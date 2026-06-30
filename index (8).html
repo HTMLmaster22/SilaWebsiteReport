@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نبضة الموقع — تقرير أداء صلة | Site Pulse — Silah Performance Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1D26;
+    --ink-2:#102a36;
+    --paper:#F2F1ED;
+    --paper-card:#FBFAF7;
+    --signal:#E8483A;
+    --teal:#134752;
+    --teal-soft:#1d5e6b;
+    --amber:#B3711F;
+    --amber-bg:rgba(193,127,46,0.13);
+    --moss:#2F6B49;
+    --moss-bg:rgba(76,122,94,0.14);
+    --poor:#B23B3B;
+    --poor-bg:rgba(178,59,59,0.13);
+    --ink-soft:#46565d;
+    --hair:rgba(11,29,38,0.10);
+    --hair-dark:rgba(247,245,241,0.14);
+    --shadow:0 1px 2px rgba(11,29,38,0.04), 0 8px 24px -12px rgba(11,29,38,0.18);
+    --radius:18px;
+    --maxw:1040px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Cairo','Segoe UI','Tahoma',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+  .num{ font-family:'JetBrains Mono','Consolas','Courier New',monospace; font-feature-settings:'tnum' 1; }
+  [dir-fix]{ unicode-bidi:isolate; }
+  ::selection{ background:var(--signal); color:#fff; }
+  a{ color:inherit; }
+
+  button{ font-family:inherit; cursor:pointer; }
+  button:focus-visible, a:focus-visible{
+    outline:2.5px solid var(--signal);
+    outline-offset:3px;
+    border-radius:6px;
+  }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+
+  /* ===== Topbar ===== */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:rgba(242,241,237,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hair);
+  }
+  .topbar .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:19px; letter-spacing:.2px; }
+  .brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--signal); display:inline-block; }
+  .brand small{ display:block; font-weight:500; font-size:11px; color:var(--ink-soft); margin-top:1px; }
+  .lang-btn{
+    background:var(--ink); color:var(--paper);
+    border:none; border-radius:100px;
+    padding:9px 18px; font-size:13.5px; font-weight:700;
+    display:flex; align-items:center; gap:7px;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .lang-btn:hover{ background:var(--teal); transform:translateY(-1px); }
+  .lang-btn svg{ width:14px; height:14px; }
+
+  /* ===== Hero ===== */
+  .hero{
+    background:radial-gradient(120% 140% at 18% -10%, #173d49 0%, var(--ink) 55%);
+    color:var(--paper);
+    padding:72px 0 96px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image:radial-gradient(rgba(247,245,241,0.045) 1px, transparent 1px);
+    background-size:18px 18px;
+    pointer-events:none;
+    mask-image:linear-gradient(to bottom, black, transparent 85%);
+  }
+  .hero .wrap{ position:relative; z-index:2; }
+  .pulse-wrap{ height:64px; margin-bottom:18px; opacity:.85; }
+  .pulse-wrap svg{ width:100%; height:100%; display:block; overflow:visible; }
+  .pulse-path{
+    fill:none; stroke:var(--signal); stroke-width:2.4;
+    stroke-linecap:round; stroke-linejoin:round;
+    stroke-dasharray:900; stroke-dashoffset:900;
+    animation:draw 2.1s cubic-bezier(.4,0,.2,1) .15s forwards;
+  }
+  .pulse-dot{
+    fill:var(--signal); opacity:0;
+    animation:dotIn .4s ease 1.9s forwards;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  @keyframes dotIn{ to{ opacity:1; } }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; font-weight:700; letter-spacing:.3px;
+    color:#cdd9da; text-transform:uppercase;
+    margin:0 0 22px;
+  }
+  .eyebrow .live{
+    width:7px; height:7px; border-radius:50%; background:var(--signal);
+    animation:livePulse 1.8s ease-in-out infinite;
+  }
+  @keyframes livePulse{ 0%,100%{ opacity:1; transform:scale(1);} 50%{ opacity:.45; transform:scale(.7);} }
+
+  .hero-stat{
+    display:flex; align-items:flex-end; flex-wrap:wrap;
+    gap:20px 28px; margin-bottom:22px;
+  }
+  .hero-stat .figure{ display:flex; align-items:baseline; gap:10px; }
+  .hero-stat .num{ font-size:clamp(46px,8vw,84px); font-weight:700; line-height:1; }
+  .hero-stat .from .num{ color:#9fb3b8; text-decoration:line-through; text-decoration-color:rgba(232,72,58,.55); text-decoration-thickness:3px; }
+  .hero-stat .to .num{ color:#fff; }
+  .hero-stat .unit{ font-size:14px; color:#a9bcc0; font-weight:600; }
+  .hero-arrow{ width:30px; height:18px; flex-shrink:0; align-self:center; color:var(--signal); }
+  .hero-arrow svg{ width:100%; height:100%; }
+  .improve-badge{
+    display:inline-flex; align-items:center; gap:7px;
+    background:rgba(232,72,58,0.16); border:1px solid rgba(232,72,58,0.4);
+    color:#ff9a8e; padding:7px 14px; border-radius:100px;
+    font-size:13.5px; font-weight:700; margin-bottom:26px;
+  }
+  .hero h1{
+    font-size:clamp(22px,3.2vw,30px); font-weight:800; margin:0 0 14px; max-width:680px;
+  }
+  .hero p.lede{
+    font-size:16.5px; color:#cfd9da; max-width:620px; margin:0 0 28px;
+  }
+  .hero .meta-line{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    font-size:13px; color:#8fa3a8; border-top:1px solid var(--hair-dark);
+    padding-top:18px;
+  }
+  .hero .meta-line svg{ width:15px; height:15px; flex-shrink:0; }
+
+  /* ===== Section shells ===== */
+  section.block{ padding:64px 0; }
+  .block-head{ margin-bottom:32px; max-width:680px; }
+  .block-eyebrow{ font-size:12.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--signal); margin:0 0 8px; }
+  .block-head h2{ font-size:clamp(22px,3vw,28px); font-weight:800; margin:0 0 10px; }
+  .block-head p{ color:var(--ink-soft); font-size:15.5px; margin:0; }
+
+  /* ===== Summary cards ===== */
+  .cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .card{
+    background:var(--paper-card); border:1px solid var(--hair); border-radius:var(--radius);
+    padding:24px; box-shadow:var(--shadow);
+  }
+  .card-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+  .card-icon{ width:38px; height:38px; border-radius:11px; background:var(--ink); color:var(--paper); display:flex; align-items:center; justify-content:center; }
+  .card-icon svg{ width:19px; height:19px; }
+  .badge{
+    font-size:12px; font-weight:800; padding:5px 11px; border-radius:100px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .badge::before{ content:""; width:6px; height:6px; border-radius:50%; }
+  .badge.good{ background:var(--moss-bg); color:var(--moss); }
+  .badge.good::before{ background:var(--moss); }
+  .badge.ni{ background:var(--amber-bg); color:var(--amber); }
+  .badge.ni::before{ background:var(--amber); }
+  .badge.poor{ background:var(--poor-bg); color:var(--poor); }
+  .badge.poor::before{ background:var(--poor); }
+  .card h3{ font-size:16.5px; font-weight:800; margin:0 0 6px; }
+  .card .card-sub{ font-size:13.5px; color:var(--ink-soft); margin:0 0 16px; min-height:38px; }
+  .spark{ width:100%; height:46px; display:block; }
+
+  /* ===== Accordion ===== */
+  .accordion{ border-top:1px solid var(--hair); }
+  .acc-item{ border-bottom:1px solid var(--hair); }
+  .acc-trigger{
+    width:100%; background:none; border:none; padding:22px 4px;
+    display:flex; align-items:center; gap:16px; text-align:start;
+  }
+  .acc-trigger:hover .acc-name{ color:var(--teal); }
+  .acc-num{
+    font-size:12px; font-weight:700; color:#9aa6ab; width:26px; flex-shrink:0;
+  }
+  .acc-name-wrap{ flex:1; min-width:0; }
+  .acc-name{ font-size:17px; font-weight:800; transition:color .15s ease; }
+  .acc-full{ font-size:12.5px; color:var(--ink-soft); font-weight:500; margin-top:2px; }
+  .acc-value{ display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .acc-value .num{ font-size:19px; font-weight:600; }
+  .acc-chevron{ width:18px; height:18px; flex-shrink:0; transition:transform .25s ease; color:var(--ink-soft); }
+  .acc-trigger[aria-expanded="true"] .acc-chevron{ transform:rotate(180deg); }
+
+  .acc-panel{
+    display:grid; grid-template-rows:0fr; transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1);
+  }
+  .acc-panel-inner{ overflow:hidden; }
+  .acc-item.open .acc-panel{ grid-template-rows:1fr; }
+  .acc-body{ padding:0 4px 30px; display:grid; grid-template-columns:1fr 1.3fr; gap:28px; }
+  .acc-def{ font-size:14.5px; color:var(--ink-soft); margin:0 0 18px; }
+  .acc-meaning{
+    background:rgba(19,71,82,0.06); border-inline-start:3px solid var(--teal);
+    padding:13px 16px; border-radius:8px; font-size:13.5px; color:var(--teal); font-weight:600;
+  }
+  .gauge{ margin-top:6px; }
+  .gauge-bar{ position:relative; height:10px; border-radius:6px; overflow:visible; display:flex; }
+  .gauge-bar .seg{ height:100%; }
+  .seg.g{ background:#cfe3d6; border-radius:6px 0 0 6px; }
+  .seg.n{ background:#ecdcc0; }
+  .seg.p{ background:#ecd0d0; border-radius:0 6px 6px 0; }
+  .gauge-marker{
+    position:absolute; top:-5px; width:3px; height:20px; background:var(--ink);
+    border-radius:2px; transform:translateX(50%);
+  }
+  .gauge-labels{ display:flex; justify-content:space-between; font-size:10.5px; color:var(--ink-soft); margin-top:7px; }
+  .chart-box{ background:var(--paper-card); border:1px solid var(--hair); border-radius:14px; padding:18px 18px 10px; }
+  .chart-title{ font-size:11.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.4px; margin-bottom:10px; }
+  .trend-svg{ width:100%; height:120px; display:block; }
+  .chart-range{ display:flex; justify-content:space-between; font-size:10.5px; color:#9aa6ab; margin-top:6px; }
+
+  @media (max-width:760px){
+    .cards{ grid-template-columns:1fr; }
+    .acc-body{ grid-template-columns:1fr; }
+    .acc-value .num{ font-size:16px; }
+  }
+
+  /* ===== Device mix ===== */
+  .device-grid{ display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:center; }
+  .stackbar{ height:34px; border-radius:10px; overflow:hidden; display:flex; box-shadow:inset 0 0 0 1px var(--hair); }
+  .stackbar .seg{ height:100%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; }
+  .device-legend{ display:flex; flex-direction:column; gap:12px; margin-top:18px; }
+  .device-legend li{ list-style:none; display:flex; align-items:center; gap:10px; font-size:14px; }
+  .device-legend .sw{ width:11px; height:11px; border-radius:3px; flex-shrink:0; }
+  .device-legend .v{ margin-inline-start:auto; font-weight:700; }
+  .device-note{ font-size:14.5px; color:var(--ink-soft); }
+  .device-note strong{ color:var(--ink); }
+  @media (max-width:760px){ .device-grid{ grid-template-columns:1fr; } }
+
+  /* ===== Device toggle ===== */
+  .device-toggle{
+    display:inline-flex; gap:4px; background:rgba(247,245,241,0.07); border:1px solid var(--hair-dark);
+    border-radius:100px; padding:4px; margin-bottom:24px;
+  }
+  .device-btn{
+    background:none; border:none; padding:8px 16px; border-radius:100px;
+    font-size:13px; font-weight:700; color:#9fb3b8; font-family:'Cairo',sans-serif;
+    display:flex; align-items:center; gap:7px; transition:background .15s ease, color .15s ease;
+  }
+  .device-btn svg{ width:15px; height:15px; }
+  .device-btn:hover{ color:#dfe9ea; }
+  .device-btn.is-active{ background:var(--signal); color:#fff; }
+
+  /* ===== Range filter ===== */
+  .range-filter{
+    display:inline-flex; gap:4px; background:var(--paper-card); border:1px solid var(--hair);
+    border-radius:100px; padding:4px; margin-bottom:26px; box-shadow:var(--shadow);
+  }
+  .range-btn{
+    background:none; border:none; padding:9px 18px; border-radius:100px;
+    font-size:13.5px; font-weight:700; color:var(--ink-soft);
+    font-family:'Cairo',sans-serif; transition:background .15s ease, color .15s ease;
+  }
+  .range-btn:hover{ color:var(--ink); }
+  .range-btn.is-active{ background:var(--ink); color:var(--paper); }
+  @media (max-width:480px){ .range-filter{ display:flex; } .range-btn{ flex:1; padding:9px 8px; font-size:12.5px; } }
+
+  /* ===== Marketing/SEO section ===== */
+  .seo-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px; }
+  .seo-score-card{
+    background:var(--paper-card); border:1px solid var(--hair); border-radius:14px;
+    padding:20px; text-align:center; box-shadow:var(--shadow);
+  }
+  .seo-score-card .score{ font-size:34px; font-weight:700; color:var(--moss); }
+  .seo-score-card .score.partial{ color:var(--amber); }
+  .seo-score-card .label{ font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:4px; }
+  .kw-table{ width:100%; border-collapse:collapse; margin-bottom:28px; }
+  .kw-table th{ text-align:start; font-size:11.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--ink-soft); font-weight:700; padding:0 14px 10px; border-bottom:1px solid var(--hair); }
+  .kw-table td{ padding:13px 14px; border-bottom:1px solid var(--hair); font-size:14.5px; }
+  .kw-table tr:last-child td{ border-bottom:none; }
+  .kw-pos{ font-weight:700; }
+  .kw-pos.weak{ color:var(--poor); }
+  .kw-pos.mid{ color:var(--amber); }
+  .kw-pos.strong{ color:var(--moss); }
+  .opp-list{ display:grid; gap:10px; margin-bottom:28px; }
+  .opp-item{
+    display:flex; gap:13px; align-items:flex-start; background:var(--paper-card);
+    border:1px solid var(--hair); border-radius:12px; padding:15px 17px;
+  }
+  .opp-item svg{ width:18px; height:18px; flex-shrink:0; color:var(--amber); margin-top:2px; }
+  .opp-item p{ margin:0; font-size:14px; color:var(--ink-soft); }
+  .opp-item strong{ color:var(--ink); font-weight:700; }
+  .tool-chip{
+    font-size:12.5px; font-weight:700; padding:8px 15px; border-radius:100px;
+    background:rgba(19,71,82,0.07); color:var(--teal); border:1px solid rgba(19,71,82,0.18);
+  }
+
+  footer{ background:var(--ink); color:#aebcc0; padding:44px 0 36px; }
+  footer h4{ color:#fff; font-size:15px; margin:0 0 10px; }
+  footer p{ font-size:13.5px; line-height:1.75; max-width:680px; margin:0 0 18px; }
+  .foot-credit{ font-size:12.5px; color:#7c8d92; border-top:1px solid var(--hair-dark); padding-top:18px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+
+  /* reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+    .pulse-path{ stroke-dashoffset:0; }
+  }
+
+  /* reveal on load (not scroll-dependent, guarantees content always appears) */
+  .reveal{ opacity:0; transform:translateY(14px); animation:revealIn .6s cubic-bezier(.4,0,.2,1) forwards; animation-delay:.05s; }
+  @keyframes revealIn{ to{ opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>
+        <span data-i18n="brandName">صلة</span>
+        <small data-i18n="brandSub">تقنية المعلومات</small>
+      </span>
+    </div>
+    <button class="lang-btn" id="langToggle" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z"/></svg>
+      <span data-i18n="langToggleLabel">English</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="pulse-wrap" aria-hidden="true">
+      <svg viewBox="0 0 600 64" preserveAspectRatio="none">
+        <path class="pulse-path" d="M0,32 L80,32 L100,32 L115,10 L130,54 L145,18 L160,32 L190,32 L210,32 L225,32 L240,12 L255,52 L270,32 L300,32 L600,32" />
+        <circle class="pulse-dot" cx="600" cy="32" r="4.5"/>
+      </svg>
+    </div>
+
+    <p class="eyebrow"><span class="live"></span><span data-i18n="heroEyebrow">تقرير أداء الموقع الإلكتروني · بيانات حقيقية من زوّار الموقع</span></p>
+
+    <div class="device-toggle" role="group" aria-label="Device">
+      <button class="device-btn is-active" data-device="mobile" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+        <span data-i18n="deviceMobileBtn">الجوال</span>
+      </button>
+      <button class="device-btn" data-device="desktop" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <span data-i18n="deviceDesktopBtn">سطح المكتب</span>
+      </button>
+    </div>
+
+    <div class="hero-stat" id="heroStat">
+      <div class="figure from" id="heroFromWrap"><span class="num" id="heroFromNum">700</span></div>
+      <div class="hero-arrow" id="heroArrowWrap" aria-hidden="true">
+        <svg viewBox="0 0 30 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9h24M18 2l8 7-8 7"/></svg>
+      </div>
+      <div class="figure to"><span class="num" id="heroToNum">165</span><span class="unit" id="heroUnit" data-i18n="msUnit">جزء من الثانية</span></div>
+    </div>
+
+    <div class="improve-badge" id="heroBadge">
+      <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" id="heroBadgeIcon"><path d="M8 13V3M3 8l5-5 5 5"/></svg>
+      <span id="heroBadgeText" data-i18n="improveBadge">أسرع بنسبة 76%</span>
+    </div>
+
+    <h1 data-i18n="heroH1" id="heroH1">استجابة الموقع لتفاعل الزوّار تحسّنت بشكل كبير خلال الأشهر الماضية</h1>
+    <p class="lede" data-i18n="heroLede" id="heroLede">في فبراير الماضي، واجه الموقع تباطؤاً ملحوظاً في الاستجابة عند تفاعل الزوّار معه. بعد المتابعة والتحسينات التقنية، عاد الموقع الآن أسرع وأكثر استجابة من أي وقت مضى — والدليل بيانات حقيقية من زوّار فعليين، وليس اختباراً معملياً فقط.</p>
+
+    <div class="meta-line">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      <span data-i18n="heroMeta" id="heroMeta">بيانات Chrome الحقيقية للزوّار (CrUX) · أغسطس 2025 – يونيو 2026 · أجهزة الجوال</span>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" data-i18n="summaryEyebrow">نظرة سريعة</p>
+      <h2 data-i18n="summaryH2">كيف تجربة الزائر اليوم؟</h2>
+      <p data-i18n="summaryP">ثلاثة مقاييس رئيسية يستخدمها جوجل لقياس تجربة أي موقع إلكتروني — وهي نفس المقاييس التي تؤثر على ظهور الموقع في نتائج البحث.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card reveal">
+        <div class="card-top">
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/></svg></div>
+          <span class="badge ni" data-i18n="badgeNI">يحتاج تحسين</span>
+        </div>
+        <h3 data-i18n="card1Title">سرعة التحميل</h3>
+        <p class="card-sub" data-i18n="card1Sub">3.1 ثانية لظهور أهم عنصر في الصفحة</p>
+        <svg class="spark" data-spark="lcp" viewBox="0 0 280 46" preserveAspectRatio="none"></svg>
+      </div>
+
+      <div class="card reveal" style="animation-delay:.13s">
+        <div class="card-top">
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 9h.01M15 9h.01M8 13s1.5 2 4 2 4-2 4-2"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <span class="badge good" data-i18n="badgeGood">جيد</span>
+        </div>
+        <h3 data-i18n="card2Title">سرعة الاستجابة</h3>
+        <p class="card-sub" data-i18n="card2Sub">165 جزء من الثانية لاستجابة النقر</p>
+        <svg class="spark" data-spark="inp" viewBox="0 0 280 46" preserveAspectRatio="none"></svg>
+      </div>
+
+      <div class="card reveal" style="animation-delay:.21s">
+        <div class="card-top">
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg></div>
+          <span class="badge ni" data-i18n="badgeNI">يحتاج تحسين</span>
+        </div>
+        <h3 data-i18n="card3Title">ثبات العرض</h3>
+        <p class="card-sub" data-i18n="card3Sub">عناصر الصفحة تتحرك بنسبة بسيطة أثناء التحميل</p>
+        <svg class="spark" data-spark="cls" viewBox="0 0 280 46" preserveAspectRatio="none"></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" style="padding-top:8px;">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" data-i18n="detailEyebrow">بالتفصيل</p>
+      <h2 data-i18n="detailH2">كل مقياس على حدة</h2>
+      <p data-i18n="detailP">اضغط على أي مقياس لعرض تعريفه، واتجاهه، وما يعنيه عملياً.</p>
+    </div>
+
+    <div class="range-filter reveal" id="rangeFilterWrap" role="group" aria-label="Time period">
+      <button class="range-btn" data-range="june" type="button"><span data-i18n="rangeJune">يونيو فقط</span></button>
+      <button class="range-btn" data-range="last3" type="button"><span data-i18n="rangeLast3">آخر 3 أشهر</span></button>
+      <button class="range-btn is-active" data-range="full" type="button"><span data-i18n="rangeFull">الفترة الكاملة</span></button>
+    </div>
+
+    <div class="accordion reveal" id="accordion"></div>
+  </div>
+</section>
+
+<section class="block" style="padding-top:8px;">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" data-i18n="deviceEyebrow">السياق</p>
+      <h2 data-i18n="deviceH2">من أين يزورنا الناس</h2>
+    </div>
+    <div class="device-grid reveal">
+      <div>
+        <div class="stackbar">
+          <div class="seg" style="width:73%;background:var(--teal);">73%</div>
+          <div class="seg" style="width:24%;background:var(--signal);">24%</div>
+          <div class="seg" style="width:3%;background:#c7c2b4;color:var(--ink);">‎</div>
+        </div>
+        <ul class="device-legend">
+          <li><span class="sw" style="background:var(--teal)"></span><span data-i18n="deviceLegendPhone">جوال</span><span class="v num">73%</span></li>
+          <li><span class="sw" style="background:var(--signal)"></span><span data-i18n="deviceLegendDesktop">كمبيوتر مكتبي</span><span class="v num">24%</span></li>
+          <li><span class="sw" style="background:#c7c2b4"></span><span data-i18n="deviceLegendTablet">جهاز لوحي</span><span class="v num">3%</span></li>
+        </ul>
+      </div>
+      <p class="device-note" data-i18n="deviceNote">٣ من كل ٤ زوّار يفتحون الموقع من الجوال — لهذا تركّز هذه البيانات على تجربة الجوال تحديداً، فهي التجربة التي يشعر بها أغلب زوّار الموقع فعلياً.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" style="padding-top:8px;">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" data-i18n="seoEyebrow">لفريق التسويق</p>
+      <h2 data-i18n="seoH2">ماذا يعني هذا لتحسين محركات البحث (SEO)</h2>
+      <p data-i18n="seoP">سرعة الموقع وصحته التقنية عاملان مباشران ضمن خوارزمية ترتيب جوجل — هذا القسم يربط الأرقام أعلاه بما يهم فريق التسويق تحديداً.</p>
+    </div>
+
+    <div class="seo-grid reveal">
+      <div class="seo-score-card">
+        <div class="score num">100</div>
+        <div class="label" data-i18n="seoScoreLabel">تحسين محركات البحث (SEO)</div>
+      </div>
+      <div class="seo-score-card">
+        <div class="score num">100</div>
+        <div class="label" data-i18n="bpScoreLabel">أفضل الممارسات</div>
+      </div>
+      <div class="seo-score-card">
+        <div class="score partial num">93–100</div>
+        <div class="label" data-i18n="a11yScoreLabel">إمكانية الوصول (جوال–مكتبي)</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:16.5px;font-weight:800;margin:0 0 14px;" data-i18n="kwTitle">أين تقف الكلمات المفتاحية المستهدفة اليوم</h3>
+    <table class="kw-table reveal">
+      <thead><tr>
+        <th data-i18n="kwColPhrase">الكلمة المفتاحية</th>
+        <th data-i18n="kwColPos">الترتيب الحالي</th>
+      </tr></thead>
+      <tbody id="kwTableBody"></tbody>
+    </table>
+
+    <h3 style="font-size:16.5px;font-weight:800;margin:0 0 14px;" data-i18n="oppTitle">فرص تحسين مرصودة</h3>
+    <div class="opp-list reveal">
+      <div class="opp-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <p data-i18n="opp1"><strong>توحيد صفحات التوطين:</strong> عدة صفحات منفصلة تستهدف موضوعات متقاربة — دمجها في صفحة مرجعية واحدة قوية يقوّي إشارة الترتيب بدلاً من تشتيتها.</p>
+      </div>
+      <div class="opp-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <p data-i18n="opp2"><strong>بيانات منظَّمة (Schema):</strong> الموقع لا يحتوي حالياً على Schema Markup — إضافتها تساعد جوجل على فهم المحتوى وقد تفتح نتائج بحث غنية (Rich Results).</p>
+      </div>
+      <div class="opp-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <p data-i18n="opp3"><strong>نصوص بديلة للصور (Alt Text):</strong> بعض صور الصفحة الرئيسية بدون نص بديل — إضافتها تحسّن إمكانية الوصول وفهم جوجل لمحتوى الصور.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h4 data-i18n="footH4">عن هذه البيانات</h4>
+    <p data-i18n="footP1">البيانات أعلاه مأخوذة من تقرير Chrome لتجربة المستخدم الحقيقية (CrUX) — قياسات حقيقية من زوّار فعليين يستخدمون متصفح Chrome، وليست اختباراً معملياً. تغطي الفترة من أغسطس 2025 إلى يونيو 2026، عند النسبة المئوية 75 — أي أن 75% من الزوّار حصلوا على تجربة تساوي أو أفضل من الرقم الموضّح.</p>
+    <p data-i18n="footP2">زمن استجابة الخادم (TTFB) كان أقل المقاييس تحسّناً خلال هذه الفترة، وهو محور التركيز القادم.</p>
+    <div class="foot-credit">
+      <span data-i18n="footCredit">إعداد: تقنية المعلومات — شركة صلة</span>
+      <span data-i18n="footDate">آخر تحديث: 30 يونيو 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- i18n ---------------- */
+  const dict = {
+    ar: {
+      brandName:"صلة", brandSub:"تقنية المعلومات", langToggleLabel:"English",
+      heroEyebrow:"تقرير أداء الموقع الإلكتروني · بيانات حقيقية من زوّار الموقع",
+      msUnit:"جزء من الثانية",
+      improveBadge:"أسرع بنسبة 76%",
+      heroH1:"استجابة الموقع لتفاعل الزوّار تحسّنت بشكل كبير خلال الأشهر الماضية",
+      heroLede:"في فبراير الماضي، واجه الموقع تباطؤاً ملحوظاً في الاستجابة عند تفاعل الزوّار معه. بعد المتابعة والتحسينات التقنية، عاد الموقع الآن أسرع وأكثر استجابة من أي وقت مضى — والدليل بيانات حقيقية من زوّار فعليين، وليس اختباراً معملياً فقط.",
+      heroMeta:"بيانات Chrome الحقيقية للزوّار (CrUX) · أغسطس 2025 – يونيو 2026 · أجهزة الجوال",
+      heroMetaJune:"بيانات Chrome الحقيقية للزوّار (CrUX) · يونيو 2026 · أجهزة الجوال",
+      heroH1June:"استجابة الموقع لتفاعل الزوّار حالياً في وضع جيد",
+      heroLedeJune:"هذا هو وضع الموقع الحالي خلال يونيو، بحسب بيانات حقيقية من زوّار فعليين على متصفح Chrome — وليس اختباراً معملياً.",
+      heroCurrentLabel:"الوضع الحالي",
+      summaryEyebrow:"نظرة سريعة", summaryH2:"كيف تجربة الزائر اليوم؟",
+      summaryP:"ثلاثة مقاييس رئيسية يستخدمها جوجل لقياس تجربة أي موقع إلكتروني — وهي نفس المقاييس التي تؤثر على ظهور الموقع في نتائج البحث.",
+      badgeGood:"جيد", badgeNI:"يحتاج تحسين", badgePoor:"ضعيف",
+      card1Title:"سرعة التحميل", card1Sub:"3.1 ثانية لظهور أهم عنصر في الصفحة",
+      card2Title:"سرعة الاستجابة", card2Sub:"165 جزء من الثانية لاستجابة النقر",
+      card3Title:"ثبات العرض", card3Sub:"عناصر الصفحة تتحرك بنسبة بسيطة أثناء التحميل",
+      detailEyebrow:"بالتفصيل", detailH2:"كل مقياس على حدة",
+      detailP:"اضغط على أي مقياس لعرض تعريفه، واتجاهه خلال آخر 10 أشهر، وما يعنيه عملياً.",
+      deviceEyebrow:"السياق", deviceH2:"من أين يزورنا الناس",
+      deviceLegendPhone:"جوال", deviceLegendDesktop:"كمبيوتر مكتبي", deviceLegendTablet:"جهاز لوحي",
+      deviceNote:"٣ من كل ٤ زوّار يفتحون الموقع من الجوال — لهذا تركّز هذه البيانات على تجربة الجوال تحديداً، فهي التجربة التي يشعر بها أغلب زوّار الموقع فعلياً.",
+      footH4:"عن هذه البيانات",
+      footP1:"البيانات أعلاه مأخوذة من تقرير Chrome لتجربة المستخدم الحقيقية (CrUX) — قياسات حقيقية من زوّار فعليين يستخدمون متصفح Chrome، وليست اختباراً معملياً. تغطي الفترة من أغسطس 2025 إلى يونيو 2026، عند النسبة المئوية 75 — أي أن 75% من الزوّار حصلوا على تجربة تساوي أو أفضل من الرقم الموضّح.",
+      footP2:"زمن استجابة الخادم (TTFB) كان أقل المقاييس تحسّناً خلال هذه الفترة، وهو محور التركيز القادم.",
+      footCredit:"إعداد: تقنية المعلومات — شركة صلة", footDate:"آخر تحديث: 30 يونيو 2026",
+      gaugeGood:"جيد", gaugeNI:"يحتاج تحسين", gaugePoor:"ضعيف",
+      meaningLabel:"ماذا يعني هذا عملياً",
+      chartTitle:"الاتجاه",
+      rangeJune:"يونيو فقط", rangeLast3:"آخر 3 أشهر", rangeFull:"الفترة الكاملة",
+      deviceMobileBtn:"الجوال", deviceDesktopBtn:"سطح المكتب",
+      outOf100:"من 100", excellentBadge:"ممتاز",
+      heroH1Desktop:"أداء الموقع على أجهزة الكمبيوتر ممتاز",
+      heroLedeDesktop:"هذا اختبار معملي (Lighthouse) — قياس واحد في لحظة محددة، وليس بيانات حقيقية متراكمة من زوّار فعليين عبر الوقت كما في عرض الجوال. الأرقام التالية كلها ضمن النطاق الجيد.",
+      heroMetaDesktop:"اختبار معملي (Lighthouse 13.4.0) · 30 يونيو 2026 · أجهزة الكمبيوتر المكتبي",
+      card1SubDesktop:"1.0 ثانية لظهور أهم عنصر في الصفحة",
+      card2SubDesktop:"0 جزء من الثانية حظر — لا تأخير في الاستجابة",
+      card3SubDesktop:"لا يوجد أي تحرك غير متوقع في عناصر الصفحة",
+      seoEyebrow:"لفريق التسويق", seoH2:"ماذا يعني هذا لتحسين محركات البحث (SEO)",
+      seoP:"سرعة الموقع وصحته التقنية عاملان مباشران ضمن خوارزمية ترتيب جوجل — هذا القسم يربط الأرقام أعلاه بما يهم فريق التسويق تحديداً.",
+      seoScoreLabel:"تحسين محركات البحث (SEO)", bpScoreLabel:"أفضل الممارسات", a11yScoreLabel:"إمكانية الوصول (جوال–مكتبي)",
+      kwTitle:"أين تقف الكلمات المفتاحية المستهدفة اليوم",
+      kwColPhrase:"الكلمة المفتاحية", kwColPos:"الترتيب الحالي",
+      oppTitle:"فرص تحسين مرصودة",
+      opp1:"<strong>توحيد صفحات التوطين:</strong> عدة صفحات منفصلة تستهدف موضوعات متقاربة — دمجها في صفحة مرجعية واحدة قوية يقوّي إشارة الترتيب بدلاً من تشتيتها.",
+      opp2:"<strong>بيانات منظَّمة (Schema):</strong> الموقع لا يحتوي حالياً على Schema Markup — إضافتها تساعد جوجل على فهم المحتوى وقد تفتح نتائج بحث غنية (Rich Results).",
+      opp3:"<strong>نصوص بديلة للصور (Alt Text):</strong> بعض صور الصفحة الرئيسية بدون نص بديل — إضافتها تحسّن إمكانية الوصول وفهم جوجل لمحتوى الصور.",
+      kwNotInTop5:"خارج أفضل 5 صفحات"
+    },
+    en: {
+      brandName:"Silah", brandSub:"Information Technology", langToggleLabel:"العربية",
+      heroEyebrow:"Website Performance Report · Real data from actual visitors",
+      msUnit:"milliseconds",
+      improveBadge:"76% faster",
+      heroH1:"The site's responsiveness to visitor interactions improved significantly over the past months",
+      heroLede:"Last February, the website slowed down noticeably whenever visitors tried to interact with it. After investigation and technical fixes, the site is now faster and more responsive than ever — confirmed by real visitor data, not just a lab test.",
+      heroMeta:"Real Chrome visitor data (CrUX) · Aug 2025 – Jun 2026 · Mobile devices",
+      heroMetaJune:"Real Chrome visitor data (CrUX) · June 2026 · Mobile devices",
+      heroH1June:"The site's responsiveness to visitor interactions is currently in good shape",
+      heroLedeJune:"This is where the site stands right now, as of June — based on real Chrome visitor data, not a lab test.",
+      heroCurrentLabel:"Current status",
+      summaryEyebrow:"At a glance", summaryH2:"How's the visitor experience today?",
+      summaryP:"Three core metrics Google uses to measure any website's user experience — the same metrics that influence how the site ranks in search results.",
+      badgeGood:"Good", badgeNI:"Needs Improvement", badgePoor:"Poor",
+      card1Title:"Loading Performance", card1Sub:"3.1s for the main content to appear",
+      card2Title:"Interactivity", card2Sub:"165ms response time to taps/clicks",
+      card3Title:"Visual Stability", card3Sub:"Page elements shift slightly while loading",
+      detailEyebrow:"In detail", detailH2:"Each metric, one by one",
+      detailP:"Tap any metric to see its definition, its trend over the last 10 months, and what it actually means.",
+      deviceEyebrow:"Context", deviceH2:"Where people visit us from",
+      deviceLegendPhone:"Phone", deviceLegendDesktop:"Desktop", deviceLegendTablet:"Tablet",
+      deviceNote:"3 out of 4 visitors open the site from their phone — that's why this data focuses specifically on the mobile experience, since that's what most visitors actually feel.",
+      footH4:"About this data",
+      footP1:"The data above comes from the Chrome Real User Experience Report (CrUX) — real measurements from actual visitors using Chrome, not a lab test. It covers August 2025 to June 2026, at the 75th percentile, meaning 75% of visitors had an experience equal to or better than the number shown.",
+      footP2:"Server response time (TTFB) improved the least over this period, and is the next area of focus.",
+      footCredit:"Prepared by: Information Technology — Silah", footDate:"Last updated: June 30, 2026",
+      gaugeGood:"Good", gaugeNI:"Needs Improvement", gaugePoor:"Poor",
+      meaningLabel:"What this means in practice",
+      chartTitle:"Trend",
+      rangeJune:"June only", rangeLast3:"Last 3 months", rangeFull:"Full period",
+      deviceMobileBtn:"Mobile", deviceDesktopBtn:"Desktop",
+      outOf100:"/ 100", excellentBadge:"Excellent",
+      heroH1Desktop:"Desktop performance is in excellent shape",
+      heroLedeDesktop:"This is a lab test (Lighthouse) — a single point-in-time measurement, not accumulated real-visitor data over time like the mobile view. Every metric below sits in the good range.",
+      heroMetaDesktop:"Lab test (Lighthouse 13.4.0) · June 30, 2026 · Desktop devices",
+      card1SubDesktop:"1.0s for the main content to appear",
+      card2SubDesktop:"0ms blocking — no response delay",
+      card3SubDesktop:"No unexpected element movement at all",
+      seoEyebrow:"For the marketing team", seoH2:"What this means for SEO",
+      seoP:"Site speed and technical health are direct factors in Google's ranking algorithm — this section connects the numbers above to what actually matters for marketing.",
+      seoScoreLabel:"SEO Score", bpScoreLabel:"Best Practices", a11yScoreLabel:"Accessibility (mobile–desktop)",
+      kwTitle:"Where target keywords stand today",
+      kwColPhrase:"Keyword", kwColPos:"Current position",
+      oppTitle:"Opportunities found",
+      opp1:"<strong>Consolidate localization pages:</strong> Several separate pages target overlapping topics — merging them into one strong reference page concentrates ranking signal instead of splitting it.",
+      opp2:"<strong>Structured data (Schema):</strong> The site currently has no Schema Markup — adding it helps Google understand the content and can unlock Rich Results in search.",
+      opp3:"<strong>Image alt text:</strong> Some homepage images are missing alt text — adding it improves accessibility and helps Google understand the image content.",
+      kwNotInTop5:"Outside top 5 pages"
+    }
+  };
+
+  /* ---------------- keyword tracking (from Abdulhadi's original tracked phrases) ---------------- */
+  const keywords = [
+    { ar:"العمل عن بعد", en:"Remote work (العمل عن بعد)", pos:8, page:2, tier:"weak" },
+    { ar:"توظيف السعوديين", en:"Saudi hiring (توظيف السعوديين)", pos:7, page:1, tier:"strong" },
+    { ar:"خدمات التوطين", en:"Localization services (خدمات التوطين)", pos:null, page:null, tier:"weak" },
+    { ar:"معاهد الشراكات الاستراتيجية", en:"Strategic partnership institutes", pos:7, page:1, tier:"strong" },
+    { ar:"اسناد السعوديين", en:"Saudi outsourcing (اسناد السعوديين)", pos:1, page:2, tier:"mid" }
+  ];
+
+  function renderKeywordTable(){
+    const body = document.getElementById("kwTableBody");
+    const d = dict[currentLang];
+    body.innerHTML = keywords.map(k=>{
+      const name = currentLang==="ar" ? k.ar : k.en;
+      const posText = k.pos===null ? d.kwNotInTop5 : `${currentLang==="ar"?"صفحة":"Page"} ${k.page} · #${k.pos}`;
+      return `<tr><td>${name}</td><td class="kw-pos ${k.tier}">${posText}</td></tr>`;
+    }).join("");
+  }
+
+  /* ---------------- metric data (CrUX, real-user, phone, 75th percentile) ---------------- */
+  const monthLabels = {ar:["أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر","يناير","فبراير","مارس","أبريل","مايو","يونيو"],
+                        en:["Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"]};
+  const months = monthLabels.en;
+  const metrics = [
+    {
+      key:"lcp", icon:'<path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/>',
+      nameAr:"سرعة التحميل", nameEn:"Loading Performance",
+      fullAr:"Largest Contentful Paint (LCP)", fullEn:"Largest Contentful Paint (LCP)",
+      unit:"s", divisor:1000, decimals:1,
+      defAr:"الوقت الذي يستغرقه ظهور أهم وأكبر عنصر بالصفحة (عادة صورة أو عنوان رئيسي) أمام الزائر.",
+      defEn:"How long it takes for the largest, most important piece of content on the page (usually an image or headline) to appear.",
+      meanAr:"كل ما كان هذا الرقم أقل، شعر الزائر أن الصفحة فتحت بسرعة.",
+      meanEn:"The lower this number, the faster the page feels like it opened.",
+      good:2500, ni:4000, visMax:5200,
+      data:[4100,3950,3550,3500,3150,3300,3950,3850,3300,3100,3150]
+    },
+    {
+      key:"inp", icon:'<path d="M9 9h.01M15 9h.01M8 13s1.5 2 4 2 4-2 4-2"/><circle cx="12" cy="12" r="9"/>',
+      nameAr:"سرعة الاستجابة", nameEn:"Interactivity",
+      fullAr:"Interaction to Next Paint (INP)", fullEn:"Interaction to Next Paint (INP)",
+      unit:"ms", divisor:1, decimals:0,
+      defAr:"مدى سرعة استجابة الموقع عندما يضغط الزائر على زر أو رابط — أي مدى السلاسة التي يشعر بها أثناء الاستخدام.",
+      defEn:"How quickly the site responds when a visitor clicks a button or link — essentially how smooth the site feels to use.",
+      meanAr:"هذا هو المقياس الذي شهد أكبر تحسّن — من تجربة بطيئة ومحبطة إلى استجابة فورية تقريباً.",
+      meanEn:"This is the metric that saw the biggest turnaround — from a slow, frustrating experience to a near-instant response.",
+      good:200, ni:500, visMax:760,
+      data:[350,380,400,420,380,420,650,700,350,180,165]
+    },
+    {
+      key:"cls", icon:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/>',
+      nameAr:"ثبات العرض", nameEn:"Visual Stability",
+      fullAr:"Cumulative Layout Shift (CLS)", fullEn:"Cumulative Layout Shift (CLS)",
+      unit:"", divisor:1, decimals:2,
+      defAr:"مدى تحرك عناصر الصفحة بشكل غير متوقع أثناء التحميل، مثل قفز زر أو نص لحظة قبل ما يضغط عليه الزائر.",
+      defEn:"How much the page's elements unexpectedly shift while loading — like a button or text jumping right before a visitor taps it.",
+      meanAr:"رقم أقل يعني عناصر الصفحة تبقى ثابتة في مكانها، فلا يضغط الزائر بالخطأ على الشي الخطأ.",
+      meanEn:"A lower number means page elements stay put, so visitors don't accidentally tap the wrong thing.",
+      good:0.10, ni:0.25, visMax:0.34,
+      data:[0.11,0.11,0.04,0.11,0.11,0.04,0.11,0.11,0.03,0.11,0.11]
+    },
+    {
+      key:"fcp", icon:'<path d="M5 12h.01M12 12h.01M19 12h.01"/><circle cx="12" cy="12" r="9"/>',
+      nameAr:"ظهور أول محتوى", nameEn:"First Contentful Paint",
+      fullAr:"First Contentful Paint (FCP)", fullEn:"First Contentful Paint (FCP)",
+      unit:"s", divisor:1000, decimals:1,
+      defAr:"الوقت الذي يستغرقه ظهور أول جزء من محتوى الصفحة على الشاشة، ولو كان بسيطاً — أول إشارة إن الصفحة بدأت تفتح.",
+      defEn:"How long until the very first piece of content appears on screen — the first sign that something is happening.",
+      meanAr:"يطمئن الزائر إن في شي يحصل، وما هو واقف أمام صفحة فاضية.",
+      meanEn:"It reassures the visitor that the page is actually loading, not stuck on a blank screen.",
+      good:1800, ni:3000, visMax:3900,
+      data:[2450,2400,2350,2150,2150,2200,2900,2750,2350,2050,2050]
+    },
+    {
+      key:"ttfb", icon:'<path d="M12 3v6l4 2"/><circle cx="12" cy="12" r="9"/>',
+      nameAr:"زمن استجابة الخادم", nameEn:"Server Response Time",
+      fullAr:"Time to First Byte (TTFB)", fullEn:"Time to First Byte (TTFB)",
+      unit:"s", divisor:1000, decimals:1,
+      defAr:"الوقت الذي يستغرقه الخادم (السيرفر) للرد على أول طلب من المتصفح — قبل ما تبدأ الصفحة تتحمّل أصلاً.",
+      defEn:"How long the server takes to respond to the very first request from the browser — before the page even starts loading.",
+      meanAr:"هذا الرقم مرتبط بسرعة الاستضافة والخادم نفسه، وهو أقل عنصر تحسّن خلال الفترة — نقطة نركّز عليها قادماً.",
+      meanEn:"This one is tied to hosting/server speed, and it improved the least over this period — a focus area going forward.",
+      good:800, ni:1800, visMax:2400,
+      data:[1650,1700,1600,1750,1650,1750,2050,1900,1650,1550,1550]
+    }
+  ];
+
+  /* ---------------- desktop metrics — real Lighthouse LAB data, single test, 30 Jun 2026 ---------------- */
+  /* Note: lab methodology differs from the mobile CrUX field data above — TBT/Speed Index have no CrUX field equivalent */
+  const desktopMetrics = [
+    {
+      key:"d_fcp", icon:'<path d="M5 12h.01M12 12h.01M19 12h.01"/><circle cx="12" cy="12" r="9"/>',
+      nameAr:"ظهور أول محتوى", nameEn:"First Contentful Paint",
+      fullAr:"First Contentful Paint (FCP)", fullEn:"First Contentful Paint (FCP)",
+      unit:"s", divisor:1000, decimals:1,
+      defAr:"الوقت الذي يستغرقه ظهور أول جزء من محتوى الصفحة على الشاشة، ولو كان بسيطاً.",
+      defEn:"How long until the very first piece of content appears on screen.",
+      meanAr:"يطمئن الزائر إن في شي يحصل، وما هو واقف أمام صفحة فاضية.",
+      meanEn:"It reassures the visitor that the page is actually loading, not stuck on a blank screen.",
+      good:1800, ni:3000, visMax:3900, data:[600]
+    },
+    {
+      key:"d_lcp", icon:'<path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/>',
+      nameAr:"سرعة التحميل", nameEn:"Loading Performance",
+      fullAr:"Largest Contentful Paint (LCP)", fullEn:"Largest Contentful Paint (LCP)",
+      unit:"s", divisor:1000, decimals:1,
+      defAr:"الوقت الذي يستغرقه ظهور أهم وأكبر عنصر بالصفحة أمام الزائر.",
+      defEn:"How long it takes for the largest, most important piece of content to appear.",
+      meanAr:"كل ما كان هذا الرقم أقل، شعر الزائر أن الصفحة فتحت بسرعة.",
+      meanEn:"The lower this number, the faster the page feels like it opened.",
+      good:2500, ni:4000, visMax:5200, data:[1000]
+    },
+    {
+      key:"d_tbt", icon:'<path d="M9 9h.01M15 9h.01M8 13s1.5 2 4 2 4-2 4-2"/><circle cx="12" cy="12" r="9"/>',
+      nameAr:"إجمالي وقت الحظر", nameEn:"Total Blocking Time",
+      fullAr:"Total Blocking Time (TBT)", fullEn:"Total Blocking Time (TBT)",
+      unit:"ms", divisor:1, decimals:0,
+      defAr:"الوقت الذي يبقى فيه المتصفح مشغولاً عن الاستجابة لتفاعل الزائر أثناء تحميل الصفحة.",
+      defEn:"How long the browser stays too busy to respond to visitor interaction while the page loads.",
+      meanAr:"رقم صفر يعني المتصفح كان جاهزاً للاستجابة فوراً طوال وقت التحميل.",
+      meanEn:"A zero means the browser was ready to respond instantly throughout loading.",
+      good:200, ni:600, visMax:900, data:[0]
+    },
+    {
+      key:"d_cls", icon:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/>',
+      nameAr:"ثبات العرض", nameEn:"Visual Stability",
+      fullAr:"Cumulative Layout Shift (CLS)", fullEn:"Cumulative Layout Shift (CLS)",
+      unit:"", divisor:1, decimals:2,
+      defAr:"مدى تحرك عناصر الصفحة بشكل غير متوقع أثناء التحميل.",
+      defEn:"How much the page's elements unexpectedly shift while loading.",
+      meanAr:"رقم أقل يعني عناصر الصفحة تبقى ثابتة في مكانها.",
+      meanEn:"A lower number means page elements stay put.",
+      good:0.10, ni:0.25, visMax:0.34, data:[0]
+    },
+    {
+      key:"d_si", icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+      nameAr:"مؤشر السرعة", nameEn:"Speed Index",
+      fullAr:"Speed Index (SI)", fullEn:"Speed Index (SI)",
+      unit:"s", divisor:1000, decimals:1,
+      defAr:"يقيس مدى سرعة ظهور محتوى الصفحة بشكل مرئي للزائر أثناء التحميل.",
+      defEn:"Measures how quickly the page's content visually appears to the visitor while loading.",
+      meanAr:"رقم أقل يعني الزائر يرى محتوى الصفحة يتشكل بسرعة، بدل الانتظار أمام شاشة شبه فارغة.",
+      meanEn:"A lower number means the visitor sees the page take shape quickly, instead of waiting on a near-empty screen.",
+      good:3400, ni:5800, visMax:7200, data:[1600]
+    }
+  ];
+  const desktopPerfScore = 96;
+
+  function classify(v, good, ni){ return v<=good ? "good" : (v<=ni ? "ni" : "poor"); }
+  function fmt(v, m){ return (v/m.divisor).toFixed(m.decimals); }
+
+  /* ---------------- SVG line chart ---------------- */
+  function lineChart(svgEl, data, good, ni, w, h, withZones){
+    const pad = 6;
+    const max = Math.max(...data, ni) * 1.08;
+    const min = 0;
+    const y = v => h - pad - ((v-min)/(max-min)) * (h - pad*2);
+
+    let svg = "";
+    if(withZones){
+      const yGood = y(good), yNi = y(ni);
+      svg += `<rect x="0" y="${yGood}" width="${w}" height="${h-yGood}" fill="#cfe3d6" opacity=".35"/>`;
+      svg += `<rect x="0" y="${yNi}" width="${w}" height="${yGood-yNi}" fill="#ecdcc0" opacity=".4"/>`;
+      svg += `<rect x="0" y="0" width="${w}" height="${yNi}" fill="#ecd0d0" opacity=".4"/>`;
+    }
+    if(data.length===1){
+      const cy = y(data[0]).toFixed(1), cx=(w/2).toFixed(1);
+      svg += `<line x1="${pad}" y1="${cy}" x2="${w-pad}" y2="${cy}" stroke="#134752" stroke-width="2" stroke-dasharray="4,5" opacity=".55"/>`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="#E8483A"/>`;
+      svgEl.innerHTML = svg;
+      return;
+    }
+    const x = i => pad + (i/(data.length-1)) * (w - pad*2);
+    let d = "";
+    data.forEach((v,i)=>{ d += (i===0?"M":"L") + x(i).toFixed(1) + "," + y(v).toFixed(1) + " "; });
+    svg += `<path d="${d}" fill="none" stroke="#134752" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+    data.forEach((v,i)=>{
+      const isEnd = i===data.length-1;
+      svg += `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="${isEnd?4.2:0}" fill="#E8483A"/>`;
+    });
+    svgEl.innerHTML = svg;
+  }
+
+  /* ---------------- range filter state ---------------- */
+  let currentRange = "full";
+  function sliceForRange(arr, range){
+    if(range==="june") return arr.slice(-1);
+    if(range==="last3") return arr.slice(-3);
+    return arr;
+  }
+  function rangeStartEndLabels(range, lang){
+    const mm = monthLabels[lang];
+    const yy = lang==="ar" ? {Aug:"25",Jun:"26"} : null;
+    if(range==="june") return [mm[10], mm[10]];
+    if(range==="last3") return [mm[8], mm[10]];
+    return [mm[0], mm[10]];
+  }
+
+  /* ---------------- build accordion ---------------- */
+  const accEl = document.getElementById("accordion");
+  let currentLang = "ar";
+
+  let currentDevice = "mobile";
+  function getActiveMetrics(){ return currentDevice==="mobile" ? metrics : desktopMetrics; }
+  const cardSlotMap = {
+    mobile:  { lcp:"lcp",   inp:"inp",  cls:"cls" },
+    desktop: { lcp:"d_lcp", inp:"d_tbt", cls:"d_cls" }
+  };
+
+  function buildAccordion(){
+    accEl.innerHTML = "";
+    getActiveMetrics().forEach((m, idx)=>{
+      const cls = classify(m.data[m.data.length-1], m.good, m.ni);
+      const item = document.createElement("div");
+      item.className = "acc-item";
+      item.innerHTML = `
+        <button class="acc-trigger" aria-expanded="false">
+          <span class="acc-num num">0${idx+1}</span>
+          <span class="acc-name-wrap">
+            <span class="acc-name" data-acc="name-${m.key}"></span>
+            <span class="acc-full num" data-acc="full-${m.key}"></span>
+          </span>
+          <span class="acc-value">
+            <span class="badge ${cls}" data-acc="badge-${m.key}"></span>
+            <span class="num" data-acc="val-${m.key}"></span>
+          </span>
+          <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="acc-panel"><div class="acc-panel-inner">
+          <div class="acc-body">
+            <div>
+              <p class="acc-def" data-acc="def-${m.key}"></p>
+              <div class="gauge">
+                <div class="gauge-bar">
+                  <div class="seg g" style="width:${(m.good/m.visMax*100).toFixed(1)}%"></div>
+                  <div class="seg n" style="width:${((m.ni-m.good)/m.visMax*100).toFixed(1)}%"></div>
+                  <div class="seg p" style="width:${((m.visMax-m.ni)/m.visMax*100).toFixed(1)}%"></div>
+                  <div class="gauge-marker" style="right:${(100-Math.min(m.data[m.data.length-1]/m.visMax*100,100)).toFixed(1)}%"></div>
+                </div>
+                <div class="gauge-labels">
+                  <span data-acc="gg-${m.key}"></span><span data-acc="gn-${m.key}"></span><span data-acc="gp-${m.key}"></span>
+                </div>
+              </div>
+              <p class="acc-meaning"><span data-acc="meaninglabel-${m.key}"></span>: <span data-acc="meaning-${m.key}"></span></p>
+            </div>
+            <div class="chart-box">
+              <div class="chart-title" data-acc="chartlabel-${m.key}"></div>
+              <svg class="trend-svg" data-chart="${m.key}" viewBox="0 0 560 120" preserveAspectRatio="none"></svg>
+              <div class="chart-range" style="${currentDevice==='desktop'?'justify-content:center':''}">
+                ${currentDevice==='desktop' ? '<span class="rng-snapshot">30 Jun 2026 · Lighthouse</span>' : '<span class="rng-start">Aug</span><span class="rng-end">Jun</span>'}
+              </div>
+            </div>
+          </div>
+        </div></div>
+      `;
+      accEl.appendChild(item);
+
+      const trigger = item.querySelector(".acc-trigger");
+      trigger.addEventListener("click", ()=>{
+        const willOpen = !item.classList.contains("open");
+        item.classList.toggle("open", willOpen);
+        trigger.setAttribute("aria-expanded", String(willOpen));
+        if(willOpen){
+          requestAnimationFrame(()=>{
+            const svgEl = item.querySelector(`[data-chart="${m.key}"]`);
+            lineChart(svgEl, sliceForRange(m.data, currentRange), m.good, m.ni, 560, 120, true);
+          });
+        }
+      });
+    });
+    applyLang(currentLang);
+    renderKeywordTable();
+    renderCardSparklines();
+  }
+
+  function renderCardSparklines(){
+    document.querySelectorAll("[data-spark]").forEach(svgEl=>{
+      const slot = svgEl.getAttribute("data-spark");
+      const actualKey = cardSlotMap[currentDevice][slot];
+      const m = getActiveMetrics().find(mm=>mm.key===actualKey);
+      lineChart(svgEl, sliceForRange(m.data, currentRange), m.good, m.ni, 280, 46, false);
+      const card = svgEl.closest(".card");
+      const badgeEl = card.querySelector(".badge");
+      const subEl = card.querySelector(".card-sub");
+      const cls = classify(m.data[m.data.length-1], m.good, m.ni);
+      const d = dict[currentLang];
+      badgeEl.className = "badge " + cls;
+      badgeEl.textContent = cls==="good"?d.badgeGood:(cls==="ni"?d.badgeNI:d.badgePoor);
+      const subKey = slot==="lcp" ? "card1Sub" : slot==="inp" ? "card2Sub" : "card3Sub";
+      const finalKey = currentDevice==="desktop" ? subKey+"Desktop" : subKey;
+      if(d[finalKey]) subEl.textContent = d[finalKey];
+    });
+  }
+
+  function applyLang(lang){
+    currentLang = lang;
+    const d = dict[lang];
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang==="ar" ? "rtl" : "ltr";
+    const htmlKeys = new Set(["opp1","opp2","opp3"]);
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+      const k = el.getAttribute("data-i18n");
+      if(d[k]!==undefined){
+        if(htmlKeys.has(k)) el.innerHTML = d[k]; else el.textContent = d[k];
+      }
+    });
+    document.getElementById("heroMeta").textContent = currentRange==="june" && currentDevice==="mobile" ? d.heroMetaJune : d.heroMeta;
+    getActiveMetrics().forEach(m=>{
+      const cls = classify(m.data[m.data.length-1], m.good, m.ni);
+      const set = (sel,val)=>{ const el = document.querySelector(`[data-acc="${sel}-${m.key}"]`); if(el) el.textContent = val; };
+      set("name", lang==="ar" ? m.nameAr : m.nameEn);
+      set("full", lang==="ar" ? m.fullAr : m.fullEn);
+      set("def", lang==="ar" ? m.defAr : m.defEn);
+      set("meaning", lang==="ar" ? m.meanAr : m.meanEn);
+      set("meaninglabel", d.meaningLabel);
+      set("chartlabel", d.chartTitle);
+      set("gg", d.gaugeGood); set("gn", d.gaugeNI); set("gp", d.gaugePoor);
+      const valEl = document.querySelector(`[data-acc="val-${m.key}"]`);
+      if(valEl) valEl.textContent = fmt(m.data[m.data.length-1], m) + (m.unit?(m.unit==="s"?"s":"ms"):"");
+      const badgeEl = document.querySelector(`[data-acc="badge-${m.key}"]`);
+      if(badgeEl) badgeEl.textContent = cls==="good"?d.badgeGood:(cls==="ni"?d.badgeNI:d.badgePoor);
+    });
+    if(currentDevice==="mobile"){
+      const [rs, re] = rangeStartEndLabels(currentRange, lang);
+      document.querySelectorAll(".rng-start").forEach(el=>el.textContent = rs);
+      document.querySelectorAll(".rng-end").forEach(el=>el.textContent = re);
+    }
+    // re-render any currently-open trend charts so labels/orientation refresh correctly
+    document.querySelectorAll(".acc-item.open").forEach(item=>{
+      const svgEl = item.querySelector("[data-chart]");
+      const key = svgEl.getAttribute("data-chart");
+      const m = getActiveMetrics().find(mm=>mm.key===key);
+      lineChart(svgEl, sliceForRange(m.data, currentRange), m.good, m.ni, 560, 120, true);
+    });
+    renderCardSparklines();
+    renderKeywordTable();
+    if(currentDevice==="mobile") updateHero(currentRange); else updateHeroDesktop();
+  }
+
+  /* ---------------- hero range-aware update ---------------- */
+  function updateHero(range){
+    currentRange = range;
+    document.querySelectorAll(".range-btn").forEach(b=>b.classList.toggle("is-active", b.dataset.range===range));
+    const d = dict[currentLang];
+    const inp = metrics.find(m=>m.key==="inp");
+    const sliced = sliceForRange(inp.data, range);
+    const fromWrap = document.getElementById("heroFromWrap");
+    const arrowWrap = document.getElementById("heroArrowWrap");
+    const toNum = document.getElementById("heroToNum");
+    const badgeText = document.getElementById("heroBadgeText");
+    const badgeIcon = document.getElementById("heroBadgeIcon");
+    const h1 = document.getElementById("heroH1");
+    const lede = document.getElementById("heroLede");
+    const heroMeta = document.getElementById("heroMeta");
+
+    toNum.textContent = sliced[sliced.length-1];
+
+    if(range==="june"){
+      fromWrap.style.display = "none";
+      arrowWrap.style.display = "none";
+      const cls = classify(sliced[0], inp.good, inp.ni);
+      badgeIcon.style.display = "none";
+      badgeText.textContent = (cls==="good"?d.badgeGood:(cls==="ni"?d.badgeNI:d.badgePoor));
+      h1.textContent = d.heroH1June;
+      lede.textContent = d.heroLedeJune;
+      heroMeta.textContent = d.heroMetaJune;
+    } else {
+      fromWrap.style.display = "";
+      arrowWrap.style.display = "";
+      badgeIcon.style.display = "";
+      const peak = Math.max(...sliced);
+      document.getElementById("heroFromNum").textContent = peak;
+      const pct = Math.round(((peak-sliced[sliced.length-1])/peak)*100);
+      const tpl = currentLang==="ar" ? `أسرع بنسبة ${pct}%` : `${pct}% faster`;
+      badgeText.textContent = tpl;
+      h1.textContent = d.heroH1;
+      lede.textContent = d.heroLede;
+      heroMeta.textContent = d.heroMeta;
+    }
+  }
+
+  /* ---------------- desktop hero (single Lighthouse snapshot, no historical range) ---------------- */
+  function updateHeroDesktop(){
+    const d = dict[currentLang];
+    document.getElementById("heroFromWrap").style.display = "none";
+    document.getElementById("heroArrowWrap").style.display = "none";
+    document.getElementById("heroBadgeIcon").style.display = "none";
+    document.getElementById("heroToNum").textContent = desktopPerfScore;
+    document.getElementById("heroUnit").textContent = d.outOf100;
+    document.getElementById("heroBadgeText").textContent = d.excellentBadge;
+    document.getElementById("heroH1").textContent = d.heroH1Desktop;
+    document.getElementById("heroLede").textContent = d.heroLedeDesktop;
+    document.getElementById("heroMeta").textContent = d.heroMetaDesktop;
+  }
+
+  function setDevice(device){
+    currentDevice = device;
+    document.querySelectorAll(".device-btn").forEach(b=>b.classList.toggle("is-active", b.dataset.device===device));
+    document.getElementById("rangeFilterWrap").style.display = device==="mobile" ? "" : "none";
+    buildAccordion();
+    if(device==="mobile") updateHero(currentRange); else updateHeroDesktop();
+  }
+
+  document.querySelectorAll(".device-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=> setDevice(btn.dataset.device));
+  });
+
+  document.querySelectorAll(".range-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const range = btn.dataset.range;
+      currentRange = range;
+      updateHero(range);
+      renderCardSparklines();
+      const [rs, re] = rangeStartEndLabels(range, currentLang);
+      document.querySelectorAll(".rng-start").forEach(el=>el.textContent = rs);
+      document.querySelectorAll(".rng-end").forEach(el=>el.textContent = re);
+      document.querySelectorAll(".acc-item.open").forEach(item=>{
+        const svgEl = item.querySelector("[data-chart]");
+        const key = svgEl.getAttribute("data-chart");
+        const m = getActiveMetrics().find(mm=>mm.key===key);
+        lineChart(svgEl, sliceForRange(m.data, range), m.good, m.ni, 560, 120, true);
+      });
+    });
+  });
+
+  document.getElementById("langToggle").addEventListener("click", ()=>{
+    applyLang(currentLang==="ar" ? "en" : "ar");
+  });
+
+  buildAccordion();
+
+})();
+</script>
+</body>
+</html>
