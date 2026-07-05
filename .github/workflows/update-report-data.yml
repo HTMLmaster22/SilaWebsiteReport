@@ -1,0 +1,33 @@
+name: Update report data (CrUX + PSI)
+
+on:
+  schedule:
+    - cron: "0 6 15 * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Refresh data.json from Google APIs
+        env:
+          PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
+        run: python scripts/update_data.py
+      - name: Commit & push if changed
+        run: |
+          git config user.name  "report-bot"
+          git config user.email "report-bot@users.noreply.github.com"
+          if git diff --quiet data.json; then
+            echo "No changes — data already current."
+          else
+            git add data.json
+            git commit -m "chore: monthly data refresh (CrUX + PSI) [skip ci]"
+            git push
+          fi
