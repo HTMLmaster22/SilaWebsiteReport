@@ -263,6 +263,10 @@
   .priority-text{ font-size:14.5px; color:var(--ink-soft); line-height:1.55; }
   .priority-text strong{ color:var(--ink); font-weight:700; }
   .priority-text a{ color:var(--teal); font-weight:700; text-decoration:underline; text-underline-offset:2px; }
+  .owner-pill{ display:inline-block; margin-top:8px; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:999px; background:var(--paper); border:1px solid var(--hair); color:var(--ink-soft); }
+  .owner-pill.tech{ border-color:var(--teal); color:var(--teal); }
+  .owner-pill.mkt{ border-color:var(--amber); color:var(--amber); }
+  .owner-pill.shared{ border-color:var(--moss); color:var(--moss); }
 
   /* ===== Data tables (keywords + pages) ===== */
   .kw-table{ width:100%; border-collapse:collapse; margin-bottom:28px; }
@@ -437,6 +441,20 @@
       <p data-i18n="prioP">ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.</p>
     </div>
     <div class="priority-list reveal" id="priorityList"></div>
+  </div>
+</section>
+
+<section class="block" style="padding-top:8px;">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" data-i18n="targetsEyebrow">المعايير والأهداف</p>
+      <h2 data-i18n="targetsH2">أين نقف اليوم، وما الهدف المطلوب الوصول له</h2>
+      <p data-i18n="targetsP"></p>
+    </div>
+    <div class="reveal" style="overflow-x:auto;">
+      <table class="kw-table" id="targetsTable"></table>
+    </div>
+    <p class="reveal" data-i18n="tgMeasureNote" style="font-size:13px;color:var(--ink-soft);margin-top:12px;line-height:1.7;"></p>
   </div>
 </section>
 
@@ -686,8 +704,17 @@
       footP1:"البيانات أعلاه مأخوذة من تقرير Chrome لتجربة المستخدم الحقيقية (CrUX) — قياسات حقيقية من زوّار فعليين يستخدمون متصفح Chrome، وليست اختباراً معملياً. تغطي الفترة من أغسطس 2025 إلى يونيو 2026، عند النسبة المئوية 75 — أي أن 75% من الزوّار حصلوا على تجربة تساوي أو أفضل من الرقم الموضّح.",
       footP2:"زمن استجابة الخادم (TTFB) كان أقل المقاييس تحسّناً خلال هذه الفترة، وهو محور التركيز القادم.",
       footP3:"الأولويات وجدول الصفحات أعلاه يُحسبان تلقائياً من بيانات هذا الشهر. عرض بيانات الزيارات والنقرات لكل صفحة يتطلب استكمال إعداد صلاحية الوصول إلى Google Search Console أولاً.",
-      footCredit:"إعداد: تقنية المعلومات — شركة صلة", footDate:"آخر تحديث: 30 يونيو 2026",
+      footCredit:"إعداد: تقنية المعلومات — شركة صلة", footDate:"آخر تحديث: 5 يوليو 2026 (بيانات يونيو 2026 — أحدث المتاح)",
       gaugeGood:"جيد", gaugeNI:"يحتاج تحسين", gaugePoor:"ضعيف",
+      ownerLabel:"المسؤول", ownerTech:"التقنية", ownerMkt:"التسويق", ownerShared:"مشترك — تقنية + تسويق",
+      targetsEyebrow:"المعايير والأهداف", targetsH2:"أين نقف اليوم، وما الهدف المطلوب الوصول له",
+      targetsP:"لكل مؤشر: قيمته الحالية، المعيار المرجعي وفق تصنيف جوجل الرسمي، والهدف المتفق على الوصول له خلال الربع القادم — مع تحديد الطرف المسؤول، لتكون خطة العمل مبنية على أرقام واضحة.",
+      tgColMetric:"المؤشر", tgColCurrent:"القيمة الحالية", tgColBench:"المعيار المرجعي (جوجل)", tgColTarget:"الهدف — الربع القادم", tgColOwner:"المسؤول",
+      tgLighthouseMobile:"مؤشر أداء الجوال (Lighthouse)", tgLighthouseDesktop:"مؤشر أداء سطح المكتب (Lighthouse)",
+      tgTargetMobile:"الوصول إلى 90 أو أعلى", tgTargetKeep:"الحفاظ على 95 أو أعلى",
+      tgKwName:"كلمة «خدمات التوطين» في نتائج البحث", tgKwCurrent:"لا تظهر حالياً", tgKwTarget:"دخول أفضل 20 نتيجة عبر صفحة مخصصة",
+      tgSchemaName:"البيانات المنظّمة (Schema)", tgSchemaCurrent:"غير مفعّلة", tgSchemaTarget:"تفعيلها على الصفحات الرئيسية",
+      tgMeasureNote:"ملاحظة حول حداثة البيانات: قياسات Lighthouse أُخذت بتاريخ 30 يونيو 2026 وتُعاد مطلع كل شهر. أما بيانات الزوّار الحقيقية (CrUX) فتصدرها جوجل بتأخير يقارب 28 يوماً — لذا بيانات يونيو 2026 هي الأحدث المتاحة فعلياً في يوليو، وبيانات يوليو ستصدر منتصف أغسطس.",
       meaningLabel:"ماذا يعني هذا عملياً",
       chartTitle:"الاتجاه",
       rangeJune:"يونيو فقط", rangeLast3:"آخر 3 أشهر", rangeFull:"الفترة الكاملة",
@@ -756,8 +783,17 @@
       footP1:"The data above comes from the Chrome Real User Experience Report (CrUX) — real measurements from actual visitors using Chrome, not a lab test. It covers August 2025 to June 2026, at the 75th percentile, meaning 75% of visitors had an experience equal to or better than the number shown.",
       footP2:"Server response time (TTFB) improved the least over this period, and is the next area of focus.",
       footP3:"The priorities and page table above are computed automatically from this month's data. Showing per-page traffic and click data requires finishing the Google Search Console access setup first.",
-      footCredit:"Prepared by: Information Technology — Silah", footDate:"Last updated: June 30, 2026",
+      footCredit:"Prepared by: Information Technology — Silah", footDate:"Last updated: July 5, 2026 (June 2026 data — latest available)",
       gaugeGood:"Good", gaugeNI:"Needs Improvement", gaugePoor:"Poor",
+      ownerLabel:"Owner", ownerTech:"IT", ownerMkt:"Marketing", ownerShared:"Shared — IT + Marketing",
+      targetsEyebrow:"Benchmarks & Targets", targetsH2:"Where we stand today, and where we need to get",
+      targetsP:"For each metric: its current value, the official Google benchmark, the agreed target for next quarter — and who owns it, so the action plan is built on clear numbers.",
+      tgColMetric:"Metric", tgColCurrent:"Current", tgColBench:"Google Benchmark", tgColTarget:"Target — Next Quarter", tgColOwner:"Owner",
+      tgLighthouseMobile:"Mobile Performance Score (Lighthouse)", tgLighthouseDesktop:"Desktop Performance Score (Lighthouse)",
+      tgTargetMobile:"Reach 90 or above", tgTargetKeep:"Maintain 95 or above",
+      tgKwName:"“Saudization services” keyword in search results", tgKwCurrent:"Not ranking", tgKwTarget:"Enter top 20 via a dedicated page",
+      tgSchemaName:"Structured Data (Schema)", tgSchemaCurrent:"Not implemented", tgSchemaTarget:"Enable on key pages",
+      tgMeasureNote:"Data freshness note: Lighthouse scores were measured on June 30, 2026 and are re-run at the start of each month. Real-visitor data (CrUX) is published by Google with a ~28-day lag — so June 2026 is genuinely the latest available in July; July data lands mid-August.",
       meaningLabel:"What this means in practice",
       chartTitle:"Trend",
       rangeJune:"June only", rangeLast3:"Last 3 months", rangeFull:"Full period",
@@ -951,11 +987,39 @@
       } else if(it.type==="alt"){
         text = d.prioAlt;
       }
+      const ownerMap = { cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared] };
+      const [ocls, otxt] = ownerMap[it.type] || ["tech", d.ownerTech];
       return `<div class="priority-item ${it.sev}">
         <span class="priority-num num">0${i+1}</span>
-        <span class="priority-text">${text}</span>
+        <span class="priority-text">${text}<br><span class="owner-pill ${ocls}">${d.ownerLabel}: ${otxt}</span></span>
       </div>`;
     }).join("");
+  }
+
+  /* ---------------- Benchmarks & Targets table ---------------- */
+  function renderTargets(){
+    const el = document.getElementById("targetsTable");
+    if(!el) return;
+    const d = dict[currentLang];
+    const unitTxt = (m)=> m.unit==="s" ? (currentLang==="ar"?"ث":"s") : (m.unit==="ms" ? (currentLang==="ar"?"م.ث":"ms") : "");
+    const pill = (cls,txt)=>`<span class="owner-pill ${cls}">${txt}</span>`;
+    const rows = [];
+    metrics.forEach(m=>{
+      const latest = m.data[m.data.length-1];
+      const name = currentLang==="ar" ? m.nameAr : m.nameEn;
+      rows.push(`<tr>
+        <td><strong>${name}</strong><span class="page-url">${m.fullAr}</span></td>
+        <td class="num">${fmt(latest,m)} ${unitTxt(m)}</td>
+        <td class="num">≤ ${fmt(m.good,m)} ${unitTxt(m)}</td>
+        <td class="num">≤ ${fmt(m.good,m)} ${unitTxt(m)}</td>
+        <td>${pill("tech", d.ownerTech)}</td>
+      </tr>`);
+    });
+    rows.push(`<tr><td><strong>${d.tgLighthouseMobile}</strong></td><td class="num">${mobilePerfNow} / 100</td><td class="num">≥ 90</td><td>${d.tgTargetMobile}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
+    rows.push(`<tr><td><strong>${d.tgLighthouseDesktop}</strong></td><td class="num">${desktopPerfScore} / 100</td><td class="num">≥ 90</td><td>${d.tgTargetKeep}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
+    rows.push(`<tr><td><strong>${d.tgKwName}</strong></td><td>${d.tgKwCurrent}</td><td>—</td><td>${d.tgKwTarget}</td><td>${pill("mkt",d.ownerMkt)}</td></tr>`);
+    rows.push(`<tr><td><strong>${d.tgSchemaName}</strong></td><td>${d.tgSchemaCurrent}</td><td>—</td><td>${d.tgSchemaTarget}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
+    el.innerHTML = `<thead><tr><th>${d.tgColMetric}</th><th>${d.tgColCurrent}</th><th>${d.tgColBench}</th><th>${d.tgColTarget}</th><th>${d.tgColOwner}</th></tr></thead><tbody>${rows.join("")}</tbody>`;
   }
 
   /* ---------------- Performance Score trend (mobile, Lighthouse 0-100) ---------------- */
@@ -1262,6 +1326,7 @@
     renderCardSparklines();
     renderPageTable();
     renderPriorities();
+    renderTargets();
     renderStatPair();
   }
 
@@ -1328,6 +1393,7 @@
     renderKeywordTable();
     renderPageTable();
     renderPriorities();
+    renderTargets();
     renderStatPair();
     if(currentDevice==="mobile") updateHero(currentRange); else updateHeroDesktop();
   }
