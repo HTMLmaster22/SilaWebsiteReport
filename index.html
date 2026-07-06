@@ -1491,14 +1491,11 @@
 
   buildAccordion();
 
-})();
-
   /* ---------------- data.json auto-sync loader ----------------
      Deployed alongside this file, data.json is refreshed monthly by a
      GitHub Action (CrUX + PageSpeed Insights APIs). If the fetch fails
      (e.g. opening the file locally), the hardcoded values above remain
      as fallback and the report still renders fully. ---------------- */
-  (function loadLiveData(){
     fetch("data.json?v=" + Date.now())
       .then(r => r.ok ? r.json() : null)
       .then(D => {
