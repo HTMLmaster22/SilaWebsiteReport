@@ -32,7 +32,7 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
-ORIGIN = "https://silah.com.sa"
+ORIGIN = "https://www.silah.com.sa"
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data.json")
 
 AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
@@ -84,16 +84,13 @@ def fetch_crux_history():
     last_err = None
     for mset in metric_sets:
         try:
-            # No "formFactor" filter here on purpose — querying all devices
-            # combined needs fewer samples than a phone-only segment, which
-            # matters for lower-traffic origins.
             body = {"origin": ORIGIN, "metrics": mset}
             resp = http_json(url, body)
             break
         except urllib.error.HTTPError as e:
             last_err = e
             if e.code == 400:
-                continue  # try the alternate TTFB metric name
+                continue
             raise
     else:
         raise RuntimeError(f"CrUX request failed with both TTFB metric names: {last_err}")
@@ -219,5 +216,5 @@ def main():
 
 
 if __name__ == "__main__":
-    import urllib.parse  # used in fetch_psi_score
+    import urllib.parse
     sys.exit(main())
