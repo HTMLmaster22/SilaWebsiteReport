@@ -1,9 +1,9 @@
 {
-  "reportMonth": "2026-06",
+  "reportMonth": "2026-07",
   "seriesStart": "2025-08",
-  "mobilePerfPrev": 72,
-  "mobilePerfNow": 81,
-  "desktopPerfScore": 96,
+  "mobilePerfPrev": 81,
+  "mobilePerfNow": 72,
+  "desktopPerfScore": 86,
   "monthLabels": {
     "ar": [
       "أغسطس",
@@ -205,6 +205,10 @@
         "2026-06": {
           "mobile": 81,
           "desktop": 96
+        },
+        "2026-07": {
+          "mobile": 72,
+          "desktop": 86
         }
       }
     }
