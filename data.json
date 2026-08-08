@@ -1,15 +1,11 @@
 {
-  "reportMonth": "2026-07",
+  "reportMonth": "2026-08",
   "seriesStart": "2025-08",
-  "mobilePerfPrev": 72,
-  "mobilePerfNow": 83,
-  "desktopPerfScore": 97,
+  "mobilePerfPrev": 83,
+  "mobilePerfNow": 85,
+  "desktopPerfScore": 95,
   "monthLabels": {
     "ar": [
-      "يناير",
-      "يناير",
-      "يناير",
-      "فبراير",
       "فبراير",
       "فبراير",
       "فبراير",
@@ -30,13 +26,13 @@
       "يونيو",
       "يونيو",
       "يونيو",
-      "يوليو"
+      "يوليو",
+      "يوليو",
+      "يوليو",
+      "يوليو",
+      "أغسطس"
     ],
     "en": [
-      "Jan",
-      "Jan",
-      "Jan",
-      "Feb",
       "Feb",
       "Feb",
       "Feb",
@@ -57,29 +53,29 @@
       "Jun",
       "Jun",
       "Jun",
-      "Jul"
+      "Jul",
+      "Jul",
+      "Jul",
+      "Jul",
+      "Aug"
     ]
   },
   "periodLabel": {
-    "ar": "يناير 2026 – يوليو 2026",
-    "en": "Jan 2026 – Jul 2026"
+    "ar": "فبراير 2026 – أغسطس 2026",
+    "en": "Feb 2026 – Aug 2026"
   },
   "latestShort": {
-    "ar": "يوليو",
-    "en": "July"
+    "ar": "أغسطس",
+    "en": "August"
   },
   "latestMonthLabel": {
-    "ar": "يوليو 2026",
-    "en": "July 2026"
+    "ar": "أغسطس 2026",
+    "en": "August 2026"
   },
   "metrics": [
     {
       "key": "lcp",
       "data": [
-        3509,
-        3529,
-        3589,
-        3653,
         3658,
         3466,
         3379,
@@ -100,16 +96,16 @@
         3403,
         3514,
         3435,
-        3437
+        3437,
+        3251,
+        3118,
+        3187,
+        3227
       ]
     },
     {
       "key": "inp",
       "data": [
-        243,
-        260,
-        278,
-        244,
         230,
         213,
         206,
@@ -130,16 +126,16 @@
         154,
         158,
         158,
-        158
+        158,
+        154,
+        150,
+        149,
+        150
       ]
     },
     {
       "key": "cls",
       "data": [
-        0.06,
-        0.06,
-        0.06,
-        0.06,
         0.07,
         0.07,
         0.07,
@@ -160,16 +156,16 @@
         0.03,
         0.02,
         0.04,
-        0.04
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06
       ]
     },
     {
       "key": "fcp",
       "data": [
-        2939,
-        2980,
-        3030,
-        3011,
         3006,
         2785,
         2699,
@@ -190,16 +186,16 @@
         2894,
         2974,
         2913,
-        2884
+        2884,
+        2691,
+        2603,
+        2658,
+        2692
       ]
     },
     {
       "key": "ttfb",
       "data": [
-        2399,
-        2450,
-        2480,
-        2430,
         2423,
         2240,
         2177,
@@ -220,7 +216,11 @@
         2353,
         2436,
         2410,
-        2419
+        2419,
+        2267,
+        2152,
+        2225,
+        2187
       ]
     }
   ],
@@ -307,9 +307,168 @@
         "2026-07": {
           "mobile": 83,
           "desktop": 97
+        },
+        "2026-08": {
+          "mobile": 85,
+          "desktop": 95
         }
       }
     }
   ],
-  "_note": "keywords + non-home pages are manual until Google Search Console API access is completed. Everything else auto-updates monthly via GitHub Action."
+  "_note": "keywords + non-home pages are manual until Google Search Console API access is completed. Everything else auto-updates monthly via GitHub Action.",
+  "pageHealth": [
+    {
+      "id": "otj_training",
+      "nameAr": "التوطين عبر معاهد الشراكات الاستراتيجية",
+      "nameEn": "OTJ Training via Strategic Partnerships",
+      "url": "https://www.silah.com.sa/otj-training-services/",
+      "checkedAt": "2026-08-08",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "ImageObject",
+          "Service",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 21,
+        "issueCount": 5,
+        "examples": [
+          "",
+          "شعار-صلة-محدث-scaled.avif",
+          "svg+xml,%3Csvg%20xmlns=",
+          "شعار-صلة-محدث-ابيض-scaled.avif",
+          "?pid=1999033&fmt=gif"
+        ]
+      },
+      "mobileScore": 94,
+      "unusedCssKb": 25,
+      "unusedJsKb": 0
+    },
+    {
+      "id": "engineering_center",
+      "nameAr": "خدمات توطين المهن الفنية الهندسية",
+      "nameEn": "Engineering Technician Localization",
+      "url": "https://www.silah.com.sa/engineering-technician-center/",
+      "checkedAt": "2026-08-08",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "Service",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 25,
+        "issueCount": 5,
+        "examples": [
+          "",
+          "شعار-صلة-محدث-scaled.avif",
+          "svg+xml,%3Csvg%20xmlns=",
+          "شعار-صلة-محدث-ابيض-scaled.avif",
+          "?pid=1999033&fmt=gif"
+        ]
+      },
+      "mobileScore": 94,
+      "unusedCssKb": 25,
+      "unusedJsKb": 0
+    },
+    {
+      "id": "saudi_hiring",
+      "nameAr": "خدمات توظيف السعوديين",
+      "nameEn": "Saudi Hiring Services",
+      "url": "https://www.silah.com.sa/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%AA%D9%88%D8%B8%D9%8A%D9%81-%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86/",
+      "checkedAt": "2026-08-08",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "ImageObject",
+          "Service",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 22,
+        "issueCount": 15,
+        "examples": [
+          "",
+          "شعار-صلة-محدث-scaled.avif",
+          "svg+xml,%3Csvg%20xmlns=",
+          "worker.avif",
+          "svg+xml,%3Csvg%20xmlns="
+        ]
+      },
+      "mobileScore": 92,
+      "unusedCssKb": 25,
+      "unusedJsKb": 0
+    },
+    {
+      "id": "training_disclosure",
+      "nameAr": "بناء وتنفيذ خطة الإفصاح التدريبي",
+      "nameEn": "Training Disclosure Plan",
+      "url": "https://www.silah.com.sa/training-disclosure-services/",
+      "checkedAt": "2026-08-08",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "Service",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 8,
+        "issueCount": 5,
+        "examples": [
+          "",
+          "شعار-صلة-محدث-scaled.avif",
+          "svg+xml,%3Csvg%20xmlns=",
+          "شعار-صلة-محدث-ابيض-scaled.avif",
+          "?pid=1999033&fmt=gif"
+        ]
+      },
+      "mobileScore": 79,
+      "unusedCssKb": 25,
+      "unusedJsKb": 0
+    },
+    {
+      "id": "outsourcing",
+      "nameAr": "خدمات تعهيد الأعمال",
+      "nameEn": "Business Outsourcing Services",
+      "url": "https://www.silah.com.sa/outsourcing-services/",
+      "checkedAt": "2026-08-08",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "Service",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 24,
+        "issueCount": 23,
+        "examples": [
+          "",
+          "شعار-صلة-محدث-scaled.avif",
+          "svg+xml,%3Csvg%20xmlns=",
+          "out-icon1.png",
+          "svg+xml,%3Csvg%20xmlns="
+        ]
+      },
+      "mobileScore": 84,
+      "unusedCssKb": 25,
+      "unusedJsKb": 0
+    }
+  ],
+  "pageHealthCheckedMonth": "2026-08"
 }
