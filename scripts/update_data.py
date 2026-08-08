@@ -168,25 +168,50 @@ def fetch_psi_score(strategy):
     return int(round(score * 100))
 
 
+SKIP_SEO_AUDITS = {"image-alt"}  # redundant with check_alt_text() below, which is more
+                                  # precise (names the actual image, Lighthouse just says yes/no)
+
+
 def fetch_psi_full(page_url, strategy):
     """Like fetch_psi_score, but for an arbitrary URL and returns the extra
-    diagnostics (unused CSS/JS byte estimates) from the same Lighthouse run —
-    no separate API call needed for those."""
+    diagnostics — unused CSS/JS byte estimates AND failing SEO-category audits
+    — from the same Lighthouse run. No separate API call for either; Lighthouse
+    already computes an "seo" category alongside "performance" on every run,
+    we just weren't reading it before."""
     url = ("https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
            f"?url={urllib.parse.quote(page_url, safe='')}"
-           f"&strategy={strategy}&category=performance&key={API_KEY}")
+           f"&strategy={strategy}&category=performance&category=seo&key={API_KEY}")
     resp = http_json(url)
-    audits = resp.get("lighthouseResult", {}).get("audits", {})
-    score = resp["lighthouseResult"]["categories"]["performance"]["score"]
+    lh = resp.get("lighthouseResult", {})
+    audits = lh.get("audits", {})
+    score = lh["categories"]["performance"]["score"]
 
     def savings_kb(audit_id):
         bytes_ = audits.get(audit_id, {}).get("details", {}).get("overallSavingsBytes")
         return round(bytes_ / 1024) if isinstance(bytes_, (int, float)) else None
 
+    # Only binary/numeric-scored SEO audits that actually failed (score != 1).
+    # Skips manual-only checks Lighthouse can't auto-verify (e.g. structured-data
+    # has scoreDisplayMode="manual" and is excluded by the filter below on its own).
+    seo_issues = []
+    seo_cat = lh.get("categories", {}).get("seo", {})
+    for ref in seo_cat.get("auditRefs", []):
+        aid = ref.get("id")
+        if aid in SKIP_SEO_AUDITS:
+            continue
+        a = audits.get(aid, {})
+        if a.get("scoreDisplayMode") not in ("binary", "numeric"):
+            continue
+        a_score = a.get("score")
+        if a_score is None or a_score >= 1:
+            continue
+        seo_issues.append({"id": aid, "title": a.get("title", aid)})
+
     return {
         "score": int(round(score * 100)),
         "unusedCssKb": savings_kb("unused-css-rules"),
         "unusedJsKb": savings_kb("unused-javascript"),
+        "seoIssues": seo_issues,
     }
 
 
@@ -233,21 +258,37 @@ def check_schema(html):
     return {"blockCount": len(blocks), "types": sorted(set(types_found))}
 
 
-def check_alt_text(html):
+def check_alt_text(html, page_url):
     """Flags <img> tags with a missing, empty, or generic-placeholder alt
-    attribute. Reports a count plus up to 5 example src filenames so the
-    report can point at something concrete instead of just a number."""
+    attribute — but only among real, same-origin content images. Two kinds
+    of noise deliberately excluded, found by inspecting the first real scan's
+    output on Aug 8 2026:
+      - data: URIs (inline SVGs/icons) — not a checkable "image with a src",
+        and rsplit("/")-ing the encoded data itself produced garbage filenames.
+      - third-party images (chat widgets, tracking pixels, embeds) — these
+        load from a different domain than the page, which is a reliable general
+        signal without having to hardcode specific vendor patterns. Not ours
+        to add alt text to even if flagged.
+    `totalImages` counts only these checkable images too, so the ratio in the
+    report (e.g. "1 of 6") means what it looks like it means."""
     imgs = re.findall(r'<img\b[^>]*>', html, re.IGNORECASE)
+    checkable = 0
     issues = []
     for tag in imgs:
+        src_match = re.search(r'src=["\']([^"\']*)["\']', tag, re.IGNORECASE)
+        src = src_match.group(1).strip() if src_match else ""
+        if not src or src.startswith("data:"):
+            continue
+        resolved = urllib.parse.urljoin(page_url, src)
+        if not resolved.startswith(ORIGIN):
+            continue
+        checkable += 1
         alt_match = re.search(r'alt=["\']([^"\']*)["\']', tag, re.IGNORECASE)
         alt_val = alt_match.group(1).strip() if alt_match else None
         is_bad = alt_val is None or alt_val.lower() in GENERIC_ALT_VALUES
         if is_bad:
-            src_match = re.search(r'src=["\']([^"\']*)["\']', tag, re.IGNORECASE)
-            src = src_match.group(1).rsplit("/", 1)[-1] if src_match else "(no src)"
-            issues.append(src)
-    return {"totalImages": len(imgs), "issueCount": len(issues), "examples": issues[:5]}
+            issues.append(resolved.rsplit("/", 1)[-1])
+    return {"totalImages": checkable, "issueCount": len(issues), "examples": issues[:5]}
 
 
 def run_page_health_scan():
@@ -267,7 +308,7 @@ def run_page_health_scan():
                 "hasExpectedType": page["expectSchemaType"] in schema["types"],
                 "typesFound": schema["types"],
             }
-            entry["altText"] = check_alt_text(html)
+            entry["altText"] = check_alt_text(html, page["url"])
         else:
             entry["schema"] = None
             entry["altText"] = None
@@ -277,11 +318,13 @@ def run_page_health_scan():
             entry["mobileScore"] = psi["score"]
             entry["unusedCssKb"] = psi["unusedCssKb"]
             entry["unusedJsKb"] = psi["unusedJsKb"]
+            entry["seoIssues"] = psi["seoIssues"]
         except Exception as e:
             print(f"  WARNING: PSI failed for {page['id']}: {e}", file=sys.stderr)
             entry["mobileScore"] = None
             entry["unusedCssKb"] = None
             entry["unusedJsKb"] = None
+            entry["seoIssues"] = None
 
         results.append(entry)
     return results
