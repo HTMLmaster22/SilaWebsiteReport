@@ -6,7 +6,10 @@
 <title>نبضة الموقع — تقرير أداء صلة | Site Pulse — Silah Performance Report</title>
 <!--
   Site Pulse v2 — extended June 30, 2026
-  New in this version: per-page performance tracking, an auto-generated
+  v2.1 — August 8, 2026: added automatic per-page "Page Health" scan
+  (Schema.org structured data, image alt-text, unused CSS/JS) — see the
+  MONTHLY UPDATE RUNBOOK comment inside <script>, item 7, for details.
+  New in v2: per-page performance tracking, an auto-generated
   "this month's priorities" panel, and a mobile Performance Score trend.
   See the MONTHLY UPDATE RUNBOOK comment inside <script> for how to
   refresh this report each month.
@@ -283,6 +286,7 @@
   .status-pill::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
   .status-pill.measured{ background:var(--moss-bg); color:var(--moss); }
   .status-pill.pending{ background:var(--amber-bg); color:var(--amber); }
+  .status-pill.poor{ background:var(--poor-bg); color:var(--poor); }
   .cell-num{ font-size:15px; font-weight:700; }
   .cell-dash{ color:#b7bfc2; }
   @media (max-width:700px){
@@ -564,6 +568,27 @@
   </div>
 </section>
 
+<section class="block" style="padding-top:8px;" id="pageHealth">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" data-i18n="healthEyebrow">فحص تلقائي شهري</p>
+      <h2 data-i18n="healthH2">سلامة الصفحات التقنية</h2>
+      <p data-i18n="healthP">يفحص هذا الجزء تلقائياً كل شهر: بيانات Schema المهيكلة، نصوص alt للصور، وحجم CSS/JS غير المستخدم — نفس الفحوصات التي تُجرى يدوياً، لكن بشكل دوري بدون تدخل.</p>
+    </div>
+    <table class="kw-table reveal" id="healthTable">
+      <thead><tr>
+        <th data-i18n="healthColName">الصفحة</th>
+        <th data-i18n="healthColSchema">Schema</th>
+        <th data-i18n="healthColAlt">Alt للصور</th>
+        <th data-i18n="healthColCss">CSS غير مستخدم</th>
+        <th data-i18n="healthColScore">أداء الجوال</th>
+      </tr></thead>
+      <tbody id="healthTableBody"></tbody>
+    </table>
+    <p class="device-note" id="healthCheckedNote" data-i18n="healthCheckedNote">لم يُشغَّل الفحص التلقائي بعد لهذه الصفحات — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.</p>
+  </div>
+</section>
+
 <section class="block" style="padding-top:8px;">
   <div class="wrap">
     <div class="block-head reveal">
@@ -654,20 +679,49 @@
           PageSpeed Insights' overall 0-100 "Performance" score.
         - Update `mobilePerfNow` / `mobilePerfPrev` below.
 
-     4) PER-PAGE TABLE (pageRegistry):
+     4) PER-PAGE PERFORMANCE TABLE (pageRegistry — still manual):
         - Run PageSpeed Insights against each URL in `pageRegistry`
           (mobile + desktop) and add an entry keyed by "YYYY-MM":
             monthly: { "2026-07": { mobile: 84, desktop: 97 } }
         - To track a new page, add a new object to `pageRegistry`
           with a real url (or leave url:null with a note until the
           URL is confirmed — don't guess a URL you're not sure of).
+        - NOTE: this is a *different* per-page system from item 7
+          below. This one (perf scores) is still manual. Item 7
+          (schema/alt-text/unused CSS) is automatic. Kept separate
+          on purpose — merging them would mean one broken fetch
+          blanks out data the other system already has.
 
      5) KEYWORDS:
         - Once Search Console access is set up: Performance → Search
           results → filter by query, for each tracked phrase.
         - Update `pos` / `page` / `tier` in the `keywords` array.
+        - This is the one piece still fully manual/undecided — real
+          position tracking needs Search Console API (OAuth, a bigger
+          integration than the API-key-only calls used elsewhere in
+          this file). Everything else in this runbook is now automatic
+          except where noted.
 
      6) Update REPORT_MONTH below and `footDate` in the dict.
+
+     7) PAGE HEALTH — schema / alt-text / unused CSS+JS (automatic,
+        added August 2026 — not a manual step, listed here for
+        reference only):
+        - scripts/update_data.py fetches each URL in its PAGE_LIST,
+          checks for a valid application/ld+json Service block, scans
+          <img> tags for missing/empty/generic alt text, and pulls
+          unused-CSS/unused-JS byte estimates from the same PageSpeed
+          call already made for that page's score.
+        - Writes into data.json as `pageHealth` (array) +
+          `pageHealthCheckedMonth`. Rendered by renderPageHealthTable()
+          into the "Page Health" section below the per-page perf table.
+        - To track a new page here: add an entry to PAGE_LIST in
+          update_data.py — no changes needed in this file, the table
+          picks up new pages automatically from data.json.
+        - Runs every time the Action runs (unlike the CrUX block above,
+          which only updates when Google actually publishes new data) —
+          intentional, since schema/alt-text can change independent of
+          CrUX's publish schedule.
 
      Everything else — the priorities panel, page-table status pills,
      and the Performance Score delta — recomputes automatically from
@@ -752,6 +806,13 @@
       pageP:"البيانات أعلاه (CrUX) تعكس الموقع ككل. هنا تفصيل أقرب لواقع كل صفحة تسويقية على حدة، ليعرف الفريق أين يركّز أولاً.",
       pageColName:"الصفحة", pageColMobile:"الجوال", pageColDesktop:"سطح المكتب", pageColStatus:"الحالة", pageColReco:"ملاحظة",
       pageStatusMeasured:"تم القياس", pageStatusPending:"بانتظار القياس",
+      healthEyebrow:"فحص تلقائي شهري", healthH2:"سلامة الصفحات التقنية",
+      healthP:"يفحص هذا الجزء تلقائياً كل شهر: بيانات Schema المهيكلة، نصوص alt للصور، وحجم CSS/JS غير المستخدم — نفس الفحوصات التي تُجرى يدوياً، لكن بشكل دوري بدون تدخل.",
+      healthColName:"الصفحة", healthColSchema:"Schema", healthColAlt:"Alt للصور", healthColCss:"CSS غير مستخدم", healthColScore:"أداء الجوال",
+      healthSchemaOk:"موجود ✓", healthSchemaMissing:"غير موجود", healthSchemaUnknown:"—",
+      healthAltOk:"سليم", healthAltIssue:(n)=>`${n} مشكلة`,
+      healthCheckedNote:"لم يُشغَّل الفحص التلقائي بعد لهذه الصفحات — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.",
+      healthCheckedOn:(d)=>`آخر فحص: ${d}`,
       recoPoorMobile:"أداء الجوال ضعيف — يحتاج أولوية عالية",
       recoNiMobile:"أداء متوسط — تحسينات إضافية ممكنة",
       recoGood:"أداء جيد هذا الشهر",
@@ -831,6 +892,13 @@
       pageP:"The data above (CrUX) reflects the site as a whole. This is a closer look at each marketing-relevant page individually, so the team knows where to focus first.",
       pageColName:"Page", pageColMobile:"Mobile", pageColDesktop:"Desktop", pageColStatus:"Status", pageColReco:"Note",
       pageStatusMeasured:"Measured", pageStatusPending:"Pending",
+      healthEyebrow:"Automatic monthly scan", healthH2:"Technical page health",
+      healthP:"This section checks automatically every month: structured Schema data, image alt text, and unused CSS/JS size — the same checks done manually, just running on a schedule with no upkeep needed.",
+      healthColName:"Page", healthColSchema:"Schema", healthColAlt:"Alt text", healthColCss:"Unused CSS", healthColScore:"Mobile score",
+      healthSchemaOk:"Present ✓", healthSchemaMissing:"Missing", healthSchemaUnknown:"—",
+      healthAltOk:"Clean", healthAltIssue:(n)=>`${n} issue${n===1?"":"s"}`,
+      healthCheckedNote:"The automatic scan hasn't run for these pages yet — this table fills in automatically after the first GitHub Action run.",
+      healthCheckedOn:(d)=>`Last checked: ${d}`,
       recoPoorMobile:"Mobile performance is poor — needs high priority",
       recoNiMobile:"Middle of the range — further optimization possible",
       recoGood:"Good performance this month",
@@ -891,6 +959,14 @@
     return pageRegistry.filter(p => !p.monthly[REPORT_MONTH]);
   }
 
+  /* ---------------- page health (schema / alt-text / unused CSS) ----------------
+     Populated entirely from data.json's "pageHealth" array (written by the
+     scripts/update_data.py monthly scan) — empty until the Action has run at
+     least once. No hardcoded fallback rows here on purpose: showing fabricated
+     schema/alt-text numbers would be worse than an honest "not run yet" note. */
+  let pageHealthData = [];
+  let pageHealthCheckedMonth = null;
+
   function pageReco(cur){
     const d = dict[currentLang];
     if(cur.mobile !== undefined){
@@ -929,6 +1005,46 @@
         <td class="reco-text">${reco}</td>
       </tr>`;
     }).join("");
+  }
+
+  function renderPageHealthTable(){
+    const body = document.getElementById("healthTableBody");
+    const note = document.getElementById("healthCheckedNote");
+    const d = dict[currentLang];
+    if(!pageHealthData.length){
+      body.innerHTML = "";
+      note.style.display = "";
+      note.textContent = d.healthCheckedNote;
+      return;
+    }
+    note.style.display = "none";
+    body.innerHTML = pageHealthData.map(p=>{
+      const label = currentLang==="ar" ? p.nameAr : p.nameEn;
+      let schemaCls, schemaText;
+      if(p.schema == null){ schemaCls = "pending"; schemaText = d.healthSchemaUnknown; }
+      else if(p.schema.hasExpectedType){ schemaCls = "measured"; schemaText = d.healthSchemaOk; }
+      else { schemaCls = "poor"; schemaText = d.healthSchemaMissing; }
+
+      let altCls, altText;
+      if(p.altText == null){ altCls = "pending"; altText = d.healthSchemaUnknown; }
+      else if(p.altText.issueCount === 0){ altCls = "measured"; altText = d.healthAltOk; }
+      else { altCls = p.altText.issueCount > 3 ? "poor" : "pending"; altText = d.healthAltIssue(p.altText.issueCount); }
+
+      const cssCell = (p.unusedCssKb === null || p.unusedCssKb === undefined) ? `<span class="cell-dash">—</span>` : `<span class="cell-num num">${p.unusedCssKb} KB</span>`;
+      const scoreCell = (p.mobileScore === null || p.mobileScore === undefined) ? `<span class="cell-dash">—</span>` : `<span class="cell-num num">${p.mobileScore}</span>`;
+
+      return `<tr>
+        <td><strong>${label}</strong></td>
+        <td><span class="status-pill ${schemaCls}">${schemaText}</span></td>
+        <td><span class="status-pill ${altCls}">${altText}</span></td>
+        <td>${cssCell}</td>
+        <td>${scoreCell}</td>
+      </tr>`;
+    }).join("");
+    if(pageHealthCheckedMonth){
+      note.style.display = "";
+      note.textContent = d.healthCheckedOn(pageHealthCheckedMonth);
+    }
   }
 
   /* ---------------- this month's priorities (auto-generated) ---------------- */
@@ -1326,6 +1442,7 @@
     renderKeywordTable();
     renderCardSparklines();
     renderPageTable();
+    renderPageHealthTable();
     renderPriorities();
     renderTargets();
     renderStatPair();
@@ -1393,6 +1510,7 @@
     renderCardSparklines();
     renderKeywordTable();
     renderPageTable();
+    renderPageHealthTable();
     renderPriorities();
     renderTargets();
     renderStatPair();
@@ -1509,6 +1627,7 @@
         (D.desktopMetrics||[]).forEach(dm => { const m = desktopMetrics.find(x=>x.key===dm.key); if(m && Array.isArray(dm.data)) m.data = dm.data; });
         if(Array.isArray(D.keywords)){ keywords.length = 0; D.keywords.forEach(k=>keywords.push(k)); }
         (D.pages||[]).forEach(pp => { const p = pageRegistry.find(x=>x.id===pp.id); if(p && pp.monthly) Object.assign(p.monthly, pp.monthly); });
+        if(Array.isArray(D.pageHealth)){ pageHealthData = D.pageHealth; pageHealthCheckedMonth = D.pageHealthCheckedMonth || null; }
         // refresh period wording so future months never show stale text
         ["ar","en"].forEach(l => {
           const dd = dict[l];
