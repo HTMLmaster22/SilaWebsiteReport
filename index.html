@@ -707,25 +707,39 @@
      6) Update REPORT_MONTH below and `footDate` in the dict.
 
      7) PAGE HEALTH — schema / alt-text / unused CSS+JS / SEO issues
-        (automatic, added August 2026 — not a manual step, listed here for
-        reference only):
-        - scripts/update_data.py fetches each URL in its PAGE_LIST, checks
-          for a valid application/ld+json Service block, scans <img> tags
-          for missing/empty/generic alt text (same-origin content images
-          only — third-party widgets/trackers and data: URIs are excluded
-          on purpose, see check_alt_text()'s docstring for why), and pulls
-          unused-CSS/unused-JS bytes PLUS failing Lighthouse SEO-category
-          audits (meta description, link text, crawlability, etc.) from the
-          same PageSpeed call already made for that page's score — no extra
-          API calls for any of this.
+        (automatic, added August 2026, auto-discovery added same day —
+        not a manual step, listed here for reference only):
+        - scripts/update_data.py auto-discovers every WordPress "Page" URL
+          from the site's own Yoast sitemap every run (see
+          discover_pages_from_sitemap()) — no hand-maintained list to keep
+          in sync with the real site anymore. Capped at MAX_AUTO_PAGES per
+          run (currently 30) to keep run time reasonable; falls back to a
+          fixed 5-page list (PAGE_LIST_FALLBACK) if the sitemap can't be
+          reached or parsed, so a sitemap hiccup never means "scan zero
+          pages this month."
+        - For each discovered page: checks for a valid application/ld+json
+          Schema block (a specific expected type for pages listed in
+          KNOWN_PAGE_NAMES, otherwise "does it have any schema at all"),
+          scans <img> tags for missing/empty/generic alt text (same-origin
+          content images only — third-party widgets/trackers and data: URIs
+          are excluded on purpose, see check_alt_text()'s docstring for why),
+          and pulls unused-CSS/unused-JS bytes PLUS failing Lighthouse
+          SEO-category audits (meta description, link text, crawlability,
+          etc.) from the same PageSpeed call already made for that page's
+          score — no extra API calls for any of this.
+        - Pages not in KNOWN_PAGE_NAMES get their display name from their
+          own <title> tag (trimmed of the "| Site Name" suffix) — Arabic
+          only, since there's no reliable auto-translation available; add
+          a page to KNOWN_PAGE_NAMES for a proper bilingual name instead.
         - Writes into data.json as `pageHealth` (array) +
           `pageHealthCheckedMonth`. Rendered by renderPageHealthTable() into
           the "Page Health" section below the per-page perf table, including
           the actual failing-audit titles (not just a count) so there's
           something concrete to act on or hand to marketing.
-        - To track a new page here: add an entry to PAGE_LIST in
-          update_data.py — no changes needed in this file, the table
-          picks up new pages automatically from data.json.
+        - New pages need NO code change to be tracked — they're picked up
+          automatically the next time the sitemap is read. Add an entry to
+          KNOWN_PAGE_NAMES only if you want a specific bilingual name or a
+          specific expected Schema type instead of the automatic fallbacks.
         - Runs every time the Action runs (unlike the CrUX block above,
           which only updates when Google actually publishes new data) —
           intentional, since schema/alt-text/SEO audits can change
