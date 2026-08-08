@@ -786,8 +786,8 @@
       kwColPhrase:"الكلمة المفتاحية", kwColPos:"الترتيب الحالي",
       oppTitle:"فرص تحسين مرصودة",
       opp1:"<strong>توحيد صفحات التوطين:</strong> عدة صفحات منفصلة تستهدف موضوعات متقاربة — دمجها في صفحة مرجعية واحدة قوية يقوّي إشارة الترتيب بدلاً من تشتيتها.",
-      opp2:"<strong>بيانات منظَّمة (Schema):</strong> الموقع لا يحتوي حالياً على Schema Markup — إضافتها تساعد جوجل على فهم المحتوى وقد تفتح نتائج بحث غنية (Rich Results).",
-      opp3:"<strong>نصوص بديلة للصور (Alt Text):</strong> بعض صور الصفحة الرئيسية بدون نص بديل — إضافتها تحسّن إمكانية الوصول وفهم جوجل لمحتوى الصور.",
+      opp2:"<strong>بيانات منظَّمة (Schema):</strong> تمت إضافتها يدوياً لـ 5 من صفحات الخدمات الرئيسية — الصفحة الرئيسية لا تزال بدونها، وإضافتها هناك أيضاً قد تفتح نتائج بحث غنية (Rich Results).",
+      opp3:"<strong>نصوص بديلة للصور (Alt Text):</strong> تم إصلاحها في صفحات الخدمات الخمس — الصفحة الرئيسية لم تُفحص بعد ضمن هذا العمل.",
       kwNotInTop5:"خارج أفضل 5 صفحات",
       prioEyebrowBase:"أولويات الشهر",
       prioH2:"أهم الأشياء التي تستحق الاهتمام الآن",
@@ -796,8 +796,10 @@
       prioKw:"الكلمة المفتاحية {kw} لا تظهر ضمن نتائج البحث حالياً — فرصة حقيقية لصفحة مخصصة تستهدفها مباشرة.",
       prioPending:"{n} صفحات رئيسية لم تُقَس بعد هذا الشهر — {link} لإضافتها والحصول على صورة كاملة.",
       prioPendingLink:"انتقل لجدول الصفحات",
-      prioSchema:"لا توجد بيانات منظّمة (Schema) على الموقع بعد — إضافتها تفتح فرصة الظهور في نتائج بحث غنية.",
-      prioAlt:"بعض الصور بدون نص بديل (Alt Text) — إصلاح بسيط يحسّن الوصول وفهم جوجل للمحتوى.",
+      prioSchema:"تمت إضافة بيانات Schema يدوياً لـ 5 من صفحات الخدمات اليوم — الصفحة الرئيسية لا تزال بدونها.",
+      prioSchemaCount:(n)=>`${n} ${n===1?'صفحة':'صفحات'} بدون بيانات Schema — إضافتها تفتح فرصة الظهور في نتائج بحث غنية.`,
+      prioAlt:"تم إصلاح نصوص alt الناقصة في صفحات الخدمات الخمس اليوم — الصفحة الرئيسية لم تُفحص بعد.",
+      prioAltCount:(n)=>`${n} ${n===1?'صفحة فيها':'صفحات فيها'} صور بدون نص بديل (Alt Text) — إصلاح بسيط يحسّن الوصول وفهم جوجل للمحتوى.`,
       statMobilePerf:"مؤشر أداء الجوال (Lighthouse)",
       statDesktopPerf:"مؤشر أداء سطح المكتب",
       statVsLastMonth:"مقارنة بالشهر الماضي",
@@ -872,8 +874,8 @@
       kwColPhrase:"Keyword", kwColPos:"Current position",
       oppTitle:"Opportunities found",
       opp1:"<strong>Consolidate localization pages:</strong> Several separate pages target overlapping topics — merging them into one strong reference page concentrates ranking signal instead of splitting it.",
-      opp2:"<strong>Structured data (Schema):</strong> The site currently has no Schema Markup — adding it helps Google understand the content and can unlock Rich Results in search.",
-      opp3:"<strong>Image alt text:</strong> Some homepage images are missing alt text — adding it improves accessibility and helps Google understand the image content.",
+      opp2:"<strong>Structured data (Schema):</strong> Manually added to 5 of the main service pages — the homepage still doesn't have it, and adding it there too could unlock Rich Results in search.",
+      opp3:"<strong>Image alt text:</strong> Fixed across the 5 service pages — the homepage wasn't checked as part of this work.",
       kwNotInTop5:"Outside top 5 pages",
       prioEyebrowBase:"This Month's Priorities",
       prioH2:"The top things worth your attention right now",
@@ -882,8 +884,10 @@
       prioKw:"The keyword {kw} isn't ranking in search results at all — a real opportunity for a dedicated page targeting it directly.",
       prioPending:"{n} key pages haven't been measured yet this month — {link} to add them for the full picture.",
       prioPendingLink:"jump to the page table",
-      prioSchema:"No Schema structured data on the site yet — adding it opens the door to rich search results.",
-      prioAlt:"Some images are missing alt text — a simple fix that improves accessibility and helps Google understand the content.",
+      prioSchema:"Schema structured data was manually added to 5 service pages today — the homepage still doesn't have it.",
+      prioSchemaCount:(n)=>`${n} page${n===1?'':'s'} missing Schema data — adding it opens the door to rich search results.`,
+      prioAlt:"Missing alt text was fixed on the 5 service pages today — the homepage hasn't been checked yet.",
+      prioAltCount:(n)=>`${n} page${n===1?'':'s'} with images missing alt text — a simple fix that improves accessibility and helps Google understand the content.`,
       statMobilePerf:"Mobile Performance Score (Lighthouse)",
       statDesktopPerf:"Desktop Performance Score",
       statVsLastMonth:"vs. last month",
@@ -1073,9 +1077,24 @@
     const pending = pagesPendingThisMonth();
     if(pending.length) list.push({ sev:"ni", type:"pending", count: pending.length });
 
-    // 4) standing SEO opportunities (until resolved)
-    list.push({ sev:"ni", type:"schema" });
-    list.push({ sev:"ni", type:"alt" });
+    // 4) SEO opportunities — schema & alt text.
+    // Once the automatic page-health scan has run (pageHealthData populated
+    // from data.json's "pageHealth"), compute this from real per-page
+    // results instead of the static assumption below — so these items
+    // disappear from the list entirely once actually resolved everywhere,
+    // and come back accurately (with a real count) if something regresses.
+    // Before the first scan has ever run, falls back to the manually-updated
+    // static text in the dict (prioSchema/prioAlt) rather than an assumption
+    // that nothing's been done — see SETUP.md for when the scan first runs.
+    if(pageHealthData.length){
+      const missingSchema = pageHealthData.filter(p => p.schema && !p.schema.hasExpectedType).length;
+      const withAltIssues = pageHealthData.filter(p => p.altText && p.altText.issueCount > 0).length;
+      if(missingSchema > 0) list.push({ sev:"ni", type:"schema", count: missingSchema });
+      if(withAltIssues > 0) list.push({ sev:"ni", type:"alt", count: withAltIssues });
+    } else {
+      list.push({ sev:"ni", type:"schema" });
+      list.push({ sev:"ni", type:"alt" });
+    }
 
     return list.slice(0,5);
   }
@@ -1099,9 +1118,9 @@
           .replace("{n}", it.count)
           .replace("{link}", `<a href="#pagePerf">${d.prioPendingLink}</a>`);
       } else if(it.type==="schema"){
-        text = d.prioSchema;
+        text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
       } else if(it.type==="alt"){
-        text = d.prioAlt;
+        text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
       }
       const ownerMap = { cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared] };
       const [ocls, otxt] = ownerMap[it.type] || ["tech", d.ownerTech];
