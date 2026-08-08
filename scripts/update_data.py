@@ -6,10 +6,13 @@ Pulls:
   1. CrUX History API   -> real-visitor monthly series (LCP, INP, CLS, FCP, TTFB) for the origin
   2. PageSpeed Insights -> Lighthouse performance scores (mobile + desktop) for the homepage,
                             plus a per-page health scan (see below)
-  3. Per-page health scan -> for each URL in PAGE_LIST: fetches the live HTML directly and
-                            checks Schema.org structured data + image alt text, and pulls
-                            unused-CSS / unused-JS byte estimates from the same PSI call
-                            already being made for that page's performance score.
+  3. Per-page health scan -> pages are now auto-discovered from the site's own
+                            Yoast sitemap every run (see discover_pages_from_sitemap()),
+                            not a hand-maintained list. For each discovered URL: fetches
+                            the live HTML directly and checks Schema.org structured data
+                            + image alt text, and pulls unused-CSS / unused-JS byte
+                            estimates plus failing SEO-category audits from the same PSI
+                            call already being made for that page's performance score.
 
 Writes the results into data.json (which the report reads at load time).
 
@@ -38,36 +41,172 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 ORIGIN = "https://www.silah.com.sa"
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data.json")
 
-# Pages checked for Schema/alt-text/unused-CSS-JS on every run, independent of
-# the CrUX-based homepage chart above. Add a page here and it's covered next run —
-# no other code changes needed. `expectSchemaType` is just what we expect to see
-# (used to flag it in the report as missing); it doesn't restrict what's detected.
-PAGE_LIST = [
-    {"id": "otj_training", "url": f"{ORIGIN}/otj-training-services/",
-     "nameAr": "التوطين عبر معاهد الشراكات الاستراتيجية", "nameEn": "OTJ Training via Strategic Partnerships",
-     "expectSchemaType": "Service"},
-    {"id": "engineering_center", "url": f"{ORIGIN}/engineering-technician-center/",
-     "nameAr": "خدمات توطين المهن الفنية الهندسية", "nameEn": "Engineering Technician Localization",
-     "expectSchemaType": "Service"},
+# Safety cap on how many pages get the full scan (HTML fetch + a PSI/Lighthouse
+# run each) in a single execution. PSI calls typically take 5-15s apiece, so at
+# ~30 pages this run stays in the few-minutes range instead of risking a very
+# long or rate-limited Action run. Raise this if the real sitemap needs more —
+# the discovery logic itself has no built-in limit, this is deliberate.
+MAX_AUTO_PAGES = 30
+
+# Manually-curated bilingual names + expected Schema type for pages already
+# worked on directly (Aug 2026 SEO pass). Anything the sitemap discovers that
+# ISN'T listed here still gets scanned — it just falls back to (a) the page's
+# own <title> tag for a name (Arabic only; this site's titles are Arabic-first
+# and there's no reliable way to auto-translate, so until someone adds a real
+# translation here the EN view will show the same Arabic text), and (b) "does
+# this page have ANY valid schema at all" instead of checking for one specific
+# type, since we don't know in advance what type an arbitrary new page should have.
+KNOWN_PAGE_NAMES = {
+    "otj-training-services": {
+        "nameAr": "التوطين عبر معاهد الشراكات الاستراتيجية",
+        "nameEn": "OTJ Training via Strategic Partnerships", "expectSchemaType": "Service"},
+    "engineering-technician-center": {
+        "nameAr": "خدمات توطين المهن الفنية الهندسية",
+        "nameEn": "Engineering Technician Localization", "expectSchemaType": "Service"},
+    "training-disclosure-services": {
+        "nameAr": "بناء وتنفيذ خطة الإفصاح التدريبي",
+        "nameEn": "Training Disclosure Plan", "expectSchemaType": "Service"},
+    "outsourcing-services": {
+        "nameAr": "خدمات تعهيد الأعمال",
+        "nameEn": "Business Outsourcing Services", "expectSchemaType": "Service"},
+}
+# The Saudi-hiring page's slug is fully Arabic and WordPress stores it
+# percent-encoded internally — matching by substring in the URL instead of
+# an exact slug comparison, same workaround needed for the Code Snippets
+# is_page() check earlier today (dashes vs. spaces caused a silent mismatch
+# there; percent-encoding could do the same here, so URL-substring is safer
+# than an exact-match on a decoded slug).
+KNOWN_PAGE_NAMES_BY_URL_SUBSTRING = {
+    "%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86": {
+        "nameAr": "خدمات توظيف السعوديين", "nameEn": "Saudi Hiring Services", "expectSchemaType": "Service"},
+}
+
+# Used only if sitemap discovery fails outright (network error, unexpected
+# site structure, etc.) — a sitemap hiccup should never mean "scan zero pages
+# this month." This is exactly the fixed 5-page list from before auto-discovery.
+PAGE_LIST_FALLBACK = [
+    {"id": "otj_training", "url": f"{ORIGIN}/otj-training-services/", **KNOWN_PAGE_NAMES["otj-training-services"]},
+    {"id": "engineering_center", "url": f"{ORIGIN}/engineering-technician-center/", **KNOWN_PAGE_NAMES["engineering-technician-center"]},
     {"id": "saudi_hiring", "url": f"{ORIGIN}/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%AA%D9%88%D8%B8%D9%8A%D9%81-%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86/",
-     "nameAr": "خدمات توظيف السعوديين", "nameEn": "Saudi Hiring Services",
-     "expectSchemaType": "Service"},
-    {"id": "training_disclosure", "url": f"{ORIGIN}/training-disclosure-services/",
-     "nameAr": "بناء وتنفيذ خطة الإفصاح التدريبي", "nameEn": "Training Disclosure Plan",
-     "expectSchemaType": "Service"},
-    {"id": "outsourcing", "url": f"{ORIGIN}/outsourcing-services/",
-     "nameAr": "خدمات تعهيد الأعمال", "nameEn": "Business Outsourcing Services",
-     "expectSchemaType": "Service"},
+     "nameAr": "خدمات توظيف السعوديين", "nameEn": "Saudi Hiring Services", "expectSchemaType": "Service"},
+    {"id": "training_disclosure", "url": f"{ORIGIN}/training-disclosure-services/", **KNOWN_PAGE_NAMES["training-disclosure-services"]},
+    {"id": "outsourcing", "url": f"{ORIGIN}/outsourcing-services/", **KNOWN_PAGE_NAMES["outsourcing-services"]},
 ]
+
+SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 
 # alt="" or alt attribute missing entirely, or a generic single-word
 # placeholder that isn't real descriptive text (case-insensitive).
 GENERIC_ALT_VALUES = {"icon", "image", "img", "photo", "logo", ""}
+
+
+def slug_from_url(url):
+    """Path-based slug, not domain-based — url.rsplit("/") alone breaks on
+    the homepage URL itself (the // after https: is also a "/", so naive
+    splitting returns the domain name instead of a real slug). Caught this
+    with a homepage-URL test case; urlparse's .path avoids the whole class
+    of bug by only ever looking at the path component."""
+    path = urllib.parse.urlparse(url).path.strip("/")
+    return path.rsplit("/", 1)[-1] if path else "home"
+
+
+def discover_pages_from_sitemap():
+    """Auto-discovers every WordPress 'Page' URL from this site's Yoast-
+    generated sitemap instead of relying on a hand-maintained list. Standard
+    Yoast structure (confirmed installed on this site — Yoast SEO v27.9):
+    sitemap_index.xml lists one sub-sitemap per post type, one of which is
+    page-sitemap.xml (or page-sitemap1.xml, page-sitemap2.xml, ... if there
+    are enough pages that Yoast splits them — it paginates at 200 URLs per
+    file, hence matching by substring below rather than an exact filename).
+    Returns a list of URLs (capped at MAX_AUTO_PAGES, with a warning logged
+    if the real count is higher), or None — not an empty list — on any
+    failure, so the caller can tell "genuinely zero pages" apart from
+    "something went wrong" and fall back to PAGE_LIST_FALLBACK accordingly."""
+    index_xml = fetch_html(f"{ORIGIN}/sitemap_index.xml")
+    if not index_xml:
+        print("WARNING: could not fetch sitemap_index.xml", file=sys.stderr)
+        return None
+    try:
+        root = ET.fromstring(index_xml)
+    except ET.ParseError as e:
+        print(f"WARNING: sitemap_index.xml did not parse as XML: {e}", file=sys.stderr)
+        return None
+
+    sub_sitemaps = [loc.text.strip() for loc in root.findall(".//sm:loc", SITEMAP_NS) if loc.text]
+    page_sitemaps = [s for s in sub_sitemaps if "page-sitemap" in s]
+    if not page_sitemaps:
+        print("WARNING: no page-sitemap*.xml listed in sitemap_index.xml — "
+              "site's sitemap structure may not match the expected Yoast layout.",
+              file=sys.stderr)
+        return None
+
+    urls = []
+    for sm_url in page_sitemaps:
+        sm_xml = fetch_html(sm_url)
+        if not sm_xml:
+            print(f"WARNING: could not fetch {sm_url}, skipping it", file=sys.stderr)
+            continue
+        try:
+            sm_root = ET.fromstring(sm_xml)
+        except ET.ParseError as e:
+            print(f"WARNING: {sm_url} did not parse as XML: {e}", file=sys.stderr)
+            continue
+        urls.extend(loc.text.strip() for loc in sm_root.findall(".//sm:loc", SITEMAP_NS) if loc.text)
+
+    if not urls:
+        return None
+    if len(urls) > MAX_AUTO_PAGES:
+        print(f"WARNING: sitemap has {len(urls)} pages — scanning the first "
+              f"{MAX_AUTO_PAGES} this run (raise MAX_AUTO_PAGES for more).",
+              file=sys.stderr)
+    return urls[:MAX_AUTO_PAGES]
+
+
+def build_page_list():
+    """Combines automatic sitemap discovery with the known bilingual names
+    above. Falls back to PAGE_LIST_FALLBACK if discovery fails for any reason."""
+    discovered = discover_pages_from_sitemap()
+    if not discovered:
+        print("Sitemap discovery unavailable this run — using the fixed 5-page fallback list.")
+        return PAGE_LIST_FALLBACK
+
+    pages = []
+    for url in discovered:
+        slug = slug_from_url(url)
+        known = KNOWN_PAGE_NAMES.get(slug)
+        if not known:
+            url_lower = url.lower()
+            known = next((v for k, v in KNOWN_PAGE_NAMES_BY_URL_SUBSTRING.items() if k in url_lower), None)
+        pages.append({
+            "id": slug,
+            "url": url,
+            "nameAr": known["nameAr"] if known else None,   # filled from <title> below if still None
+            "nameEn": known["nameEn"] if known else None,
+            "expectSchemaType": known.get("expectSchemaType") if known else None,
+        })
+    return pages
+
+
+def extract_title(html):
+    """Pulls the page's own <title> text as a fallback display name for
+    pages without a curated entry in KNOWN_PAGE_NAMES. WordPress/Yoast titles
+    are usually "Page Name | Site Name" — trims that suffix so the report
+    shows just the page-specific part, not the same site name on every row."""
+    m = re.search(r'<title[^>]*>(.*?)</title>', html, re.DOTALL | re.IGNORECASE)
+    if not m:
+        return None
+    title = re.sub(r'\s+', ' ', m.group(1)).strip()
+    for sep in (" | ", " – ", " - "):
+        if sep in title:
+            title = title.split(sep)[0].strip()
+            break
+    return title or None
 
 AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
              "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
@@ -292,22 +431,31 @@ def check_alt_text(html, page_url):
 
 
 def run_page_health_scan():
-    """One pass over PAGE_LIST: HTML-based schema/alt-text checks + a PSI run
-    per page for score + unused CSS/JS. Any single page failing doesn't stop
-    the others — each result just gets marked unavailable for this run."""
+    """One pass over the auto-discovered page list: HTML-based schema/alt-text
+    checks + a PSI run per page for score, unused CSS/JS, and SEO issues. Any
+    single page failing doesn't stop the others — each result just gets marked
+    unavailable for this run."""
+    page_list = build_page_list()
+    print(f"  Page list: {len(page_list)} page(s) to scan this run.")
     results = []
-    for page in PAGE_LIST:
+    for page in page_list:
         print(f"  Scanning {page['id']} ({page['url']}) ...")
         entry = {"id": page["id"], "nameAr": page["nameAr"], "nameEn": page["nameEn"],
                   "url": page["url"], "checkedAt": datetime.now(timezone.utc).strftime("%Y-%m-%d")}
 
         html = fetch_html(page["url"])
         if html is not None:
+            if not page.get("nameAr"):
+                # No curated name for this one — use the page's own <title>
+                # for both languages (see extract_title()'s docstring for why
+                # there's no separate EN version: no reliable auto-translation).
+                extracted = extract_title(html) or page["id"]
+                entry["nameAr"] = extracted
+                entry["nameEn"] = extracted
             schema = check_schema(html)
-            entry["schema"] = {
-                "hasExpectedType": page["expectSchemaType"] in schema["types"],
-                "typesFound": schema["types"],
-            }
+            expected = page.get("expectSchemaType")
+            has_expected = (expected in schema["types"]) if expected else (len(schema["types"]) > 0)
+            entry["schema"] = {"hasExpectedType": has_expected, "typesFound": schema["types"]}
             entry["altText"] = check_alt_text(html, page["url"])
         else:
             entry["schema"] = None
@@ -325,6 +473,7 @@ def run_page_health_scan():
             entry["unusedCssKb"] = None
             entry["unusedJsKb"] = None
             entry["seoIssues"] = None
+
 
         results.append(entry)
     return results
