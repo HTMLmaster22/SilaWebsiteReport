@@ -334,19 +334,17 @@
         ]
       },
       "altText": {
-        "totalImages": 21,
-        "issueCount": 5,
+        "totalImages": 9,
+        "issueCount": 2,
         "examples": [
-          "",
           "شعار-صلة-محدث-scaled.avif",
-          "svg+xml,%3Csvg%20xmlns=",
-          "شعار-صلة-محدث-ابيض-scaled.avif",
-          "?pid=1999033&fmt=gif"
+          "شعار-صلة-محدث-ابيض-scaled.avif"
         ]
       },
-      "mobileScore": 94,
+      "mobileScore": 96,
       "unusedCssKb": 25,
-      "unusedJsKb": 0
+      "unusedJsKb": 0,
+      "seoIssues": []
     },
     {
       "id": "engineering_center",
@@ -364,19 +362,17 @@
         ]
       },
       "altText": {
-        "totalImages": 25,
-        "issueCount": 5,
+        "totalImages": 12,
+        "issueCount": 2,
         "examples": [
-          "",
           "شعار-صلة-محدث-scaled.avif",
-          "svg+xml,%3Csvg%20xmlns=",
-          "شعار-صلة-محدث-ابيض-scaled.avif",
-          "?pid=1999033&fmt=gif"
+          "شعار-صلة-محدث-ابيض-scaled.avif"
         ]
       },
-      "mobileScore": 94,
+      "mobileScore": 92,
       "unusedCssKb": 25,
-      "unusedJsKb": 0
+      "unusedJsKb": 0,
+      "seoIssues": []
     },
     {
       "id": "saudi_hiring",
@@ -395,19 +391,20 @@
         ]
       },
       "altText": {
-        "totalImages": 22,
-        "issueCount": 15,
+        "totalImages": 11,
+        "issueCount": 7,
         "examples": [
-          "",
           "شعار-صلة-محدث-scaled.avif",
-          "svg+xml,%3Csvg%20xmlns=",
           "worker.avif",
-          "svg+xml,%3Csvg%20xmlns="
+          "evaluation.avif",
+          "waranty.avif",
+          "5days-scaled.avif"
         ]
       },
-      "mobileScore": 92,
+      "mobileScore": 93,
       "unusedCssKb": 25,
-      "unusedJsKb": 0
+      "unusedJsKb": 0,
+      "seoIssues": []
     },
     {
       "id": "training_disclosure",
@@ -425,19 +422,17 @@
         ]
       },
       "altText": {
-        "totalImages": 8,
-        "issueCount": 5,
+        "totalImages": 4,
+        "issueCount": 2,
         "examples": [
-          "",
           "شعار-صلة-محدث-scaled.avif",
-          "svg+xml,%3Csvg%20xmlns=",
-          "شعار-صلة-محدث-ابيض-scaled.avif",
-          "?pid=1999033&fmt=gif"
+          "شعار-صلة-محدث-ابيض-scaled.avif"
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 78,
       "unusedCssKb": 25,
-      "unusedJsKb": 0
+      "unusedJsKb": 0,
+      "seoIssues": []
     },
     {
       "id": "outsourcing",
@@ -455,19 +450,20 @@
         ]
       },
       "altText": {
-        "totalImages": 24,
-        "issueCount": 23,
+        "totalImages": 12,
+        "issueCount": 11,
         "examples": [
-          "",
           "شعار-صلة-محدث-scaled.avif",
-          "svg+xml,%3Csvg%20xmlns=",
           "out-icon1.png",
-          "svg+xml,%3Csvg%20xmlns="
+          "out-icon2.png",
+          "out-icon3.png",
+          "out-icon4.png"
         ]
       },
-      "mobileScore": 84,
+      "mobileScore": 81,
       "unusedCssKb": 25,
-      "unusedJsKb": 0
+      "unusedJsKb": 0,
+      "seoIssues": []
     }
   ],
   "pageHealthCheckedMonth": "2026-08"
