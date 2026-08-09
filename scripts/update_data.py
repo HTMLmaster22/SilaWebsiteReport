@@ -499,7 +499,19 @@ def main():
                   "sample threshold. Skipping real-user chart update this run; "
                   "PSI/Lighthouse scores will still refresh below.")
         else:
-            raise
+            print(f"WARNING: CrUX request failed (HTTP {e.code}) — {e}. "
+                  "Skipping real-user chart update this run; PSI/Lighthouse "
+                  "scores will still refresh below.", file=sys.stderr)
+    except Exception as e:
+        # Catch-all is deliberate: this module's whole design promise (see
+        # docstring) is that a CrUX hiccup of ANY kind never fails the run.
+        # Before this, only HTTPError-404 was treated as "skip gracefully" —
+        # a 400 (e.g. both TTFB metric names rejected -> RuntimeError from
+        # fetch_crux_history's for/else), a 403/429, or a malformed response
+        # (KeyError) all fell through and crashed the whole Action red.
+        print(f"WARNING: CrUX history fetch failed unexpectedly ({type(e).__name__}: {e}). "
+              "Skipping real-user chart update this run; PSI/Lighthouse "
+              "scores will still refresh below.", file=sys.stderr)
 
     if months is not None:
         y_last, m_last = months[-1]
