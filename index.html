@@ -287,7 +287,14 @@
   .status-pill.measured{ background:var(--moss-bg); color:var(--moss); }
   .status-pill.pending{ background:var(--amber-bg); color:var(--amber); }
   .status-pill.poor{ background:var(--poor-bg); color:var(--poor); }
-  .seo-issue-list{ font-size:11px; color:var(--ink-soft); margin-top:5px; max-width:220px; line-height:1.4; }
+  .status-pill.clickable{ cursor:pointer; user-select:none; }
+  .status-pill.clickable::after{ content:"›"; margin-inline-start:3px; display:inline-block; font-weight:900; transition:transform .15s ease; }
+  .status-pill.clickable.open::after{ transform:rotate(90deg); }
+  .status-pill.clickable:focus-visible{ outline:2px solid currentColor; outline-offset:2px; }
+  .issue-detail{ display:none; font-size:11px; color:var(--ink-soft); margin-top:5px; max-width:240px; line-height:1.55; }
+  .issue-detail.open{ display:block; }
+  .issue-detail-label{ font-weight:800; color:var(--ink); margin-bottom:2px; }
+  .issue-detail-more{ opacity:.65; font-style:italic; }
   .cell-num{ font-size:15px; font-weight:700; }
   .cell-dash{ color:#b7bfc2; }
   @media (max-width:700px){
@@ -836,6 +843,7 @@
       healthSeoOk:"سليم", healthSeoIssue:(n)=>`${n} ${n===1?'مشكلة':'مشاكل'}`,
       healthSchemaOk:"موجود ✓", healthSchemaMissing:"غير موجود", healthSchemaUnknown:"—",
       healthAltOk:"سليم", healthAltIssue:(n)=>`${n} مشكلة`,
+      healthAltDetailLabel:"صور بلا نص alt:", healthMoreCount:(n)=>`+ ${n} ${n===1?'صورة أخرى':'صور أخرى'}`,
       healthCheckedNote:"لم يُشغَّل الفحص التلقائي بعد لهذه الصفحات — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.",
       healthCheckedOn:(d)=>`آخر فحص: ${d}`,
       recoPoorMobile:"أداء الجوال ضعيف — يحتاج أولوية عالية",
@@ -925,6 +933,7 @@
       healthSeoOk:"Clean", healthSeoIssue:(n)=>`${n} issue${n===1?'':'s'}`,
       healthSchemaOk:"Present ✓", healthSchemaMissing:"Missing", healthSchemaUnknown:"—",
       healthAltOk:"Clean", healthAltIssue:(n)=>`${n} issue${n===1?"":"s"}`,
+      healthAltDetailLabel:"Images missing alt text:", healthMoreCount:(n)=>`+ ${n} more`,
       healthCheckedNote:"The automatic scan hasn't run for these pages yet — this table fills in automatically after the first GitHub Action run.",
       healthCheckedOn:(d)=>`Last checked: ${d}`,
       recoPoorMobile:"Mobile performance is poor — needs high priority",
@@ -1035,6 +1044,16 @@
     }).join("");
   }
 
+  // Real PSI audit titles can contain literal HTML-special characters — e.g.
+  // the actual "document-title" audit text is `Document doesn't have a
+  // <title> element` (confirmed in this site's own scanned data). Inserted
+  // raw via innerHTML, that <title> would get parsed as a real element
+  // instead of displayed as text. Same defensive escaping applies to image
+  // filenames in the alt-text detail list.
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
   function renderPageHealthTable(){
     const body = document.getElementById("healthTableBody");
     const note = document.getElementById("healthCheckedNote");
@@ -1053,18 +1072,29 @@
       else if(p.schema.hasExpectedType){ schemaCls = "measured"; schemaText = d.healthSchemaOk; }
       else { schemaCls = "poor"; schemaText = d.healthSchemaMissing; }
 
-      let altCls, altText;
+      let altCls, altText, altDetail = "", altClickable = "";
       if(p.altText == null){ altCls = "pending"; altText = d.healthSchemaUnknown; }
       else if(p.altText.issueCount === 0){ altCls = "measured"; altText = d.healthAltOk; }
-      else { altCls = p.altText.issueCount > 3 ? "poor" : "pending"; altText = d.healthAltIssue(p.altText.issueCount); }
+      else {
+        altCls = p.altText.issueCount > 3 ? "poor" : "pending";
+        altText = d.healthAltIssue(p.altText.issueCount);
+        altClickable = "clickable";
+        const shown = p.altText.examples || [];
+        let rows = `<div class="issue-detail-label">${d.healthAltDetailLabel}</div>` + shown.map(f=>`<div>${escapeHtml(f)}</div>`).join("");
+        if(p.altText.issueCount > shown.length){
+          rows += `<div class="issue-detail-more">${d.healthMoreCount(p.altText.issueCount - shown.length)}</div>`;
+        }
+        altDetail = `<div class="issue-detail">${rows}</div>`;
+      }
 
-      let seoCls, seoText, seoDetail = "";
+      let seoCls, seoText, seoDetail = "", seoClickable = "";
       if(p.seoIssues == null){ seoCls = "pending"; seoText = d.healthSchemaUnknown; }
       else if(p.seoIssues.length === 0){ seoCls = "measured"; seoText = d.healthSeoOk; }
       else {
         seoCls = p.seoIssues.length > 2 ? "poor" : "pending";
         seoText = d.healthSeoIssue(p.seoIssues.length);
-        seoDetail = `<div class="seo-issue-list">${p.seoIssues.map(s=>s.title).join("، ")}</div>`;
+        seoClickable = "clickable";
+        seoDetail = `<div class="issue-detail">${p.seoIssues.map(s=>`<div>${escapeHtml(s.title)}</div>`).join("")}</div>`;
       }
 
       const cssCell = (p.unusedCssKb === null || p.unusedCssKb === undefined) ? `<span class="cell-dash">—</span>` : `<span class="cell-num num">${p.unusedCssKb} KB</span>`;
@@ -1073,8 +1103,8 @@
       return `<tr>
         <td><strong>${label}</strong></td>
         <td><span class="status-pill ${schemaCls}">${schemaText}</span></td>
-        <td><span class="status-pill ${altCls}">${altText}</span></td>
-        <td><span class="status-pill ${seoCls}">${seoText}</span>${seoDetail}</td>
+        <td><span class="status-pill ${altCls} ${altClickable}"${altClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${altText}</span>${altDetail}</td>
+        <td><span class="status-pill ${seoCls} ${seoClickable}"${seoClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${seoText}</span>${seoDetail}</td>
         <td>${cssCell}</td>
         <td>${scoreCell}</td>
       </tr>`;
@@ -1084,6 +1114,33 @@
       note.textContent = d.healthCheckedOn(pageHealthCheckedMonth);
     }
   }
+
+  // Expand/collapse for the Alt-text and SEO-issue pills above. Delegated on
+  // the (static) tbody rather than bound per-pill, because renderPageHealthTable()
+  // fully replaces the tbody's innerHTML on every re-render (language toggle,
+  // initial load) — a delegated listener attached once here survives that,
+  // no re-binding needed after each render.
+  (function initPageHealthExpand(){
+    const tbody = document.getElementById("healthTableBody");
+    function toggle(pill){
+      const detail = pill.nextElementSibling;
+      if(!detail || !detail.classList.contains("issue-detail")) return;
+      const open = detail.classList.toggle("open");
+      pill.classList.toggle("open", open);
+      pill.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    tbody.addEventListener("click", function(e){
+      const pill = e.target.closest(".status-pill.clickable");
+      if(pill) toggle(pill);
+    });
+    tbody.addEventListener("keydown", function(e){
+      if(e.key !== "Enter" && e.key !== " ") return;
+      const pill = e.target.closest(".status-pill.clickable");
+      if(!pill) return;
+      e.preventDefault();
+      toggle(pill);
+    });
+  })();
 
   /* ---------------- this month's priorities (auto-generated) ---------------- */
   function calendarLabel(monthStr, lang){
