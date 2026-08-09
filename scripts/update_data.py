@@ -427,7 +427,11 @@ def check_alt_text(html, page_url):
         is_bad = alt_val is None or alt_val.lower() in GENERIC_ALT_VALUES
         if is_bad:
             issues.append(resolved.rsplit("/", 1)[-1])
-    return {"totalImages": checkable, "issueCount": len(issues), "examples": issues[:5]}
+    # "examples" used to be capped at issues[:5] — kept only a sample, so the
+    # report could show a count but never the full picture. Now that the report
+    # has a click-to-expand detail view (Aug 9 2026), it needs every flagged
+    # filename, not a truncated sample, so the list here is complete.
+    return {"totalImages": checkable, "issueCount": len(issues), "examples": issues}
 
 
 def run_page_health_scan():
