@@ -29,5 +29,15 @@ jobs:
           else
             git add data.json
             git commit -m "chore: monthly data refresh (CrUX + PSI) [skip ci]"
+            # This job's checkout is a snapshot from when it started. If anyone
+            # (or any other run) pushes to main in the meantime — e.g. a manual
+            # edit via the GitHub web editor, which is exactly what rejected
+            # this push on Aug 9 2026 — origin/main has moved on, and a plain
+            # `git push` gets rejected as non-fast-forward. Our commit only
+            # ever touches data.json, so rebasing onto the current tip right
+            # before pushing is safe and clears that race without needing a
+            # human to manually re-run the job.
+            git fetch origin main
+            git rebase origin/main
             git push
           fi
