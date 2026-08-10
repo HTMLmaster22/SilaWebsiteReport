@@ -1,3 +1,4 @@
+[SETUP (2).md](https://github.com/user-attachments/files/30914583/SETUP.2.md)
 [SETUP (1).md](https://github.com/user-attachments/files/30863555/SETUP.1.md)
 # Auto-Sync Setup — Silah Site Performance Report
 
@@ -43,3 +44,6 @@ One-time setup (~10 minutes). After this, the report updates itself monthly fore
 - Pages for the health scan are **discovered automatically from the site's sitemap** — nothing to maintain by hand. If the sitemap can't be reached that run, it falls back to a fixed 5-page list rather than scanning nothing. Capped at 30 pages per run (`MAX_AUTO_PAGES` in the script) to keep run time reasonable — raise that constant if the real page count grows past it.
 - To update keywords manually: edit the `keywords` array in `data.json` and commit.
 - To give a specific page a proper bilingual name (instead of its auto-extracted `<title>`) or a specific expected Schema type: add it to `KNOWN_PAGE_NAMES` near the top of `scripts/update_data.py`.
+
+## SEO report PDF (added Aug 2026)
+"Download SEO Report (PDF)" button lives in the SEO section. On click it builds the report from the same in-memory `pageHealthData`/`keywords`/`computePriorities()` the live tables already use — not a separate fetch — so it's always exactly what's on screen at that moment, never stale. Renders into an off-screen template, rasterizes with html2canvas, paginates across A4 pages with jsPDF (same library versions already in use on silah.com.sa's own cost-calculator PDF button). Text logic is covered by a Node test against real `data.json` (checks every page/keyword name appears, no `undefined`/`NaN` leaks, balanced HTML). The actual visual PDF output — Arabic text shaping, page breaks, spacing — has **not** been checked in a real browser and should be before relying on it; open the live site, click the button, and look at the file.
