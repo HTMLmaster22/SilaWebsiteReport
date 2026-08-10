@@ -1,0 +1,406 @@
+diff --git a/index.html b/index.html
+index 6bc4e6c..7a813e3 100644
+--- a/index.html
++++ b/index.html
+@@ -17,6 +17,11 @@
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
++<!-- PDF export (SEO report download button). Same jsPDF + html2canvas
++     versions already used elsewhere on silah.com.sa's own site, so this
++     combination is already proven in production rather than a fresh pick. -->
++<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
++<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+ <style>
+   :root{
+     --ink:#0B1D26;
+@@ -366,6 +371,49 @@
+     background:rgba(19,71,82,0.07); color:var(--teal); border:1px solid rgba(19,71,82,0.18);
+   }
+ 
++  /* ===== PDF export button ===== */
++  .pdf-export-row{
++    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
++    background:var(--paper-card); border:1px solid var(--hair); border-radius:14px;
++    padding:18px 20px; margin-bottom:26px; box-shadow:var(--shadow);
++  }
++  .pdf-export-text{ font-size:13px; color:var(--ink-soft); max-width:480px; }
++  .pdf-export-text strong{ color:var(--ink); }
++  .pdf-btn{
++    display:inline-flex; align-items:center; gap:9px; flex-shrink:0;
++    background:var(--signal); color:#fff; border:none; border-radius:100px;
++    padding:12px 22px; font-family:inherit; font-size:14px; font-weight:700;
++    cursor:pointer; transition:opacity .15s, transform .15s;
++  }
++  .pdf-btn:hover{ opacity:.9; }
++  .pdf-btn:active{ transform:scale(.97); }
++  .pdf-btn:disabled{ opacity:.6; cursor:wait; }
++  .pdf-btn svg{ width:16px; height:16px; flex-shrink:0; }
++  .pdf-btn .spin{ animation:pdfSpin .8s linear infinite; }
++  @keyframes pdfSpin{ to{ transform:rotate(360deg); } }
++
++  /* Off-screen printable template that html2canvas renders into an image.
++     Positioned off the visible viewport (not display:none — html2canvas
++     can't lay out a display:none element) rather than hidden, and only
++     ever exists in the DOM for the few seconds a PDF is being built. */
++  #pdfPrintable{
++    position:fixed; top:0; inset-inline-start:-99999px; width:900px;
++    background:#fff; color:var(--ink); font-family:'Cairo',sans-serif;
++    padding:40px 44px;
++  }
++  #pdfPrintable h1{ font-size:22px; margin:0 0 4px; color:var(--ink); }
++  #pdfPrintable .pdf-sub{ font-size:12.5px; color:var(--ink-soft); margin:0 0 26px; }
++  #pdfPrintable h2{ font-size:16px; margin:26px 0 12px; padding-bottom:8px; border-bottom:2px solid var(--signal); color:var(--ink); }
++  #pdfPrintable table{ width:100%; border-collapse:collapse; font-size:11.5px; }
++  #pdfPrintable th{ text-align:start; background:var(--ink); color:#fff; padding:8px 9px; font-weight:700; }
++  #pdfPrintable td{ padding:7px 9px; border-bottom:1px solid var(--hair); vertical-align:top; }
++  #pdfPrintable tr:nth-child(even) td{ background:rgba(11,29,38,0.025); }
++  #pdfPrintable .pdf-detail{ font-size:10.5px; color:var(--ink-soft); margin-top:3px; line-height:1.6; }
++  #pdfPrintable .pdf-prio-item{ display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--hair); font-size:13px; }
++  #pdfPrintable .pdf-prio-num{ font-weight:800; color:var(--signal); flex-shrink:0; }
++  #pdfPrintable .pdf-owner{ font-size:11px; color:var(--ink-soft); margin-top:2px; }
++  #pdfPrintable .pdf-foot{ margin-top:30px; padding-top:16px; border-top:1px solid var(--hair); font-size:10.5px; color:var(--ink-soft); line-height:1.7; }
++
+   footer{ background:var(--ink); color:#aebcc0; padding:44px 0 36px; }
+   footer h4{ color:#fff; font-size:15px; margin:0 0 10px; }
+   footer p{ font-size:13.5px; line-height:1.75; max-width:680px; margin:0 0 14px; }
+@@ -606,6 +654,14 @@
+       <p data-i18n="seoP">سرعة الموقع وصحته التقنية عاملان مباشران ضمن خوارزمية ترتيب جوجل — هذا القسم يربط الأرقام أعلاه بما يهم فريق التسويق تحديداً.</p>
+     </div>
+ 
++    <div class="pdf-export-row reveal">
++      <p class="pdf-export-text" data-i18n="pdfExportText">تقرير PDF كامل بكل ما يلزم تحسينه في الـSEO — يعكس بيانات آخر مزامنة تلقائياً، لحظة الضغط على الزر.</p>
++      <button class="pdf-btn" id="pdfDownloadBtn" type="button">
++        <svg id="pdfBtnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0-4-4m4 4 4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
++        <span id="pdfBtnLabel" data-i18n="pdfBtnLabel">تحميل تقرير SEO (PDF)</span>
++      </button>
++    </div>
++
+     <div class="seo-grid reveal">
+       <div class="seo-score-card">
+         <div class="score num">100</div>
+@@ -636,13 +692,13 @@
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+         <p data-i18n="opp1"><strong>توحيد صفحات التوطين:</strong> عدة صفحات منفصلة تستهدف موضوعات متقاربة — دمجها في صفحة مرجعية واحدة قوية يقوّي إشارة الترتيب بدلاً من تشتيتها.</p>
+       </div>
+-      <div class="opp-item">
++      <div class="opp-item" id="oppSchemaWrap">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+-        <p data-i18n="opp2"><strong>بيانات منظَّمة (Schema):</strong> الموقع لا يحتوي حالياً على Schema Markup — إضافتها تساعد جوجل على فهم المحتوى وقد تفتح نتائج بحث غنية (Rich Results).</p>
++        <p id="oppSchemaText"></p>
+       </div>
+-      <div class="opp-item">
++      <div class="opp-item" id="oppAltWrap">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+-        <p data-i18n="opp3"><strong>نصوص بديلة للصور (Alt Text):</strong> بعض صور الصفحة الرئيسية بدون نص بديل — إضافتها تحسّن إمكانية الوصول وفهم جوجل لمحتوى الصور.</p>
++        <p id="oppAltText"></p>
+       </div>
+     </div>
+   </div>
+@@ -815,8 +871,18 @@
+       kwColPhrase:"الكلمة المفتاحية", kwColPos:"الترتيب الحالي",
+       oppTitle:"فرص تحسين مرصودة",
+       opp1:"<strong>توحيد صفحات التوطين:</strong> عدة صفحات منفصلة تستهدف موضوعات متقاربة — دمجها في صفحة مرجعية واحدة قوية يقوّي إشارة الترتيب بدلاً من تشتيتها.",
+-      opp2:"<strong>بيانات منظَّمة (Schema):</strong> تمت إضافتها يدوياً لـ 5 من صفحات الخدمات الرئيسية — الصفحة الرئيسية لا تزال بدونها، وإضافتها هناك أيضاً قد تفتح نتائج بحث غنية (Rich Results).",
+-      opp3:"<strong>نصوص بديلة للصور (Alt Text):</strong> تم إصلاحها في صفحات الخدمات الخمس — الصفحة الرئيسية لم تُفحص بعد ضمن هذا العمل.",
++      oppSchemaLabel:"بيانات منظَّمة (Schema):", oppAltLabel:"نصوص بديلة للصور (Alt Text):",
++      pdfExportText:"تقرير PDF كامل بكل ما يلزم تحسينه في الـSEO — يعكس بيانات آخر مزامنة تلقائياً، لحظة الضغط على الزر.",
++      pdfBtnLabel:"تحميل تقرير SEO (PDF)", pdfBtnBusy:"جاري إعداد التقرير…",
++      pdfReportTitle:"تقرير تحسين محركات البحث (SEO) — صلة",
++      pdfGeneratedOn:(d)=>`تم إنشاؤه في ${d}`,
++      pdfSyncedThrough:(d)=>`يعكس بيانات الفحص التلقائي الأخير: ${d}`,
++      pdfSyncedThroughUnknown:"الفحص التلقائي لم يُشغَّل بعد لهذه الصفحات",
++      pdfPrioHeading:"أولويات هذا الشهر", pdfKwHeading:"الكلمات المفتاحية المستهدفة",
++      pdfHealthHeading:"سلامة الصفحات التقنية — كل الصفحات الممسوحة",
++      pdfHealthColUrl:"الرابط",
++      pdfFootNote:"تم إنشاء هذا التقرير تلقائياً من نفس البيانات المعروضة في لوحة المتابعة اللحظية على sila-website-report.vercel.app وقت التحميل. بيانات Chrome الحقيقية (CrUX) تصدر عن جوجل بتأخير يقارب 28 يوماً. إعداد: تقنية المعلومات — شركة صلة.",
++      pdfFileBase:"تقرير-تحسين-السيو-صلة",
+       kwNotInTop5:"خارج أفضل 5 صفحات",
+       prioEyebrowBase:"أولويات الشهر",
+       prioH2:"أهم الأشياء التي تستحق الاهتمام الآن",
+@@ -905,8 +971,18 @@
+       kwColPhrase:"Keyword", kwColPos:"Current position",
+       oppTitle:"Opportunities found",
+       opp1:"<strong>Consolidate localization pages:</strong> Several separate pages target overlapping topics — merging them into one strong reference page concentrates ranking signal instead of splitting it.",
+-      opp2:"<strong>Structured data (Schema):</strong> Manually added to 5 of the main service pages — the homepage still doesn't have it, and adding it there too could unlock Rich Results in search.",
+-      opp3:"<strong>Image alt text:</strong> Fixed across the 5 service pages — the homepage wasn't checked as part of this work.",
++      oppSchemaLabel:"Structured data (Schema):", oppAltLabel:"Image alt text:",
++      pdfExportText:"A complete PDF report of everything worth fixing for SEO — reflects the latest auto-sync, at the moment you click.",
++      pdfBtnLabel:"Download SEO report (PDF)", pdfBtnBusy:"Building the report…",
++      pdfReportTitle:"SEO Improvement Report — Silah",
++      pdfGeneratedOn:(d)=>`Generated ${d}`,
++      pdfSyncedThrough:(d)=>`Reflects the latest automatic scan: ${d}`,
++      pdfSyncedThroughUnknown:"The automatic scan hasn't run for these pages yet",
++      pdfPrioHeading:"This month's priorities", pdfKwHeading:"Target keywords",
++      pdfHealthHeading:"Technical page health — every page scanned",
++      pdfHealthColUrl:"URL",
++      pdfFootNote:"This report was generated automatically from the same data shown on the live dashboard at sila-website-report.vercel.app at the moment of download. Real Chrome visitor data (CrUX) is published by Google with a ~28-day lag. Prepared by: Information Technology — Silah.",
++      pdfFileBase:"silah-seo-report",
+       kwNotInTop5:"Outside top 5 pages",
+       prioEyebrowBase:"This Month's Priorities",
+       prioH2:"The top things worth your attention right now",
+@@ -1148,6 +1224,13 @@
+     return `${dict[lang].calendarMonths[parseInt(mm,10)-1]} ${y}`;
+   }
+ 
++  function healthCounts(){
++    return {
++      missingSchema: pageHealthData.filter(p => p.schema && !p.schema.hasExpectedType).length,
++      withAltIssues: pageHealthData.filter(p => p.altText && p.altText.issueCount > 0).length
++    };
++  }
++
+   function computePriorities(){
+     const list = [];
+ 
+@@ -1178,8 +1261,7 @@
+     // static text in the dict (prioSchema/prioAlt) rather than an assumption
+     // that nothing's been done — see SETUP.md for when the scan first runs.
+     if(pageHealthData.length){
+-      const missingSchema = pageHealthData.filter(p => p.schema && !p.schema.hasExpectedType).length;
+-      const withAltIssues = pageHealthData.filter(p => p.altText && p.altText.issueCount > 0).length;
++      const { missingSchema, withAltIssues } = healthCounts();
+       if(missingSchema > 0) list.push({ sev:"ni", type:"schema", count: missingSchema });
+       if(withAltIssues > 0) list.push({ sev:"ni", type:"alt", count: withAltIssues });
+     } else {
+@@ -1222,6 +1304,198 @@
+     }).join("");
+   }
+ 
++  /* Schema/Alt-text opportunity cards — same live pageHealthData the
++     priorities panel uses, so this can't drift out of sync with it or
++     go stale the way the old hardcoded opp2/opp3 copy did (it kept
++     saying "homepage not checked yet" long after the scan covered it).
++     Before the first scan has ever run, falls back to the same static
++     dict text as computePriorities() does, for the same reason. */
++  function renderOpportunities(){
++    const d = dict[currentLang];
++    const schemaEl = document.getElementById("oppSchemaText");
++    const schemaWrap = document.getElementById("oppSchemaWrap");
++    const altEl = document.getElementById("oppAltText");
++    const altWrap = document.getElementById("oppAltWrap");
++    if(!schemaEl || !altEl) return;
++
++    if(pageHealthData.length){
++      const { missingSchema, withAltIssues } = healthCounts();
++      schemaWrap.style.display = missingSchema > 0 ? "" : "none";
++      schemaEl.innerHTML = missingSchema > 0 ? `<strong>${d.oppSchemaLabel}</strong> ${d.prioSchemaCount(missingSchema)}` : "";
++      altWrap.style.display = withAltIssues > 0 ? "" : "none";
++      altEl.innerHTML = withAltIssues > 0 ? `<strong>${d.oppAltLabel}</strong> ${d.prioAltCount(withAltIssues)}` : "";
++    } else {
++      schemaWrap.style.display = "";
++      schemaEl.innerHTML = `<strong>${d.oppSchemaLabel}</strong> ${d.prioSchema}`;
++      altWrap.style.display = "";
++      altEl.innerHTML = `<strong>${d.oppAltLabel}</strong> ${d.prioAlt}`;
++    }
++  }
++
++  /* ---------------- PDF export: "Download SEO Report" ----------------
++     Builds the report from the exact same in-memory variables the live
++     tables render from (pageHealthData, keywords, computePriorities()),
++     so it's mechanically impossible for the PDF to say something
++     different from what's on screen at click-time — no separate fetch,
++     no separate data path to drift out of sync.
++     Renders into an off-screen HTML template, rasterizes it with
++     html2canvas, then slices that image across A4 pages with jsPDF —
++     the same combination (same CDN versions) already used for the
++     cost-calculator PDF elsewhere on silah.com.sa. Arabic renders
++     correctly this way because the browser's own text engine draws it
++     (same as the on-screen tables), sidestepping jsPDF's native text()
++     API, which has no real Arabic shaping support. */
++  function buildSeoPdfHtml(lang){
++    const d = dict[lang];
++    const now = new Date();
++    const generatedStr = now.toLocaleDateString(lang==="ar"?"ar-SA":"en-GB", {year:"numeric",month:"long",day:"numeric"})
++      + " " + now.toLocaleTimeString(lang==="ar"?"ar-SA":"en-GB", {hour:"2-digit",minute:"2-digit"});
++    const syncedStr = pageHealthCheckedMonth ? d.pdfSyncedThrough(calendarLabel(pageHealthCheckedMonth, lang)) : d.pdfSyncedThroughUnknown;
++
++    const prioItems = computePriorities().map((it,i)=>{
++      let text = "";
++      if(it.type==="cwv"){
++        const name = lang==="ar" ? it.m.nameAr : it.m.nameEn;
++        text = d.prioCwv.replace("{metric}", name);
++      } else if(it.type==="kw"){
++        const name = lang==="ar" ? it.k.ar : it.k.en;
++        text = d.prioKw.replace("{kw}", name);
++      } else if(it.type==="pending"){
++        text = d.prioPending.replace("{n}", it.count).replace("{link}", d.prioPendingLink);
++      } else if(it.type==="schema"){
++        text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
++      } else if(it.type==="alt"){
++        text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
++      }
++      const ownerMap = { cwv:d.ownerTech, kw:d.ownerMkt, pending:d.ownerTech, schema:d.ownerTech, alt:d.ownerShared };
++      const otxt = ownerMap[it.type] || d.ownerTech;
++      return `<div class="pdf-prio-item"><span class="pdf-prio-num">0${i+1}</span><div>${text}<div class="pdf-owner">${d.ownerLabel}: ${otxt}</div></div></div>`;
++    }).join("") || `<p>—</p>`;
++
++    const kwRows = keywords.map(k=>{
++      const name = lang==="ar" ? k.ar : k.en;
++      const posText = k.pos===null ? d.kwNotInTop5 : `${lang==="ar"?"صفحة":"Page"} ${k.page} · #${k.pos}`;
++      return `<tr><td>${escapeHtml(name)}</td><td>${escapeHtml(posText)}</td></tr>`;
++    }).join("");
++
++    const healthRows = pageHealthData.map(p=>{
++      const label = lang==="ar" ? p.nameAr : p.nameEn;
++      const schemaTxt = p.schema==null ? d.healthSchemaUnknown : (p.schema.hasExpectedType ? d.healthSchemaOk : d.healthSchemaMissing);
++
++      let altCell = d.healthSchemaUnknown;
++      if(p.altText != null){
++        altCell = p.altText.issueCount === 0 ? d.healthAltOk : (()=>{
++          const shown = (p.altText.examples||[]).slice(0,6);
++          const more = p.altText.issueCount - shown.length;
++          return `${d.healthAltIssue(p.altText.issueCount)}<div class="pdf-detail">${shown.map(f=>escapeHtml(f)).join("، ")}${more>0?` (${d.healthMoreCount(more)})`:""}</div>`;
++        })();
++      }
++
++      let seoCell = d.healthSchemaUnknown;
++      if(p.seoIssues != null){
++        seoCell = p.seoIssues.length === 0 ? d.healthSeoOk :
++          `${d.healthSeoIssue(p.seoIssues.length)}<div class="pdf-detail">${p.seoIssues.map(s=>escapeHtml(s.title)).join("؛ ")}</div>`;
++      }
++
++      const cssTxt = (p.unusedCssKb===null||p.unusedCssKb===undefined) ? "—" : `${p.unusedCssKb} KB`;
++      const scoreTxt = (p.mobileScore===null||p.mobileScore===undefined) ? "—" : p.mobileScore;
++
++      return `<tr>
++        <td><strong>${escapeHtml(label)}</strong><div class="pdf-detail">${escapeHtml(p.url||"")}</div></td>
++        <td>${schemaTxt}</td>
++        <td>${altCell}</td>
++        <td>${seoCell}</td>
++        <td>${cssTxt}</td>
++        <td>${scoreTxt}</td>
++      </tr>`;
++    }).join("");
++
++    const healthSection = pageHealthData.length
++      ? `<table><thead><tr>
++           <th>${d.healthColName}</th><th>${d.healthColSchema}</th><th>${d.healthColAlt}</th>
++           <th>${d.healthColSeo}</th><th>${d.healthColCss}</th><th>${d.healthColScore}</th>
++         </tr></thead><tbody>${healthRows}</tbody></table>`
++      : `<p>${d.healthCheckedNote}</p>`;
++
++    return `
++      <h1>${d.pdfReportTitle}</h1>
++      <p class="pdf-sub">${d.pdfGeneratedOn(generatedStr)} · ${syncedStr}</p>
++
++      <h2>${d.pdfPrioHeading}</h2>
++      ${prioItems}
++
++      <h2>${d.pdfKwHeading}</h2>
++      <table><thead><tr><th>${d.kwColPhrase}</th><th>${d.kwColPos}</th></tr></thead><tbody>${kwRows}</tbody></table>
++
++      <h2>${d.pdfHealthHeading}</h2>
++      ${healthSection}
++
++      <div class="pdf-foot">${d.pdfFootNote}</div>
++    `;
++  }
++
++  async function downloadSeoPdf(){
++    const btn = document.getElementById("pdfDownloadBtn");
++    const label = document.getElementById("pdfBtnLabel");
++    const icon = document.getElementById("pdfBtnIcon");
++    const d = dict[currentLang];
++    if(btn.disabled) return;
++
++    if(typeof window.jspdf === "undefined" || typeof window.html2canvas === "undefined"){
++      alert(currentLang==="ar" ? "مكتبات إنشاء الـPDF لم تُحمَّل بعد — تأكد من الاتصال بالإنترنت وحاول مرة أخرى." : "PDF libraries haven't loaded yet — check your connection and try again.");
++      return;
++    }
++
++    btn.disabled = true;
++    const origLabel = label.textContent;
++    label.textContent = d.pdfBtnBusy;
++    icon.classList.add("spin");
++
++    const container = document.getElementById("pdfPrintable");
++    try{
++      container.innerHTML = buildSeoPdfHtml(currentLang);
++      container.dir = currentLang === "ar" ? "rtl" : "ltr";
++
++      // let the browser lay the now-populated off-screen container out
++      // (fonts, tables) before html2canvas measures/rasterizes it
++      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
++      if(document.fonts && document.fonts.ready) await document.fonts.ready;
++
++      const { jsPDF } = window.jspdf;
++      const canvas = await window.html2canvas(container, { useCORS:true, backgroundColor:"#ffffff", scale:2 });
++      const imgData = canvas.toDataURL("image/png");
++
++      const doc = new jsPDF("p", "mm", "a4");
++      const pageWidth = doc.internal.pageSize.getWidth();
++      const pageHeight = doc.internal.pageSize.getHeight();
++      const margin = 10;
++      const imgWidth = pageWidth - margin * 2;
++      const imgHeight = (canvas.height * imgWidth) / canvas.width;
++      const pageContentHeight = pageHeight - margin * 2;
++
++      let position = margin;
++      doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
++      let shown = pageContentHeight;
++      while(shown < imgHeight){
++        position -= pageContentHeight;
++        doc.addPage();
++        doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
++        shown += pageContentHeight;
++      }
++
++      const fileDate = (pageHealthCheckedMonth || REPORT_MONTH || "report").toString();
++      doc.save(`${d.pdfFileBase}-${fileDate}.pdf`);
++    } catch(err){
++      console.error("SEO PDF generation failed:", err);
++      alert(currentLang==="ar" ? "تعذّر إنشاء التقرير — حاول مرة أخرى." : "Couldn't generate the report — please try again.");
++    } finally {
++      container.innerHTML = "";
++      btn.disabled = false;
++      label.textContent = origLabel;
++      icon.classList.remove("spin");
++    }
++  }
++
+   /* ---------------- Benchmarks & Targets table ---------------- */
+   function renderTargets(){
+     const el = document.getElementById("targetsTable");
+@@ -1554,6 +1828,7 @@
+     renderPageTable();
+     renderPageHealthTable();
+     renderPriorities();
++    renderOpportunities();
+     renderTargets();
+     renderStatPair();
+   }
+@@ -1582,7 +1857,7 @@
+     const d = dict[lang];
+     document.documentElement.lang = lang;
+     document.documentElement.dir = lang==="ar" ? "rtl" : "ltr";
+-    const htmlKeys = new Set(["opp1","opp2","opp3"]);
++    const htmlKeys = new Set(["opp1"]);
+     document.querySelectorAll("[data-i18n]").forEach(el=>{
+       const k = el.getAttribute("data-i18n");
+       if(d[k]!==undefined){
+@@ -1622,6 +1897,7 @@
+     renderPageTable();
+     renderPageHealthTable();
+     renderPriorities();
++    renderOpportunities();
+     renderTargets();
+     renderStatPair();
+     if(currentDevice==="mobile") updateHero(currentRange); else updateHeroDesktop();
+@@ -1717,6 +1993,8 @@
+     applyLang(currentLang==="ar" ? "en" : "ar");
+   });
+ 
++  document.getElementById("pdfDownloadBtn").addEventListener("click", downloadSeoPdf);
++
+   buildAccordion();
+ 
+   /* ---------------- data.json auto-sync loader ----------------
+@@ -1761,5 +2039,7 @@
+   })();
+ 
+ </script>
++  <div id="pdfPrintable" aria-hidden="true"></div>
++
+ </body>
+ </html>
