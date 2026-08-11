@@ -404,9 +404,21 @@
   #pdfPrintable h1{ font-size:22px; margin:0 0 4px; color:var(--ink); }
   #pdfPrintable .pdf-sub{ font-size:12.5px; color:var(--ink-soft); margin:0 0 26px; }
   #pdfPrintable h2{ font-size:16px; margin:26px 0 12px; padding-bottom:8px; border-bottom:2px solid var(--signal); color:var(--ink); }
-  #pdfPrintable table{ width:100%; border-collapse:collapse; font-size:11.5px; }
-  #pdfPrintable th{ text-align:start; background:var(--ink); color:#fff; padding:8px 9px; font-weight:700; }
-  #pdfPrintable td{ padding:7px 9px; border-bottom:1px solid var(--hair); vertical-align:top; }
+  #pdfPrintable table{ width:100%; table-layout:fixed; border-collapse:collapse; font-size:11.5px; }
+  #pdfPrintable th{ text-align:start; background:var(--ink); color:#fff; padding:8px 9px; font-weight:700; overflow-wrap:break-word; }
+  #pdfPrintable td{ padding:7px 9px; border-bottom:1px solid var(--hair); vertical-align:top; overflow-wrap:break-word; word-break:break-word; }
+  /* Fixed layout needs each column told how wide to be, or the browser
+     falls back to sizing by content — which is exactly what silently
+     pushed 3 columns off the edge before: a single unbroken URL or a
+     long concatenated filename list has no natural break point, so it
+     was dragging the whole table past 900px and html2canvas was simply
+     clipping whatever fell outside that boundary. */
+  #pdfPrintable table.health-table th:nth-child(1), #pdfPrintable table.health-table td:nth-child(1){ width:21%; }
+  #pdfPrintable table.health-table th:nth-child(2), #pdfPrintable table.health-table td:nth-child(2){ width:9%; }
+  #pdfPrintable table.health-table th:nth-child(3), #pdfPrintable table.health-table td:nth-child(3){ width:24%; }
+  #pdfPrintable table.health-table th:nth-child(4), #pdfPrintable table.health-table td:nth-child(4){ width:24%; }
+  #pdfPrintable table.health-table th:nth-child(5), #pdfPrintable table.health-table td:nth-child(5){ width:11%; }
+  #pdfPrintable table.health-table th:nth-child(6), #pdfPrintable table.health-table td:nth-child(6){ width:11%; }
   #pdfPrintable tr:nth-child(even) td{ background:rgba(11,29,38,0.025); }
   #pdfPrintable .pdf-detail{ font-size:10.5px; color:var(--ink-soft); margin-top:3px; line-height:1.6; }
   #pdfPrintable .pdf-prio-item{ display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--hair); font-size:13px; }
@@ -664,18 +676,19 @@
 
     <div class="seo-grid reveal">
       <div class="seo-score-card">
-        <div class="score num">100</div>
+        <div class="score num" id="seoScoreVal">—</div>
         <div class="label" data-i18n="seoScoreLabel">تحسين محركات البحث (SEO)</div>
       </div>
       <div class="seo-score-card">
-        <div class="score num">100</div>
+        <div class="score num" id="bpScoreVal">—</div>
         <div class="label" data-i18n="bpScoreLabel">أفضل الممارسات</div>
       </div>
       <div class="seo-score-card">
-        <div class="score partial num">93–100</div>
+        <div class="score num" id="a11yScoreVal">—</div>
         <div class="label" data-i18n="a11yScoreLabel">إمكانية الوصول (جوال–مكتبي)</div>
       </div>
     </div>
+    <p class="pdf-export-text" id="scoresFreshnessNote" style="margin:-4px 0 20px;"></p>
 
     <h3 style="font-size:16.5px;font-weight:800;margin:0 0 14px;" data-i18n="kwTitle">أين تقف الكلمات المفتاحية المستهدفة اليوم</h3>
     <table class="kw-table reveal">
@@ -883,6 +896,9 @@
       pdfHealthColUrl:"الرابط",
       pdfFootNote:"تم إنشاء هذا التقرير تلقائياً من نفس البيانات المعروضة في لوحة المتابعة اللحظية على sila-website-report.vercel.app وقت التحميل. بيانات Chrome الحقيقية (CrUX) تصدر عن جوجل بتأخير يقارب 28 يوماً. إعداد: تقنية المعلومات — شركة صلة.",
       pdfFileBase:"تقرير-تحسين-السيو-صلة",
+      pdfContinued:"تابع",
+      scoresNotSyncedYet:"سيظهر هنا رقم حقيقي بعد أول مزامنة تالية — هذا القسم كان نصًا ثابتًا قبل الآن.",
+      scoresSyncedOn:(d)=>`محدَّث اعتبارًا من فحص ${d}`,
       kwNotInTop5:"خارج أفضل 5 صفحات",
       prioEyebrowBase:"أولويات الشهر",
       prioH2:"أهم الأشياء التي تستحق الاهتمام الآن",
@@ -983,6 +999,9 @@
       pdfHealthColUrl:"URL",
       pdfFootNote:"This report was generated automatically from the same data shown on the live dashboard at sila-website-report.vercel.app at the moment of download. Real Chrome visitor data (CrUX) is published by Google with a ~28-day lag. Prepared by: Information Technology — Silah.",
       pdfFileBase:"silah-seo-report",
+      pdfContinued:"continued",
+      scoresNotSyncedYet:"A real number will appear here after the next sync — this section was static text before now.",
+      scoresSyncedOn:(d)=>`Updated as of the ${d} scan`,
       kwNotInTop5:"Outside top 5 pages",
       prioEyebrowBase:"This Month's Priorities",
       prioH2:"The top things worth your attention right now",
@@ -1310,6 +1329,41 @@
      saying "homepage not checked yet" long after the scan covered it).
      Before the first scan has ever run, falls back to the same static
      dict text as computePriorities() does, for the same reason. */
+  /* Score cards used to be hand-typed literals (100 / 100 / "93-100")
+     sitting in the HTML, never touched by any automated process since
+     whenever someone first typed them in. Now reads the real numbers
+     from the same PSI homepage run that already feeds mobilePerfNow —
+     see fetch_psi_score() in update_data.py. Falls back to an honest
+     "not synced yet" message rather than a silent dash if the site's
+     data.json predates this fix and doesn't have the fields at all. */
+  function renderScoreCards(){
+    const d = dict[currentLang];
+    const seoEl = document.getElementById("seoScoreVal");
+    const bpEl = document.getElementById("bpScoreVal");
+    const a11yEl = document.getElementById("a11yScoreVal");
+    const noteEl = document.getElementById("scoresFreshnessNote");
+    if(!seoEl) return;
+
+    const have = typeof window.__seoScore === "number";
+    seoEl.textContent = have ? window.__seoScore : "—";
+    bpEl.textContent = typeof window.__bpScore === "number" ? window.__bpScore : "—";
+    if(typeof window.__a11yMobile === "number" && typeof window.__a11yDesktop === "number"){
+      const lo = Math.min(window.__a11yMobile, window.__a11yDesktop);
+      const hi = Math.max(window.__a11yMobile, window.__a11yDesktop);
+      a11yEl.textContent = lo === hi ? String(lo) : `${lo}–${hi}`;
+      a11yEl.classList.toggle("partial", lo < 90);
+    } else {
+      a11yEl.textContent = "—";
+    }
+
+    if(!have){
+      noteEl.textContent = d.scoresNotSyncedYet;
+      return;
+    }
+    const syncedMonth = window.__lighthouseScoresCheckedMonth;
+    noteEl.textContent = syncedMonth ? d.scoresSyncedOn(calendarLabel(syncedMonth, currentLang)) : "";
+  }
+
   function renderOpportunities(){
     const d = dict[currentLang];
     const schemaEl = document.getElementById("oppSchemaText");
@@ -1345,7 +1399,7 @@
      correctly this way because the browser's own text engine draws it
      (same as the on-screen tables), sidestepping jsPDF's native text()
      API, which has no real Arabic shaping support. */
-  function buildSeoPdfHtml(lang){
+  function buildPdfSheets(lang){
     const d = dict[lang];
     const now = new Date();
     const generatedStr = now.toLocaleDateString(lang==="ar"?"ar-SA":"en-GB", {year:"numeric",month:"long",day:"numeric"})
@@ -1378,60 +1432,82 @@
       return `<tr><td>${escapeHtml(name)}</td><td>${escapeHtml(posText)}</td></tr>`;
     }).join("");
 
-    const healthRows = pageHealthData.map(p=>{
-      const label = lang==="ar" ? p.nameAr : p.nameEn;
-      const schemaTxt = p.schema==null ? d.healthSchemaUnknown : (p.schema.hasExpectedType ? d.healthSchemaOk : d.healthSchemaMissing);
-
-      let altCell = d.healthSchemaUnknown;
-      if(p.altText != null){
-        altCell = p.altText.issueCount === 0 ? d.healthAltOk : (()=>{
-          const shown = (p.altText.examples||[]).slice(0,6);
-          const more = p.altText.issueCount - shown.length;
-          return `${d.healthAltIssue(p.altText.issueCount)}<div class="pdf-detail">${shown.map(f=>escapeHtml(f)).join("، ")}${more>0?` (${d.healthMoreCount(more)})`:""}</div>`;
-        })();
-      }
-
-      let seoCell = d.healthSchemaUnknown;
-      if(p.seoIssues != null){
-        seoCell = p.seoIssues.length === 0 ? d.healthSeoOk :
-          `${d.healthSeoIssue(p.seoIssues.length)}<div class="pdf-detail">${p.seoIssues.map(s=>escapeHtml(s.title)).join("؛ ")}</div>`;
-      }
-
-      const cssTxt = (p.unusedCssKb===null||p.unusedCssKb===undefined) ? "—" : `${p.unusedCssKb} KB`;
-      const scoreTxt = (p.mobileScore===null||p.mobileScore===undefined) ? "—" : p.mobileScore;
-
-      return `<tr>
-        <td><strong>${escapeHtml(label)}</strong><div class="pdf-detail">${escapeHtml(p.url||"")}</div></td>
-        <td>${schemaTxt}</td>
-        <td>${altCell}</td>
-        <td>${seoCell}</td>
-        <td>${cssTxt}</td>
-        <td>${scoreTxt}</td>
-      </tr>`;
-    }).join("");
-
-    const healthSection = pageHealthData.length
-      ? `<table><thead><tr>
-           <th>${d.healthColName}</th><th>${d.healthColSchema}</th><th>${d.healthColAlt}</th>
-           <th>${d.healthColSeo}</th><th>${d.healthColCss}</th><th>${d.healthColScore}</th>
-         </tr></thead><tbody>${healthRows}</tbody></table>`
-      : `<p>${d.healthCheckedNote}</p>`;
-
-    return `
+    const sheets = [`
       <h1>${d.pdfReportTitle}</h1>
       <p class="pdf-sub">${d.pdfGeneratedOn(generatedStr)} · ${syncedStr}</p>
-
       <h2>${d.pdfPrioHeading}</h2>
       ${prioItems}
-
       <h2>${d.pdfKwHeading}</h2>
       <table><thead><tr><th>${d.kwColPhrase}</th><th>${d.kwColPos}</th></tr></thead><tbody>${kwRows}</tbody></table>
+    `];
 
-      <h2>${d.pdfHealthHeading}</h2>
-      ${healthSection}
+    if(pageHealthData.length){
+      // Worst-first, not sitemap-crawl order: SEO issues weighted highest
+      // (most selective signal), then missing schema, then alt-text count
+      // (present on nearly every page, so least differentiating on its
+      // own). Whatever most needs attention now leads the report instead
+      // of being buried somewhere in 30 undifferentiated rows.
+      const severity = p =>
+        (p.seoIssues ? p.seoIssues.length * 20 : 0) +
+        (p.schema && !p.schema.hasExpectedType ? 15 : 0) +
+        (p.altText ? p.altText.issueCount * 0.3 : 0);
+      const sortedPages = [...pageHealthData].sort((a,b)=> severity(b) - severity(a));
 
-      <div class="pdf-foot">${d.pdfFootNote}</div>
-    `;
+      const rowsHtml = sortedPages.map(p=>{
+        const label = lang==="ar" ? p.nameAr : p.nameEn;
+        const schemaTxt = p.schema==null ? d.healthSchemaUnknown : (p.schema.hasExpectedType ? d.healthSchemaOk : d.healthSchemaMissing);
+
+        let altCell = d.healthSchemaUnknown;
+        if(p.altText != null){
+          altCell = p.altText.issueCount === 0 ? d.healthAltOk : (()=>{
+            const shown = (p.altText.examples||[]).slice(0,4);
+            const more = p.altText.issueCount - shown.length;
+            return `${d.healthAltIssue(p.altText.issueCount)}<div class="pdf-detail">${shown.map(f=>escapeHtml(f)).join("، ")}${more>0?` (${d.healthMoreCount(more)})`:""}</div>`;
+          })();
+        }
+
+        let seoCell = d.healthSchemaUnknown;
+        if(p.seoIssues != null){
+          seoCell = p.seoIssues.length === 0 ? d.healthSeoOk :
+            `${d.healthSeoIssue(p.seoIssues.length)}<div class="pdf-detail">${p.seoIssues.map(s=>escapeHtml(s.title)).join("؛ ")}</div>`;
+        }
+
+        const cssTxt = (p.unusedCssKb===null||p.unusedCssKb===undefined) ? "—" : `${p.unusedCssKb} KB`;
+        const scoreTxt = (p.mobileScore===null||p.mobileScore===undefined) ? "—" : p.mobileScore;
+
+        return `<tr>
+          <td><strong>${escapeHtml(label)}</strong><div class="pdf-detail">${escapeHtml(p.url||"")}</div></td>
+          <td>${schemaTxt}</td>
+          <td>${altCell}</td>
+          <td>${seoCell}</td>
+          <td>${cssTxt}</td>
+          <td>${scoreTxt}</td>
+        </tr>`;
+      });
+
+      // Chunked into page-sized tables instead of one continuous image:
+      // this is what actually fixes the missing columns (each chunk is
+      // small enough that html2canvas never needs to clip anything) and
+      // the ~59MB file size (many modest images compress far better than
+      // one multi-thousand-pixel-tall one).
+      const headerRow = `<tr>
+        <th>${d.healthColName}</th><th>${d.healthColSchema}</th><th>${d.healthColAlt}</th>
+        <th>${d.healthColSeo}</th><th>${d.healthColCss}</th><th>${d.healthColScore}</th>
+      </tr>`;
+      const CHUNK_SIZE = 8;
+      for(let i=0; i<rowsHtml.length; i+=CHUNK_SIZE){
+        const heading = i===0 ? d.pdfHealthHeading : `${d.pdfHealthHeading} (${d.pdfContinued})`;
+        sheets.push(`
+          <h2>${heading}</h2>
+          <table class="health-table"><thead>${headerRow}</thead><tbody>${rowsHtml.slice(i, i+CHUNK_SIZE).join("")}</tbody></table>
+        `);
+      }
+    } else {
+      sheets.push(`<h2>${d.pdfHealthHeading}</h2><p>${d.healthCheckedNote}</p>`);
+    }
+
+    sheets[sheets.length - 1] += `<div class="pdf-foot">${d.pdfFootNote}</div>`;
+    return sheets;
   }
 
   async function downloadSeoPdf(){
@@ -1453,34 +1529,41 @@
 
     const container = document.getElementById("pdfPrintable");
     try{
-      container.innerHTML = buildSeoPdfHtml(currentLang);
+      const sheets = buildPdfSheets(currentLang);
       container.dir = currentLang === "ar" ? "rtl" : "ltr";
-
-      // let the browser lay the now-populated off-screen container out
-      // (fonts, tables) before html2canvas measures/rasterizes it
-      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
       if(document.fonts && document.fonts.ready) await document.fonts.ready;
 
       const { jsPDF } = window.jspdf;
-      const canvas = await window.html2canvas(container, { useCORS:true, backgroundColor:"#ffffff", scale:2 });
-      const imgData = canvas.toDataURL("image/png");
-
       const doc = new jsPDF("p", "mm", "a4");
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
       const margin = 10;
       const imgWidth = pageWidth - margin * 2;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
       const pageContentHeight = pageHeight - margin * 2;
 
-      let position = margin;
-      doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
-      let shown = pageContentHeight;
-      while(shown < imgHeight){
-        position -= pageContentHeight;
-        doc.addPage();
+      for(let s=0; s<sheets.length; s++){
+        container.innerHTML = sheets[s];
+        // let the browser lay this sheet out (fonts, table widths) before
+        // html2canvas measures/rasterizes it
+        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const canvas = await window.html2canvas(container, { useCORS:true, backgroundColor:"#ffffff", scale:1.5 });
+        const imgData = canvas.toDataURL("image/png");
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        if(s > 0) doc.addPage();
+        let position = margin;
         doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
-        shown += pageContentHeight;
+        // safety net: if this particular sheet still ends up taller than
+        // one page (e.g. a page with an unusually long issue list), keep
+        // paginating it rather than cutting it off
+        let shown = pageContentHeight;
+        while(shown < imgHeight){
+          position -= pageContentHeight;
+          doc.addPage();
+          doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+          shown += pageContentHeight;
+        }
       }
 
       const fileDate = (pageHealthCheckedMonth || REPORT_MONTH || "report").toString();
@@ -1829,6 +1912,7 @@
     renderPageHealthTable();
     renderPriorities();
     renderOpportunities();
+    renderScoreCards();
     renderTargets();
     renderStatPair();
   }
@@ -1898,6 +1982,7 @@
     renderPageHealthTable();
     renderPriorities();
     renderOpportunities();
+    renderScoreCards();
     renderTargets();
     renderStatPair();
     if(currentDevice==="mobile") updateHero(currentRange); else updateHeroDesktop();
@@ -2016,6 +2101,11 @@
         if(Array.isArray(D.keywords)){ keywords.length = 0; D.keywords.forEach(k=>keywords.push(k)); }
         (D.pages||[]).forEach(pp => { const p = pageRegistry.find(x=>x.id===pp.id); if(p && pp.monthly) Object.assign(p.monthly, pp.monthly); });
         if(Array.isArray(D.pageHealth)){ pageHealthData = D.pageHealth; pageHealthCheckedMonth = D.pageHealthCheckedMonth || null; }
+        if(typeof D.seoScore === "number") window.__seoScore = D.seoScore;
+        if(typeof D.bestPracticesScore === "number") window.__bpScore = D.bestPracticesScore;
+        if(typeof D.a11yScoreMobile === "number") window.__a11yMobile = D.a11yScoreMobile;
+        if(typeof D.a11yScoreDesktop === "number") window.__a11yDesktop = D.a11yScoreDesktop;
+        if(D.lighthouseScoresCheckedMonth) window.__lighthouseScoresCheckedMonth = D.lighthouseScoresCheckedMonth;
         // refresh period wording so future months never show stale text
         ["ar","en"].forEach(l => {
           const dd = dict[l];
