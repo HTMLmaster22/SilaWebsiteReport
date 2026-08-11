@@ -288,6 +288,8 @@
   .page-url{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-soft); display:block; margin-top:2px; }
   .reco-text{ font-size:13px; color:var(--ink-soft); }
   .status-pill{ display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; padding:4px 11px; border-radius:100px; white-space:nowrap; }
+  .row-page-link{ color:var(--ink); text-decoration:none; border-bottom:1px dashed var(--hair); transition:color .15s, border-color .15s; }
+  .row-page-link:hover{ color:var(--signal); border-bottom-color:var(--signal); }
   .status-pill::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
   .status-pill.measured{ background:var(--moss-bg); color:var(--moss); }
   .status-pill.pending{ background:var(--amber-bg); color:var(--amber); }
@@ -366,6 +368,8 @@
   .seo-score-card .score{ font-size:34px; font-weight:700; color:var(--moss); }
   .seo-score-card .score.partial{ color:var(--amber); }
   .seo-score-card .label{ font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:4px; }
+  .seo-score-card .score-target{ font-size:11px; color:var(--ink-soft); margin-top:6px; min-height:14px; }
+  .seo-score-card .score-target strong{ color:var(--moss); }
   .tool-chip{
     font-size:12.5px; font-weight:700; padding:8px 15px; border-radius:100px;
     background:rgba(19,71,82,0.07); color:var(--teal); border:1px solid rgba(19,71,82,0.18);
@@ -678,6 +682,7 @@
       <div class="seo-score-card">
         <div class="score num" id="seoScoreVal">—</div>
         <div class="label" data-i18n="seoScoreLabel">تحسين محركات البحث (SEO)</div>
+        <div class="score-target" id="seoScoreTarget"></div>
       </div>
       <div class="seo-score-card">
         <div class="score num" id="bpScoreVal">—</div>
@@ -899,6 +904,8 @@
       pdfContinued:"تابع",
       scoresNotSyncedYet:"سيظهر هنا رقم حقيقي بعد أول مزامنة تالية — هذا القسم كان نصًا ثابتًا قبل الآن.",
       scoresSyncedOn:(d)=>`محدَّث اعتبارًا من فحص ${d}`,
+      scoreTargetReached:"✓ الهدف محقَّق بالفعل",
+      scoreTargetGap:(n)=>`الهدف: <strong>100</strong> — بعد إصلاح ${n} ${n===1?'مشكلة':'مشاكل'}`,
       kwNotInTop5:"خارج أفضل 5 صفحات",
       prioEyebrowBase:"أولويات الشهر",
       prioH2:"أهم الأشياء التي تستحق الاهتمام الآن",
@@ -1002,6 +1009,8 @@
       pdfContinued:"continued",
       scoresNotSyncedYet:"A real number will appear here after the next sync — this section was static text before now.",
       scoresSyncedOn:(d)=>`Updated as of the ${d} scan`,
+      scoreTargetReached:"✓ Target already reached",
+      scoreTargetGap:(n)=>`Target: <strong>100</strong> — after fixing ${n} issue${n===1?'':'s'}`,
       kwNotInTop5:"Outside top 5 pages",
       prioEyebrowBase:"This Month's Priorities",
       prioH2:"The top things worth your attention right now",
@@ -1196,7 +1205,7 @@
       const scoreCell = (p.mobileScore === null || p.mobileScore === undefined) ? `<span class="cell-dash">—</span>` : `<span class="cell-num num">${p.mobileScore}</span>`;
 
       return `<tr>
-        <td><strong>${label}</strong></td>
+        <td><a class="row-page-link" href="${escapeHtml(p.url||'#')}" target="_blank" rel="noopener noreferrer"><strong>${label}</strong></a></td>
         <td><span class="status-pill ${schemaCls}">${schemaText}</span></td>
         <td><span class="status-pill ${altCls} ${altClickable}"${altClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${altText}</span>${altDetail}</td>
         <td><span class="status-pill ${seoCls} ${seoClickable}"${seoClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${seoText}</span>${seoDetail}</td>
@@ -1342,6 +1351,7 @@
     const bpEl = document.getElementById("bpScoreVal");
     const a11yEl = document.getElementById("a11yScoreVal");
     const noteEl = document.getElementById("scoresFreshnessNote");
+    const targetEl = document.getElementById("seoScoreTarget");
     if(!seoEl) return;
 
     const have = typeof window.__seoScore === "number";
@@ -1354,6 +1364,22 @@
       a11yEl.classList.toggle("partial", lo < 90);
     } else {
       a11yEl.textContent = "—";
+    }
+
+    // Target isn't a guessed/projected number — 100 is Lighthouse's actual
+    // ceiling for the SEO category, reached for real if every currently-
+    // failing audit passes. Reuses the homepage's own seoIssues list
+    // (pageHealthData id "home") rather than a separate calculation, since
+    // that's the same page this score card is measuring.
+    if(targetEl){
+      const home = pageHealthData.find(p => p.id === "home");
+      if(!home || home.seoIssues == null){
+        targetEl.textContent = "";
+      } else if(home.seoIssues.length === 0){
+        targetEl.textContent = d.scoreTargetReached;
+      } else {
+        targetEl.innerHTML = d.scoreTargetGap(home.seoIssues.length);
+      }
     }
 
     if(!have){
