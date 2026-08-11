@@ -299,12 +299,34 @@ def fetch_crux_history():
 
 
 def fetch_psi_score(strategy):
+    """Homepage PSI run for the given strategy. Returns all four Lighthouse
+    category scores from one call -- Performance, SEO, Accessibility, and
+    Best Practices are all computed together by Lighthouse regardless of
+    which categories you ask for in scoring terms; requesting them
+    explicitly just makes the API return them. Previously this only asked
+    for (and returned) performance, so the SEO/Best Practices/Accessibility
+    score cards on the site were hand-typed once and never updated by any
+    automated process since -- correct fix is to actually read the numbers
+    already present in the response we were already making, not add a
+    second request."""
     url = ("https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
            f"?url={urllib.parse.quote(ORIGIN + '/', safe='')}"
-           f"&strategy={strategy}&category=performance&key={API_KEY}")
+           f"&strategy={strategy}&category=performance&category=seo"
+           f"&category=accessibility&category=best-practices&key={API_KEY}")
     resp = http_json(url)
-    score = resp["lighthouseResult"]["categories"]["performance"]["score"]
-    return int(round(score * 100))
+    cats = resp["lighthouseResult"]["categories"]
+
+    def pct(key):
+        c = cats.get(key, {})
+        s = c.get("score")
+        return int(round(s * 100)) if isinstance(s, (int, float)) else None
+
+    return {
+        "performance": pct("performance"),
+        "seo": pct("seo"),
+        "accessibility": pct("accessibility"),
+        "bestPractices": pct("best-practices"),
+    }
 
 
 SKIP_SEO_AUDITS = {"image-alt"}  # redundant with check_alt_text() below, which is more
@@ -539,8 +561,10 @@ def main():
         print("CrUX/homepage data already at", new_month, "— skipping that part, still running page-health scan below.")
     else:
         print("Fetching PageSpeed Insights scores ...")
-        mobile_score = fetch_psi_score("mobile")
-        desktop_score = fetch_psi_score("desktop")
+        mobile_psi = fetch_psi_score("mobile")
+        desktop_psi = fetch_psi_score("desktop")
+        mobile_score = mobile_psi["performance"]
+        desktop_score = desktop_psi["performance"]
         print("PSI mobile:", mobile_score, "| desktop:", desktop_score)
 
         prev_now = data.get("mobilePerfNow")
@@ -548,6 +572,19 @@ def main():
         data["mobilePerfNow"] = mobile_score
         data["desktopPerfScore"] = desktop_score
         data["reportMonth"] = new_month
+
+        # Real SEO/Best Practices/Accessibility scores from the same PSI
+        # runs above -- previously these three were hand-typed once into
+        # index.html (100 / 100 / "93-100") and never touched again by any
+        # automated process. Mobile score used for the single-number cards
+        # (SEO and Best Practices don't meaningfully differ by device in
+        # Lighthouse); Accessibility kept as a mobile-desktop range since
+        # the existing card's own label already implied that was the intent.
+        data["seoScore"] = mobile_psi["seo"]
+        data["bestPracticesScore"] = mobile_psi["bestPractices"]
+        data["a11yScoreMobile"] = mobile_psi["accessibility"]
+        data["a11yScoreDesktop"] = desktop_psi["accessibility"]
+        data["lighthouseScoresCheckedMonth"] = new_month
 
         if months is not None:
             y0, m0 = months[0]
