@@ -1062,7 +1062,7 @@
     body.innerHTML = keywords.map(k=>{
       const name = currentLang==="ar" ? k.ar : k.en;
       const posText = k.pos===null ? d.kwNotInTop5 : `${currentLang==="ar"?"صفحة":"Page"} ${k.page} · #${k.pos}`;
-      return `<tr><td>${name}</td><td class="kw-pos ${k.tier}">${posText}</td></tr>`;
+      return `<tr><td>${escapeHtml(name)}</td><td class="kw-pos ${k.tier}">${escapeHtml(posText)}</td></tr>`;
     }).join("");
   }
 
@@ -1132,14 +1132,14 @@
       const hasDesktop = cur.desktop !== undefined;
       const measured = hasMobile || hasDesktop;
       const label = currentLang==="ar" ? p.labelAr : p.labelEn;
-      const urlLine = p.url ? `<span class="page-url">${p.url}</span>` : "";
+      const urlLine = p.url ? `<span class="page-url">${escapeHtml(p.url)}</span>` : "";
       const mobileCell = hasMobile ? `<span class="cell-num num">${cur.mobile}</span>` : `<span class="cell-dash">—</span>`;
       const desktopCell = hasDesktop ? `<span class="cell-num num">${cur.desktop}</span>` : `<span class="cell-dash">—</span>`;
       const statusCls = measured ? "measured" : "pending";
       const statusText = measured ? d.pageStatusMeasured : d.pageStatusPending;
       const reco = measured ? pageReco(cur) : (currentLang==="ar" ? p.noteAr : p.noteEn);
       return `<tr>
-        <td><strong>${label}</strong>${urlLine}</td>
+        <td><strong>${escapeHtml(label)}</strong>${urlLine}</td>
         <td>${mobileCell}</td>
         <td>${desktopCell}</td>
         <td><span class="status-pill ${statusCls}">${statusText}</span></td>
@@ -1156,6 +1156,21 @@
   // filenames in the alt-text detail list.
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  // escapeHtml() above only escapes HTML metacharacters -- it does NOT
+  // validate URL scheme, so escapeHtml("javascript:...") passes through
+  // unchanged and would still execute on click if placed directly in an
+  // href. Page URLs currently only ever come from this site's own Yoast
+  // sitemap (not external/user input), so this isn't exploitable today --
+  // but that's trusting the upstream source to always stay clean forever,
+  // which isn't a real security boundary. Anything going into href/src
+  // should go through this first.
+  function safeHref(url){
+    if(typeof url !== "string") return "#";
+    const trimmed = url.trim();
+    if(/^https?:\/\//i.test(trimmed)) return escapeHtml(trimmed);
+    return "#";
   }
 
   function renderPageHealthTable(){
@@ -1205,7 +1220,7 @@
       const scoreCell = (p.mobileScore === null || p.mobileScore === undefined) ? `<span class="cell-dash">—</span>` : `<span class="cell-num num">${p.mobileScore}</span>`;
 
       return `<tr>
-        <td><a class="row-page-link" href="${escapeHtml(p.url||'#')}" target="_blank" rel="noopener noreferrer"><strong>${label}</strong></a></td>
+        <td><a class="row-page-link" href="${safeHref(p.url)}" target="_blank" rel="noopener noreferrer"><strong>${label}</strong></a></td>
         <td><span class="status-pill ${schemaCls}">${schemaText}</span></td>
         <td><span class="status-pill ${altCls} ${altClickable}"${altClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${altText}</span>${altDetail}</td>
         <td><span class="status-pill ${seoCls} ${seoClickable}"${seoClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${seoText}</span>${seoDetail}</td>
@@ -1310,10 +1325,10 @@
       let text = "";
       if(it.type==="cwv"){
         const name = currentLang==="ar" ? it.m.nameAr : it.m.nameEn;
-        text = d.prioCwv.replace("{metric}", `<strong>${name}</strong>`);
+        text = d.prioCwv.replace("{metric}", `<strong>${escapeHtml(name)}</strong>`);
       } else if(it.type==="kw"){
         const name = currentLang==="ar" ? it.k.ar : it.k.en;
-        text = d.prioKw.replace("{kw}", `<strong>${name}</strong>`);
+        text = d.prioKw.replace("{kw}", `<strong>${escapeHtml(name)}</strong>`);
       } else if(it.type==="pending"){
         text = d.prioPending
           .replace("{n}", it.count)
@@ -1436,10 +1451,10 @@
       let text = "";
       if(it.type==="cwv"){
         const name = lang==="ar" ? it.m.nameAr : it.m.nameEn;
-        text = d.prioCwv.replace("{metric}", name);
+        text = d.prioCwv.replace("{metric}", escapeHtml(name));
       } else if(it.type==="kw"){
         const name = lang==="ar" ? it.k.ar : it.k.en;
-        text = d.prioKw.replace("{kw}", name);
+        text = d.prioKw.replace("{kw}", escapeHtml(name));
       } else if(it.type==="pending"){
         text = d.prioPending.replace("{n}", it.count).replace("{link}", d.prioPendingLink);
       } else if(it.type==="schema"){
@@ -1617,7 +1632,7 @@
       const latest = m.data[m.data.length-1];
       const name = currentLang==="ar" ? m.nameAr : m.nameEn;
       rows.push(`<tr>
-        <td><strong>${name}</strong><span class="page-url">${m.fullAr}</span></td>
+        <td><strong>${escapeHtml(name)}</strong><span class="page-url">${escapeHtml(m.fullAr)}</span></td>
         <td class="num">${fmt(latest,m)} ${unitTxt(m)}</td>
         <td class="num">≤ ${fmt(m.good,m)} ${unitTxt(m)}</td>
         <td class="num">≤ ${fmt(m.good,m)} ${unitTxt(m)}</td>
