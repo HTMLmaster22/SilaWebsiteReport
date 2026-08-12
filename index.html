@@ -282,6 +282,37 @@
   .kw-table td{ padding:13px 14px; border-bottom:1px solid var(--hair); font-size:14.5px; vertical-align:top; }
   .kw-table tr:last-child td{ border-bottom:none; }
   .kw-pos{ font-weight:700; }
+  .kw-rank{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:20px; height:20px; margin-inline-end:9px; border-radius:6px;
+    background:var(--ink); color:#fff; font-size:11px; font-weight:800;
+  }
+
+  /* ===== Marketing action plan ===== */
+  .mkt-plan{ margin-bottom:30px; }
+  .mkt-plan-title{
+    display:flex; align-items:center; gap:9px; font-size:16.5px; font-weight:800; margin:0 0 6px; color:var(--ink);
+  }
+  .mkt-plan-title svg{ width:19px; height:19px; color:var(--moss); flex-shrink:0; }
+  .mkt-card{
+    border:1px solid var(--hair); border-radius:14px; padding:16px 18px; margin-bottom:12px; background:var(--paper-card);
+  }
+  .mkt-card-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .mkt-card-title{ font-size:14px; font-weight:800; color:var(--ink); }
+  .mkt-card-badge{
+    font-size:11px; font-weight:800; padding:3px 10px; border-radius:100px;
+    background:rgba(19,71,82,0.09); color:var(--teal); flex-shrink:0;
+  }
+  .mkt-card-why, .mkt-card-how{ font-size:12.5px; color:var(--ink-soft); margin-top:7px; line-height:1.6; }
+  .mkt-card-how strong{ color:var(--ink); font-weight:700; }
+  .mkt-card-toggle{
+    display:inline-flex; align-items:center; gap:4px; margin-top:10px; font-size:12px; font-weight:700;
+    color:var(--signal); cursor:pointer; user-select:none; background:none; border:none; padding:0; font-family:inherit;
+  }
+  .mkt-card-toggle::after{ content:"›"; font-weight:900; transition:transform .15s ease; }
+  .mkt-card-toggle.open::after{ transform:rotate(90deg); }
+  .mkt-card-pages{ display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--hair); font-size:12.5px; color:var(--ink-soft); line-height:2; }
+  .mkt-card-pages.open{ display:block; }
   .kw-pos.weak{ color:var(--poor); }
   .kw-pos.mid{ color:var(--amber); }
   .kw-pos.strong{ color:var(--moss); }
@@ -695,7 +726,8 @@
     </div>
     <p class="pdf-export-text" id="scoresFreshnessNote" style="margin:-4px 0 20px;"></p>
 
-    <h3 style="font-size:16.5px;font-weight:800;margin:0 0 14px;" data-i18n="kwTitle">أين تقف الكلمات المفتاحية المستهدفة اليوم</h3>
+    <h3 style="font-size:16.5px;font-weight:800;margin:0 0 6px;" data-i18n="kwTitle">أين تقف الكلمات المفتاحية المستهدفة اليوم</h3>
+    <p class="pdf-export-text" style="margin:0 0 14px;" data-i18n="kwTitleCaption"></p>
     <table class="kw-table reveal">
       <thead><tr>
         <th data-i18n="kwColPhrase">الكلمة المفتاحية</th>
@@ -703,6 +735,15 @@
       </tr></thead>
       <tbody id="kwTableBody"></tbody>
     </table>
+
+    <div class="mkt-plan reveal" id="mktPlanSection">
+      <h3 class="mkt-plan-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span data-i18n="mktPlanTitle">خطة عمل جاهزة لفريق التسويق</span>
+      </h3>
+      <p class="pdf-export-text" style="margin:0 0 16px;" data-i18n="mktPlanIntro"></p>
+      <div id="mktPlanList"></div>
+    </div>
 
     <h3 style="font-size:16.5px;font-weight:800;margin:0 0 14px;" data-i18n="oppTitle">فرص تحسين مرصودة</h3>
     <div class="opp-list reveal">
@@ -885,7 +926,22 @@
       seoEyebrow:"لفريق التسويق", seoH2:"ماذا يعني هذا لتحسين محركات البحث (SEO)",
       seoP:"سرعة الموقع وصحته التقنية عاملان مباشران ضمن خوارزمية ترتيب جوجل — هذا القسم يربط الأرقام أعلاه بما يهم فريق التسويق تحديداً.",
       seoScoreLabel:"تحسين محركات البحث (SEO)", bpScoreLabel:"أفضل الممارسات", a11yScoreLabel:"إمكانية الوصول (جوال–مكتبي)",
-      kwTitle:"أين تقف الكلمات المفتاحية المستهدفة اليوم",
+      kwTitle:"ترتيب أولوية الكلمات المفتاحية — من الأهم للأقل إلحاحًا",
+      kwTitleCaption:"مرتّبة تلقائيًا: رقم 1 يحتاج عمل أولاً. القائمة حاليًا 5 كلمات متابَعة يدويًا — تتبّع تلقائي لعدد أكبر يحتاج ربط Google Search Console.",
+      mktPlanTitle:"خطة عمل جاهزة لفريق التسويق",
+      mktPlanIntro:"كل بند هنا قابل للتنفيذ مباشرة من لوحة تحكم ووردبريس — بدون الحاجة لمبرمج.",
+      mktShowPages:"عرض القائمة",
+      mktBadgeCount:(n)=>`${n} ${n===1?'صفحة':'صفحات'}`,
+      mktMetaTitle:(n)=>`صياغة وصف تعريفي (Meta Description) لـ ${n} صفحة`,
+      mktMetaWhy:"بدون وصف تعريفي، جوجل يختار سطرًا عشوائيًا من محتوى الصفحة لعرضه في نتائج البحث — غالبًا لا يشجّع الزائر على الضغط.",
+      mktMetaHow:"من ووردبريس: افتح الصفحة للتعديل ← مربع Yoast SEO أسفل المحرر ← اكتب وصف من <strong>120-155 حرف</strong> يتضمن الكلمة المفتاحية المستهدفة.",
+      mktKwTitle:(n)=>`تقوية المحتوى لـ ${n} كلمات مفتاحية متأخرة`,
+      mktKwWhy:"هذه الكلمات إما خارج أفضل 5 صفحات في نتائج البحث أو في صفحة نتائج ثانية — محتوى أعمق ومخصص لها يرفع ترتيبها تدريجيًا.",
+      mktKwHow:"راجعي الصفحة الحالية المستهدفة لكل كلمة، وأضيفي فقرات أعمق حولها، أو أنشئي صفحة مخصصة إذا ما فيه صفحة واضحة تستهدفها فعليًا.",
+      mktAltTitle:(n)=>`إضافة نص بديل (Alt Text) لصور في ${n} صفحة`,
+      mktAltWhy:"النص البديل يساعد جوجل على فهم محتوى الصور، ويحسّن تجربة الوصول لذوي الإعاقة البصرية.",
+      mktAltHow:"من مكتبة الوسائط في ووردبريس: افتحي كل صورة ← حقل <strong>Alternative Text</strong> ← صف الصورة بجملة قصيرة وواضحة.",
+      mktPlanEmpty:"لا توجد بيانات كافية بعد — بانتظار أول مزامنة لبيانات الصفحات.",
       kwColPhrase:"الكلمة المفتاحية", kwColPos:"الترتيب الحالي",
       oppTitle:"فرص تحسين مرصودة",
       opp1:"<strong>توحيد صفحات التوطين:</strong> عدة صفحات منفصلة تستهدف موضوعات متقاربة — دمجها في صفحة مرجعية واحدة قوية يقوّي إشارة الترتيب بدلاً من تشتيتها.",
@@ -911,6 +967,7 @@
       prioH2:"أهم الأشياء التي تستحق الاهتمام الآن",
       prioP:"ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.",
       prioCwv:"{metric} على الجوال يحتاج تحسين — هذا أضعف مقياس أداء حالياً، ويؤثر مباشرة على تجربة الـ73% من الزوّار الذين يفتحون الموقع من الجوال.",
+      prioBroken:(n)=>`${n} ${n===1?'صفحة تُرجع':'صفحات تُرجع'} خطأ فعلي عند الفحص (HTTP غير ناجح) — أولوية عاجلة، الصفحة قد تكون معطّلة فعليًا للزوّار.`,
       prioKw:"الكلمة المفتاحية {kw} لا تظهر ضمن نتائج البحث حالياً — فرصة حقيقية لصفحة مخصصة تستهدفها مباشرة.",
       prioPending:"{n} صفحات رئيسية لم تُقَس بعد هذا الشهر — {link} لإضافتها والحصول على صورة كاملة.",
       prioPendingLink:"انتقل لجدول الصفحات",
@@ -991,7 +1048,22 @@
       seoEyebrow:"For the marketing team", seoH2:"What this means for SEO",
       seoP:"Site speed and technical health are direct factors in Google's ranking algorithm — this section connects the numbers above to what actually matters for marketing.",
       seoScoreLabel:"SEO Score", bpScoreLabel:"Best Practices", a11yScoreLabel:"Accessibility (mobile–desktop)",
-      kwTitle:"Where target keywords stand today",
+      kwTitle:"Keyword priority ranking — most urgent first",
+      kwTitleCaption:"Auto-ranked: #1 needs work first. This list is currently 5 manually-tracked keywords — automatic tracking of more needs Google Search Console connected.",
+      mktPlanTitle:"Ready-to-run action plan for marketing",
+      mktPlanIntro:"Every item here is doable directly from the WordPress admin — no developer needed.",
+      mktShowPages:"Show list",
+      mktBadgeCount:(n)=>`${n} page${n===1?'':'s'}`,
+      mktMetaTitle:(n)=>`Write a meta description for ${n} page${n===1?'':'s'}`,
+      mktMetaWhy:"Without a meta description, Google picks a random line from the page to show in search results — usually not compelling enough to click.",
+      mktMetaHow:"In WordPress: open the page to edit ← Yoast SEO box below the editor ← write <strong>120-155 characters</strong> including the target keyword.",
+      mktKwTitle:(n)=>`Strengthen content for ${n} underperforming keyword${n===1?'':'s'}`,
+      mktKwWhy:"These keywords are either outside the top 5 results or on a second results page — deeper, dedicated content gradually improves ranking.",
+      mktKwHow:"Review the current page targeting each keyword and add deeper content around it, or create a dedicated page if none clearly targets it yet.",
+      mktAltTitle:(n)=>`Add alt text to images on ${n} page${n===1?'':'s'}`,
+      mktAltWhy:"Alt text helps Google understand image content, and improves accessibility for visually impaired visitors.",
+      mktAltHow:"In the WordPress Media Library: open each image ← <strong>Alternative Text</strong> field ← describe it in one short, clear sentence.",
+      mktPlanEmpty:"Not enough data yet — waiting on the first page-data sync.",
       kwColPhrase:"Keyword", kwColPos:"Current position",
       oppTitle:"Opportunities found",
       opp1:"<strong>Consolidate localization pages:</strong> Several separate pages target overlapping topics — merging them into one strong reference page concentrates ranking signal instead of splitting it.",
@@ -1017,6 +1089,7 @@
       prioH2:"The top things worth your attention right now",
       prioP:"Auto-generated from this month's data — ranking what's worth acting on first.",
       prioCwv:"{metric} on mobile needs improvement — it's currently the weakest performance metric, and it directly affects the 73% of visitors who open the site on mobile.",
+      prioBroken:(n)=>`${n} page${n===1?'':'s'} returning an actual error on check (unsuccessful HTTP status) — urgent, the page may genuinely be broken for visitors.`,
       prioKw:"The keyword {kw} isn't ranking in search results at all — a real opportunity for a dedicated page targeting it directly.",
       prioPending:"{n} key pages haven't been measured yet this month — {link} to add them for the full picture.",
       prioPendingLink:"jump to the page table",
@@ -1061,10 +1134,19 @@
   function renderKeywordTable(){
     const body = document.getElementById("kwTableBody");
     const d = dict[currentLang];
-    body.innerHTML = keywords.map(k=>{
+    // Ranked worst-first, computed from the real page+pos numbers rather
+    // than the tier field: not ranking at all is worst (Infinity), then
+    // page dominates position (being on page 1 at all matters far more
+    // for real clicks than a few positions within a page), position
+    // breaks ties within the same page.
+    const scored = keywords.map(k => ({
+      k, score: k.pos === null ? Infinity : (k.page * 100 + k.pos)
+    })).sort((a,b) => b.score - a.score);
+
+    body.innerHTML = scored.map(({k}, i)=>{
       const name = currentLang==="ar" ? k.ar : k.en;
       const posText = k.pos===null ? d.kwNotInTop5 : `${currentLang==="ar"?"صفحة":"Page"} ${k.page} · #${k.pos}`;
-      return `<tr><td>${escapeHtml(name)}</td><td class="kw-pos ${k.tier}">${escapeHtml(posText)}</td></tr>`;
+      return `<tr><td><span class="kw-rank">${i+1}</span>${escapeHtml(name)}</td><td class="kw-pos ${k.tier}">${escapeHtml(posText)}</td></tr>`;
     }).join("");
   }
 
@@ -1280,6 +1362,16 @@
   function computePriorities(){
     const list = [];
 
+    // 0) pages actually returning a broken HTTP status — checked first and
+    // deliberately not competing with the .slice(0,5) cap below, since an
+    // actively broken/inaccessible page is more urgent than anything else
+    // this function tracks. Found while building the marketing action plan
+    // (business-center-cost: both missing <title> AND a failing status code
+    // turned up together) -- this is IT's problem, not marketing's, so it's
+    // surfaced here rather than in the marketing section.
+    const broken = pageHealthData.filter(p => (p.seoIssues||[]).some(i => i.id === "http-status-code"));
+    const brokenList = broken.length ? [{ sev:"poor", type:"broken", count: broken.length, pages: broken }] : [];
+
     // 1) weakest sitewide mobile CWV metric
     let worst = null, worstRank = -1;
     metrics.forEach(m=>{
@@ -1315,7 +1407,7 @@
       list.push({ sev:"ni", type:"alt" });
     }
 
-    return list.slice(0,5);
+    return brokenList.concat(list.slice(0,5));
   }
 
   function renderPriorities(){
@@ -1326,7 +1418,9 @@
     const items = computePriorities();
     el.innerHTML = items.map((it,i)=>{
       let text = "";
-      if(it.type==="cwv"){
+      if(it.type==="broken"){
+        text = d.prioBroken(it.count);
+      } else if(it.type==="cwv"){
         const name = currentLang==="ar" ? it.m.nameAr : it.m.nameEn;
         text = d.prioCwv.replace("{metric}", `<strong>${escapeHtml(name)}</strong>`);
       } else if(it.type==="kw"){
@@ -1341,7 +1435,7 @@
       } else if(it.type==="alt"){
         text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
       }
-      const ownerMap = { cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared] };
+      const ownerMap = { broken:["tech",d.ownerTech], cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared] };
       const [ocls, otxt] = ownerMap[it.type] || ["tech", d.ownerTech];
       return `<div class="priority-item ${it.sev}">
         <span class="priority-num num">0${i+1}</span>
@@ -1408,6 +1502,81 @@
     noteEl.textContent = syncedMonth ? d.scoresSyncedOn(calendarLabel(syncedMonth, currentLang)) : "";
   }
 
+  /* Marketing action plan — everything here is deliberately scoped to
+     tasks doable from the WordPress admin with no developer involved:
+     meta descriptions and alt text are both plain content-editing fields,
+     keyword content gaps are a writing/content-strategy task. Schema
+     markup, unused CSS/JS, and Core Web Vitals stay out of this section
+     on purpose — those need code changes and belong with IT instead.
+     Built from the same pageHealthData/keywords already driving every
+     other section, so this can't say something different from what the
+     rest of the report says. */
+  function mktCard(id, title, badge, why, how, items){
+    const itemsHtml = items.length
+      ? `<button class="mkt-card-toggle" type="button" aria-expanded="false">${dict[currentLang].mktShowPages}</button>
+         <div class="mkt-card-pages">${items.map(escapeHtml).map(x=>`<div>${x}</div>`).join("")}</div>`
+      : "";
+    return `<div class="mkt-card">
+      <div class="mkt-card-head"><span class="mkt-card-title">${escapeHtml(title)}</span><span class="mkt-card-badge">${escapeHtml(badge)}</span></div>
+      <div class="mkt-card-why">${escapeHtml(why)}</div>
+      <div class="mkt-card-how">${how}</div>
+      ${itemsHtml}
+    </div>`;
+  }
+
+  function renderMarketingPlan(){
+    const d = dict[currentLang];
+    const list = document.getElementById("mktPlanList");
+    if(!list) return;
+
+    const cards = [];
+
+    const metaMissing = pageHealthData.filter(p => (p.seoIssues||[]).some(i => i.id === "meta-description"));
+    if(metaMissing.length){
+      cards.push(mktCard(
+        "meta", d.mktMetaTitle(metaMissing.length), d.mktBadgeCount(metaMissing.length),
+        d.mktMetaWhy, d.mktMetaHow,
+        metaMissing.map(p => currentLang==="ar" ? p.nameAr : p.nameEn)
+      ));
+    }
+
+    const kwScored = [...keywords].sort((a,b) => {
+      const sa = a.pos===null?Infinity:(a.page*100+a.pos), sb = b.pos===null?Infinity:(b.page*100+b.pos);
+      return sb - sa;
+    }).filter(k => k.pos === null || k.page > 1);
+    if(kwScored.length){
+      cards.push(mktCard(
+        "kw", d.mktKwTitle(kwScored.length), d.mktBadgeCount(kwScored.length),
+        d.mktKwWhy, d.mktKwHow,
+        kwScored.map(k => currentLang==="ar" ? k.ar : k.en)
+      ));
+    }
+
+    const altMissing = pageHealthData.filter(p => p.altText && p.altText.issueCount > 0);
+    if(altMissing.length){
+      cards.push(mktCard(
+        "alt", d.mktAltTitle(altMissing.length), d.mktBadgeCount(altMissing.length),
+        d.mktAltWhy, d.mktAltHow,
+        altMissing.map(p => currentLang==="ar" ? p.nameAr : p.nameEn)
+      ));
+    }
+
+    list.innerHTML = cards.length ? cards.join("") : `<p class="pdf-export-text">${d.mktPlanEmpty}</p>`;
+  }
+
+  (function initMktPlanExpand(){
+    const list = document.getElementById("mktPlanList");
+    if(!list) return;
+    list.addEventListener("click", function(e){
+      const btn = e.target.closest(".mkt-card-toggle");
+      if(!btn) return;
+      const detail = btn.nextElementSibling;
+      const open = detail.classList.toggle("open");
+      btn.classList.toggle("open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  })();
+
   function renderOpportunities(){
     const d = dict[currentLang];
     const schemaEl = document.getElementById("oppSchemaText");
@@ -1452,7 +1621,9 @@
 
     const prioItems = computePriorities().map((it,i)=>{
       let text = "";
-      if(it.type==="cwv"){
+      if(it.type==="broken"){
+        text = d.prioBroken(it.count);
+      } else if(it.type==="cwv"){
         const name = lang==="ar" ? it.m.nameAr : it.m.nameEn;
         text = d.prioCwv.replace("{metric}", escapeHtml(name));
       } else if(it.type==="kw"){
@@ -1465,7 +1636,7 @@
       } else if(it.type==="alt"){
         text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
       }
-      const ownerMap = { cwv:d.ownerTech, kw:d.ownerMkt, pending:d.ownerTech, schema:d.ownerTech, alt:d.ownerShared };
+      const ownerMap = { broken:d.ownerTech, cwv:d.ownerTech, kw:d.ownerMkt, pending:d.ownerTech, schema:d.ownerTech, alt:d.ownerShared };
       const otxt = ownerMap[it.type] || d.ownerTech;
       return `<div class="pdf-prio-item"><span class="pdf-prio-num">0${i+1}</span><div>${text}<div class="pdf-owner">${d.ownerLabel}: ${otxt}</div></div></div>`;
     }).join("") || `<p>—</p>`;
@@ -1957,6 +2128,7 @@
     renderPriorities();
     renderOpportunities();
     renderScoreCards();
+    renderMarketingPlan();
     renderTargets();
     renderStatPair();
   }
@@ -2027,6 +2199,7 @@
     renderPriorities();
     renderOpportunities();
     renderScoreCards();
+    renderMarketingPlan();
     renderTargets();
     renderStatPair();
     if(currentDevice==="mobile") updateHero(currentRange); else updateHeroDesktop();
