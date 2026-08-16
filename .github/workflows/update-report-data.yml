@@ -38,9 +38,21 @@ jobs:
             # this push on Aug 9 2026 — origin/main has moved on, and a plain
             # `git push` gets rejected as non-fast-forward. Our commit only
             # ever touches data.json, so rebasing onto the current tip right
-            # before pushing is safe and clears that race without needing a
-            # human to manually re-run the job.
+            # before pushing is meant to clear that race without a human
+            # needing to manually re-run the job.
+            #
+            # -X theirs is required to actually make that true, not just -X
+            # on its own (Aug 17 2026 fix: a run failed with an unresolved
+            # conflict because this flag was missing entirely). During a
+            # REBASE specifically, "ours"/"theirs" are reversed from their
+            # meaning in a normal merge: "ours" is origin/main (the branch
+            # being rebased onto), "theirs" is this run's own fresh commit
+            # being replayed on top. -X theirs makes THIS run's just-scanned
+            # data win the conflict, which is what we actually want — the
+            # whole point of this step is that our freshly-computed
+            # data.json should always be the one that lands, not whatever
+            # was on main before we started.
             git fetch origin main
-            git rebase origin/main
+            git rebase -X theirs origin/main
             git push
           fi
