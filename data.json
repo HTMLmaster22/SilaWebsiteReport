@@ -322,7 +322,7 @@
       "nameAr": "حلول التوطين والتوظيف |",
       "nameEn": "حلول التوطين والتوظيف |",
       "url": "https://www.silah.com.sa/",
-      "checkedAt": "2026-08-15",
+      "checkedAt": "2026-08-16",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -336,45 +336,136 @@
         "totalImages": 23,
         "issueCount": 23,
         "examples": [
-          "شعار-صلة-محدث-scaled.avif",
-          "تطبيق-صلة-silah-application_compressed-scaled.avif",
-          "باقات-صلة-packages_compressed-scaled.avif",
-          "background-1_compressed-scaled.avif",
-          "logosilah_compressed.avif",
-          "logosilah_compressed.avif",
-          "logosilah_compressed.avif",
-          "Basic-300x270.avif",
-          "Silver.avif",
-          "Gold.avif",
-          "Platinum.avif",
-          "Basic-300x270.avif",
-          "Silver.avif",
-          "Gold.avif",
-          "Platinum.avif",
-          "Training.avif",
-          "MOL.avif",
-          "HRDF-1.avif",
-          "Tarahum.avif",
-          "i.be-2.avif",
-          "Bnood-1.avif",
-          "Monshaat.avif",
-          "شعار-صلة-محدث-ابيض-scaled.avif"
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "تطبيق-صلة-silah-application_compressed-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/تطبيق-صلة-silah-application_compressed-scaled.avif"
+          },
+          {
+            "file": "باقات-صلة-packages_compressed-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/باقات-صلة-packages_compressed-scaled.avif"
+          },
+          {
+            "file": "background-1_compressed-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/background-1_compressed-scaled.avif"
+          },
+          {
+            "file": "logosilah_compressed.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/logosilah_compressed.avif"
+          },
+          {
+            "file": "logosilah_compressed.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/logosilah_compressed.avif"
+          },
+          {
+            "file": "logosilah_compressed.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/logosilah_compressed.avif"
+          },
+          {
+            "file": "Basic-300x270.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/08/Basic-300x270.avif"
+          },
+          {
+            "file": "Silver.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/08/Silver.avif"
+          },
+          {
+            "file": "Gold.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/08/Gold.avif"
+          },
+          {
+            "file": "Platinum.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/08/Platinum.avif"
+          },
+          {
+            "file": "Basic-300x270.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/08/Basic-300x270.avif"
+          },
+          {
+            "file": "Silver.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/08/Silver.avif"
+          },
+          {
+            "file": "Gold.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/08/Gold.avif"
+          },
+          {
+            "file": "Platinum.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/08/Platinum.avif"
+          },
+          {
+            "file": "Training.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/Training.avif"
+          },
+          {
+            "file": "MOL.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/MOL.avif"
+          },
+          {
+            "file": "HRDF-1.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/HRDF-1.avif"
+          },
+          {
+            "file": "Tarahum.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/Tarahum.avif"
+          },
+          {
+            "file": "i.be-2.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/i.be-2.avif"
+          },
+          {
+            "file": "Bnood-1.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/Bnood-1.avif"
+          },
+          {
+            "file": "Monshaat.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/09/Monshaat.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
         ]
       },
-      "mobileScore": 84,
+      "mobileScore": 80,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 73
     },
     {
       "id": "%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "آلية التقدم على الوظيفة",
+      "nameEn": "آلية التقدم على الوظيفة",
       "url": "https://www.silah.com.sa/%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 79,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 80,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -382,17 +473,51 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": false,
+      "seoScore": 64
     },
     {
       "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "طلب باقة",
+      "nameEn": "طلب باقة",
       "url": "https://www.silah.com.sa/%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 96,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": false,
+        "typesFound": []
+      },
+      "altText": {
+        "totalImages": 7,
+        "issueCount": 6,
+        "examples": [
+          {
+            "file": "silah_logo_png.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/images/silah_logo_png.png"
+          },
+          {
+            "file": "Background.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/Packge_landing_page/Background.jpg"
+          },
+          {
+            "file": "mail.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/images/mail.png"
+          },
+          {
+            "file": "phone-2.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/images/phone-2.png"
+          },
+          {
+            "file": "whatsapp-1.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/images/whatsapp-1.png"
+          },
+          {
+            "file": "silah_logo_png.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/images/silah_logo_png.png"
+          }
+        ]
+      },
+      "mobileScore": 95,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -400,17 +525,43 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "%d9%85%d8%af%d9%88%d9%86%d8%a9",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "مدونة",
+      "nameEn": "مدونة",
       "url": "https://www.silah.com.sa/%d9%85%d8%af%d9%88%d9%86%d8%a9/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 84,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 8,
+        "issueCount": 3,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "Picture1-300x210.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/02/Picture1-300x210.jpg"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 76,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -418,17 +569,39 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": false,
+      "seoScore": 75
     },
     {
       "id": "%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "عربة التسوق",
+      "nameEn": "عربة التسوق",
       "url": "https://www.silah.com.sa/%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 93,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 87,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -436,17 +609,39 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "%d8%a7%d9%84%d8%af%d9%81%d8%b9",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "الدفع",
+      "nameEn": "الدفع",
       "url": "https://www.silah.com.sa/%d8%a7%d9%84%d8%af%d9%81%d8%b9/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 79,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 77,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -454,29 +649,149 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
+      "nameEn": "تطبيق صلة لقياس أداء الموظف عن بعد",
       "url": "https://www.silah.com.sa/%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 74,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": false,
+        "typesFound": []
+      },
+      "altText": {
+        "totalImages": 19,
+        "issueCount": 14,
+        "examples": [
+          {
+            "file": "silah_logo_png.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/images/silah_logo_png.png"
+          },
+          {
+            "file": "bacground_optimized.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/book_order/bacground_optimized.jpg"
+          },
+          {
+            "file": "TTS.gif",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/images/TTS.gif"
+          },
+          {
+            "file": "icons-01.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/icons-01.png"
+          },
+          {
+            "file": "icons-02.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/icons-02.png"
+          },
+          {
+            "file": "icons-03.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/icons-03.png"
+          },
+          {
+            "file": "icons-04.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/icons-04.png"
+          },
+          {
+            "file": "icons-05.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/icons-05.png"
+          },
+          {
+            "file": "icons-06.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/icons-06.png"
+          },
+          {
+            "file": "icons-07.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/icons-07.png"
+          },
+          {
+            "file": "mail.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/mail.png"
+          },
+          {
+            "file": "phone-2.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/phone-2.png"
+          },
+          {
+            "file": "whatsapp-1.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/new_image/whatsapp-1.png"
+          },
+          {
+            "file": "silah_logo_png.png",
+            "url": "https://www.silah.com.sa/wp-content/themes/masterwp/images/silah_logo_png.png"
+          }
+        ]
+      },
+      "mobileScore": 73,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 58
     },
     {
       "id": "%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
+      "nameEn": "تشغيل تطبيقات الاقتصاد التشاركي",
       "url": "https://www.silah.com.sa/%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 12,
+        "issueCount": 10,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "icon1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/04/icon1.png"
+          },
+          {
+            "file": "icon-truck.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/04/icon-truck.png"
+          },
+          {
+            "file": "icon3.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/04/icon3.png"
+          },
+          {
+            "file": "icon-home.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/04/icon-home.png"
+          },
+          {
+            "file": "icon5.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/04/icon5.png"
+          },
+          {
+            "file": "icon6.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/04/icon6.png"
+          },
+          {
+            "file": "icon4.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/04/icon4.png"
+          },
+          {
+            "file": "new-icon-289x300.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/04/new-icon-289x300.png"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
       "mobileScore": 96,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
@@ -485,56 +800,153 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": false,
+      "seoScore": 70
     },
     {
       "id": "silah-academy-for-e-learning",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
+      "nameEn": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
       "url": "https://www.silah.com.sa/silah-academy-for-e-learning/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 73,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 3,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 76,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 80
     },
     {
       "id": "defining-the-problem",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية |",
+      "nameEn": "مشكلة محدودية فرص العمل للمرأة السعودية |",
       "url": "https://www.silah.com.sa/defining-the-problem/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 97,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 96,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 77
     },
     {
       "id": "infrastructure",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "البنية التحتية |",
+      "nameEn": "البنية التحتية |",
       "url": "https://www.silah.com.sa/infrastructure/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 76,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "ImageObject",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 8,
+        "issueCount": 3,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "Picture1-300x210.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/02/Picture1-300x210.jpg"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 74,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 84
     },
     {
       "id": "%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "فرص وظيفية تقنية",
+      "nameEn": "فرص وظيفية تقنية",
       "url": "https://www.silah.com.sa/%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 89,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 3,
+        "issueCount": 3,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "Header-1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/Header-1.png"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 90,
       "unusedCssKb": 177,
       "unusedJsKb": 99,
       "seoIssues": [
@@ -542,17 +954,59 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": false,
+      "seoScore": 52
     },
     {
       "id": "gitex2022",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "Gitex2022 |",
+      "nameEn": "Gitex2022 |",
       "url": "https://www.silah.com.sa/gitex2022/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 66,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 9,
+        "issueCount": 7,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "Silah-Solutions.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/10/Silah-Solutions.png"
+          },
+          {
+            "file": "Software-dev-centers.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/10/Software-dev-centers.png"
+          },
+          {
+            "file": "Silah-TTS.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/10/Silah-TTS.png"
+          },
+          {
+            "file": "RS.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/10/RS.png"
+          },
+          {
+            "file": "whatsapp-icon-e1665047171836.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2022/10/whatsapp-icon-e1665047171836.png"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 67,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -560,86 +1014,178 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "terms-and-conditions",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "الشروط والأحكام |",
+      "nameEn": "الشروط والأحكام |",
       "url": "https://www.silah.com.sa/terms-and-conditions/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 79,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 81,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 74
     },
     {
       "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "دراسة مستقبل العمل لعام 2022م |",
+      "nameEn": "دراسة مستقبل العمل لعام 2022م |",
       "url": "https://www.silah.com.sa/%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 98,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 97,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 77
     },
     {
       "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
+      "nameEn": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
       "url": "https://www.silah.com.sa/%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 98,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 97,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 77
     },
     {
       "id": "%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
+      "nameEn": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
       "url": "https://www.silah.com.sa/%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
       "mobileScore": 98,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 77
     },
     {
       "id": "gitex2023",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "Gitex2023_AR |",
+      "nameEn": "Gitex2023_AR |",
       "url": "https://www.silah.com.sa/gitex2023/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 69,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ]
-    },
-    {
-      "id": "gitex2023_en",
-      "nameAr": null,
-      "nameEn": null,
-      "url": "https://www.silah.com.sa/gitex2023_en/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 6,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
       "mobileScore": 70,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
@@ -648,17 +1194,79 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
+    },
+    {
+      "id": "gitex2023_en",
+      "nameAr": "Gitex2023_EN |",
+      "nameEn": "Gitex2023_EN |",
+      "url": "https://www.silah.com.sa/gitex2023_en/",
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 6,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 70,
+      "unusedCssKb": 23,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "gitex-form",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "Gitex-Form |",
+      "nameEn": "Gitex-Form |",
       "url": "https://www.silah.com.sa/gitex-form/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 88,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 77,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -666,17 +1274,39 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "user-public-account",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "User Public Account",
+      "nameEn": "User Public Account",
       "url": "https://www.silah.com.sa/user-public-account/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 78,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 97,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -684,17 +1314,39 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "wishlist",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "Wishlist",
+      "nameEn": "Wishlist",
       "url": "https://www.silah.com.sa/wishlist/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 76,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 81,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -702,17 +1354,39 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "user-account",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "User Account",
+      "nameEn": "User Account",
       "url": "https://www.silah.com.sa/user-account/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 83,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 82,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -720,17 +1394,43 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "thank-you",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "شكراً |",
+      "nameEn": "شكراً |",
       "url": "https://www.silah.com.sa/thank-you/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 79,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 4,
+        "issueCount": 3,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "logo_high.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/02/logo_high.png"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 75,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -738,17 +1438,39 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "normal-form-test",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "Normal Form Test",
+      "nameEn": "Normal Form Test",
       "url": "https://www.silah.com.sa/normal-form-test/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 74,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 88,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -756,48 +1478,83 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": true,
+      "seoScore": null
     },
     {
       "id": "%d9%85%d8%b1%d8%a7%d9%83%d8%b2-%d8%b5%d9%84%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "مراكز صلة التقنية",
+      "nameEn": "مراكز صلة التقنية",
       "url": "https://www.silah.com.sa/%d9%85%d8%b1%d8%a7%d9%83%d8%b2-%d8%b5%d9%84%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d9%86%d9%8a%d8%a9/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 75,
-      "unusedCssKb": 25,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ]
-    },
-    {
-      "id": "privacy-policy",
-      "nameAr": null,
-      "nameEn": null,
-      "url": "https://www.silah.com.sa/privacy-policy/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 96,
-      "unusedCssKb": 24,
-      "unusedJsKb": 0,
-      "seoIssues": []
-    },
-    {
-      "id": "our-brochures",
-      "nameAr": null,
-      "nameEn": null,
-      "url": "https://www.silah.com.sa/our-brochures/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 71,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 13,
+        "issueCount": 13,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "image_2021_07_15T04_34_20_929Z.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/image_2021_07_15T04_34_20_929Z.png"
+          },
+          {
+            "file": "2.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/2.png"
+          },
+          {
+            "file": "1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/1.png"
+          },
+          {
+            "file": "3.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/3.png"
+          },
+          {
+            "file": "4.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/4.png"
+          },
+          {
+            "file": "5.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/5.png"
+          },
+          {
+            "file": "6.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/6.png"
+          },
+          {
+            "file": "9.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/9.png"
+          },
+          {
+            "file": "7.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/7.png"
+          },
+          {
+            "file": "10.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/10.png"
+          },
+          {
+            "file": "8.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/07/8.png"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 64,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -805,34 +1562,337 @@
           "id": "meta-description",
           "title": "Document does not have a meta description"
         }
-      ]
+      ],
+      "excludedFromScore": false,
+      "seoScore": 60
+    },
+    {
+      "id": "privacy-policy",
+      "nameAr": "سياسة الخصوصية |",
+      "nameEn": "سياسة الخصوصية |",
+      "url": "https://www.silah.com.sa/privacy-policy/",
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 2,
+        "issueCount": 2,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 97,
+      "unusedCssKb": 24,
+      "unusedJsKb": 0,
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 78
+    },
+    {
+      "id": "our-brochures",
+      "nameAr": "حلول وخدمات صلة المتكاملة |",
+      "nameEn": "حلول وخدمات صلة المتكاملة |",
+      "url": "https://www.silah.com.sa/our-brochures/",
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 7,
+        "issueCount": 7,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "المتسوق-الخفي-1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2023/07/المتسوق-الخفي-1.png"
+          },
+          {
+            "file": "خدمات-صلة-المتكاملة.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2023/07/خدمات-صلة-المتكاملة.png"
+          },
+          {
+            "file": "مراكز-تطوير-البرمجيات-e1688925943686.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2023/07/مراكز-تطوير-البرمجيات-e1688925943686.png"
+          },
+          {
+            "file": "تالنت-1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2023/07/تالنت-1.png"
+          },
+          {
+            "file": "خدمات-رؤية-صلة.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2023/07/خدمات-رؤية-صلة.png"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 78,
+      "unusedCssKb": 23,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
+      "excludedFromScore": false,
+      "seoScore": 64
     },
     {
       "id": "who-our-clients",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "من هم عملاء شركة صلة |",
+      "nameEn": "من هم عملاء شركة صلة |",
       "url": "https://www.silah.com.sa/who-our-clients/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 98,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 26,
+        "issueCount": 26,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "image_2022_05_16T13_19_57_130Z.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2022/05/image_2022_05_16T13_19_57_130Z.png"
+          },
+          {
+            "file": "image_2022_05_16T13_19_37_774Z.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2022/05/image_2022_05_16T13_19_37_774Z.png"
+          },
+          {
+            "file": "الفوزان_1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/12/الفوزان_1.png"
+          },
+          {
+            "file": "image_2022_05_16T13_19_29_185Z.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2022/05/image_2022_05_16T13_19_29_185Z.png"
+          },
+          {
+            "file": "كريم_1.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/03/كريم_1.jpg"
+          },
+          {
+            "file": "بوبا.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/12/بوبا.jpg"
+          },
+          {
+            "file": "الزامل-للصناعة.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/03/الزامل-للصناعة.png"
+          },
+          {
+            "file": "هدف_1.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/03/هدف_1.jpg"
+          },
+          {
+            "file": "الحكير.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/03/الحكير.jpg"
+          },
+          {
+            "file": "Habib-Group.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/03/Habib-Group.avif"
+          },
+          {
+            "file": "العراب_1.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/12/العراب_1.jpg"
+          },
+          {
+            "file": "ابيات_1.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/12/ابيات_1.jpg"
+          },
+          {
+            "file": "عبر-الخليج.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2016/04/عبر-الخليج.png"
+          },
+          {
+            "file": "العالمية.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/02/العالمية.jpg"
+          },
+          {
+            "file": "رضايات_2.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/02/رضايات_2.jpg"
+          },
+          {
+            "file": "الرومانسية-1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/12/الرومانسية-1.png"
+          },
+          {
+            "file": "المؤسسة-مياة.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/03/المؤسسة-مياة.jpg"
+          },
+          {
+            "file": "اجادة.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/12/اجادة.jpg"
+          },
+          {
+            "file": "ديفو.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2021/03/ديفو.png"
+          },
+          {
+            "file": "الفلك_2.jpg",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/12/الفلك_2.jpg"
+          },
+          {
+            "file": "the-chefz-logo.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2016/04/the-chefz-logo.png"
+          },
+          {
+            "file": "الانصاري-1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2016/04/الانصاري-1.png"
+          },
+          {
+            "file": "هنقر_2.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2020/12/هنقر_2.png"
+          },
+          {
+            "file": "الفيصلية_1.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2016/04/الفيصلية_1.png"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 97,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 77
     },
     {
       "id": "business-center-cost",
-      "nameAr": null,
-      "nameEn": null,
+      "nameAr": "حاسبة تكلفة التوظيف",
+      "nameEn": "حاسبة تكلفة التوظيف",
       "url": "https://www.silah.com.sa/business-center-cost/",
-      "checkedAt": "2026-08-15",
-      "schema": null,
-      "altText": null,
-      "mobileScore": 30,
+      "checkedAt": "2026-08-16",
+      "schema": {
+        "hasExpectedType": true,
+        "typesFound": [
+          "BreadcrumbList",
+          "WebPage",
+          "WebSite"
+        ]
+      },
+      "altText": {
+        "totalImages": 3,
+        "issueCount": 3,
+        "examples": [
+          {
+            "file": "شعار-صلة-محدث-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-scaled.avif"
+          },
+          {
+            "file": "-خلفية-e1739376910563.png",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2025/02/-خلفية-e1739376910563.png"
+          },
+          {
+            "file": "شعار-صلة-محدث-ابيض-scaled.avif",
+            "url": "https://www.silah.com.sa/wp-content/uploads/2026/05/شعار-صلة-محدث-ابيض-scaled.avif"
+          }
+        ]
+      },
+      "mobileScore": 28,
       "unusedCssKb": 138,
       "unusedJsKb": 1300,
-      "seoIssues": []
+      "seoIssues": [],
+      "excludedFromScore": false,
+      "seoScore": 47
     }
   ],
-  "pageHealthCheckedMonth": "2026-08"
+  "pageHealthCheckedMonth": "2026-08",
+  "seoScore": 100,
+  "bestPracticesScore": 100,
+  "a11yScoreMobile": 100,
+  "a11yScoreDesktop": 93,
+  "lighthouseScoresCheckedMonth": "2026-08",
+  "pageHealthScore": 70,
+  "pageHealthScoreCheckedMonth": "2026-08",
+  "aiSearchReadiness": {
+    "crawlers": [
+      {
+        "agent": "GPTBot",
+        "owner": "OpenAI",
+        "purpose": "ChatGPT web search",
+        "flagIfBlocked": true,
+        "allowed": true
+      },
+      {
+        "agent": "OAI-SearchBot",
+        "owner": "OpenAI",
+        "purpose": "OpenAI search features",
+        "flagIfBlocked": true,
+        "allowed": true
+      },
+      {
+        "agent": "ClaudeBot",
+        "owner": "Anthropic",
+        "purpose": "Claude web features",
+        "flagIfBlocked": true,
+        "allowed": true
+      },
+      {
+        "agent": "PerplexityBot",
+        "owner": "Perplexity",
+        "purpose": "Perplexity AI search",
+        "flagIfBlocked": true,
+        "allowed": true
+      },
+      {
+        "agent": "Google-Extended",
+        "owner": "Google",
+        "purpose": "Gemini / AI Overviews grounding",
+        "flagIfBlocked": true,
+        "allowed": true
+      },
+      {
+        "agent": "anthropic-ai",
+        "owner": "Anthropic",
+        "purpose": "Claude training",
+        "flagIfBlocked": false,
+        "allowed": true
+      },
+      {
+        "agent": "CCBot",
+        "owner": "Common Crawl",
+        "purpose": "Training-data crawl (often blocked on purpose)",
+        "flagIfBlocked": false,
+        "allowed": true
+      }
+    ],
+    "llmsTxtPresent": true
+  },
+  "aiSearchReadinessCheckedMonth": "2026-08"
 }
