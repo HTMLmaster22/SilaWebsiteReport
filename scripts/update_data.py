@@ -42,6 +42,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import urllib.robotparser
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
@@ -473,11 +474,16 @@ def check_alt_text(html, page_url):
         alt_val = alt_match.group(1).strip() if alt_match else None
         is_bad = alt_val is None or alt_val.lower() in GENERIC_ALT_VALUES
         if is_bad:
-            issues.append(resolved.rsplit("/", 1)[-1])
+            issues.append({"file": resolved.rsplit("/", 1)[-1], "url": resolved})
     # "examples" used to be capped at issues[:5] — kept only a sample, so the
     # report could show a count but never the full picture. Now that the report
     # has a click-to-expand detail view (Aug 9 2026), it needs every flagged
     # filename, not a truncated sample, so the list here is complete.
+    # Each example carries the full resolved `url` alongside `file` (Aug 2026)
+    # so the report can link straight to the image instead of showing a bare
+    # filename with nothing to click - `resolved` was already being computed
+    # above, it just wasn't being kept past the rsplit that trims it to a
+    # display name.
     return {"totalImages": checkable, "issueCount": len(issues), "examples": issues}
 
 
@@ -631,6 +637,67 @@ def compute_site_seo_score(page_health):
     return round(sum(scored) / len(scored)) if scored else None
 
 
+# AI crawlers worth checking explicitly for AI-search visibility (ChatGPT,
+# Claude, Perplexity) as distinct from Google-Extended, which governs
+# Gemini/AI Overviews grounding specifically. CCBot (Common Crawl) is
+# checked too but not flagged as a problem if blocked - many sites block it
+# on purpose since it's training data, not a live-answer crawler, and
+# blocking it doesn't affect whether Silah gets cited in an answer.
+# Source for which of these matter and why: Google's own AI optimization
+# guide plus the crawler-purpose table this was cross-checked against
+# (Aug 2026 SEO review) - Google-Agent/ChatGPT-User/Google-NotebookLM are
+# deliberately left out of this list since those are user-triggered
+# fetchers that ignore robots.txt by design, so checking them here would
+# always show "allowed" regardless of what the file says and just add
+# noise.
+AI_CRAWLERS_TO_CHECK = [
+    {"agent": "GPTBot", "owner": "OpenAI", "purpose": "ChatGPT web search", "flagIfBlocked": True},
+    {"agent": "OAI-SearchBot", "owner": "OpenAI", "purpose": "OpenAI search features", "flagIfBlocked": True},
+    {"agent": "ClaudeBot", "owner": "Anthropic", "purpose": "Claude web features", "flagIfBlocked": True},
+    {"agent": "PerplexityBot", "owner": "Perplexity", "purpose": "Perplexity AI search", "flagIfBlocked": True},
+    {"agent": "Google-Extended", "owner": "Google", "purpose": "Gemini / AI Overviews grounding", "flagIfBlocked": True},
+    {"agent": "anthropic-ai", "owner": "Anthropic", "purpose": "Claude training", "flagIfBlocked": False},
+    {"agent": "CCBot", "owner": "Common Crawl", "purpose": "Training-data crawl (often blocked on purpose)", "flagIfBlocked": False},
+]
+
+
+def check_ai_search_readiness():
+    """Checks whether the site's actual robots.txt allows the AI crawlers
+    that power ChatGPT/Claude/Perplexity/Google-AI-Overviews answers, plus
+    whether /llms.txt exists. Uses urllib.robotparser (stdlib) rather than
+    hand-rolled parsing, since robots.txt group-matching (which User-agent
+    block applies, wildcard fallback, etc.) has enough edge cases that a
+    battle-tested parser is worth it over a regex.
+
+    llms.txt is checked for presence only, not scored as pass/fail - as of
+    Google's 2026-06-29 AI optimization guide update, Google Search
+    (including its AI features) explicitly ignores llms.txt entirely, so
+    treating its absence as a problem would be actively misleading. It's
+    reported here only because it may help non-Google AI crawlers, which
+    is a real but smaller benefit than the robots.txt access itself.
+
+    Returns None (not a dict of failures) if robots.txt itself couldn't be
+    read at all, so the caller can tell "checked, and X is blocked" apart
+    from "couldn't check this run" - same distinction made everywhere else
+    in this file for a failed fetch."""
+    rp = urllib.robotparser.RobotFileParser()
+    rp.set_url(f"{ORIGIN}/robots.txt")
+    try:
+        rp.read()
+    except Exception as e:
+        print(f"  WARNING: could not read robots.txt: {e}", file=sys.stderr)
+        return None
+
+    crawlers = []
+    for c in AI_CRAWLERS_TO_CHECK:
+        allowed = rp.can_fetch(c["agent"], ORIGIN + "/")
+        crawlers.append({**c, "allowed": allowed})
+
+    llms_txt_present = fetch_html(f"{ORIGIN}/llms.txt") is not None
+
+    return {"crawlers": crawlers, "llmsTxtPresent": llms_txt_present}
+
+
 def main():
     if not API_KEY:
         print("ERROR: PSI_API_KEY env var is missing (set it as a repo secret).", file=sys.stderr)
@@ -768,6 +835,13 @@ def main():
     scored_count = sum(1 for e in data["pageHealth"] if not e["excludedFromScore"])
     print(f"  Page Health score: {data['pageHealthScore']} (averaged over {scored_count} pages, "
           f"{len(data['pageHealth']) - scored_count} excluded as non-content pages)")
+
+    print("Checking AI crawler access (robots.txt) and llms.txt ...")
+    data["aiSearchReadiness"] = check_ai_search_readiness()
+    data["aiSearchReadinessCheckedMonth"] = new_month
+    if data["aiSearchReadiness"]:
+        blocked = [c["agent"] for c in data["aiSearchReadiness"]["crawlers"] if c["flagIfBlocked"] and not c["allowed"]]
+        print(f"  AI crawlers blocked: {blocked or 'none'} | llms.txt present: {data['aiSearchReadiness']['llmsTxtPresent']}")
 
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
