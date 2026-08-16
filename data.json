@@ -430,7 +430,7 @@
           }
         ]
       },
-      "mobileScore": 80,
+      "mobileScore": 81,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -465,7 +465,7 @@
           }
         ]
       },
-      "mobileScore": 80,
+      "mobileScore": 75,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -475,7 +475,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 64
+      "seoScore": 63
     },
     {
       "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
@@ -561,7 +561,7 @@
           }
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 79,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -571,7 +571,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 75
+      "seoScore": 76
     },
     {
       "id": "%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82",
@@ -601,7 +601,7 @@
           }
         ]
       },
-      "mobileScore": 87,
+      "mobileScore": 78,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -641,7 +641,7 @@
           }
         ]
       },
-      "mobileScore": 77,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -725,7 +725,7 @@
           }
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 72,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -832,12 +832,12 @@
           }
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 73,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 80
+      "seoScore": 79
     },
     {
       "id": "defining-the-problem",
@@ -867,7 +867,7 @@
           }
         ]
       },
-      "mobileScore": 96,
+      "mobileScore": 97,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -946,7 +946,7 @@
           }
         ]
       },
-      "mobileScore": 90,
+      "mobileScore": 84,
       "unusedCssKb": 177,
       "unusedJsKb": 99,
       "seoIssues": [
@@ -956,7 +956,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 52
+      "seoScore": 51
     },
     {
       "id": "gitex2022",
@@ -1046,12 +1046,12 @@
           }
         ]
       },
-      "mobileScore": 81,
+      "mobileScore": 76,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 74
+      "seoScore": 73
     },
     {
       "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
@@ -1081,7 +1081,7 @@
           }
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 98,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1116,7 +1116,7 @@
           }
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 98,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1151,12 +1151,12 @@
           }
         ]
       },
-      "mobileScore": 98,
+      "mobileScore": 99,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 77
+      "seoScore": 78
     },
     {
       "id": "gitex2023",
@@ -1186,7 +1186,7 @@
           }
         ]
       },
-      "mobileScore": 70,
+      "mobileScore": 68,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1266,7 +1266,7 @@
           }
         ]
       },
-      "mobileScore": 77,
+      "mobileScore": 78,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1346,7 +1346,7 @@
           }
         ]
       },
-      "mobileScore": 81,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1386,7 +1386,7 @@
           }
         ]
       },
-      "mobileScore": 82,
+      "mobileScore": 79,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1430,7 +1430,7 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 79,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1470,7 +1470,7 @@
           }
         ]
       },
-      "mobileScore": 88,
+      "mobileScore": 82,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1554,7 +1554,7 @@
           }
         ]
       },
-      "mobileScore": 64,
+      "mobileScore": 66,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1649,7 +1649,7 @@
           }
         ]
       },
-      "mobileScore": 78,
+      "mobileScore": 68,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1659,7 +1659,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 64
+      "seoScore": 61
     },
     {
       "id": "who-our-clients",
@@ -1785,12 +1785,12 @@
           }
         ]
       },
-      "mobileScore": 97,
-      "unusedCssKb": 26,
+      "mobileScore": 74,
+      "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 77
+      "seoScore": 72
     },
     {
       "id": "business-center-cost",
@@ -1824,12 +1824,12 @@
           }
         ]
       },
-      "mobileScore": 28,
+      "mobileScore": 39,
       "unusedCssKb": 138,
-      "unusedJsKb": 1300,
+      "unusedJsKb": 1281,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 47
+      "seoScore": 50
     }
   ],
   "pageHealthCheckedMonth": "2026-08",
@@ -1894,5 +1894,6 @@
     ],
     "llmsTxtPresent": true
   },
-  "aiSearchReadinessCheckedMonth": "2026-08"
+  "aiSearchReadinessCheckedMonth": "2026-08",
+  "keywordsSource": "manual"
 }
