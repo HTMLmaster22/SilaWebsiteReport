@@ -1270,7 +1270,13 @@
     }
     note.style.display = "none";
     body.innerHTML = pageHealthData.map(p=>{
-      const label = currentLang==="ar" ? p.nameAr : p.nameEn;
+      // Falls back to the page's id/slug if both nameAr and nameEn are null —
+      // happens when a page's HTML fetch fails on a given run (no curated
+      // name AND no <title> to extract from), so there's nothing better to
+      // show. Every other column here already has a null-guard; this one was
+      // missing it, which is why a failed fetch showed literal "null" as the
+      // page name instead of degrading like the rest of the row.
+      const label = (currentLang==="ar" ? p.nameAr : p.nameEn) || p.id;
       let schemaCls, schemaText;
       if(p.schema == null){ schemaCls = "pending"; schemaText = d.healthSchemaUnknown; }
       else if(p.schema.hasExpectedType){ schemaCls = "measured"; schemaText = d.healthSchemaOk; }
