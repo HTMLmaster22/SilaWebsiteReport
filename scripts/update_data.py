@@ -539,6 +539,98 @@ def run_page_health_scan():
     return results
 
 
+# Slugs excluded from the SEO score: checkout/cart/account funnel pages
+# (never meant to be indexed or ranked - noindex is the real fix for these,
+# not a meta description), one leftover test page, and expired trade-show
+# landing pages. Matched against the URL-decoded slug so the Arabic ones
+# are readable here instead of raw percent-encoding. Excluded pages still
+# get scanned normally and still appear in the table - only the aggregate
+# score skips them, since averaging in "does the shopping cart page have a
+# meta description" would punish the score for something that was never a
+# real SEO target. Aug 2026: see the pageHealth review that flagged these.
+SCORE_EXCLUDED_SLUGS = {
+    "طلب-باقة", "عربة-التسوق", "الدفع",                                # checkout/cart funnel
+    "user-account", "user-public-account", "wishlist", "thank-you",       # account funnel
+    "normal-form-test",                                                  # leftover test page
+    "gitex2022", "gitex2023", "gitex2023_en", "gitex-form",              # expired trade-show pages
+}
+
+
+def is_excluded_from_score(page_id):
+    return urllib.parse.unquote(page_id) in SCORE_EXCLUDED_SLUGS
+
+
+def compute_page_seo_score(entry):
+    """Weighted 0-100 SEO score for one pageHealth entry, built entirely from
+    checks already being collected here - nothing new to fetch. Weights are
+    loosely modeled on common external audit frameworks (technical/schema,
+    on-page, performance, and images all contribute); this scanner doesn't
+    check content-quality/E-E-A-T or AI-search-readiness, so those aren't
+    part of this score.
+
+    Each component is (points_earned, points_possible). A component whose
+    underlying check is unavailable this run (null, same reasons as
+    elsewhere in this file) is left out of BOTH the numerator and the
+    denominator, so a page isn't punished for a check that didn't run -
+    same graceful-degradation principle used throughout this script.
+    Returns None if every component is unavailable."""
+    parts = []
+
+    if entry.get("schema") is not None:
+        if entry["schema"]["hasExpectedType"]:
+            pts = 20
+        elif entry["schema"]["typesFound"]:
+            pts = 10  # has *some* schema, just not the expected type
+        else:
+            pts = 0
+        parts.append((pts, 20))
+
+    if entry.get("altText") is not None:
+        total = entry["altText"]["totalImages"]
+        issues = entry["altText"]["issueCount"]
+        ratio = 1.0 if total == 0 else max(0.0, (total - issues) / total)
+        parts.append((round(20 * ratio), 20))
+
+    if entry.get("seoIssues") is not None:
+        parts.append((max(0, 20 - len(entry["seoIssues"]) * 10), 20))
+
+    if entry.get("mobileScore") is not None:
+        parts.append((round(entry["mobileScore"] / 100 * 25), 25))
+
+    if entry.get("unusedCssKb") is not None and entry.get("unusedJsKb") is not None:
+        # Full 15 pts under ~20KB unused CSS / ~50KB unused JS, tapering to
+        # 0 at roughly 3x those thresholds. Bounded by whichever is worse.
+        css_frac = max(0.0, 1 - max(0, entry["unusedCssKb"] - 20) / 40)
+        js_frac = max(0.0, 1 - max(0, entry["unusedJsKb"] - 50) / 100)
+        parts.append((round(15 * min(css_frac, js_frac)), 15))
+
+    if not parts:
+        return None
+    earned = sum(p[0] for p in parts)
+    possible = sum(p[1] for p in parts)
+    return round(earned / possible * 100)
+
+
+def compute_site_seo_score(page_health):
+    """Adds `seoScore` (0-100, or null if nothing to score) and
+    `excludedFromScore` (bool) onto each pageHealth entry IN PLACE, and
+    returns the overall site score - a plain average across included pages
+    that have at least one scoreable component - or None if nothing on the
+    whole list could be scored (e.g. every fetch failed this run)."""
+    scored = []
+    for entry in page_health:
+        excluded = is_excluded_from_score(entry["id"])
+        entry["excludedFromScore"] = excluded
+        if excluded:
+            entry["seoScore"] = None
+            continue
+        s = compute_page_seo_score(entry)
+        entry["seoScore"] = s
+        if s is not None:
+            scored.append(s)
+    return round(sum(scored) / len(scored)) if scored else None
+
+
 def main():
     if not API_KEY:
         print("ERROR: PSI_API_KEY env var is missing (set it as a repo secret).", file=sys.stderr)
@@ -591,34 +683,47 @@ def main():
     # month CrUX didn't advance — that's fixed by not early-returning.
     homepage_updated = data.get("reportMonth") != new_month
 
+    # PSI/Lighthouse category scores (Performance, SEO, Accessibility, Best
+    # Practices) now run every invocation, NOT gated on whether CrUX itself
+    # advanced to a new month. These are lab scores from PSI's own crawl —
+    # there's no real coupling to CrUX's real-user publish cadence, same
+    # reasoning already applied to the page-health scan (see note above).
+    # Previously this whole fetch sat inside the homepage_updated branch
+    # below: since reportMonth had already been sitting at the same value
+    # CrUX kept reporting, homepage_updated was False on every run so far
+    # this month, so seoScore/bestPracticesScore/a11yScore* never got set
+    # even once, despite the frontend cards for them already being live and
+    # waiting on real data. Moving the fetch out fixes that; the CrUX-tied
+    # fields below (mobilePerfNow, reportMonth, monthLabels, etc.) still
+    # only update when homepage_updated is actually True.
+    print("Fetching PageSpeed Insights scores ...")
+    mobile_psi = fetch_psi_score("mobile")
+    desktop_psi = fetch_psi_score("desktop")
+    mobile_score = mobile_psi["performance"]
+    desktop_score = desktop_psi["performance"]
+    print("PSI mobile:", mobile_score, "| desktop:", desktop_score)
+
+    # Real SEO/Best Practices/Accessibility scores from the PSI runs above --
+    # previously these three were hand-typed once into index.html
+    # (100 / 100 / "93-100") and never touched again by any automated
+    # process. Mobile score used for the single-number cards (SEO and Best
+    # Practices don't meaningfully differ by device in Lighthouse);
+    # Accessibility kept as a mobile-desktop range since the existing
+    # card's own label already implied that was the intent.
+    data["seoScore"] = mobile_psi["seo"]
+    data["bestPracticesScore"] = mobile_psi["bestPractices"]
+    data["a11yScoreMobile"] = mobile_psi["accessibility"]
+    data["a11yScoreDesktop"] = desktop_psi["accessibility"]
+    data["lighthouseScoresCheckedMonth"] = new_month
+
     if not homepage_updated:
         print("CrUX/homepage data already at", new_month, "— skipping that part, still running page-health scan below.")
     else:
-        print("Fetching PageSpeed Insights scores ...")
-        mobile_psi = fetch_psi_score("mobile")
-        desktop_psi = fetch_psi_score("desktop")
-        mobile_score = mobile_psi["performance"]
-        desktop_score = desktop_psi["performance"]
-        print("PSI mobile:", mobile_score, "| desktop:", desktop_score)
-
         prev_now = data.get("mobilePerfNow")
         data["mobilePerfPrev"] = prev_now if prev_now is not None else data.get("mobilePerfPrev")
         data["mobilePerfNow"] = mobile_score
         data["desktopPerfScore"] = desktop_score
         data["reportMonth"] = new_month
-
-        # Real SEO/Best Practices/Accessibility scores from the same PSI
-        # runs above -- previously these three were hand-typed once into
-        # index.html (100 / 100 / "93-100") and never touched again by any
-        # automated process. Mobile score used for the single-number cards
-        # (SEO and Best Practices don't meaningfully differ by device in
-        # Lighthouse); Accessibility kept as a mobile-desktop range since
-        # the existing card's own label already implied that was the intent.
-        data["seoScore"] = mobile_psi["seo"]
-        data["bestPracticesScore"] = mobile_psi["bestPractices"]
-        data["a11yScoreMobile"] = mobile_psi["accessibility"]
-        data["a11yScoreDesktop"] = desktop_psi["accessibility"]
-        data["lighthouseScoresCheckedMonth"] = new_month
 
         if months is not None:
             y0, m0 = months[0]
@@ -652,6 +757,17 @@ def main():
     print("Scanning per-page health (schema, alt text, unused CSS/JS) ...")
     data["pageHealth"] = run_page_health_scan()
     data["pageHealthCheckedMonth"] = new_month
+    # NOT the same thing as data["seoScore"] above, which is Lighthouse's
+    # own homepage-only SEO category audit (viewport tag, valid hreflang,
+    # descriptive link text, etc.). This one is a composite built from the
+    # per-page pageHealth data itself -- schema, alt-text, meta description,
+    # performance, and CSS/JS bloat -- averaged across every scanned page
+    # (not just the homepage), which is why it needed its own field name.
+    data["pageHealthScore"] = compute_site_seo_score(data["pageHealth"])
+    data["pageHealthScoreCheckedMonth"] = new_month
+    scored_count = sum(1 for e in data["pageHealth"] if not e["excludedFromScore"])
+    print(f"  Page Health score: {data['pageHealthScore']} (averaged over {scored_count} pages, "
+          f"{len(data['pageHealth']) - scored_count} excluded as non-content pages)")
 
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
