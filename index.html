@@ -1303,7 +1303,17 @@
         altText = d.healthAltIssue(p.altText.issueCount);
         altClickable = "clickable";
         const shown = p.altText.examples || [];
-        let rows = `<div class="issue-detail-label">${d.healthAltDetailLabel}</div>` + shown.map(f=>`<div>${escapeHtml(f)}</div>`).join("");
+        // Handles both the current {file,url} shape and the older bare-
+        // string shape (pre-Aug-2026-fix data.json) - a string just never
+        // gets a link, since there's no url to point it at.
+        let rows = `<div class="issue-detail-label">${d.healthAltDetailLabel}</div>` + shown.map(f=>{
+          const isObj = f && typeof f === "object";
+          const file = isObj ? f.file : f;
+          const url = isObj ? f.url : null;
+          return url
+            ? `<div><a class="row-page-link" href="${safeHref(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(file)}</a></div>`
+            : `<div>${escapeHtml(file)}</div>`;
+        }).join("");
         if(p.altText.issueCount > shown.length){
           rows += `<div class="issue-detail-more">${d.healthMoreCount(p.altText.issueCount - shown.length)}</div>`;
         }
@@ -1556,9 +1566,21 @@
      other section, so this can't say something different from what the
      rest of the report says. */
   function mktCard(id, title, badge, why, how, items){
+    // items is either plain strings (keywords - no natural URL to link to)
+    // or {name,url} objects (pages - always link straight to the page, so
+    // marketing doesn't have to go hunting for it manually). Aug 2026: this
+    // used to render page names as inert text with no way to reach the
+    // actual page from here.
     const itemsHtml = items.length
       ? `<button class="mkt-card-toggle" type="button" aria-expanded="false">${dict[currentLang].mktShowPages}</button>
-         <div class="mkt-card-pages">${items.map(escapeHtml).map(x=>`<div>${x}</div>`).join("")}</div>`
+         <div class="mkt-card-pages">${items.map(it=>{
+           const isObj = it && typeof it === "object";
+           const name = escapeHtml(isObj ? it.name : it);
+           const url = isObj ? it.url : null;
+           return url
+             ? `<div><a class="row-page-link" href="${safeHref(url)}" target="_blank" rel="noopener noreferrer">${name}</a></div>`
+             : `<div>${name}</div>`;
+         }).join("")}</div>`
       : "";
     return `<div class="mkt-card">
       <div class="mkt-card-head"><span class="mkt-card-title">${escapeHtml(title)}</span><span class="mkt-card-badge">${escapeHtml(badge)}</span></div>
@@ -1580,7 +1602,7 @@
       cards.push(mktCard(
         "meta", d.mktMetaTitle(metaMissing.length), d.mktBadgeCount(metaMissing.length),
         d.mktMetaWhy, d.mktMetaHow,
-        metaMissing.map(p => currentLang==="ar" ? p.nameAr : p.nameEn)
+        metaMissing.map(p => ({ name: (currentLang==="ar" ? p.nameAr : p.nameEn) || p.id, url: p.url }))
       ));
     }
 
@@ -1601,7 +1623,7 @@
       cards.push(mktCard(
         "alt", d.mktAltTitle(altMissing.length), d.mktBadgeCount(altMissing.length),
         d.mktAltWhy, d.mktAltHow,
-        altMissing.map(p => currentLang==="ar" ? p.nameAr : p.nameEn)
+        altMissing.map(p => ({ name: (currentLang==="ar" ? p.nameAr : p.nameEn) || p.id, url: p.url }))
       ));
     }
 
@@ -1713,7 +1735,7 @@
       const sortedPages = [...pageHealthData].sort((a,b)=> severity(b) - severity(a));
 
       const rowsHtml = sortedPages.map(p=>{
-        const label = lang==="ar" ? p.nameAr : p.nameEn;
+        const label = (lang==="ar" ? p.nameAr : p.nameEn) || p.id;
         const schemaTxt = p.schema==null ? d.healthSchemaUnknown : (p.schema.hasExpectedType ? d.healthSchemaOk : d.healthSchemaMissing);
 
         let altCell = d.healthSchemaUnknown;
@@ -1721,7 +1743,12 @@
           altCell = p.altText.issueCount === 0 ? d.healthAltOk : (()=>{
             const shown = (p.altText.examples||[]).slice(0,4);
             const more = p.altText.issueCount - shown.length;
-            return `${d.healthAltIssue(p.altText.issueCount)}<div class="pdf-detail">${shown.map(f=>escapeHtml(f)).join("، ")}${more>0?` (${d.healthMoreCount(more)})`:""}</div>`;
+            // .file, not the bare item - examples are {file,url} objects as
+            // of Aug 2026 (see check_alt_text() in update_data.py). No link
+            // here even though url is available: this HTML gets rasterized
+            // via html2canvas into the PDF, so an <a href> would be inert.
+            const fileNames = shown.map(f => (f && typeof f === "object") ? f.file : f);
+            return `${d.healthAltIssue(p.altText.issueCount)}<div class="pdf-detail">${fileNames.map(f=>escapeHtml(f)).join("، ")}${more>0?` (${d.healthMoreCount(more)})`:""}</div>`;
           })();
         }
 
