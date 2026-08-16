@@ -761,6 +761,7 @@
       </tr></thead>
       <tbody id="kwTableBody"></tbody>
     </table>
+    <p class="device-note" id="kwSourceNote" style="margin:-6px 0 20px;"></p>
 
     <div class="mkt-plan reveal" id="mktPlanSection">
       <h3 class="mkt-plan-title">
@@ -1029,6 +1030,8 @@
       aiLlmsTxtNote:"ملاحظة: جوجل صرّحت رسمياً إنها تتجاهل هذا الملف تماماً في البحث ونتائج الذكاء الاصطناعي — لا يؤثر على الظهور في جوجل. قد يفيد فقط بعض روبوتات الذكاء الاصطناعي الأخرى (غير جوجل).",
       aiCheckedNote:"لم يُشغَّل الفحص بعد — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.",
       aiCheckedOn:(d)=>`آخر فحص: ${d}`,
+      kwSourceGsc:(d)=>`المصدر: بيانات حقيقية من Google Search Console (آخر تحديث: ${d}) — متوسط الترتيب الفعلي خلال آخر 28 يوماً.`,
+      kwSourceManual:"المصدر: بيانات مُدخلة يدوياً حالياً. تُستبدل تلقائياً ببيانات Google Search Console الحقيقية بمجرد اكتمال الربط.",
       prioAiCrawler:(n)=>`${n} ${n===1?'روبوت ذكاء اصطناعي محظور':'روبوتات ذكاء اصطناعي محظورة'} في robots.txt — يمنع ظهور الموقع في إجابات ChatGPT/Claude/Perplexity.`,
       recoPoorMobile:"أداء الجوال ضعيف — يحتاج أولوية عالية",
       recoNiMobile:"أداء متوسط — تحسينات إضافية ممكنة",
@@ -1160,6 +1163,8 @@
       aiLlmsTxtNote:"Note: Google has stated it ignores this file entirely for Search and AI features — it doesn't affect Google visibility. It may only help some non-Google AI crawlers.",
       aiCheckedNote:"Not checked yet — this fills in automatically after the first GitHub Action run.",
       aiCheckedOn:(d)=>`Last checked: ${d}`,
+      kwSourceGsc:(d)=>`Source: real Google Search Console data (last updated: ${d}) — average position over the trailing 28 days.`,
+      kwSourceManual:"Source: manually entered for now. Replaced automatically with real Google Search Console data once that connection is complete.",
       prioAiCrawler:(n)=>`${n} AI crawler${n===1?"":"s"} blocked in robots.txt — keeps the site out of ChatGPT/Claude/Perplexity answers.`,
       healthAltDetailLabel:"Images missing alt text:", healthMoreCount:(n)=>`+ ${n} more`,
       healthCheckedNote:"The automatic scan hasn't run for these pages yet — this table fills in automatically after the first GitHub Action run.",
@@ -1198,6 +1203,13 @@
       const posText = k.pos===null ? d.kwNotInTop5 : `${currentLang==="ar"?"صفحة":"Page"} ${k.page} · #${k.pos}`;
       return `<tr><td><span class="kw-rank">${i+1}</span>${escapeHtml(name)}</td><td class="kw-pos ${k.tier}">${escapeHtml(posText)}</td></tr>`;
     }).join("");
+
+    const sourceNote = document.getElementById("kwSourceNote");
+    if(sourceNote){
+      sourceNote.textContent = window.__keywordsSource === "gsc"
+        ? d.kwSourceGsc(window.__keywordsCheckedMonth || "")
+        : d.kwSourceManual;
+    }
   }
 
   /* ---------------- per-page registry ----------------
@@ -2486,6 +2498,8 @@
         (D.metrics||[]).forEach(dm => { const m = metrics.find(x=>x.key===dm.key); if(m && Array.isArray(dm.data)) m.data = dm.data; });
         (D.desktopMetrics||[]).forEach(dm => { const m = desktopMetrics.find(x=>x.key===dm.key); if(m && Array.isArray(dm.data)) m.data = dm.data; });
         if(Array.isArray(D.keywords)){ keywords.length = 0; D.keywords.forEach(k=>keywords.push(k)); }
+        window.__keywordsSource = D.keywordsSource || "manual";
+        window.__keywordsCheckedMonth = D.keywordsCheckedMonth || null;
         (D.pages||[]).forEach(pp => { const p = pageRegistry.find(x=>x.id===pp.id); if(p && pp.monthly) Object.assign(p.monthly, pp.monthly); });
         if(Array.isArray(D.pageHealth)){ pageHealthData = D.pageHealth; pageHealthCheckedMonth = D.pageHealthCheckedMonth || null; }
         if(typeof D.pageHealthScore === "number") window.__pageHealthScore = D.pageHealthScore;
