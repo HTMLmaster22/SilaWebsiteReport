@@ -699,6 +699,26 @@
   </div>
 </section>
 
+<section class="block" style="padding-top:8px;" id="aiReadiness">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" data-i18n="aiEyebrow">جاهزية الظهور في محركات الذكاء الاصطناعي</p>
+      <h2 data-i18n="aiH2">هل تقدر أدوات الذكاء الاصطناعي تصل لموقعنا؟</h2>
+      <p data-i18n="aiP">عند سؤال أدوات مثل ChatGPT أو Claude أو Perplexity عن خدمات مشابهة لخدماتنا، هل تقدر تصل لمحتوى الموقع أصلاً؟ هذا الجزء يفحص شهرياً ملف robots.txt للتأكد من عدم حظر روبوتات الذكاء الاصطناعي الرئيسية.</p>
+    </div>
+    <table class="kw-table reveal" id="aiTable">
+      <thead><tr>
+        <th data-i18n="aiColCrawler">الروبوت</th>
+        <th data-i18n="aiColPurpose">الغرض</th>
+        <th data-i18n="aiColStatus">الحالة</th>
+      </tr></thead>
+      <tbody id="aiTableBody"></tbody>
+    </table>
+    <p class="device-note" id="aiLlmsTxtLine" style="margin-top:14px;"></p>
+    <p class="device-note" id="aiCheckedNote" data-i18n="aiCheckedNote">لم يُشغَّل الفحص بعد — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.</p>
+  </div>
+</section>
+
 <section class="block" style="padding-top:8px;">
   <div class="wrap">
     <div class="block-head reveal">
@@ -1001,6 +1021,15 @@
       pageHealthScoreLabel:"متوسط صحة الصفحات",
       pageHealthScoreNote:(scored,excluded)=>`بمتوسط ${scored} صفحة محتوى فعلية — استُبعدت ${excluded} صفحة (سلة تسوق/حساب/صفحات فعاليات منتهية) من الحساب لأنها أصلاً لا يُفترض ظهورها في نتائج البحث.`,
       healthExcludedTag:"غير محسوبة",
+      aiEyebrow:"جاهزية الظهور في محركات الذكاء الاصطناعي", aiH2:"هل تقدر أدوات الذكاء الاصطناعي تصل لموقعنا؟",
+      aiP:"عند سؤال أدوات مثل ChatGPT أو Claude أو Perplexity عن خدمات مشابهة لخدماتنا، هل تقدر تصل لمحتوى الموقع أصلاً؟ هذا الجزء يفحص شهرياً ملف robots.txt للتأكد من عدم حظر روبوتات الذكاء الاصطناعي الرئيسية.",
+      aiColCrawler:"الروبوت", aiColPurpose:"الغرض", aiColStatus:"الحالة",
+      aiAllowed:"مسموح ✓", aiBlocked:"محظور",
+      aiLlmsTxtLabel:"ملف llms.txt", aiLlmsTxtPresent:"موجود", aiLlmsTxtMissing:"غير موجود",
+      aiLlmsTxtNote:"ملاحظة: جوجل صرّحت رسمياً إنها تتجاهل هذا الملف تماماً في البحث ونتائج الذكاء الاصطناعي — لا يؤثر على الظهور في جوجل. قد يفيد فقط بعض روبوتات الذكاء الاصطناعي الأخرى (غير جوجل).",
+      aiCheckedNote:"لم يُشغَّل الفحص بعد — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.",
+      aiCheckedOn:(d)=>`آخر فحص: ${d}`,
+      prioAiCrawler:(n)=>`${n} ${n===1?'روبوت ذكاء اصطناعي محظور':'روبوتات ذكاء اصطناعي محظورة'} في robots.txt — يمنع ظهور الموقع في إجابات ChatGPT/Claude/Perplexity.`,
       recoPoorMobile:"أداء الجوال ضعيف — يحتاج أولوية عالية",
       recoNiMobile:"أداء متوسط — تحسينات إضافية ممكنة",
       recoGood:"أداء جيد هذا الشهر",
@@ -1123,6 +1152,15 @@
       pageHealthScoreLabel:"Page Health Score",
       pageHealthScoreNote:(scored,excluded)=>`Averaged across ${scored} real content pages — ${excluded} page${excluded===1?"":"s"} (cart/account/expired event pages) excluded, since those were never meant to show up in search results anyway.`,
       healthExcludedTag:"not scored",
+      aiEyebrow:"AI search readiness", aiH2:"Can AI tools actually reach our site?",
+      aiP:"When someone asks ChatGPT, Claude, or Perplexity about services like ours, can those tools even access the site's content? This checks robots.txt every month to confirm the major AI crawlers aren't blocked.",
+      aiColCrawler:"Crawler", aiColPurpose:"Purpose", aiColStatus:"Status",
+      aiAllowed:"Allowed ✓", aiBlocked:"Blocked",
+      aiLlmsTxtLabel:"llms.txt file", aiLlmsTxtPresent:"Present", aiLlmsTxtMissing:"Missing",
+      aiLlmsTxtNote:"Note: Google has stated it ignores this file entirely for Search and AI features — it doesn't affect Google visibility. It may only help some non-Google AI crawlers.",
+      aiCheckedNote:"Not checked yet — this fills in automatically after the first GitHub Action run.",
+      aiCheckedOn:(d)=>`Last checked: ${d}`,
+      prioAiCrawler:(n)=>`${n} AI crawler${n===1?"":"s"} blocked in robots.txt — keeps the site out of ChatGPT/Claude/Perplexity answers.`,
       healthAltDetailLabel:"Images missing alt text:", healthMoreCount:(n)=>`+ ${n} more`,
       healthCheckedNote:"The automatic scan hasn't run for these pages yet — this table fills in automatically after the first GitHub Action run.",
       healthCheckedOn:(d)=>`Last checked: ${d}`,
@@ -1373,6 +1411,49 @@
     noteEl.textContent = d.pageHealthScoreNote(scoredCount, excludedCount);
   }
 
+  // AI crawler access (robots.txt) + llms.txt presence - see
+  // check_ai_search_readiness() in update_data.py. Same empty-state
+  // reasoning as the rest of this report: no data yet shows the "not
+  // checked" note instead of an empty table or a misleading "all clear".
+  function renderAiReadiness(){
+    const section = document.getElementById("aiReadiness");
+    if(!section) return;
+    const d = dict[currentLang];
+    const body = document.getElementById("aiTableBody");
+    const table = document.getElementById("aiTable");
+    const note = document.getElementById("aiCheckedNote");
+    const llmsLine = document.getElementById("aiLlmsTxtLine");
+    const data = window.__aiSearchReadiness;
+
+    if(!data){
+      table.style.display = "none";
+      llmsLine.style.display = "none";
+      note.style.display = "";
+      note.textContent = d.aiCheckedNote;
+      return;
+    }
+    table.style.display = "";
+    note.style.display = "none";
+
+    body.innerHTML = data.crawlers.map(c=>{
+      const cls = c.allowed ? "measured" : (c.flagIfBlocked ? "poor" : "pending");
+      const statusText = c.allowed ? d.aiAllowed : d.aiBlocked;
+      return `<tr>
+        <td><strong>${escapeHtml(c.agent)}</strong><span class="page-url">${escapeHtml(c.owner)}</span></td>
+        <td>${escapeHtml(c.purpose)}</td>
+        <td><span class="status-pill ${cls}">${statusText}</span></td>
+      </tr>`;
+    }).join("");
+
+    llmsLine.style.display = "";
+    llmsLine.innerHTML = `<strong>${d.aiLlmsTxtLabel}:</strong> ${data.llmsTxtPresent ? d.aiLlmsTxtPresent : d.aiLlmsTxtMissing} — ${d.aiLlmsTxtNote}`;
+
+    if(window.__aiCheckedMonth){
+      note.style.display = "";
+      note.textContent = d.aiCheckedOn(window.__aiCheckedMonth);
+    }
+  }
+
   // Expand/collapse for the Alt-text and SEO-issue pills above. Delegated on
   // the (static) tbody rather than bound per-pill, because renderPageHealthTable()
   // fully replaces the tbody's innerHTML on every re-render (language toggle,
@@ -1426,6 +1507,16 @@
     const broken = pageHealthData.filter(p => (p.seoIssues||[]).some(i => i.id === "http-status-code"));
     const brokenList = broken.length ? [{ sev:"poor", type:"broken", count: broken.length, pages: broken }] : [];
 
+    // 0.5) AI crawlers blocked in robots.txt - grouped with broken pages
+    // above since both are access problems, not optimization opportunities:
+    // a crawler that can't reach the site at all makes every other content
+    // improvement moot for that channel. Only counts the answer-serving
+    // crawlers (flagIfBlocked) - CCBot and training-only crawlers are
+    // commonly blocked on purpose and aren't flagged here.
+    const aiData = window.__aiSearchReadiness;
+    const blockedCrawlers = aiData ? aiData.crawlers.filter(c => c.flagIfBlocked && !c.allowed) : [];
+    const aiCrawlerList = blockedCrawlers.length ? [{ sev:"poor", type:"aiCrawler", count: blockedCrawlers.length }] : [];
+
     // 1) weakest sitewide mobile CWV metric
     let worst = null, worstRank = -1;
     metrics.forEach(m=>{
@@ -1461,7 +1552,7 @@
       list.push({ sev:"ni", type:"alt" });
     }
 
-    return brokenList.concat(list.slice(0,5));
+    return brokenList.concat(aiCrawlerList).concat(list.slice(0,5));
   }
 
   function renderPriorities(){
@@ -1474,6 +1565,8 @@
       let text = "";
       if(it.type==="broken"){
         text = d.prioBroken(it.count);
+      } else if(it.type==="aiCrawler"){
+        text = d.prioAiCrawler(it.count);
       } else if(it.type==="cwv"){
         const name = currentLang==="ar" ? it.m.nameAr : it.m.nameEn;
         text = d.prioCwv.replace("{metric}", `<strong>${escapeHtml(name)}</strong>`);
@@ -1489,7 +1582,7 @@
       } else if(it.type==="alt"){
         text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
       }
-      const ownerMap = { broken:["tech",d.ownerTech], cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared] };
+      const ownerMap = { broken:["tech",d.ownerTech], aiCrawler:["tech",d.ownerTech], cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared] };
       const [ocls, otxt] = ownerMap[it.type] || ["tech", d.ownerTech];
       return `<div class="priority-item ${it.sev}">
         <span class="priority-num num">0${i+1}</span>
@@ -1689,6 +1782,8 @@
       let text = "";
       if(it.type==="broken"){
         text = d.prioBroken(it.count);
+      } else if(it.type==="aiCrawler"){
+        text = d.prioAiCrawler(it.count);
       } else if(it.type==="cwv"){
         const name = lang==="ar" ? it.m.nameAr : it.m.nameEn;
         text = d.prioCwv.replace("{metric}", escapeHtml(name));
@@ -1702,7 +1797,7 @@
       } else if(it.type==="alt"){
         text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
       }
-      const ownerMap = { broken:d.ownerTech, cwv:d.ownerTech, kw:d.ownerMkt, pending:d.ownerTech, schema:d.ownerTech, alt:d.ownerShared };
+      const ownerMap = { broken:d.ownerTech, aiCrawler:d.ownerTech, cwv:d.ownerTech, kw:d.ownerMkt, pending:d.ownerTech, schema:d.ownerTech, alt:d.ownerShared };
       const otxt = ownerMap[it.type] || d.ownerTech;
       return `<div class="pdf-prio-item"><span class="pdf-prio-num">0${i+1}</span><div>${text}<div class="pdf-owner">${d.ownerLabel}: ${otxt}</div></div></div>`;
     }).join("") || `<p>—</p>`;
@@ -2197,6 +2292,7 @@
     renderPageTable();
     renderPageHealthTable();
     renderPageHealthScore();
+    renderAiReadiness();
     renderPriorities();
     renderOpportunities();
     renderScoreCards();
@@ -2269,6 +2365,7 @@
     renderPageTable();
     renderPageHealthTable();
     renderPageHealthScore();
+    renderAiReadiness();
     renderPriorities();
     renderOpportunities();
     renderScoreCards();
@@ -2392,6 +2489,7 @@
         (D.pages||[]).forEach(pp => { const p = pageRegistry.find(x=>x.id===pp.id); if(p && pp.monthly) Object.assign(p.monthly, pp.monthly); });
         if(Array.isArray(D.pageHealth)){ pageHealthData = D.pageHealth; pageHealthCheckedMonth = D.pageHealthCheckedMonth || null; }
         if(typeof D.pageHealthScore === "number") window.__pageHealthScore = D.pageHealthScore;
+        if(D.aiSearchReadiness){ window.__aiSearchReadiness = D.aiSearchReadiness; window.__aiCheckedMonth = D.aiSearchReadinessCheckedMonth || null; }
         if(typeof D.seoScore === "number") window.__seoScore = D.seoScore;
         if(typeof D.bestPracticesScore === "number") window.__bpScore = D.bestPracticesScore;
         if(typeof D.a11yScoreMobile === "number") window.__a11yMobile = D.a11yScoreMobile;
