@@ -38,6 +38,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -53,6 +54,20 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data.json")
 # long or rate-limited Action run. Raise this if the real sitemap needs more —
 # the discovery logic itself has no built-in limit, this is deliberate.
 MAX_AUTO_PAGES = 30
+
+# Seconds to wait between each page's direct HTML fetch in run_page_health_scan().
+# Added Aug 2026 after the Aug 15 run showed only page 1 (home) getting real
+# schema/alt-text data and the other 29 coming back null — a same-day repro
+# of two unrelated pages returning HTTP 429 pointed at the site's own
+# rate-limiting/WAF reacting to a burst of same-IP requests, not a code bug
+# (the Aug 9 run, same code, same 30 URLs, succeeded 30/30). PSI-based fields
+# (mobileScore, unusedCssKb/JsKb, seoIssues) are unaffected either way since
+# those come from Google's PSI servers hitting the site, not this fetch.
+PAGE_FETCH_DELAY_SECONDS = 2
+# Extra wait before a single retry if a fetch still fails — separate from the
+# steady per-page delay above, since a failure is a stronger signal to back
+# off further than the routine gap between pages.
+PAGE_FETCH_RETRY_BACKOFF_SECONDS = 5
 
 # Manually-curated bilingual names + expected Schema type for pages already
 # worked on directly (Aug 2026 SEO pass). Anything the sitemap discovers that
@@ -376,16 +391,26 @@ def fetch_psi_full(page_url, strategy):
     }
 
 
-def fetch_html(page_url):
+def fetch_html(page_url, retry=True):
     """Fetch a page's rendered-server HTML. Returns None on any failure —
     callers treat a missing fetch as 'skip this page this run', matching the
     existing best-effort pattern used for CrUX above (a page hiccup shouldn't
-    fail the whole monthly run)."""
+    fail the whole monthly run).
+
+    Retries once after PAGE_FETCH_RETRY_BACKOFF_SECONDS on failure (still a
+    single extra attempt, not a loop) — cheap insurance against a transient
+    rate-limit/WAF response on an otherwise-fine page, without turning one
+    stuck page into a long hang."""
     try:
         req = urllib.request.Request(page_url, headers={"User-Agent": "Mozilla/5.0 (compatible; SilahReportBot/1.0)"})
         with urllib.request.urlopen(req, timeout=30) as r:
             return r.read().decode("utf-8", errors="replace")
     except Exception as e:
+        if retry:
+            print(f"  WARNING: fetch failed for {page_url}, retrying once in "
+                  f"{PAGE_FETCH_RETRY_BACKOFF_SECONDS}s: {e}", file=sys.stderr)
+            time.sleep(PAGE_FETCH_RETRY_BACKOFF_SECONDS)
+            return fetch_html(page_url, retry=False)
         print(f"  WARNING: could not fetch {page_url}: {e}", file=sys.stderr)
         return None
 
@@ -464,7 +489,9 @@ def run_page_health_scan():
     page_list = build_page_list()
     print(f"  Page list: {len(page_list)} page(s) to scan this run.")
     results = []
-    for page in page_list:
+    for i, page in enumerate(page_list):
+        if i > 0:
+            time.sleep(PAGE_FETCH_DELAY_SECONDS)
         print(f"  Scanning {page['id']} ({page['url']}) ...")
         entry = {"id": page["id"], "nameAr": page["nameAr"], "nameEn": page["nameEn"],
                   "url": page["url"], "checkedAt": datetime.now(timezone.utc).strftime("%Y-%m-%d")}
