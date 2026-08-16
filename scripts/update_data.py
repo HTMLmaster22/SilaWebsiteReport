@@ -243,11 +243,14 @@ CRUX_METRIC_MAP = {
 API_KEY = os.environ.get("PSI_API_KEY", "").strip()
 
 
-def http_json(url, payload=None):
+def http_json(url, payload=None, extra_headers=None):
+    headers = {"Content-Type": "application/json"}
+    if extra_headers:
+        headers.update(extra_headers)
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode() if payload is not None else None,
-        headers={"Content-Type": "application/json"},
+        headers=headers,
         method="POST" if payload is not None else "GET",
     )
     with urllib.request.urlopen(req, timeout=120) as r:
@@ -347,6 +350,112 @@ def fetch_psi_score(strategy):
 
 SKIP_SEO_AUDITS = {"image-alt"}  # redundant with check_alt_text() below, which is more
                                   # precise (names the actual image, Lighthouse just says yes/no)
+
+
+def get_gsc_access_token():
+    """Loads the service account from the GSC_SERVICE_ACCOUNT_JSON secret and
+    exchanges it for a short-lived access token. Returns None (not an
+    exception) if the secret isn't set yet, or if auth fails for any
+    reason - GSC data is a "nice to have on top of" the rest of this
+    script, not something that should take down a run that would
+    otherwise succeed. Requires google-auth (added to the workflow's pip
+    install step alongside this function - unlike everything else in this
+    file, correctly signing a service-account JWT isn't something worth
+    hand-rolling against stdlib; this is exactly the kind of auth-critical
+    code where the well-audited official library is the right call).
+
+    Read-only scope on purpose - this integration only ever needs to query
+    existing Search Analytics data, never modify anything about the
+    property."""
+    raw = os.environ.get("GSC_SERVICE_ACCOUNT_JSON")
+    if not raw:
+        print("  GSC_SERVICE_ACCOUNT_JSON not set - skipping GSC, keywords stay as-is this run.")
+        return None
+    try:
+        from google.oauth2 import service_account
+        from google.auth.transport.requests import Request as GoogleAuthRequest
+        info = json.loads(raw)
+        creds = service_account.Credentials.from_service_account_info(
+            info, scopes=["https://www.googleapis.com/auth/webmasters.readonly"]
+        )
+        creds.refresh(GoogleAuthRequest())
+        return creds.token
+    except Exception as e:
+        print(f"  WARNING: GSC auth failed, keywords stay as-is this run: {e}", file=sys.stderr)
+        return None
+
+
+# Silah's GSC property was verified via DNS TXT record (see project history),
+# which is the verification method specific to Domain properties, not
+# URL-prefix ones - so sc-domain: is the expected format. Falls back to the
+# URL-prefix format automatically if that guess is wrong, rather than just
+# failing outright on a property-type mismatch we can recover from.
+GSC_SITE_URL_CANDIDATES = ["sc-domain:silah.com.sa", "https://www.silah.com.sa/"]
+
+
+def fetch_gsc_position(access_token, keyword_query, days=28):
+    """Average position/clicks/impressions over the trailing `days` for
+    everything Search Console logged containing `keyword_query` - a
+    "contains" match rather than exact, since real searches rarely match a
+    tracked phrase word-for-word, and this is meant to track how the TOPIC
+    is doing, not one exact string. Returns None if there's no data for
+    this phrase in the window (genuinely not appearing in any real search,
+    as opposed to appearing but ranking poorly - those are different
+    findings and shouldn't be conflated)."""
+    from datetime import timedelta
+    end = datetime.now(timezone.utc).date()
+    start = end - timedelta(days=days)
+    payload = {
+        "startDate": start.isoformat(), "endDate": end.isoformat(),
+        "dimensions": ["query"], "rowLimit": 1,
+        "dimensionFilterGroups": [{"filters": [
+            {"dimension": "query", "operator": "contains", "expression": keyword_query}
+        ]}],
+    }
+    headers = {"Authorization": f"Bearer {access_token}"}
+    last_err = None
+    for site_url in GSC_SITE_URL_CANDIDATES:
+        endpoint = ("https://searchconsole.googleapis.com/webmasters/v3/sites/"
+                    f"{urllib.parse.quote(site_url, safe='')}/searchAnalytics/query")
+        try:
+            resp = http_json(endpoint, payload=payload, extra_headers=headers)
+            rows = resp.get("rows", [])
+            if not rows:
+                return None
+            r = rows[0]
+            return {"position": r["position"], "clicks": r["clicks"], "impressions": r["impressions"]}
+        except urllib.error.HTTPError as e:
+            last_err = e
+            continue  # try the next site_url candidate - likely a property-type mismatch
+    if last_err:
+        print(f"  WARNING: GSC query failed for '{keyword_query}' against both site URL formats: {last_err}", file=sys.stderr)
+    return None
+
+
+def update_keywords_with_gsc(keywords, access_token):
+    """Updates each tracked keyword's pos/page/tier IN PLACE from real GSC
+    data. position is GSC's average over the window as a float (e.g. 6.8);
+    converted here to the report's existing page/pos pair the same way
+    Google's own results pages are numbered - 10 results per page, so
+    overall rank 15 is page 2, position 5 on that page. A keyword with no
+    GSC rows this window keeps its previous manually-recorded value rather
+    than being overwritten with a false null - going from "we measured
+    this once" to "we have no idea" isn't right either. Only ever called
+    with a real access_token; caller skips this entirely when auth failed,
+    so keywords silently keep their last-known values on any GSC outage."""
+    import math
+    for kw in keywords:
+        result = fetch_gsc_position(access_token, kw["ar"])
+        if result is None:
+            continue
+        overall_rank = round(result["position"])
+        page = max(1, math.ceil(overall_rank / 10))
+        pos = overall_rank - (page - 1) * 10
+        kw["pos"] = pos
+        kw["page"] = page
+        kw["tier"] = "strong" if page == 1 else "weak"
+        kw["gscClicks"] = result["clicks"]
+        kw["gscImpressions"] = round(result["impressions"])
 
 
 def fetch_psi_full(page_url, strategy):
@@ -842,6 +951,22 @@ def main():
     if data["aiSearchReadiness"]:
         blocked = [c["agent"] for c in data["aiSearchReadiness"]["crawlers"] if c["flagIfBlocked"] and not c["allowed"]]
         print(f"  AI crawlers blocked: {blocked or 'none'} | llms.txt present: {data['aiSearchReadiness']['llmsTxtPresent']}")
+
+    print("Checking Google Search Console for real keyword rankings ...")
+    gsc_token = get_gsc_access_token()
+    if gsc_token and data.get("keywords"):
+        update_keywords_with_gsc(data["keywords"], gsc_token)
+        data["keywordsSource"] = "gsc"
+        data["keywordsCheckedMonth"] = new_month
+        print(f"  Updated {len(data['keywords'])} tracked keywords from real Search Console data.")
+    else:
+        # Not an error - just means the keywords array keeps whatever it
+        # already had (manually entered, or from the last successful GSC
+        # run). keywordsSource stays whatever it already was, so a report
+        # that's never had GSC connected still correctly says "manual"
+        # instead of silently claiming a source it doesn't have.
+        data.setdefault("keywordsSource", "manual")
+        print("  Skipped - keywords unchanged this run (see warning above if this is unexpected).")
 
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
