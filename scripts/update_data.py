@@ -495,6 +495,13 @@ def run_page_health_scan():
         print(f"  Scanning {page['id']} ({page['url']}) ...")
         entry = {"id": page["id"], "nameAr": page["nameAr"], "nameEn": page["nameEn"],
                   "url": page["url"], "checkedAt": datetime.now(timezone.utc).strftime("%Y-%m-%d")}
+        if not entry["nameAr"]:
+            # Baseline fallback before we even try the fetch: the slug, so a
+            # failed fetch below still leaves a real (if unpolished) name
+            # instead of null. Upgraded to the page's actual <title> further
+            # down if the fetch succeeds and a nicer name is available.
+            entry["nameAr"] = page["id"]
+            entry["nameEn"] = page["id"]
 
         html = fetch_html(page["url"])
         if html is not None:
