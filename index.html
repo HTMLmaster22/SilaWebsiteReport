@@ -360,6 +360,7 @@
   .device-legend .v{ margin-inline-start:auto; font-weight:700; }
   .device-note{ font-size:14.5px; color:var(--ink-soft); }
   .device-note strong{ color:var(--ink); }
+  .excluded-tag{ display:inline-block; font-size:10px; font-weight:700; color:var(--ink-soft); background:rgba(11,29,38,0.06); border-radius:100px; padding:2px 8px; margin-inline-start:8px; vertical-align:middle; }
   @media (max-width:760px){ .device-grid{ grid-template-columns:1fr; } }
 
   /* ===== Device toggle ===== */
@@ -678,6 +679,11 @@
       <h2 data-i18n="healthH2">سلامة الصفحات التقنية</h2>
       <p data-i18n="healthP">يفحص هذا الجزء تلقائياً كل شهر: بيانات Schema المهيكلة، نصوص alt للصور، حجم CSS/JS غير المستخدم، ومشاكل SEO الفنية — نفس الفحوصات التي تُجرى يدوياً، لكن بشكل دوري بدون تدخل.</p>
     </div>
+    <div class="seo-score-card reveal" id="pageHealthScoreCard" style="max-width:300px;margin-bottom:22px;">
+      <div class="score num" id="pageHealthScoreVal">—</div>
+      <div class="label" data-i18n="pageHealthScoreLabel">متوسط صحة الصفحات</div>
+      <div class="score-target" id="pageHealthScoreNote"></div>
+    </div>
     <table class="kw-table reveal" id="healthTable">
       <thead><tr>
         <th data-i18n="healthColName">الصفحة</th>
@@ -992,6 +998,9 @@
       healthAltDetailLabel:"صور بلا نص alt:", healthMoreCount:(n)=>`+ ${n} ${n===1?'صورة أخرى':'صور أخرى'}`,
       healthCheckedNote:"لم يُشغَّل الفحص التلقائي بعد لهذه الصفحات — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.",
       healthCheckedOn:(d)=>`آخر فحص: ${d}`,
+      pageHealthScoreLabel:"متوسط صحة الصفحات",
+      pageHealthScoreNote:(scored,excluded)=>`بمتوسط ${scored} صفحة محتوى فعلية — استُبعدت ${excluded} صفحة (سلة تسوق/حساب/صفحات فعاليات منتهية) من الحساب لأنها أصلاً لا يُفترض ظهورها في نتائج البحث.`,
+      healthExcludedTag:"غير محسوبة",
       recoPoorMobile:"أداء الجوال ضعيف — يحتاج أولوية عالية",
       recoNiMobile:"أداء متوسط — تحسينات إضافية ممكنة",
       recoGood:"أداء جيد هذا الشهر",
@@ -1111,6 +1120,9 @@
       healthSeoOk:"Clean", healthSeoIssue:(n)=>`${n} issue${n===1?'':'s'}`,
       healthSchemaOk:"Present ✓", healthSchemaMissing:"Missing", healthSchemaUnknown:"—",
       healthAltOk:"Clean", healthAltIssue:(n)=>`${n} issue${n===1?"":"s"}`,
+      pageHealthScoreLabel:"Page Health Score",
+      pageHealthScoreNote:(scored,excluded)=>`Averaged across ${scored} real content pages — ${excluded} page${excluded===1?"":"s"} (cart/account/expired event pages) excluded, since those were never meant to show up in search results anyway.`,
+      healthExcludedTag:"not scored",
       healthAltDetailLabel:"Images missing alt text:", healthMoreCount:(n)=>`+ ${n} more`,
       healthCheckedNote:"The automatic scan hasn't run for these pages yet — this table fills in automatically after the first GitHub Action run.",
       healthCheckedOn:(d)=>`Last checked: ${d}`,
@@ -1277,6 +1289,7 @@
       // missing it, which is why a failed fetch showed literal "null" as the
       // page name instead of degrading like the rest of the row.
       const label = (currentLang==="ar" ? p.nameAr : p.nameEn) || p.id;
+      const excludedTag = p.excludedFromScore ? `<span class="excluded-tag">${d.healthExcludedTag}</span>` : "";
       let schemaCls, schemaText;
       if(p.schema == null){ schemaCls = "pending"; schemaText = d.healthSchemaUnknown; }
       else if(p.schema.hasExpectedType){ schemaCls = "measured"; schemaText = d.healthSchemaOk; }
@@ -1311,7 +1324,7 @@
       const scoreCell = (p.mobileScore === null || p.mobileScore === undefined) ? `<span class="cell-dash">—</span>` : `<span class="cell-num num">${p.mobileScore}</span>`;
 
       return `<tr>
-        <td><a class="row-page-link" href="${safeHref(p.url)}" target="_blank" rel="noopener noreferrer"><strong>${label}</strong></a></td>
+        <td><a class="row-page-link" href="${safeHref(p.url)}" target="_blank" rel="noopener noreferrer"><strong>${label}</strong></a>${excludedTag}</td>
         <td><span class="status-pill ${schemaCls}">${schemaText}</span></td>
         <td><span class="status-pill ${altCls} ${altClickable}"${altClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${altText}</span>${altDetail}</td>
         <td><span class="status-pill ${seoCls} ${seoClickable}"${seoClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${seoText}</span>${seoDetail}</td>
@@ -1323,6 +1336,31 @@
       note.style.display = "";
       note.textContent = d.healthCheckedOn(pageHealthCheckedMonth);
     }
+  }
+
+  // Composite score built from pageHealthData itself (schema/alt-text/SEO
+  // issues/performance/CSS-JS bloat, averaged across real content pages) —
+  // distinct from window.__seoScore in renderScoreCards() above, which is
+  // Lighthouse's own homepage-only SEO category audit. Hidden entirely
+  // (rather than showing a "—") when there's no pageHealthData yet, same
+  // reasoning as healthCheckedNote's empty-state above: a blank score card
+  // reads as broken, no card at all just reads as "not run yet."
+  function renderPageHealthScore(){
+    const card = document.getElementById("pageHealthScoreCard");
+    if(!card) return;
+    const d = dict[currentLang];
+    const valEl = document.getElementById("pageHealthScoreVal");
+    const noteEl = document.getElementById("pageHealthScoreNote");
+    if(!pageHealthData.length || typeof window.__pageHealthScore !== "number"){
+      card.style.display = "none";
+      return;
+    }
+    card.style.display = "";
+    valEl.textContent = window.__pageHealthScore;
+    valEl.classList.toggle("partial", window.__pageHealthScore < 80);
+    const excludedCount = pageHealthData.filter(p => p.excludedFromScore).length;
+    const scoredCount = pageHealthData.length - excludedCount;
+    noteEl.textContent = d.pageHealthScoreNote(scoredCount, excludedCount);
   }
 
   // Expand/collapse for the Alt-text and SEO-issue pills above. Delegated on
@@ -2131,6 +2169,7 @@
     renderCardSparklines();
     renderPageTable();
     renderPageHealthTable();
+    renderPageHealthScore();
     renderPriorities();
     renderOpportunities();
     renderScoreCards();
@@ -2202,6 +2241,7 @@
     renderKeywordTable();
     renderPageTable();
     renderPageHealthTable();
+    renderPageHealthScore();
     renderPriorities();
     renderOpportunities();
     renderScoreCards();
@@ -2324,6 +2364,7 @@
         if(Array.isArray(D.keywords)){ keywords.length = 0; D.keywords.forEach(k=>keywords.push(k)); }
         (D.pages||[]).forEach(pp => { const p = pageRegistry.find(x=>x.id===pp.id); if(p && pp.monthly) Object.assign(p.monthly, pp.monthly); });
         if(Array.isArray(D.pageHealth)){ pageHealthData = D.pageHealth; pageHealthCheckedMonth = D.pageHealthCheckedMonth || null; }
+        if(typeof D.pageHealthScore === "number") window.__pageHealthScore = D.pageHealthScore;
         if(typeof D.seoScore === "number") window.__seoScore = D.seoScore;
         if(typeof D.bestPracticesScore === "number") window.__bpScore = D.bestPracticesScore;
         if(typeof D.a11yScoreMobile === "number") window.__a11yMobile = D.a11yScoreMobile;
