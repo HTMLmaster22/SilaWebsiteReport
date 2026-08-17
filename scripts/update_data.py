@@ -968,6 +968,18 @@ def main():
         data.setdefault("keywordsSource", "manual")
         print("  Skipped - keywords unchanged this run (see warning above if this is unexpected).")
 
+    # _note is the report's own plain-language summary of what's live vs.
+    # still manual - was hand-seeded once, long ago, and (like keywords used
+    # to be) never touched by any automated process since, so it drifted out
+    # of date the moment GSC went live this morning. Refreshing it here each
+    # run means it can't silently go stale again the way it just did.
+    data["_note"] = ("Keywords: real Google Search Console data as of Aug 2026. "
+                      "Non-home per-page performance rows still need URLs added manually "
+                      "(see pageRegistry in index.html). Everything else - page health, "
+                      "AI crawler access, Lighthouse scores, CrUX trend - auto-updates "
+                      "monthly via GitHub Action, sourced directly from Google APIs and "
+                      "the live site.")
+
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")
