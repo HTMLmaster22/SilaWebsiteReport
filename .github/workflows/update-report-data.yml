@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: pip install google-auth
+        run: pip install google-auth requests
       - name: Refresh data.json from Google APIs
         env:
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
