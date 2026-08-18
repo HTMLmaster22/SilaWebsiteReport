@@ -89,6 +89,25 @@
   .lang-btn:hover{ background:var(--teal); transform:translateY(-1px); }
   .lang-btn svg{ width:14px; height:14px; }
 
+  .refresh-btn{
+    background:var(--paper); color:var(--ink); border:1.5px solid var(--hair);
+    border-radius:100px; padding:9px 18px; font-size:13.5px; font-weight:700;
+    display:flex; align-items:center; gap:7px; margin-inline-end:10px;
+    transition:transform .15s ease, border-color .15s ease, opacity .15s ease;
+    cursor:pointer;
+  }
+  .refresh-btn:hover:not(:disabled){ border-color:var(--signal); transform:translateY(-1px); }
+  .refresh-btn:disabled{ opacity:.55; cursor:not-allowed; }
+  .refresh-btn svg{ width:14px; height:14px; }
+  .refresh-btn.spinning svg{ animation:refresh-spin 1s linear infinite; }
+  @keyframes refresh-spin{ to{ transform:rotate(360deg); } }
+  .refresh-status{
+    font-size:12.5px; color:var(--ink-soft); text-align:center;
+    padding:6px 16px 0; min-height:20px;
+  }
+  .refresh-status.err{ color:var(--poor); }
+  .refresh-status.ok{ color:var(--moss); }
+
   /* ===== Hero ===== */
   .hero{
     background:radial-gradient(120% 140% at 18% -10%, #173d49 0%, var(--ink) 55%);
@@ -489,11 +508,16 @@
         <small data-i18n="brandSub">تقنية المعلومات</small>
       </span>
     </div>
+    <button class="refresh-btn" id="refreshBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16m0 5v-5h5"/></svg>
+      <span id="refreshBtnLabel" data-i18n="refreshBtnLabel">تحديث البيانات الآن</span>
+    </button>
     <button class="lang-btn" id="langToggle" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z"/></svg>
       <span data-i18n="langToggleLabel">English</span>
     </button>
   </div>
+  <div class="refresh-status" id="refreshStatus"></div>
 </header>
 
 <section class="hero">
@@ -905,6 +929,9 @@
   const dict = {
     ar: {
       brandName:"صلة", brandSub:"تقنية المعلومات", langToggleLabel:"English",
+      refreshBtnLabel:"تحديث البيانات الآن", refreshBtnBusy:"جاري التحديث…",
+      refreshStatusWait:"سيستغرق حوالي ٩ دقائق. لا تغلق الصفحة، بس تقدر تكمل تصفحها.",
+      refreshStatusGenericErr:"صار خطأ غير متوقع، جرّب مرة ثانية بعد شوي.",
       heroEyebrow:"تقرير أداء الموقع الإلكتروني · بيانات حقيقية من زوّار الموقع",
       msUnit:"جزء من الثانية",
       improveBadge:"أسرع بنسبة 76%",
@@ -1041,6 +1068,9 @@
     },
     en: {
       brandName:"Silah", brandSub:"Information Technology", langToggleLabel:"العربية",
+      refreshBtnLabel:"Refresh data now", refreshBtnBusy:"Refreshing…",
+      refreshStatusWait:"Takes about 9 minutes. Don't close the page — feel free to keep browsing though.",
+      refreshStatusGenericErr:"Something unexpected went wrong, try again in a bit.",
       heroEyebrow:"Website Performance Report · Real data from actual visitors",
       msUnit:"milliseconds",
       improveBadge:"76% faster",
@@ -2478,6 +2508,49 @@
   });
 
   document.getElementById("pdfDownloadBtn").addEventListener("click", downloadSeoPdf);
+
+  // Calls the Vercel serverless function (api/refresh-report.js), which
+  // holds the GitHub token server-side and triggers the Action on our
+  // behalf - see that file for why this can't just call GitHub directly
+  // from here. Does NOT wait for the ~9 minute scan to finish; it only
+  // confirms the trigger itself succeeded, then tells the person to check
+  // back later. The button disables itself immediately on click to avoid
+  // a burst of double-clicks all firing before the first response returns.
+  document.getElementById("refreshBtn").addEventListener("click", async () => {
+    const btn = document.getElementById("refreshBtn");
+    const label = document.getElementById("refreshBtnLabel");
+    const status = document.getElementById("refreshStatus");
+    const d = dict[currentLang];
+
+    btn.disabled = true;
+    btn.classList.add("spinning");
+    label.textContent = d.refreshBtnBusy;
+    status.className = "refresh-status";
+    status.textContent = "";
+
+    try {
+      const res = await fetch("/api/refresh-report", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.ok) {
+        status.className = "refresh-status ok";
+        status.textContent = data.message || d.refreshStatusWait;
+      } else {
+        // already_running / cooldown / GitHub errors all carry their own
+        // Arabic-or-English-appropriate message from the server; fall
+        // back to a generic one only if the response is malformed.
+        status.className = "refresh-status err";
+        status.textContent = data.message || d.refreshStatusGenericErr;
+      }
+    } catch (e) {
+      status.className = "refresh-status err";
+      status.textContent = d.refreshStatusGenericErr;
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove("spinning");
+      label.textContent = d.refreshBtnLabel;
+    }
+  });
 
   buildAccordion();
 
