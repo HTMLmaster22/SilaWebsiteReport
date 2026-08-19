@@ -518,6 +518,7 @@
     </button>
   </div>
   <div class="refresh-status" id="refreshStatus"></div>
+  <div class="refresh-status" id="lastRefreshedLine"></div>
 </header>
 
 <section class="hero">
@@ -932,6 +933,10 @@
       refreshBtnLabel:"تحديث البيانات الآن", refreshBtnBusy:"جاري التحديث…",
       refreshStatusWait:"سيستغرق حوالي ٩ دقائق. لا تغلق الصفحة، بس تقدر تكمل تصفحها.",
       refreshStatusGenericErr:"صار خطأ غير متوقع، جرّب مرة ثانية بعد شوي.",
+      lastRefreshedLabel:(exact,rel)=>`آخر تحديث فعلي للبيانات: ${exact} (${rel})`,
+      relJustNow:"الآن", relMinutes:(n)=>`قبل ${n} ${n===1?'دقيقة':'دقائق'}`,
+      relHours:(n)=>`قبل ${n} ${n===1?'ساعة':'ساعات'}`,
+      relDays:(n)=>`قبل ${n} ${n===1?'يوم':'أيام'}`,
       heroEyebrow:"تقرير أداء الموقع الإلكتروني · بيانات حقيقية من زوّار الموقع",
       msUnit:"جزء من الثانية",
       improveBadge:"أسرع بنسبة 76%",
@@ -1071,6 +1076,9 @@
       refreshBtnLabel:"Refresh data now", refreshBtnBusy:"Refreshing…",
       refreshStatusWait:"Takes about 9 minutes. Don't close the page — feel free to keep browsing though.",
       refreshStatusGenericErr:"Something unexpected went wrong, try again in a bit.",
+      lastRefreshedLabel:(exact,rel)=>`Data last actually refreshed: ${exact} (${rel})`,
+      relJustNow:"just now", relMinutes:(n)=>`${n} minute${n===1?"":"s"} ago`,
+      relHours:(n)=>`${n} hour${n===1?"":"s"} ago`, relDays:(n)=>`${n} day${n===1?"":"s"} ago`,
       heroEyebrow:"Website Performance Report · Real data from actual visitors",
       msUnit:"milliseconds",
       improveBadge:"76% faster",
@@ -1494,6 +1502,40 @@
       note.style.display = "";
       note.textContent = d.aiCheckedOn(window.__aiCheckedMonth);
     }
+  }
+
+  // "When was this actually last refreshed" - added Aug 19 2026 after
+  // repeated confusion in practice about whether a given number on the
+  // page was current or stale. Distinct from the various *CheckedMonth
+  // notes scattered through other sections (those are per-section and
+  // month-granularity); this is one single, precise answer, shown right
+  // next to the refresh button since that's where the question naturally
+  // comes up.
+  function renderLastRefreshed(){
+    const el = document.getElementById("lastRefreshedLine");
+    if(!el) return;
+    const iso = window.__lastRefreshedAt;
+    if(!iso){ el.style.display = "none"; return; }
+    const d = dict[currentLang];
+    const then = new Date(iso);
+    if(isNaN(then.getTime())){ el.style.display = "none"; return; }
+
+    const exact = then.toLocaleString(currentLang==="ar" ? "ar-SA" : "en-US", {
+      dateStyle: "medium", timeStyle: "short",
+    });
+
+    const diffMs = Date.now() - then.getTime();
+    const mins = Math.floor(diffMs / 60000);
+    const hours = Math.floor(mins / 60);
+    const days = Math.floor(hours / 24);
+    let rel;
+    if(mins < 1) rel = d.relJustNow;
+    else if(mins < 60) rel = d.relMinutes(mins);
+    else if(hours < 24) rel = d.relHours(hours);
+    else rel = d.relDays(days);
+
+    el.style.display = "";
+    el.textContent = d.lastRefreshedLabel(exact, rel);
   }
 
   // Expand/collapse for the Alt-text and SEO-issue pills above. Delegated on
@@ -2335,6 +2377,7 @@
     renderPageHealthTable();
     renderPageHealthScore();
     renderAiReadiness();
+    renderLastRefreshed();
     renderPriorities();
     renderOpportunities();
     renderScoreCards();
@@ -2408,6 +2451,7 @@
     renderPageHealthTable();
     renderPageHealthScore();
     renderAiReadiness();
+    renderLastRefreshed();
     renderPriorities();
     renderOpportunities();
     renderScoreCards();
@@ -2577,6 +2621,7 @@
         if(Array.isArray(D.pageHealth)){ pageHealthData = D.pageHealth; pageHealthCheckedMonth = D.pageHealthCheckedMonth || null; }
         if(typeof D.pageHealthScore === "number") window.__pageHealthScore = D.pageHealthScore;
         if(D.aiSearchReadiness){ window.__aiSearchReadiness = D.aiSearchReadiness; window.__aiCheckedMonth = D.aiSearchReadinessCheckedMonth || null; }
+        window.__lastRefreshedAt = D.lastRefreshedAt || null;
         if(typeof D.seoScore === "number") window.__seoScore = D.seoScore;
         if(typeof D.bestPracticesScore === "number") window.__bpScore = D.bestPracticesScore;
         if(typeof D.a11yScoreMobile === "number") window.__a11yMobile = D.a11yScoreMobile;
