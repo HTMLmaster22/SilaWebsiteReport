@@ -1017,6 +1017,17 @@ def main():
                       "monthly via GitHub Action, sourced directly from Google APIs and "
                       "the live site.")
 
+    # Exact timestamp of THIS run, set unconditionally regardless of which
+    # individual sections above succeeded, failed, or were skipped this
+    # time. Distinct on purpose from the various *CheckedMonth fields
+    # (pageHealthCheckedMonth, lighthouseScoresCheckedMonth, etc.) - those
+    # are month-granularity and only advance when that section's own data
+    # actually changed; this one is a precise date+time and always moves,
+    # since its only job is answering "when did the report last actually
+    # run" - a question that came up repeatedly on Aug 19 2026 with no
+    # single clear answer anywhere on the page.
+    data["lastRefreshedAt"] = datetime.now(timezone.utc).isoformat()
+
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")
