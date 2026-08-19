@@ -243,7 +243,7 @@ CRUX_METRIC_MAP = {
 API_KEY = os.environ.get("PSI_API_KEY", "").strip()
 
 
-def http_json(url, payload=None, extra_headers=None):
+def http_json(url, payload=None, extra_headers=None, timeout=120):
     headers = {"Content-Type": "application/json"}
     if extra_headers:
         headers.update(extra_headers)
@@ -253,7 +253,7 @@ def http_json(url, payload=None, extra_headers=None):
         headers=headers,
         method="POST" if payload is not None else "GET",
     )
-    with urllib.request.urlopen(req, timeout=120) as r:
+    with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read().decode())
 
 
@@ -317,7 +317,7 @@ def fetch_crux_history():
     return months, series
 
 
-def fetch_psi_score(strategy):
+def fetch_psi_score(strategy, retry=True):
     """Homepage PSI run for the given strategy. Returns all four Lighthouse
     category scores from one call -- Performance, SEO, Accessibility, and
     Best Practices are all computed together by Lighthouse regardless of
@@ -327,12 +327,28 @@ def fetch_psi_score(strategy):
     score cards on the site were hand-typed once and never updated by any
     automated process since -- correct fix is to actually read the numbers
     already present in the response we were already making, not add a
-    second request."""
+    second request.
+
+    Uses a longer timeout than the default (200s, not 120s) and retries
+    once on a timeout before giving up -- added after an Aug 19 2026 run
+    crashed entirely because a single slow mobile Lighthouse test (these
+    run a full simulated-connection audit and are the slowest of the API
+    calls this script makes) exceeded the old 120s default. A retry after
+    a real timeout is a legitimate thing to attempt here, unlike blindly
+    retrying a 4xx/5xx error response: a timeout means no response came
+    back at all, not that the server rejected something retrying would
+    repeat identically."""
     url = ("https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
            f"?url={urllib.parse.quote(ORIGIN + '/', safe='')}"
            f"&strategy={strategy}&category=performance&category=seo"
            f"&category=accessibility&category=best-practices&key={API_KEY}")
-    resp = http_json(url)
+    try:
+        resp = http_json(url, timeout=200)
+    except (TimeoutError, urllib.error.URLError) as e:
+        if retry:
+            print(f"  WARNING: PSI {strategy} request timed out, retrying once: {e}", file=sys.stderr)
+            return fetch_psi_score(strategy, retry=False)
+        raise
     cats = resp["lighthouseResult"]["categories"]
 
     def pct(key):
@@ -873,32 +889,53 @@ def main():
     # fields below (mobilePerfNow, reportMonth, monthLabels, etc.) still
     # only update when homepage_updated is actually True.
     print("Fetching PageSpeed Insights scores ...")
-    mobile_psi = fetch_psi_score("mobile")
-    desktop_psi = fetch_psi_score("desktop")
-    mobile_score = mobile_psi["performance"]
-    desktop_score = desktop_psi["performance"]
-    print("PSI mobile:", mobile_score, "| desktop:", desktop_score)
+    try:
+        mobile_psi = fetch_psi_score("mobile")
+        desktop_psi = fetch_psi_score("desktop")
+        mobile_score = mobile_psi["performance"]
+        desktop_score = desktop_psi["performance"]
+        print("PSI mobile:", mobile_score, "| desktop:", desktop_score)
 
-    # Real SEO/Best Practices/Accessibility scores from the PSI runs above --
-    # previously these three were hand-typed once into index.html
-    # (100 / 100 / "93-100") and never touched again by any automated
-    # process. Mobile score used for the single-number cards (SEO and Best
-    # Practices don't meaningfully differ by device in Lighthouse);
-    # Accessibility kept as a mobile-desktop range since the existing
-    # card's own label already implied that was the intent.
-    data["seoScore"] = mobile_psi["seo"]
-    data["bestPracticesScore"] = mobile_psi["bestPractices"]
-    data["a11yScoreMobile"] = mobile_psi["accessibility"]
-    data["a11yScoreDesktop"] = desktop_psi["accessibility"]
-    data["lighthouseScoresCheckedMonth"] = new_month
+        # Real SEO/Best Practices/Accessibility scores from the PSI runs
+        # above -- previously these three were hand-typed once into
+        # index.html (100 / 100 / "93-100") and never touched again by any
+        # automated process. Mobile score used for the single-number cards
+        # (SEO and Best Practices don't meaningfully differ by device in
+        # Lighthouse); Accessibility kept as a mobile-desktop range since
+        # the existing card's own label already implied that was the intent.
+        data["seoScore"] = mobile_psi["seo"]
+        data["bestPracticesScore"] = mobile_psi["bestPractices"]
+        data["a11yScoreMobile"] = mobile_psi["accessibility"]
+        data["a11yScoreDesktop"] = desktop_psi["accessibility"]
+        data["lighthouseScoresCheckedMonth"] = new_month
+    except Exception as e:
+        # Both the direct timeout and the one retry inside fetch_psi_score
+        # already failed if execution reaches here - a persistent PSI
+        # slowdown, not a one-off blip. Falls back to leaving seoScore/
+        # bestPracticesScore/a11yScore*/mobilePerfNow/desktopPerfScore
+        # exactly as they already were in data.json, rather than writing
+        # nulls over real numbers or crashing the whole run (Aug 19 2026:
+        # an unhandled timeout here took down page-health, AI-crawler, and
+        # GSC keyword updates too, none of which have anything to do with
+        # PSI at all). mobile_score/desktop_score set to None so the
+        # homepage_updated branch below knows not to touch those two
+        # fields either.
+        print(f"  WARNING: PSI fetch failed after retry, keeping previous scores this run: {type(e).__name__}: {e}", file=sys.stderr)
+        mobile_score = desktop_score = None
 
     if not homepage_updated:
         print("CrUX/homepage data already at", new_month, "— skipping that part, still running page-health scan below.")
     else:
         prev_now = data.get("mobilePerfNow")
         data["mobilePerfPrev"] = prev_now if prev_now is not None else data.get("mobilePerfPrev")
-        data["mobilePerfNow"] = mobile_score
-        data["desktopPerfScore"] = desktop_score
+        # Only overwrite if the fetch above actually succeeded this run -
+        # mobile_score/desktop_score are None specifically when PSI failed
+        # even after its retry, and reportMonth/monthLabels/etc still need
+        # to advance below regardless (CrUX itself did report a new month,
+        # independent of whether PSI cooperated), just not these two scores.
+        if mobile_score is not None:
+            data["mobilePerfNow"] = mobile_score
+            data["desktopPerfScore"] = desktop_score
         data["reportMonth"] = new_month
 
         if months is not None:
