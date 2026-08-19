@@ -264,7 +264,7 @@
       "page": 1,
       "tier": "strong",
       "gscClicks": 11,
-      "gscImpressions": 796
+      "gscImpressions": 790
     },
     {
       "ar": "توظيف السعوديين",
@@ -289,7 +289,7 @@
       "page": 1,
       "tier": "strong",
       "gscClicks": 1,
-      "gscImpressions": 9
+      "gscImpressions": 8
     },
     {
       "ar": "اسناد السعوديين",
@@ -298,7 +298,7 @@
       "page": 1,
       "tier": "strong",
       "gscClicks": 1,
-      "gscImpressions": 40
+      "gscImpressions": 39
     }
   ],
   "pages": [
@@ -330,7 +330,7 @@
       "nameAr": "حلول التوطين والتوظيف |",
       "nameEn": "حلول التوطين والتوظيف |",
       "url": "https://www.silah.com.sa/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -450,7 +450,7 @@
       "nameAr": "آلية التقدم على الوظيفة",
       "nameEn": "آلية التقدم على الوظيفة",
       "url": "https://www.silah.com.sa/%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -473,7 +473,7 @@
           }
         ]
       },
-      "mobileScore": 81,
+      "mobileScore": 96,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -483,14 +483,14 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 64
+      "seoScore": 68
     },
     {
       "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
       "nameAr": "طلب باقة",
       "nameEn": "طلب باقة",
       "url": "https://www.silah.com.sa/%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": false,
         "typesFound": []
@@ -525,7 +525,7 @@
           }
         ]
       },
-      "mobileScore": 96,
+      "mobileScore": 94,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -542,7 +542,7 @@
       "nameAr": "مدونة",
       "nameEn": "مدونة",
       "url": "https://www.silah.com.sa/%d9%85%d8%af%d9%88%d9%86%d8%a9/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -569,7 +569,7 @@
           }
         ]
       },
-      "mobileScore": 81,
+      "mobileScore": 76,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -579,14 +579,14 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 76
+      "seoScore": 75
     },
     {
       "id": "%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82",
       "nameAr": "عربة التسوق",
       "nameEn": "عربة التسوق",
       "url": "https://www.silah.com.sa/%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -609,7 +609,7 @@
           }
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 79,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -626,7 +626,7 @@
       "nameAr": "الدفع",
       "nameEn": "الدفع",
       "url": "https://www.silah.com.sa/%d8%a7%d9%84%d8%af%d9%81%d8%b9/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -649,15 +649,10 @@
           }
         ]
       },
-      "mobileScore": 81,
-      "unusedCssKb": 22,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -666,7 +661,7 @@
       "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
       "nameEn": "تطبيق صلة لقياس أداء الموظف عن بعد",
       "url": "https://www.silah.com.sa/%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": false,
         "typesFound": []
@@ -733,7 +728,7 @@
           }
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 71,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -745,7 +740,7 @@
       "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
       "nameEn": "تشغيل تطبيقات الاقتصاد التشاركي",
       "url": "https://www.silah.com.sa/%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -817,7 +812,7 @@
       "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
       "nameEn": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
       "url": "https://www.silah.com.sa/silah-academy-for-e-learning/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -840,19 +835,19 @@
           }
         ]
       },
-      "mobileScore": 73,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 79
+      "seoScore": 68
     },
     {
       "id": "defining-the-problem",
       "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية |",
       "nameEn": "مشكلة محدودية فرص العمل للمرأة السعودية |",
       "url": "https://www.silah.com.sa/defining-the-problem/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -887,7 +882,7 @@
       "nameAr": "البنية التحتية |",
       "nameEn": "البنية التحتية |",
       "url": "https://www.silah.com.sa/infrastructure/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -915,7 +910,7 @@
           }
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 73,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -927,7 +922,7 @@
       "nameAr": "فرص وظيفية تقنية",
       "nameEn": "فرص وظيفية تقنية",
       "url": "https://www.silah.com.sa/%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -954,7 +949,7 @@
           }
         ]
       },
-      "mobileScore": 65,
+      "mobileScore": 86,
       "unusedCssKb": 178,
       "unusedJsKb": 99,
       "seoIssues": [
@@ -964,14 +959,14 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 46
+      "seoScore": 52
     },
     {
       "id": "gitex2022",
       "nameAr": "Gitex2022 |",
       "nameEn": "Gitex2022 |",
       "url": "https://www.silah.com.sa/gitex2022/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1014,15 +1009,10 @@
           }
         ]
       },
-      "mobileScore": 66,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1031,7 +1021,7 @@
       "nameAr": "الشروط والأحكام |",
       "nameEn": "الشروط والأحكام |",
       "url": "https://www.silah.com.sa/terms-and-conditions/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1054,19 +1044,19 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 79,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 73
+      "seoScore": 74
     },
     {
       "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
       "nameAr": "دراسة مستقبل العمل لعام 2022م |",
       "nameEn": "دراسة مستقبل العمل لعام 2022م |",
       "url": "https://www.silah.com.sa/%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1089,7 +1079,7 @@
           }
         ]
       },
-      "mobileScore": 98,
+      "mobileScore": 96,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1101,7 +1091,7 @@
       "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
       "nameEn": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
       "url": "https://www.silah.com.sa/%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1124,19 +1114,19 @@
           }
         ]
       },
-      "mobileScore": 98,
-      "unusedCssKb": 25,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 77
+      "seoScore": 50
     },
     {
       "id": "%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9",
       "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
       "nameEn": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
       "url": "https://www.silah.com.sa/%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1159,19 +1149,19 @@
           }
         ]
       },
-      "mobileScore": 99,
-      "unusedCssKb": 25,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 78
+      "seoScore": 50
     },
     {
       "id": "gitex2023",
       "nameAr": "Gitex2023_AR |",
       "nameEn": "Gitex2023_AR |",
       "url": "https://www.silah.com.sa/gitex2023/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1194,15 +1184,10 @@
           }
         ]
       },
-      "mobileScore": 73,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1211,7 +1196,7 @@
       "nameAr": "Gitex2023_EN |",
       "nameEn": "Gitex2023_EN |",
       "url": "https://www.silah.com.sa/gitex2023_en/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1234,15 +1219,10 @@
           }
         ]
       },
-      "mobileScore": 67,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1251,7 +1231,7 @@
       "nameAr": "Gitex-Form |",
       "nameEn": "Gitex-Form |",
       "url": "https://www.silah.com.sa/gitex-form/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1274,7 +1254,7 @@
           }
         ]
       },
-      "mobileScore": 77,
+      "mobileScore": 82,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1291,7 +1271,7 @@
       "nameAr": "User Public Account",
       "nameEn": "User Public Account",
       "url": "https://www.silah.com.sa/user-public-account/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1314,7 +1294,7 @@
           }
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 97,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1331,7 +1311,7 @@
       "nameAr": "Wishlist",
       "nameEn": "Wishlist",
       "url": "https://www.silah.com.sa/wishlist/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1354,7 +1334,7 @@
           }
         ]
       },
-      "mobileScore": 81,
+      "mobileScore": 84,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1371,7 +1351,7 @@
       "nameAr": "User Account",
       "nameEn": "User Account",
       "url": "https://www.silah.com.sa/user-account/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1394,15 +1374,10 @@
           }
         ]
       },
-      "mobileScore": 88,
-      "unusedCssKb": 22,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1411,7 +1386,7 @@
       "nameAr": "شكراً |",
       "nameEn": "شكراً |",
       "url": "https://www.silah.com.sa/thank-you/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1438,15 +1413,10 @@
           }
         ]
       },
-      "mobileScore": 85,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1455,7 +1425,7 @@
       "nameAr": "Normal Form Test",
       "nameEn": "Normal Form Test",
       "url": "https://www.silah.com.sa/normal-form-test/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1478,15 +1448,10 @@
           }
         ]
       },
-      "mobileScore": 82,
-      "unusedCssKb": 22,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1495,7 +1460,7 @@
       "nameAr": "مراكز صلة التقنية",
       "nameEn": "مراكز صلة التقنية",
       "url": "https://www.silah.com.sa/%d9%85%d8%b1%d8%a7%d9%83%d8%b2-%d8%b5%d9%84%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d9%86%d9%8a%d8%a9/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1562,7 +1527,7 @@
           }
         ]
       },
-      "mobileScore": 63,
+      "mobileScore": 66,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1579,7 +1544,7 @@
       "nameAr": "سياسة الخصوصية |",
       "nameEn": "سياسة الخصوصية |",
       "url": "https://www.silah.com.sa/privacy-policy/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1602,7 +1567,7 @@
           }
         ]
       },
-      "mobileScore": 94,
+      "mobileScore": 97,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1614,7 +1579,7 @@
       "nameAr": "حلول وخدمات صلة المتكاملة |",
       "nameEn": "حلول وخدمات صلة المتكاملة |",
       "url": "https://www.silah.com.sa/our-brochures/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1657,7 +1622,7 @@
           }
         ]
       },
-      "mobileScore": 67,
+      "mobileScore": 69,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1674,7 +1639,7 @@
       "nameAr": "من هم عملاء شركة صلة |",
       "nameEn": "من هم عملاء شركة صلة |",
       "url": "https://www.silah.com.sa/who-our-clients/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1793,7 +1758,7 @@
           }
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 74,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1805,7 +1770,7 @@
       "nameAr": "حاسبة تكلفة التوظيف",
       "nameEn": "حاسبة تكلفة التوظيف",
       "url": "https://www.silah.com.sa/business-center-cost/",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-08-19",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1832,12 +1797,12 @@
           }
         ]
       },
-      "mobileScore": 28,
+      "mobileScore": 39,
       "unusedCssKb": 138,
-      "unusedJsKb": 1270,
+      "unusedJsKb": 1303,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 47
+      "seoScore": 50
     }
   ],
   "pageHealthCheckedMonth": "2026-08",
@@ -1846,7 +1811,7 @@
   "a11yScoreMobile": 100,
   "a11yScoreDesktop": 93,
   "lighthouseScoresCheckedMonth": "2026-08",
-  "pageHealthScore": 70,
+  "pageHealthScore": 67,
   "pageHealthScoreCheckedMonth": "2026-08",
   "aiSearchReadiness": {
     "crawlers": [
