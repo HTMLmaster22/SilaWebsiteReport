@@ -438,12 +438,12 @@
           }
         ]
       },
-      "mobileScore": 84,
+      "mobileScore": 64,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 74
+      "seoScore": 69
     },
     {
       "id": "%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9",
@@ -473,7 +473,7 @@
           }
         ]
       },
-      "mobileScore": 96,
+      "mobileScore": 75,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -483,7 +483,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 68
+      "seoScore": 63
     },
     {
       "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
@@ -525,7 +525,7 @@
           }
         ]
       },
-      "mobileScore": 94,
+      "mobileScore": 96,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -609,7 +609,7 @@
           }
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 85,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -728,7 +728,7 @@
           }
         ]
       },
-      "mobileScore": 71,
+      "mobileScore": 74,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -795,17 +795,12 @@
           }
         ]
       },
-      "mobileScore": 96,
-      "unusedCssKb": 26,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 70
+      "seoScore": 57
     },
     {
       "id": "silah-academy-for-e-learning",
@@ -835,12 +830,12 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 73,
+      "unusedCssKb": 23,
+      "unusedJsKb": 0,
+      "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 68
+      "seoScore": 79
     },
     {
       "id": "defining-the-problem",
@@ -870,12 +865,12 @@
           }
         ]
       },
-      "mobileScore": 96,
-      "unusedCssKb": 26,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 77
+      "seoScore": 50
     },
     {
       "id": "infrastructure",
@@ -910,7 +905,7 @@
           }
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 74,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -949,17 +944,12 @@
           }
         ]
       },
-      "mobileScore": 86,
-      "unusedCssKb": 178,
-      "unusedJsKb": 99,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 52
+      "seoScore": 50
     },
     {
       "id": "gitex2022",
@@ -1009,10 +999,15 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 67,
+      "unusedCssKb": 23,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1044,12 +1039,12 @@
           }
         ]
       },
-      "mobileScore": 79,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 74
+      "seoScore": 50
     },
     {
       "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
@@ -1079,12 +1074,12 @@
           }
         ]
       },
-      "mobileScore": 96,
-      "unusedCssKb": 25,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 77
+      "seoScore": 50
     },
     {
       "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
@@ -1114,12 +1109,12 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 98,
+      "unusedCssKb": 25,
+      "unusedJsKb": 0,
+      "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 50
+      "seoScore": 77
     },
     {
       "id": "%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9",
@@ -1184,10 +1179,15 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 64,
+      "unusedCssKb": 23,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1219,10 +1219,15 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 66,
+      "unusedCssKb": 23,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1254,7 +1259,7 @@
           }
         ]
       },
-      "mobileScore": 82,
+      "mobileScore": 80,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1294,7 +1299,7 @@
           }
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1334,7 +1339,7 @@
           }
         ]
       },
-      "mobileScore": 84,
+      "mobileScore": 82,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1374,10 +1379,15 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 76,
+      "unusedCssKb": 22,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1413,10 +1423,15 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 75,
+      "unusedCssKb": 23,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1567,12 +1582,12 @@
           }
         ]
       },
-      "mobileScore": 97,
-      "unusedCssKb": 24,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 78
+      "seoScore": 50
     },
     {
       "id": "our-brochures",
@@ -1622,7 +1637,7 @@
           }
         ]
       },
-      "mobileScore": 69,
+      "mobileScore": 68,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1758,12 +1773,12 @@
           }
         ]
       },
-      "mobileScore": 74,
-      "unusedCssKb": 24,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 72
+      "seoScore": 50
     },
     {
       "id": "business-center-cost",
@@ -1797,12 +1812,12 @@
           }
         ]
       },
-      "mobileScore": 39,
+      "mobileScore": 30,
       "unusedCssKb": 138,
-      "unusedJsKb": 1303,
+      "unusedJsKb": 1302,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 50
+      "seoScore": 48
     }
   ],
   "pageHealthCheckedMonth": "2026-08",
@@ -1811,7 +1826,7 @@
   "a11yScoreMobile": 100,
   "a11yScoreDesktop": 93,
   "lighthouseScoresCheckedMonth": "2026-08",
-  "pageHealthScore": 67,
+  "pageHealthScore": 60,
   "pageHealthScoreCheckedMonth": "2026-08",
   "aiSearchReadiness": {
     "crawlers": [
