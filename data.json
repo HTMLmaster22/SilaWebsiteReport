@@ -438,12 +438,12 @@
           }
         ]
       },
-      "mobileScore": 64,
+      "mobileScore": 79,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 69
+      "seoScore": 73
     },
     {
       "id": "%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9",
@@ -525,15 +525,10 @@
           }
         ]
       },
-      "mobileScore": 96,
-      "unusedCssKb": 0,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -569,17 +564,12 @@
           }
         ]
       },
-      "mobileScore": 76,
-      "unusedCssKb": 22,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 75
+      "seoScore": 80
     },
     {
       "id": "%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82",
@@ -609,7 +599,7 @@
           }
         ]
       },
-      "mobileScore": 85,
+      "mobileScore": 81,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -649,10 +639,15 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 79,
+      "unusedCssKb": 22,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -728,7 +723,7 @@
           }
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 71,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -830,12 +825,12 @@
           }
         ]
       },
-      "mobileScore": 73,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 79
+      "seoScore": 68
     },
     {
       "id": "defining-the-problem",
@@ -905,12 +900,12 @@
           }
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 84
+      "seoScore": 85
     },
     {
       "id": "%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
@@ -944,10 +939,15 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 82,
+      "unusedCssKb": 178,
+      "unusedJsKb": 99,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
       "excludedFromScore": false,
       "seoScore": 50
     },
@@ -999,15 +999,10 @@
           }
         ]
       },
-      "mobileScore": 67,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1074,12 +1069,12 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 98,
+      "unusedCssKb": 25,
+      "unusedJsKb": 0,
+      "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 50
+      "seoScore": 77
     },
     {
       "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
@@ -1179,15 +1174,10 @@
           }
         ]
       },
-      "mobileScore": 64,
-      "unusedCssKb": 23,
-      "unusedJsKb": 0,
-      "seoIssues": [
-        {
-          "id": "meta-description",
-          "title": "Document does not have a meta description"
-        }
-      ],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1219,7 +1209,7 @@
           }
         ]
       },
-      "mobileScore": 66,
+      "mobileScore": 68,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1259,7 +1249,7 @@
           }
         ]
       },
-      "mobileScore": 80,
+      "mobileScore": 76,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1299,7 +1289,7 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 73,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1379,7 +1369,7 @@
           }
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 83,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1423,7 +1413,7 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 78,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1463,10 +1453,15 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 85,
+      "unusedCssKb": 22,
+      "unusedJsKb": 0,
+      "seoIssues": [
+        {
+          "id": "meta-description",
+          "title": "Document does not have a meta description"
+        }
+      ],
       "excludedFromScore": true,
       "seoScore": null
     },
@@ -1542,7 +1537,7 @@
           }
         ]
       },
-      "mobileScore": 66,
+      "mobileScore": 67,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1552,7 +1547,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 60
+      "seoScore": 61
     },
     {
       "id": "privacy-policy",
@@ -1582,12 +1577,12 @@
           }
         ]
       },
-      "mobileScore": null,
-      "unusedCssKb": null,
-      "unusedJsKb": null,
-      "seoIssues": null,
+      "mobileScore": 97,
+      "unusedCssKb": 24,
+      "unusedJsKb": 0,
+      "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 50
+      "seoScore": 78
     },
     {
       "id": "our-brochures",
@@ -1812,12 +1807,12 @@
           }
         ]
       },
-      "mobileScore": 30,
-      "unusedCssKb": 138,
-      "unusedJsKb": 1302,
-      "seoIssues": [],
+      "mobileScore": null,
+      "unusedCssKb": null,
+      "unusedJsKb": null,
+      "seoIssues": null,
       "excludedFromScore": false,
-      "seoScore": 48
+      "seoScore": 50
     }
   ],
   "pageHealthCheckedMonth": "2026-08",
@@ -1826,7 +1821,7 @@
   "a11yScoreMobile": 100,
   "a11yScoreDesktop": 93,
   "lighthouseScoresCheckedMonth": "2026-08",
-  "pageHealthScore": 60,
+  "pageHealthScore": 63,
   "pageHealthScoreCheckedMonth": "2026-08",
   "aiSearchReadiness": {
     "crawlers": [
@@ -1884,5 +1879,6 @@
   },
   "aiSearchReadinessCheckedMonth": "2026-08",
   "keywordsSource": "gsc",
-  "keywordsCheckedMonth": "2026-08"
+  "keywordsCheckedMonth": "2026-08",
+  "lastRefreshedAt": "2026-08-19T09:01:09.191633+00:00"
 }
