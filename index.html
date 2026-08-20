@@ -450,36 +450,108 @@
   /* Off-screen printable template that html2canvas renders into an image.
      Positioned off the visible viewport (not display:none — html2canvas
      can't lay out a display:none element) rather than hidden, and only
-     ever exists in the DOM for the few seconds a PDF is being built. */
+     ever exists in the DOM for the few seconds a PDF is being built.
+
+     Design language deliberately matches the standalone branded PDF
+     report (Aug 2026): brand red, card-based findings, IT/Marketing
+     split columns, score badges. Scoped entirely under #pdfPrintable so
+     none of it touches the live dashboard's own --signal/--ink palette
+     above. Cairo (already loaded site-wide via Google Fonts, see <head>)
+     stands in for Noto Kufi/Sans Arabic here rather than adding a second
+     font family — same geometric-sans character, one less network
+     dependency for a template that only ever renders in the visitor's
+     own browser. */
   #pdfPrintable{
     position:fixed; top:0; inset-inline-start:-99999px; width:900px;
-    background:#fff; color:var(--ink); font-family:'Cairo',sans-serif;
-    padding:40px 44px;
+    background:#fff; color:#211C1C; font-family:'Cairo',sans-serif;
+    padding:0; font-size:13px; line-height:1.75;
+    --pb:#8E1E22;      /* brand red        */
+    --pb-dark:#5E1317;
+    --pb-tint:#FBEEED;
+    --pi:#211C1C;      /* ink              */
+    --pi-soft:#655C5A;
+    --pline:#E9E1DF;
+    --ppaper:#FAF7F6;
+    --pgood:#1E7A4C; --pgood-tint:#E7F5EE;
+    --pwarn:#A8681B; --pwarn-tint:#FBF1E2;
+    --pbad:#B23A2E;  --pbad-tint:#FBEAE8;
   }
-  #pdfPrintable h1{ font-size:22px; margin:0 0 4px; color:var(--ink); }
-  #pdfPrintable .pdf-sub{ font-size:12.5px; color:var(--ink-soft); margin:0 0 26px; }
-  #pdfPrintable h2{ font-size:16px; margin:26px 0 12px; padding-bottom:8px; border-bottom:2px solid var(--signal); color:var(--ink); }
-  #pdfPrintable table{ width:100%; table-layout:fixed; border-collapse:collapse; font-size:11.5px; }
-  #pdfPrintable th{ text-align:start; background:var(--ink); color:#fff; padding:8px 9px; font-weight:700; overflow-wrap:break-word; }
-  #pdfPrintable td{ padding:7px 9px; border-bottom:1px solid var(--hair); vertical-align:top; overflow-wrap:break-word; word-break:break-word; }
-  /* Fixed layout needs each column told how wide to be, or the browser
-     falls back to sizing by content — which is exactly what silently
-     pushed 3 columns off the edge before: a single unbroken URL or a
-     long concatenated filename list has no natural break point, so it
-     was dragging the whole table past 900px and html2canvas was simply
-     clipping whatever fell outside that boundary. */
-  #pdfPrintable table.health-table th:nth-child(1), #pdfPrintable table.health-table td:nth-child(1){ width:21%; }
-  #pdfPrintable table.health-table th:nth-child(2), #pdfPrintable table.health-table td:nth-child(2){ width:9%; }
-  #pdfPrintable table.health-table th:nth-child(3), #pdfPrintable table.health-table td:nth-child(3){ width:24%; }
-  #pdfPrintable table.health-table th:nth-child(4), #pdfPrintable table.health-table td:nth-child(4){ width:24%; }
-  #pdfPrintable table.health-table th:nth-child(5), #pdfPrintable table.health-table td:nth-child(5){ width:11%; }
-  #pdfPrintable table.health-table th:nth-child(6), #pdfPrintable table.health-table td:nth-child(6){ width:11%; }
-  #pdfPrintable tr:nth-child(even) td{ background:rgba(11,29,38,0.025); }
-  #pdfPrintable .pdf-detail{ font-size:10.5px; color:var(--ink-soft); margin-top:3px; line-height:1.6; }
-  #pdfPrintable .pdf-prio-item{ display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--hair); font-size:13px; }
-  #pdfPrintable .pdf-prio-num{ font-weight:800; color:var(--signal); flex-shrink:0; }
-  #pdfPrintable .pdf-owner{ font-size:11px; color:var(--ink-soft); margin-top:2px; }
-  #pdfPrintable .pdf-foot{ margin-top:30px; padding-top:16px; border-top:1px solid var(--hair); font-size:10.5px; color:var(--ink-soft); line-height:1.7; }
+  #pdfPrintable .pdf-page{ padding:34px 40px; }
+  #pdfPrintable .pdf-eyebrow{ font-size:11px; font-weight:700; color:var(--pb); margin:0 0 5px; }
+  #pdfPrintable h1{ font-size:23px; margin:0 0 6px; color:var(--pi); font-weight:800; }
+  #pdfPrintable h2{ font-size:19px; margin:0 0 14px; padding-bottom:10px; border-bottom:2px solid var(--pline); color:var(--pi); font-weight:800; }
+  #pdfPrintable h3.pdf-sub{ font-size:15px; margin:18px 0 8px; color:var(--pb-dark); font-weight:800; }
+  #pdfPrintable .pdf-lede{ font-size:13px; color:var(--pi-soft); margin:0 0 16px; }
+  #pdfPrintable p{ margin:0 0 9px; }
+  #pdfPrintable .pdf-sub-meta{ font-size:12px; color:var(--pi-soft); margin:0 0 20px; }
+  #pdfPrintable b, #pdfPrintable strong{ color:var(--pi); font-weight:700; }
+  #pdfPrintable bdi{ unicode-bidi:isolate; }
+  /* Rendered as a real block list rather than a comma-joined inline
+     string: html2canvas's own bidi/text-shaping does not reliably
+     reproduce correct visual order for several RTL names joined by a
+     neutral separator inside an LTR sentence (or vice-versa) — a real
+     browser gets it right, html2canvas's from-scratch text layout does
+     not. Each name as its own block sidesteps the mismatch entirely
+     instead of fighting it with isolation markup. */
+  #pdfPrintable ul.pdf-inline-list{ margin:6px 0 0; padding-inline-start:18px; }
+  #pdfPrintable ul.pdf-inline-list li{ font-size:12.5px; color:var(--pi-soft); margin-bottom:3px; }
+
+  /* score cards */
+  #pdfPrintable .pdf-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 16px; }
+  #pdfPrintable .pdf-card{ flex:1 1 28%; min-width:150px; border:1px solid var(--pline); border-radius:8px; background:var(--ppaper); padding:14px 10px; text-align:center; }
+  #pdfPrintable .pdf-card .n{ font-size:26px; font-weight:800; }
+  #pdfPrintable .pdf-card .l{ font-size:11px; color:var(--pi-soft); margin-top:4px; line-height:1.5; }
+  #pdfPrintable .pdf-card .bt{ height:4px; border-radius:3px; background:#EEE7E5; margin-top:8px; overflow:hidden; }
+  #pdfPrintable .pdf-card .bf{ height:100%; border-radius:3px; }
+  #pdfPrintable .pdf-card.good .n{ color:var(--pgood); } #pdfPrintable .pdf-card.good .bf{ background:var(--pgood); }
+  #pdfPrintable .pdf-card.warn .n{ color:var(--pwarn); } #pdfPrintable .pdf-card.warn .bf{ background:var(--pwarn); }
+  #pdfPrintable .pdf-card.bad  .n{ color:var(--pbad);  } #pdfPrintable .pdf-card.bad  .bf{ background:var(--pbad); }
+
+  /* finding cards */
+  #pdfPrintable .pdf-finding{ border:1px solid var(--pline); border-radius:8px; margin-bottom:10px; overflow:hidden; }
+  #pdfPrintable .pdf-f-head{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:9px 14px; background:var(--ppaper); border-bottom:1px solid var(--pline); }
+  #pdfPrintable .pdf-f-head .nm{ font-weight:800; font-size:13.5px; }
+  #pdfPrintable .pdf-tag{ font-weight:800; font-size:12px; padding:3px 11px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+  #pdfPrintable .pdf-tag.bad{ background:var(--pbad-tint); color:var(--pbad); }
+  #pdfPrintable .pdf-tag.warn{ background:var(--pwarn-tint); color:var(--pwarn); }
+  #pdfPrintable .pdf-tag.good{ background:var(--pgood-tint); color:var(--pgood); }
+  #pdfPrintable .pdf-f-body{ padding:10px 14px; font-size:12.5px; color:var(--pi-soft); }
+
+  #pdfPrintable .pdf-note{ background:var(--pb-tint); border-inline-start:4px solid var(--pb); border-radius:3px; padding:11px 14px; margin:14px 0; font-size:12.5px; color:var(--pi-soft); }
+  #pdfPrintable .pdf-note b{ color:var(--pb-dark); }
+
+  /* IT / Marketing recommendation columns */
+  #pdfPrintable .pdf-reco{ display:flex; gap:12px; margin-top:10px; }
+  #pdfPrintable .pdf-reco-col{ flex:1; border:1px solid var(--pline); border-radius:8px; overflow:hidden; }
+  #pdfPrintable .pdf-reco-head{ padding:11px 14px; font-weight:800; font-size:14px; color:#fff; background:var(--pb); }
+  #pdfPrintable .pdf-reco-col.mkt .pdf-reco-head{ background:var(--pi); }
+  #pdfPrintable .pdf-reco-list{ padding:6px 12px 8px; }
+  #pdfPrintable .pdf-reco-item{ display:flex; gap:8px; padding:8px 0; border-bottom:1px solid var(--pline); }
+  #pdfPrintable .pdf-reco-item:last-child{ border-bottom:none; }
+  #pdfPrintable .pdf-pri{ flex-shrink:0; font-weight:800; font-size:10px; color:#fff; border-radius:4px; padding:2px 7px; height:fit-content; white-space:nowrap; }
+  #pdfPrintable .pdf-pri.p1{ background:var(--pbad); }
+  #pdfPrintable .pdf-pri.p2{ background:var(--pwarn); }
+  #pdfPrintable .pdf-pri.p3{ background:#6B7280; }
+  #pdfPrintable .pdf-reco-item .tx{ font-size:12px; line-height:1.65; }
+
+  /* keyword table */
+  #pdfPrintable table.pdf-kw{ width:100%; border-collapse:collapse; font-size:12.5px; margin:10px 0; }
+  #pdfPrintable table.pdf-kw thead th{ text-align:start; background:var(--pb); color:#fff; padding:9px 11px; font-weight:800; font-size:11.5px; }
+  #pdfPrintable table.pdf-kw tbody td{ padding:8px 11px; border-bottom:1px solid var(--pline); color:var(--pi-soft); }
+  #pdfPrintable table.pdf-kw tbody tr:nth-child(even){ background:var(--ppaper); }
+  #pdfPrintable table.pdf-kw td.kw{ color:var(--pi); font-weight:700; }
+  #pdfPrintable .pdf-pill{ display:inline-block; font-size:10.5px; font-weight:700; padding:2px 10px; border-radius:20px; }
+  #pdfPrintable .pdf-pill.good{ background:var(--pgood-tint); color:var(--pgood); }
+  #pdfPrintable .pdf-pill.bad{ background:var(--pbad-tint); color:var(--pbad); }
+
+  /* roadmap */
+  #pdfPrintable .pdf-road{ display:flex; gap:12px; margin-top:10px; }
+  #pdfPrintable .pdf-road-col{ flex:1; }
+  #pdfPrintable .pdf-road-head{ font-weight:800; font-size:13px; padding-bottom:7px; border-bottom:2px solid var(--pb); margin-bottom:8px; }
+  #pdfPrintable .pdf-road-col ul{ margin:0; padding-inline-start:16px; }
+  #pdfPrintable .pdf-road-col li{ font-size:12px; color:var(--pi-soft); margin-bottom:7px; line-height:1.6; }
+
+  #pdfPrintable .pdf-foot{ margin-top:18px; padding-top:12px; border-top:1px solid var(--pline); font-size:10.5px; color:var(--pi-soft); line-height:1.7; }
 
   footer{ background:var(--ink); color:#aebcc0; padding:44px 0 36px; }
   footer h4{ color:#fff; font-size:15px; margin:0 0 10px; }
@@ -1017,6 +1089,48 @@
       pdfFootNote:"تم إنشاء هذا التقرير تلقائياً من نفس البيانات المعروضة في لوحة المتابعة اللحظية على sila-website-report.vercel.app وقت التحميل. بيانات Chrome الحقيقية (CrUX) تصدر عن جوجل بتأخير يقارب 28 يوماً. إعداد: تقنية المعلومات — شركة صلة.",
       pdfFileBase:"تقرير-تحسين-السيو-صلة",
       pdfContinued:"تابع",
+      pdfCoverKicker:"تقرير داخلي — تقنية المعلومات",
+      pdfCoverSub:"قراءة تفصيلية للحالة الفنية الحالية للموقع، مبنية على بيانات حقيقية من Google Search Console، وبيانات PageSpeed Insights، مع خطة عمل مقسّمة بوضوح بين تقنية المعلومات والتسويق.",
+      pdfExecEyebrow:"01 — نظرة عامة", pdfExecH2:"الملخص التنفيذي",
+      pdfExecLedeGood:"الأساس التقني لموقع صلة الإلكتروني في وضع قوي، والفجوة المتبقية محصورة ومحددة بدقة.",
+      pdfExecLedeWork:"عدة نقاط تحتاج إلى معالجة مباشرة لرفع جاهزية الموقع لمحركات البحث.",
+      pdfExecBody:(scored,total)=>`المؤشرات أدناه محسوبة من بيانات حقيقية وقت التحميل. مؤشر «صحة الصفحات» هو متوسط ${scored} صفحة مؤهَّلة للتقييم من أصل ${total} صفحة مفحوصة (صفحات السلة والدفع والحساب مستثناة من الاحتساب لأنها غير مخصصة للظهور في نتائج البحث أصلاً).`,
+      pdfCardSeo:"السيو العام (الصفحة الرئيسية)", pdfCardDesktop:"أداء سطح المكتب", pdfCardMobile:"أداء الجوال",
+      pdfCardA11yDesktop:"إمكانية الوصول — سطح المكتب", pdfCardA11yMobile:"إمكانية الوصول — الجوال",
+      pdfCardBP:"أفضل الممارسات التقنية", pdfCardHealth:"صحة الصفحات (مجتمعة)",
+      pdfMobileWas:(n)=>`(كان ${n})`,
+      pdfFindEyebrow:"02 — النتائج التفصيلية", pdfFindH2:"أبرز النقاط التي تحتاج معالجة",
+      pdfFindLede:"الصفحات التالية هي الأكثر تأثراً حالياً، مرتّبة حسب الأولوية.",
+      pdfFindNoneTitle:"لا توجد نقاط حرجة حالياً",
+      pdfFindNoneBody:"جميع الصفحات المفحوصة هذا الشهر ضمن مستوى جيد إلى ممتاز — لا توجد صفحة تحتاج تدخلاً عاجلاً وقت إعداد هذا التقرير.",
+      pdfFindNotScanned:"الفحص الشهري للصفحات الفردية لم يُشغَّل بعد. القسم التالي يعتمد على المؤشرات العامة أعلاه فقط.",
+      pdfFactSchemaMissing:"بيانات Schema المتوقعة غير موجودة على الصفحة.",
+      pdfFactAlt:(n,total)=>`${n} من أصل ${total} صورة بلا نص بديل.`,
+      pdfFactJs:(kb)=>`${kb.toLocaleString("en-US")} كيلوبايت من JavaScript غير مستخدَم يُحمَّل مع الصفحة.`,
+      pdfFactSeo:(txt)=>`مشاكل SEO: ${txt}`,
+      pdfFactNone:"لا توجد ملاحظات إضافية على هذه الصفحة.",
+      pdfAltRootCause:"<b>ملاحظة:</b> عندما تتكرر نسبة عالية من الصور بلا نص بديل عبر عدة صفحات مختلفة في آن واحد، غالباً يكون السبب عناصر متكررة — كالشعار والأيقونات الظاهرة في كل صفحة — لا تحمل نص بديل على مستوى قالب الموقع نفسه، وليس صور محتوى منسية فرادى. إصلاحها مرة واحدة على مستوى القالب ينعكس تلقائياً على كل صفحة.",
+      pdfMetaMissingLabel:"صفحات تفتقد وصف الميتا (Meta Description) حالياً:",
+      pdfRecoEyebrow:"03 — خطة العمل", pdfRecoH2:"التوصيات، مقسّمة حسب الجهة المسؤولة",
+      pdfRecoLede:"حتى نصل لأفضل نتيجة ممكنة في السيو، لكل جهة مهامها المحددة أدناه.",
+      pdfRecoColIT:"تقنية المعلومات", pdfRecoColITsub:"مهام فنية على الموقع والقالب",
+      pdfRecoColMkt:"التسويق", pdfRecoColMktsub:"مهام محتوى ونصوص",
+      pdfPriP1:"عاجل", pdfPriP2:"متوسط", pdfPriP3:"مستمر",
+      pdfRecoAltTpl:(n)=>`إضافة نص بديل للصور الناقصة (${n} صورة حالياً) — يُعطى أولوية للعناصر المتكررة على مستوى القالب.`,
+      pdfRecoEvergreenIT:"مراجعة شهرية لأي فحوصات PSI فاشلة أو جزئية، والتأكد أن كل صفحة تُقيَّم على كامل المعايير.",
+      pdfRecoEvergreenMkt1:"كتابة نصوص بديلة لصور المحتوى الفردية (شعارات العملاء، أيقونات الخدمات) في الصفحات ذات النسبة الأعلى.",
+      pdfRecoEvergreenMkt2:"توسيع قائمة الكلمات المفتاحية المتابَعة لتغطية جوانب أخرى من خدمات الشركة.",
+      pdfKwSub:"أداء الكلمات المفتاحية المتابَعة", pdfKwLede:"بيانات حقيقية من Google Search Console، بمتوسط آخر 28 يوماً.",
+      pdfKwLedeManual:"قائمة الكلمات المفتاحية المتابَعة (بيانات النقرات ومرات الظهور غير متاحة قبل ربط Google Search Console).",
+      pdfKwColPhrase:"الكلمة المفتاحية", pdfKwColPos:"الترتيب", pdfKwColClicks:"النقرات", pdfKwColImpr:"مرات الظهور", pdfKwColStatus:"الحالة",
+      pdfKwGood:"ضمن نتائج البحث", pdfKwBad:"لا تظهر في النتائج",
+      pdfKwNoneWeak:"جميع الكلمات المتابَعة تظهر حالياً ضمن أفضل 5 صفحات في نتائج البحث.",
+      pdfKwWeakLabel:"لا تظهر حالياً في نتائج البحث:",
+      pdfRoadEyebrow:"04 — الخلاصة", pdfRoadH2:"خطوات تنفيذية مقترحة",
+      pdfRoadWeek:"عاجل", pdfRoadMonth:"متوسط الأولوية", pdfRoadOngoing:"مستمر",
+      pdfRoadEmpty:"لا يوجد",
+      pdfClosing:"أرقام هذا التقرير مأخوذة مباشرة من بيانات Google Search Console، وبيانات PageSpeed Insights المعروضة في لوحة المتابعة اللحظية وقت التحميل، بلا إدخال يدوي.",
+      pdfNeedsReview:"يحتاج مراجعة",
       scoresNotSyncedYet:"سيظهر هنا رقم حقيقي بعد أول مزامنة تالية — هذا القسم كان نصًا ثابتًا قبل الآن.",
       scoresSyncedOn:(d)=>`محدَّث اعتبارًا من فحص ${d}`,
       scoreTargetReached:"✓ الهدف محقَّق بالفعل",
@@ -1159,6 +1273,48 @@
       pdfFootNote:"This report was generated automatically from the same data shown on the live dashboard at sila-website-report.vercel.app at the moment of download. Real Chrome visitor data (CrUX) is published by Google with a ~28-day lag. Prepared by: Information Technology — Silah.",
       pdfFileBase:"silah-seo-report",
       pdfContinued:"continued",
+      pdfCoverKicker:"Internal report — Information Technology",
+      pdfCoverSub:"A detailed read of the site's current technical state, built from real Google Search Console and PageSpeed Insights data, with an action plan clearly split between IT and Marketing.",
+      pdfExecEyebrow:"01 — Overview", pdfExecH2:"Executive Summary",
+      pdfExecLedeGood:"Silah's website has a strong technical foundation, and the remaining gap is narrow and precisely defined.",
+      pdfExecLedeWork:"Several points need direct attention to raise the site's search-engine readiness.",
+      pdfExecBody:(scored,total)=>`The figures below are computed from real data at download time. The "Page Health" score is the average of ${scored} scoreable pages out of ${total} pages scanned (cart, checkout, and account pages are excluded, since they were never meant to appear in search results).`,
+      pdfCardSeo:"Overall SEO (homepage)", pdfCardDesktop:"Desktop performance", pdfCardMobile:"Mobile performance",
+      pdfCardA11yDesktop:"Accessibility — desktop", pdfCardA11yMobile:"Accessibility — mobile",
+      pdfCardBP:"Technical best practices", pdfCardHealth:"Page health (combined)",
+      pdfMobileWas:(n)=>`(was ${n})`,
+      pdfFindEyebrow:"02 — Detailed findings", pdfFindH2:"The pages that need attention most",
+      pdfFindLede:"The pages below are the most affected right now, ranked by priority.",
+      pdfFindNoneTitle:"No critical issues right now",
+      pdfFindNoneBody:"Every page scanned this month is in good-to-excellent shape — nothing needs urgent attention as of this report.",
+      pdfFindNotScanned:"The monthly per-page scan hasn't run yet. The section below relies on the overall scores above only.",
+      pdfFactSchemaMissing:"The expected Schema markup is missing from this page.",
+      pdfFactAlt:(n,total)=>`${n} of ${total} images have no alt text.`,
+      pdfFactJs:(kb)=>`${kb.toLocaleString("en-US")} KB of unused JavaScript loads with this page.`,
+      pdfFactSeo:(txt)=>`SEO issues: ${txt}`,
+      pdfFactNone:"No further notes on this page.",
+      pdfAltRootCause:"<b>Note:</b> when a high share of images lack alt text across several pages at once, it's usually repeated elements — the logo and icons that appear on every page — missing alt text at the template level, not individually forgotten content images. Fixing it once at the template level reflects automatically on every page.",
+      pdfMetaMissingLabel:"Pages currently missing a meta description:",
+      pdfRecoEyebrow:"03 — Action plan", pdfRecoH2:"Recommendations, split by owner",
+      pdfRecoLede:"For the best possible SEO outcome, each side has its own tasks below.",
+      pdfRecoColIT:"Information Technology", pdfRecoColITsub:"Technical work on the site and template",
+      pdfRecoColMkt:"Marketing", pdfRecoColMktsub:"Content and copy work",
+      pdfPriP1:"Urgent", pdfPriP2:"Medium", pdfPriP3:"Ongoing",
+      pdfRecoAltTpl:(n)=>`Add alt text to the missing images (${n} currently) — prioritise repeated template-level elements first.`,
+      pdfRecoEvergreenIT:"Monthly review of any failed or partial PSI checks, to make sure every page is scored on the full set of criteria.",
+      pdfRecoEvergreenMkt1:"Write alt text for individual content images (client logos, service icons) on the highest-ratio pages.",
+      pdfRecoEvergreenMkt2:"Expand the list of tracked keywords to cover other aspects of the company's services.",
+      pdfKwSub:"Tracked keyword performance", pdfKwLede:"Real data from Google Search Console, averaged over the last 28 days.",
+      pdfKwLedeManual:"List of tracked keywords (click and impression data isn't available until Google Search Console is connected).",
+      pdfKwColPhrase:"Keyword", pdfKwColPos:"Rank", pdfKwColClicks:"Clicks", pdfKwColImpr:"Impressions", pdfKwColStatus:"Status",
+      pdfKwGood:"Ranking in search results", pdfKwBad:"Not ranking",
+      pdfKwNoneWeak:"All tracked keywords currently rank within the top 5 search-result pages.",
+      pdfKwWeakLabel:"Not currently ranking in search results:",
+      pdfRoadEyebrow:"04 — Summary", pdfRoadH2:"Suggested next steps",
+      pdfRoadWeek:"Urgent", pdfRoadMonth:"Medium priority", pdfRoadOngoing:"Ongoing",
+      pdfRoadEmpty:"None",
+      pdfClosing:"The figures in this report are taken directly from the Google Search Console and PageSpeed Insights data shown on the live dashboard at download time, with no manual entry.",
+      pdfNeedsReview:"Needs review",
       scoresNotSyncedYet:"A real number will appear here after the next sync — this section was static text before now.",
       scoresSyncedOn:(d)=>`Updated as of the ${d} scan`,
       scoreTargetReached:"✓ Target already reached",
@@ -1855,123 +2011,206 @@
      correctly this way because the browser's own text engine draws it
      (same as the on-screen tables), sidestepping jsPDF's native text()
      API, which has no real Arabic shaping support. */
+  function pdfScoreBand(v){ return v>=80 ? "good" : (v>=50 ? "warn" : "bad"); }
+
+  /* One card per page in the "findings" sheet. Every fact line is
+     conditional on the field actually being present/meaningful for that
+     page, so this reads correctly whether a page has one issue or four,
+     and works unchanged as pages get fixed and drop out of the list
+     entirely next month. */
+  function pdfFindingCard(p, lang, d){
+    const label = (lang==="ar" ? p.nameAr : p.nameEn) || p.id;
+    let tagTxt, tagCls;
+    const of100 = (n) => lang==="ar" ? `${n} من 100` : `${n} / 100`;
+    if(typeof p.seoScore === "number"){ tagTxt = of100(p.seoScore); tagCls = pdfScoreBand(p.seoScore); }
+    else if(typeof p.mobileScore === "number"){ tagTxt = of100(p.mobileScore); tagCls = pdfScoreBand(p.mobileScore); }
+    else { tagTxt = d.pdfNeedsReview; tagCls = "warn"; }
+
+    const lines = [];
+    if(p.schema && !p.schema.hasExpectedType) lines.push(d.pdfFactSchemaMissing);
+    if(p.altText && p.altText.issueCount > 0) lines.push(d.pdfFactAlt(p.altText.issueCount, p.altText.totalImages));
+    if(typeof p.unusedJsKb === "number" && p.unusedJsKb >= 200) lines.push(d.pdfFactJs(p.unusedJsKb));
+    if(p.seoIssues && p.seoIssues.length){
+      const sep = lang==="ar" ? "، " : ", ";
+      lines.push(d.pdfFactSeo(p.seoIssues.map(s=>escapeHtml(s.title)).join(sep)));
+    }
+    if(!lines.length) lines.push(d.pdfFactNone);
+
+    return `<div class="pdf-finding">
+      <div class="pdf-f-head"><div class="nm">${escapeHtml(label)}</div><div class="pdf-tag ${tagCls}">${escapeHtml(String(tagTxt))}</div></div>
+      <div class="pdf-f-body">${lines.map(l=>`<div>${l}</div>`).join("")}</div>
+    </div>`;
+  }
+
+  /* ---------------- PDF export: "Download SEO Report" ----------------
+     Builds the report from the exact same in-memory variables the live
+     tables render from (pageHealthData, keywords, computePriorities(),
+     the score globals set from data.json), so it's mechanically
+     impossible for the PDF to say something different from what's on
+     screen at click-time — no separate fetch, no separate data path to
+     drift out of sync.
+     Layout/visual language matches the standalone branded SEO report
+     (cover-style summary, score cards, per-page finding cards, an
+     IT/Marketing recommendation split, a keyword table, a roadmap) —
+     see #pdfPrintable CSS above. Every section degrades gracefully when
+     a data source is missing (scan not run yet, GSC not connected,
+     nothing currently wrong) instead of assuming today's specific
+     numbers.
+     Renders into an off-screen HTML template, rasterizes it with
+     html2canvas, then slices that image across A4 pages with jsPDF.
+     Arabic renders correctly this way because the browser's own text
+     engine draws it (same as the on-screen tables), sidestepping
+     jsPDF's native text() API, which has no real Arabic shaping
+     support. */
   function buildPdfSheets(lang){
     const d = dict[lang];
+    const sep = lang==="ar" ? "، " : ", ";
     const now = new Date();
     const generatedStr = now.toLocaleDateString(lang==="ar"?"ar-SA":"en-GB", {year:"numeric",month:"long",day:"numeric"})
       + " " + now.toLocaleTimeString(lang==="ar"?"ar-SA":"en-GB", {hour:"2-digit",minute:"2-digit"});
     const syncedStr = pageHealthCheckedMonth ? d.pdfSyncedThrough(calendarLabel(pageHealthCheckedMonth, lang)) : d.pdfSyncedThroughUnknown;
 
-    const prioItems = computePriorities().map((it,i)=>{
-      let text = "";
-      if(it.type==="broken"){
-        text = d.prioBroken(it.count);
-      } else if(it.type==="aiCrawler"){
-        text = d.prioAiCrawler(it.count);
-      } else if(it.type==="cwv"){
-        const name = lang==="ar" ? it.m.nameAr : it.m.nameEn;
-        text = d.prioCwv.replace("{metric}", escapeHtml(name));
-      } else if(it.type==="kw"){
-        const name = lang==="ar" ? it.k.ar : it.k.en;
-        text = d.prioKw.replace("{kw}", escapeHtml(name));
-      } else if(it.type==="pending"){
-        text = d.prioPending.replace("{n}", it.count).replace("{link}", d.prioPendingLink);
-      } else if(it.type==="schema"){
-        text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
-      } else if(it.type==="alt"){
-        text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
-      }
-      const ownerMap = { broken:d.ownerTech, aiCrawler:d.ownerTech, cwv:d.ownerTech, kw:d.ownerMkt, pending:d.ownerTech, schema:d.ownerTech, alt:d.ownerShared };
-      const otxt = ownerMap[it.type] || d.ownerTech;
-      return `<div class="pdf-prio-item"><span class="pdf-prio-num">0${i+1}</span><div>${text}<div class="pdf-owner">${d.ownerLabel}: ${otxt}</div></div></div>`;
-    }).join("") || `<p>—</p>`;
-
-    const kwRows = keywords.map(k=>{
-      const name = lang==="ar" ? k.ar : k.en;
-      const posText = k.pos===null ? d.kwNotInTop5 : `${lang==="ar"?"صفحة":"Page"} ${k.page} · #${k.pos}`;
-      return `<tr><td>${escapeHtml(name)}</td><td>${escapeHtml(posText)}</td></tr>`;
+    // ---- sheet 1: cover + executive summary + score cards ----
+    const health = window.__pageHealthScore;
+    const cardDefs = [
+      [window.__seoScore, d.pdfCardSeo],
+      [desktopPerfScore, d.pdfCardDesktop],
+      [mobilePerfNow, d.pdfCardMobile, (typeof mobilePerfPrev==="number" && mobilePerfPrev!==mobilePerfNow) ? d.pdfMobileWas(mobilePerfPrev) : ""],
+      [window.__bpScore, d.pdfCardBP],
+      [window.__a11yDesktop, d.pdfCardA11yDesktop],
+      [window.__a11yMobile, d.pdfCardA11yMobile],
+      [health, d.pdfCardHealth],
+    ];
+    const cardsHtml = cardDefs.filter(c=>typeof c[0]==="number").map(([n,l,sub])=>{
+      const cls = pdfScoreBand(n);
+      return `<div class="pdf-card ${cls}"><div class="n">${n}</div><div class="l">${escapeHtml(l)}${sub?" "+escapeHtml(sub):""}</div><div class="bt"><div class="bf" style="width:${Math.max(0,Math.min(100,n))}%"></div></div></div>`;
     }).join("");
 
-    const sheets = [`
+    const scoredPages = pageHealthData.filter(p => !p.excludedFromScore && typeof p.seoScore==="number");
+    const execLede = (typeof health==="number" && health<80) ? d.pdfExecLedeWork : d.pdfExecLedeGood;
+
+    const sheets = [`<div class="pdf-page">
+      <div class="pdf-eyebrow">${d.pdfCoverKicker}</div>
       <h1>${d.pdfReportTitle}</h1>
-      <p class="pdf-sub">${d.pdfGeneratedOn(generatedStr)} · ${syncedStr}</p>
-      <h2>${d.pdfPrioHeading}</h2>
-      ${prioItems}
-      <h2>${d.pdfKwHeading}</h2>
-      <table><thead><tr><th>${d.kwColPhrase}</th><th>${d.kwColPos}</th></tr></thead><tbody>${kwRows}</tbody></table>
-    `];
+      <p class="pdf-sub-meta">${d.pdfCoverSub}</p>
+      <p class="pdf-sub-meta">${d.pdfGeneratedOn(generatedStr)} · ${syncedStr}</p>
+      <h2 style="margin-top:20px">${d.pdfExecH2}</h2>
+      <p class="pdf-lede">${execLede}</p>
+      ${pageHealthData.length ? `<p>${d.pdfExecBody(scoredPages.length, pageHealthData.length)}</p>` : ""}
+      <div class="pdf-grid">${cardsHtml}</div>
+    </div>`];
 
-    if(pageHealthData.length){
-      // Worst-first, not sitemap-crawl order: SEO issues weighted highest
-      // (most selective signal), then missing schema, then alt-text count
-      // (present on nearly every page, so least differentiating on its
-      // own). Whatever most needs attention now leads the report instead
-      // of being buried somewhere in 30 undifferentiated rows.
-      const severity = p =>
-        (p.seoIssues ? p.seoIssues.length * 20 : 0) +
-        (p.schema && !p.schema.hasExpectedType ? 15 : 0) +
-        (p.altText ? p.altText.issueCount * 0.3 : 0);
-      const sortedPages = [...pageHealthData].sort((a,b)=> severity(b) - severity(a));
+    // ---- sheet 2: findings ----
+    const sevOf = p =>
+      (p.seoIssues ? p.seoIssues.length * 20 : 0) +
+      (p.schema && !p.schema.hasExpectedType ? 15 : 0) +
+      (p.altText ? p.altText.issueCount * 0.6 : 0) +
+      (typeof p.mobileScore==="number" && p.mobileScore<50 ? (50-p.mobileScore) : 0) +
+      (typeof p.unusedJsKb==="number" && p.unusedJsKb>300 ? Math.min(30, p.unusedJsKb/50) : 0);
 
-      const rowsHtml = sortedPages.map(p=>{
-        const label = (lang==="ar" ? p.nameAr : p.nameEn) || p.id;
-        const schemaTxt = p.schema==null ? d.healthSchemaUnknown : (p.schema.hasExpectedType ? d.healthSchemaOk : d.healthSchemaMissing);
+    const findingPages = scoredPages
+      .map(p=>({p, sev:sevOf(p)}))
+      .filter(x=>x.sev>5)
+      .sort((a,b)=>b.sev-a.sev)
+      .slice(0,4)
+      .map(x=>x.p);
 
-        let altCell = d.healthSchemaUnknown;
-        if(p.altText != null){
-          altCell = p.altText.issueCount === 0 ? d.healthAltOk : (()=>{
-            const shown = (p.altText.examples||[]).slice(0,4);
-            const more = p.altText.issueCount - shown.length;
-            // .file, not the bare item - examples are {file,url} objects as
-            // of Aug 2026 (see check_alt_text() in update_data.py). No link
-            // here even though url is available: this HTML gets rasterized
-            // via html2canvas into the PDF, so an <a href> would be inert.
-            const fileNames = shown.map(f => (f && typeof f === "object") ? f.file : f);
-            return `${d.healthAltIssue(p.altText.issueCount)}<div class="pdf-detail">${fileNames.map(f=>escapeHtml(f)).join("، ")}${more>0?` (${d.healthMoreCount(more)})`:""}</div>`;
-          })();
-        }
-
-        let seoCell = d.healthSchemaUnknown;
-        if(p.seoIssues != null){
-          seoCell = p.seoIssues.length === 0 ? d.healthSeoOk :
-            `${d.healthSeoIssue(p.seoIssues.length)}<div class="pdf-detail">${p.seoIssues.map(s=>escapeHtml(s.title)).join("؛ ")}</div>`;
-        }
-
-        const cssTxt = (p.unusedCssKb===null||p.unusedCssKb===undefined) ? "—" : `${p.unusedCssKb} KB`;
-        const scoreTxt = (p.mobileScore===null||p.mobileScore===undefined) ? "—" : p.mobileScore;
-
-        return `<tr>
-          <td><strong>${escapeHtml(label)}</strong><div class="pdf-detail">${escapeHtml(p.url||"")}</div></td>
-          <td>${schemaTxt}</td>
-          <td>${altCell}</td>
-          <td>${seoCell}</td>
-          <td>${cssTxt}</td>
-          <td>${scoreTxt}</td>
-        </tr>`;
-      });
-
-      // Chunked into page-sized tables instead of one continuous image:
-      // this is what actually fixes the missing columns (each chunk is
-      // small enough that html2canvas never needs to clip anything) and
-      // the ~59MB file size (many modest images compress far better than
-      // one multi-thousand-pixel-tall one).
-      const headerRow = `<tr>
-        <th>${d.healthColName}</th><th>${d.healthColSchema}</th><th>${d.healthColAlt}</th>
-        <th>${d.healthColSeo}</th><th>${d.healthColCss}</th><th>${d.healthColScore}</th>
-      </tr>`;
-      const CHUNK_SIZE = 8;
-      for(let i=0; i<rowsHtml.length; i+=CHUNK_SIZE){
-        const heading = i===0 ? d.pdfHealthHeading : `${d.pdfHealthHeading} (${d.pdfContinued})`;
-        sheets.push(`
-          <h2>${heading}</h2>
-          <table class="health-table"><thead>${headerRow}</thead><tbody>${rowsHtml.slice(i, i+CHUNK_SIZE).join("")}</tbody></table>
-        `);
-      }
+    let findingsHtml;
+    if(!pageHealthData.length){
+      findingsHtml = `<p>${d.pdfFindNotScanned}</p>`;
+    } else if(!findingPages.length){
+      findingsHtml = `<div class="pdf-finding"><div class="pdf-f-head"><div class="nm">${d.pdfFindNoneTitle}</div><div class="pdf-tag good">✓</div></div><div class="pdf-f-body">${d.pdfFindNoneBody}</div></div>`;
     } else {
-      sheets.push(`<h2>${d.pdfHealthHeading}</h2><p>${d.healthCheckedNote}</p>`);
+      findingsHtml = findingPages.map(p=>pdfFindingCard(p, lang, d)).join("");
     }
 
-    sheets[sheets.length - 1] += `<div class="pdf-foot">${d.pdfFootNote}</div>`;
+    const highAltCount = findingPages.filter(p=>p.altText && p.altText.totalImages>0 && (p.altText.issueCount/p.altText.totalImages)>=0.7).length;
+    const altNoteHtml = highAltCount>=2 ? `<div class="pdf-note">${d.pdfAltRootCause}</div>` : "";
+
+    const metaMissingPages = scoredPages.filter(p=>p.seoIssues && p.seoIssues.some(i=>i.id==="meta-description"));
+    const metaNoteHtml = metaMissingPages.length
+      ? `<p>${d.pdfMetaMissingLabel}</p><ul class="pdf-inline-list">${metaMissingPages.slice(0,4).map(p=>`<li>${escapeHtml((lang==="ar"?p.nameAr:p.nameEn)||p.id)}</li>`).join("")}</ul>`
+      : "";
+
+    sheets.push(`<div class="pdf-page">
+      <div class="pdf-eyebrow">${d.pdfFindEyebrow}</div>
+      <h2>${d.pdfFindH2}</h2>
+      <p class="pdf-lede">${d.pdfFindLede}</p>
+      ${findingsHtml}
+      ${altNoteHtml}
+      ${metaNoteHtml}
+    </div>`);
+
+    // ---- sheet 3: recommendations (IT / Marketing) + keyword table ----
+    const itItems = [], mktItems = [];
+    computePriorities().forEach(it=>{
+      const pri = it.sev==="poor" ? "p1" : "p2";
+      let text = "";
+      if(it.type==="broken") text = d.prioBroken(it.count);
+      else if(it.type==="aiCrawler") text = d.prioAiCrawler(it.count);
+      else if(it.type==="cwv"){ const name = lang==="ar"?it.m.nameAr:it.m.nameEn; text = d.prioCwv.replace("{metric}", `<b>${escapeHtml(name)}</b>`); }
+      else if(it.type==="kw"){ const name = lang==="ar"?it.k.ar:it.k.en; text = d.prioKw.replace("{kw}", `<b>${escapeHtml(name)}</b>`); }
+      else if(it.type==="pending") text = d.prioPending.replace("{n}", it.count).replace("{link}", d.prioPendingLink);
+      else if(it.type==="schema") text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
+      else if(it.type==="alt") text = d.pdfRecoAltTpl(it.count || 0);
+      if(!text) return;
+      (it.type==="kw" ? mktItems : itItems).push({pri, text});
+    });
+    itItems.push({pri:"p3", text:d.pdfRecoEvergreenIT});
+    mktItems.push({pri:"p2", text:d.pdfRecoEvergreenMkt1});
+    mktItems.push({pri:"p3", text:d.pdfRecoEvergreenMkt2});
+
+    const priLabel = p => p==="p1" ? d.pdfPriP1 : (p==="p2" ? d.pdfPriP2 : d.pdfPriP3);
+    const recoCol = (items, head, sub, cls) => `<div class="pdf-reco-col ${cls}">
+      <div class="pdf-reco-head">${escapeHtml(head)}<div style="font-weight:400;font-size:11px;opacity:.85;margin-top:2px">${escapeHtml(sub)}</div></div>
+      <div class="pdf-reco-list">${items.map(it=>`<div class="pdf-reco-item"><div class="pdf-pri ${it.pri}">${priLabel(it.pri)}</div><div class="tx">${it.text}</div></div>`).join("")}</div>
+    </div>`;
+    const recoHtml = `<div class="pdf-reco">${recoCol(itItems, d.pdfRecoColIT, d.pdfRecoColITsub, "")}${recoCol(mktItems, d.pdfRecoColMkt, d.pdfRecoColMktsub, "mkt")}</div>`;
+
+    const hasGscData = keywords.some(k=>typeof k.gscClicks==="number");
+    const kwRowsHtml = keywords.map(k=>{
+      const name = lang==="ar" ? k.ar : k.en;
+      const ranking = k.pos !== null;
+      const posTxt = ranking ? `#${k.pos}` : "—";
+      const clicksTxt = typeof k.gscClicks==="number" ? k.gscClicks : "—";
+      const imprTxt = typeof k.gscImpressions==="number" ? k.gscImpressions : "—";
+      const pillHtml = ranking ? `<span class="pdf-pill good">${d.pdfKwGood}</span>` : `<span class="pdf-pill bad">${d.pdfKwBad}</span>`;
+      return `<tr><td class="kw">${escapeHtml(name)}</td><td>${posTxt}</td><td>${clicksTxt}</td><td>${imprTxt}</td><td>${pillHtml}</td></tr>`;
+    }).join("");
+    const kwTableHtml = `<table class="pdf-kw"><thead><tr><th>${d.pdfKwColPhrase}</th><th>${d.pdfKwColPos}</th><th>${d.pdfKwColClicks}</th><th>${d.pdfKwColImpr}</th><th>${d.pdfKwColStatus}</th></tr></thead><tbody>${kwRowsHtml}</tbody></table>`;
+
+    const weakKws = keywords.filter(k=>k.pos===null);
+    const kwNoteHtml = weakKws.length
+      ? `<div class="pdf-note"><b>${d.pdfKwWeakLabel}</b><ul class="pdf-inline-list">${weakKws.map(k=>`<li>${escapeHtml(lang==="ar"?k.ar:k.en)}</li>`).join("")}</ul></div>`
+      : `<div class="pdf-note">${d.pdfKwNoneWeak}</div>`;
+
+    sheets.push(`<div class="pdf-page">
+      <div class="pdf-eyebrow">${d.pdfRecoEyebrow}</div>
+      <h2>${d.pdfRecoH2}</h2>
+      <p class="pdf-lede">${d.pdfRecoLede}</p>
+      ${recoHtml}
+      <h3 class="pdf-sub">${d.pdfKwSub}</h3>
+      <p class="pdf-lede">${hasGscData ? d.pdfKwLede : d.pdfKwLedeManual}</p>
+      ${keywords.length ? kwTableHtml : ""}
+      ${keywords.length ? kwNoteHtml : ""}
+    </div>`);
+
+    // ---- sheet 4: roadmap + closing ----
+    const allItems = itItems.concat(mktItems);
+    const bucket = pri => allItems.filter(x=>x.pri===pri).map(x=>`<li>${x.text}</li>`).join("") || `<li>${d.pdfRoadEmpty}</li>`;
+
+    sheets.push(`<div class="pdf-page">
+      <div class="pdf-eyebrow">${d.pdfRoadEyebrow}</div>
+      <h2>${d.pdfRoadH2}</h2>
+      <div class="pdf-road">
+        <div class="pdf-road-col"><div class="pdf-road-head">${d.pdfRoadWeek}</div><ul>${bucket("p1")}</ul></div>
+        <div class="pdf-road-col"><div class="pdf-road-head">${d.pdfRoadMonth}</div><ul>${bucket("p2")}</ul></div>
+        <div class="pdf-road-col"><div class="pdf-road-head">${d.pdfRoadOngoing}</div><ul>${bucket("p3")}</ul></div>
+      </div>
+      <p style="margin-top:16px">${d.pdfClosing}</p>
+      <div class="pdf-foot">${d.pdfFootNote}</div>
+    </div>`);
+
     return sheets;
   }
 
@@ -2018,7 +2257,13 @@
 
         if(s > 0) doc.addPage();
         let position = margin;
-        doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+        // "MEDIUM" applies real (Flate) compression to the embedded image
+        // stream instead of jsPDF's uncompressed default, which is what
+        // was actually behind a previous ~59MB file-size bug — the fix
+        // then was smaller/more images (chunking); this is the other half
+        // of that same fix, compressing each one properly regardless of
+        // how many there are.
+        doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight, undefined, "MEDIUM");
         // safety net: if this particular sheet still ends up taller than
         // one page (e.g. a page with an unusually long issue list), keep
         // paginating it rather than cutting it off
@@ -2026,7 +2271,7 @@
         while(shown < imgHeight){
           position -= pageContentHeight;
           doc.addPage();
-          doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+          doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight, undefined, "MEDIUM");
           shown += pageContentHeight;
         }
       }
