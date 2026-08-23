@@ -438,12 +438,12 @@
           }
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 77,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 73
+      "seoScore": 72
     },
     {
       "id": "%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9",
@@ -473,7 +473,7 @@
           }
         ]
       },
-      "mobileScore": 88,
+      "mobileScore": 78,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -483,7 +483,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 66
+      "seoScore": 64
     },
     {
       "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
@@ -609,7 +609,7 @@
           }
         ]
       },
-      "mobileScore": 82,
+      "mobileScore": 78,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -649,7 +649,7 @@
           }
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 87,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -733,7 +733,7 @@
           }
         ]
       },
-      "mobileScore": 72,
+      "mobileScore": 74,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -800,7 +800,7 @@
           }
         ]
       },
-      "mobileScore": 95,
+      "mobileScore": 96,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -840,12 +840,12 @@
           }
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 74,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 81
+      "seoScore": 79
     },
     {
       "id": "defining-the-problem",
@@ -875,12 +875,12 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 87,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 73
+      "seoScore": 76
     },
     {
       "id": "infrastructure",
@@ -915,12 +915,12 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 78,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 85
+      "seoScore": 86
     },
     {
       "id": "%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
@@ -954,7 +954,7 @@
           }
         ]
       },
-      "mobileScore": 90,
+      "mobileScore": 89,
       "unusedCssKb": 178,
       "unusedJsKb": 99,
       "seoIssues": [
@@ -1054,7 +1054,7 @@
           }
         ]
       },
-      "mobileScore": 96,
+      "mobileScore": 97,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1194,7 +1194,7 @@
           }
         ]
       },
-      "mobileScore": 67,
+      "mobileScore": 68,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1234,7 +1234,7 @@
           }
         ]
       },
-      "mobileScore": 66,
+      "mobileScore": 68,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1314,7 +1314,7 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 82,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1354,7 +1354,7 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 76,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1438,7 +1438,7 @@
           }
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 78,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1478,7 +1478,7 @@
           }
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 78,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1562,7 +1562,7 @@
           }
         ]
       },
-      "mobileScore": 65,
+      "mobileScore": 67,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1572,7 +1572,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 60
+      "seoScore": 61
     },
     {
       "id": "privacy-policy",
@@ -1602,7 +1602,7 @@
           }
         ]
       },
-      "mobileScore": 96,
+      "mobileScore": 97,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1657,7 +1657,7 @@
           }
         ]
       },
-      "mobileScore": 69,
+      "mobileScore": 68,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1832,12 +1832,12 @@
           }
         ]
       },
-      "mobileScore": 29,
+      "mobileScore": 42,
       "unusedCssKb": 138,
-      "unusedJsKb": 1272,
+      "unusedJsKb": 1273,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 47
+      "seoScore": 50
     }
   ],
   "pageHealthCheckedMonth": "2026-08",
@@ -1905,5 +1905,5 @@
   "aiSearchReadinessCheckedMonth": "2026-08",
   "keywordsSource": "gsc",
   "keywordsCheckedMonth": "2026-08",
-  "lastRefreshedAt": "2026-08-23T09:14:25.610615+00:00"
+  "lastRefreshedAt": "2026-08-23T10:33:22.270919+00:00"
 }
