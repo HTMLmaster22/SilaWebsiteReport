@@ -438,12 +438,12 @@
           }
         ]
       },
-      "mobileScore": 86,
+      "mobileScore": 79,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 75
+      "seoScore": 73
     },
     {
       "id": "%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9",
@@ -473,7 +473,7 @@
           }
         ]
       },
-      "mobileScore": 80,
+      "mobileScore": 88,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -483,7 +483,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 64
+      "seoScore": 66
     },
     {
       "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
@@ -569,7 +569,7 @@
           }
         ]
       },
-      "mobileScore": 81,
+      "mobileScore": 79,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -609,7 +609,7 @@
           }
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 82,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -649,7 +649,7 @@
           }
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 79,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -733,7 +733,7 @@
           }
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 72,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -840,12 +840,12 @@
           }
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 79,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 79
+      "seoScore": 81
     },
     {
       "id": "defining-the-problem",
@@ -875,12 +875,12 @@
           }
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 75,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 74
+      "seoScore": 73
     },
     {
       "id": "infrastructure",
@@ -915,12 +915,12 @@
           }
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 84
+      "seoScore": 85
     },
     {
       "id": "%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
@@ -954,7 +954,7 @@
           }
         ]
       },
-      "mobileScore": 88,
+      "mobileScore": 90,
       "unusedCssKb": 178,
       "unusedJsKb": 99,
       "seoIssues": [
@@ -1014,7 +1014,7 @@
           }
         ]
       },
-      "mobileScore": 68,
+      "mobileScore": 67,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1054,7 +1054,7 @@
           }
         ]
       },
-      "mobileScore": 95,
+      "mobileScore": 96,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1124,7 +1124,7 @@
           }
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 98,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1194,7 +1194,7 @@
           }
         ]
       },
-      "mobileScore": 66,
+      "mobileScore": 67,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1234,7 +1234,7 @@
           }
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 66,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1274,7 +1274,7 @@
           }
         ]
       },
-      "mobileScore": 77,
+      "mobileScore": 80,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1314,7 +1314,7 @@
           }
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1354,7 +1354,7 @@
           }
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1394,7 +1394,7 @@
           }
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1438,7 +1438,7 @@
           }
         ]
       },
-      "mobileScore": 82,
+      "mobileScore": 76,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1478,7 +1478,7 @@
           }
         ]
       },
-      "mobileScore": 80,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1562,7 +1562,7 @@
           }
         ]
       },
-      "mobileScore": 68,
+      "mobileScore": 65,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1572,7 +1572,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 61
+      "seoScore": 60
     },
     {
       "id": "privacy-policy",
@@ -1602,7 +1602,7 @@
           }
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 96,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1657,7 +1657,7 @@
           }
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 69,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [
@@ -1667,7 +1667,7 @@
         }
       ],
       "excludedFromScore": false,
-      "seoScore": 62
+      "seoScore": 61
     },
     {
       "id": "who-our-clients",
@@ -1793,12 +1793,12 @@
           }
         ]
       },
-      "mobileScore": 81,
+      "mobileScore": 74,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
       "excludedFromScore": false,
-      "seoScore": 74
+      "seoScore": 72
     },
     {
       "id": "business-center-cost",
@@ -1834,7 +1834,7 @@
       },
       "mobileScore": 29,
       "unusedCssKb": 138,
-      "unusedJsKb": 1271,
+      "unusedJsKb": 1272,
       "seoIssues": [],
       "excludedFromScore": false,
       "seoScore": 47
@@ -1905,5 +1905,5 @@
   "aiSearchReadinessCheckedMonth": "2026-08",
   "keywordsSource": "gsc",
   "keywordsCheckedMonth": "2026-08",
-  "lastRefreshedAt": "2026-08-23T08:40:53.788110+00:00"
+  "lastRefreshedAt": "2026-08-23T09:14:25.610615+00:00"
 }
