@@ -1,3345 +1,1632 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نبضة الموقع — تقرير أداء صلة | Site Pulse — Silah Performance Report</title>
-<!--
-  Site Pulse v2 — extended June 30, 2026
-  v2.1 — August 8, 2026: added automatic per-page "Page Health" scan
-  (Schema.org structured data, image alt-text, unused CSS/JS) — see the
-  MONTHLY UPDATE RUNBOOK comment inside <script>, item 7, for details.
-  New in v2: per-page performance tracking, an auto-generated
-  "this month's priorities" panel, and a mobile Performance Score trend.
-  See the MONTHLY UPDATE RUNBOOK comment inside <script> for how to
-  refresh this report each month.
--->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- PDF export (SEO report download button). Same jsPDF + html2canvas
-     versions already used elsewhere on silah.com.sa's own site, so this
-     combination is already proven in production rather than a fresh pick. -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-<style>
-  :root{
-    --ink:#0B1D26;
-    --ink-2:#102a36;
-    --paper:#F2F1ED;
-    --paper-card:#FBFAF7;
-    --signal:#E8483A;
-    --teal:#134752;
-    --teal-soft:#1d5e6b;
-    --amber:#B3711F;
-    --amber-bg:rgba(193,127,46,0.13);
-    --moss:#2F6B49;
-    --moss-bg:rgba(76,122,94,0.14);
-    --poor:#B23B3B;
-    --poor-bg:rgba(178,59,59,0.13);
-    --ink-soft:#46565d;
-    --hair:rgba(11,29,38,0.10);
-    --hair-dark:rgba(247,245,241,0.14);
-    --shadow:0 1px 2px rgba(11,29,38,0.04), 0 8px 24px -12px rgba(11,29,38,0.18);
-    --radius:18px;
-    --maxw:1040px;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Cairo','Segoe UI','Tahoma',sans-serif;
-    -webkit-font-smoothing:antialiased;
-    line-height:1.6;
-  }
-  .num{ font-family:'JetBrains Mono','Consolas','Courier New',monospace; font-feature-settings:'tnum' 1; }
-  [dir-fix]{ unicode-bidi:isolate; }
-  ::selection{ background:var(--signal); color:#fff; }
-  a{ color:inherit; }
-
-  button{ font-family:inherit; cursor:pointer; }
-  button:focus-visible, a:focus-visible{
-    outline:2.5px solid var(--signal);
-    outline-offset:3px;
-    border-radius:6px;
-  }
-
-  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
-
-  /* ===== Topbar ===== */
-  .topbar{
-    position:sticky; top:0; z-index:40;
-    background:rgba(242,241,237,0.86);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--hair);
-  }
-  .topbar .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
-  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:19px; letter-spacing:.2px; }
-  .brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--signal); display:inline-block; }
-  .brand small{ display:block; font-weight:500; font-size:11px; color:var(--ink-soft); margin-top:1px; }
-  .lang-btn{
-    background:var(--ink); color:var(--paper);
-    border:none; border-radius:100px;
-    padding:9px 18px; font-size:13.5px; font-weight:700;
-    display:flex; align-items:center; gap:7px;
-    transition:transform .15s ease, background .15s ease;
-  }
-  .lang-btn:hover{ background:var(--teal); transform:translateY(-1px); }
-  .lang-btn svg{ width:14px; height:14px; }
-
-  .refresh-btn{
-    background:var(--paper); color:var(--ink); border:1.5px solid var(--hair);
-    border-radius:100px; padding:9px 18px; font-size:13.5px; font-weight:700;
-    display:flex; align-items:center; gap:7px; margin-inline-end:10px;
-    transition:transform .15s ease, border-color .15s ease, opacity .15s ease;
-    cursor:pointer;
-  }
-  .refresh-btn:hover:not(:disabled){ border-color:var(--signal); transform:translateY(-1px); }
-  .refresh-btn:disabled{ opacity:.55; cursor:not-allowed; }
-  .refresh-btn svg{ width:14px; height:14px; }
-  .refresh-btn.spinning svg{ animation:refresh-spin 1s linear infinite; }
-  @keyframes refresh-spin{ to{ transform:rotate(360deg); } }
-  .refresh-status{
-    font-size:12.5px; color:var(--ink-soft); text-align:center;
-    padding:6px 16px 0; min-height:20px;
-  }
-  .refresh-status.err{ color:var(--poor); }
-  .refresh-status.ok{ color:var(--moss); }
-
-  /* ===== Hero ===== */
-  .hero{
-    background:radial-gradient(120% 140% at 18% -10%, #173d49 0%, var(--ink) 55%);
-    color:var(--paper);
-    padding:72px 0 96px;
-    position:relative;
-    overflow:hidden;
-  }
-  .hero::after{
-    content:"";
-    position:absolute; inset:0;
-    background-image:radial-gradient(rgba(247,245,241,0.045) 1px, transparent 1px);
-    background-size:18px 18px;
-    pointer-events:none;
-    mask-image:linear-gradient(to bottom, black, transparent 85%);
-  }
-  .hero .wrap{ position:relative; z-index:2; }
-  .pulse-wrap{ height:64px; margin-bottom:18px; opacity:.85; }
-  .pulse-wrap svg{ width:100%; height:100%; display:block; overflow:visible; }
-  .pulse-path{
-    fill:none; stroke:var(--signal); stroke-width:2.4;
-    stroke-linecap:round; stroke-linejoin:round;
-    stroke-dasharray:900; stroke-dashoffset:900;
-    animation:draw 2.1s cubic-bezier(.4,0,.2,1) .15s forwards;
-  }
-  .pulse-dot{
-    fill:var(--signal); opacity:0;
-    animation:dotIn .4s ease 1.9s forwards;
-  }
-  @keyframes draw{ to{ stroke-dashoffset:0; } }
-  @keyframes dotIn{ to{ opacity:1; } }
-
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:8px;
-    font-size:13px; font-weight:700; letter-spacing:.3px;
-    color:#cdd9da; text-transform:uppercase;
-    margin:0 0 22px;
-  }
-  .eyebrow .live{
-    width:7px; height:7px; border-radius:50%; background:var(--signal);
-    animation:livePulse 1.8s ease-in-out infinite;
-  }
-  @keyframes livePulse{ 0%,100%{ opacity:1; transform:scale(1);} 50%{ opacity:.45; transform:scale(.7);} }
-
-  .hero-stat{
-    display:flex; align-items:flex-end; flex-wrap:wrap;
-    gap:20px 28px; margin-bottom:22px;
-  }
-  .hero-stat .figure{ display:flex; align-items:baseline; gap:10px; }
-  .hero-stat .num{ font-size:clamp(46px,8vw,84px); font-weight:700; line-height:1; }
-  .hero-stat .from .num{ color:#9fb3b8; text-decoration:line-through; text-decoration-color:rgba(232,72,58,.55); text-decoration-thickness:3px; }
-  .hero-stat .to .num{ color:#fff; }
-  .hero-stat .unit{ font-size:14px; color:#a9bcc0; font-weight:600; }
-  .hero-arrow{ width:30px; height:18px; flex-shrink:0; align-self:center; color:var(--signal); }
-  .hero-arrow svg{ width:100%; height:100%; }
-  .improve-badge{
-    display:inline-flex; align-items:center; gap:7px;
-    background:rgba(232,72,58,0.16); border:1px solid rgba(232,72,58,0.4);
-    color:#ff9a8e; padding:7px 14px; border-radius:100px;
-    font-size:13.5px; font-weight:700; margin-bottom:26px;
-  }
-  .hero h1{
-    font-size:clamp(22px,3.2vw,30px); font-weight:800; margin:0 0 14px; max-width:680px;
-  }
-  .hero p.lede{
-    font-size:16.5px; color:#cfd9da; max-width:620px; margin:0 0 28px;
-  }
-  .hero .meta-line{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    font-size:13px; color:#8fa3a8; border-top:1px solid var(--hair-dark);
-    padding-top:18px;
-  }
-  .hero .meta-line svg{ width:15px; height:15px; flex-shrink:0; }
-
-  /* ===== Section shells ===== */
-  section.block{ padding:64px 0; }
-  .block-head{ margin-bottom:32px; max-width:680px; }
-  .block-eyebrow{ font-size:12.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--signal); margin:0 0 8px; }
-  .block-head h2{ font-size:clamp(22px,3vw,28px); font-weight:800; margin:0 0 10px; }
-  .block-head p{ color:var(--ink-soft); font-size:15.5px; margin:0; }
-
-  /* ===== Summary cards ===== */
-  .cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-  .card{
-    background:var(--paper-card); border:1px solid var(--hair); border-radius:var(--radius);
-    padding:24px; box-shadow:var(--shadow);
-  }
-  .card-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
-  .card-icon{ width:38px; height:38px; border-radius:11px; background:var(--ink); color:var(--paper); display:flex; align-items:center; justify-content:center; }
-  .card-icon svg{ width:19px; height:19px; }
-  .badge{
-    font-size:12px; font-weight:800; padding:5px 11px; border-radius:100px;
-    display:inline-flex; align-items:center; gap:6px;
-  }
-  .badge::before{ content:""; width:6px; height:6px; border-radius:50%; }
-  .badge.good{ background:var(--moss-bg); color:var(--moss); }
-  .badge.good::before{ background:var(--moss); }
-  .badge.ni{ background:var(--amber-bg); color:var(--amber); }
-  .badge.ni::before{ background:var(--amber); }
-  .badge.poor{ background:var(--poor-bg); color:var(--poor); }
-  .badge.poor::before{ background:var(--poor); }
-  .card h3{ font-size:16.5px; font-weight:800; margin:0 0 6px; }
-  .card .card-sub{ font-size:13.5px; color:var(--ink-soft); margin:0 0 16px; min-height:38px; }
-  .spark{ width:100%; height:46px; display:block; }
-
-  /* ===== Stat pair (Performance Score) ===== */
-  .stat-pair{ display:flex; gap:32px; flex-wrap:wrap; margin-bottom:26px; padding-bottom:26px; border-bottom:1px solid var(--hair); }
-  .stat-pair-item{ display:flex; align-items:baseline; gap:11px; }
-  .stat-pair-item .num{ font-size:32px; font-weight:700; }
-  .stat-pair-item .num small{ font-size:15px; font-weight:600; color:var(--ink-soft); font-family:'Cairo',sans-serif; }
-  .stat-pair-item .lbl{ font-size:13px; color:var(--ink-soft); font-weight:700; }
-  .stat-pair-item .delta{ font-size:12px; font-weight:800; padding:3px 10px; border-radius:100px; }
-  .stat-pair-item .delta.up{ background:var(--moss-bg); color:var(--moss); }
-  .stat-pair-item .delta.down{ background:var(--poor-bg); color:var(--poor); }
-  @media (max-width:520px){ .stat-pair{ gap:20px; } .stat-pair-item .num{ font-size:26px; } }
-
-  /* ===== Accordion ===== */
-  .accordion{ border-top:1px solid var(--hair); }
-  .acc-item{ border-bottom:1px solid var(--hair); }
-  .acc-trigger{
-    width:100%; background:none; border:none; padding:22px 4px;
-    display:flex; align-items:center; gap:16px; text-align:start;
-  }
-  .acc-trigger:hover .acc-name{ color:var(--teal); }
-  .acc-num{
-    font-size:12px; font-weight:700; color:#9aa6ab; width:26px; flex-shrink:0;
-  }
-  .acc-name-wrap{ flex:1; min-width:0; }
-  .acc-name{ font-size:17px; font-weight:800; transition:color .15s ease; }
-  .acc-full{ font-size:12.5px; color:var(--ink-soft); font-weight:500; margin-top:2px; }
-  .acc-value{ display:flex; align-items:center; gap:12px; flex-shrink:0; }
-  .acc-value .num{ font-size:19px; font-weight:600; }
-  .acc-chevron{ width:18px; height:18px; flex-shrink:0; transition:transform .25s ease; color:var(--ink-soft); }
-  .acc-trigger[aria-expanded="true"] .acc-chevron{ transform:rotate(180deg); }
-
-  .acc-panel{
-    display:grid; grid-template-rows:0fr; transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1);
-  }
-  .acc-panel-inner{ overflow:hidden; }
-  .acc-item.open .acc-panel{ grid-template-rows:1fr; }
-  .acc-body{ padding:0 4px 30px; display:grid; grid-template-columns:1fr 1.3fr; gap:28px; }
-  .acc-def{ font-size:14.5px; color:var(--ink-soft); margin:0 0 18px; }
-  .acc-meaning{
-    background:rgba(19,71,82,0.06); border-inline-start:3px solid var(--teal);
-    padding:13px 16px; border-radius:8px; font-size:13.5px; color:var(--teal); font-weight:600;
-  }
-  .gauge{ margin-top:6px; }
-  .gauge-bar{ position:relative; height:10px; border-radius:6px; overflow:visible; display:flex; }
-  .gauge-bar .seg{ height:100%; }
-  .seg.g{ background:#cfe3d6; border-radius:6px 0 0 6px; }
-  .seg.n{ background:#ecdcc0; }
-  .seg.p{ background:#ecd0d0; border-radius:0 6px 6px 0; }
-  .gauge-marker{
-    position:absolute; top:-5px; width:3px; height:20px; background:var(--ink);
-    border-radius:2px; transform:translateX(50%);
-  }
-  .gauge-labels{ display:flex; justify-content:space-between; font-size:10.5px; color:var(--ink-soft); margin-top:7px; }
-  .chart-box{ background:var(--paper-card); border:1px solid var(--hair); border-radius:14px; padding:18px 18px 10px; }
-  .chart-title{ font-size:11.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.4px; margin-bottom:10px; }
-  .trend-svg{ width:100%; height:120px; display:block; }
-  .chart-range{ display:flex; justify-content:space-between; font-size:10.5px; color:#9aa6ab; margin-top:6px; }
-
-  @media (max-width:760px){
-    .cards{ grid-template-columns:1fr; }
-    .acc-body{ grid-template-columns:1fr; }
-    .acc-value .num{ font-size:16px; }
-  }
-
-  /* ===== Priorities panel ===== */
-  .priority-list{ display:grid; gap:10px; }
-  .priority-item{
-    display:flex; gap:15px; align-items:flex-start; background:var(--paper-card);
-    border:1px solid var(--hair); border-inline-start:4px solid var(--ink-soft);
-    border-radius:12px; padding:16px 18px;
-  }
-  .priority-item.poor{ border-inline-start-color:var(--poor); }
-  .priority-item.ni{ border-inline-start-color:var(--amber); }
-  .priority-item.good{ border-inline-start-color:var(--moss); }
-  .priority-num{ font-weight:700; font-size:13px; color:var(--ink-soft); flex-shrink:0; width:22px; padding-top:2px; }
-  .priority-text{ font-size:14.5px; color:var(--ink-soft); line-height:1.55; }
-  .priority-text strong{ color:var(--ink); font-weight:700; }
-  .priority-text a{ color:var(--teal); font-weight:700; text-decoration:underline; text-underline-offset:2px; }
-  .owner-pill{ display:inline-block; margin-top:8px; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:999px; background:var(--paper); border:1px solid var(--hair); color:var(--ink-soft); }
-  .owner-pill.tech{ border-color:var(--teal); color:var(--teal); }
-  .owner-pill.mkt{ border-color:var(--amber); color:var(--amber); }
-  .owner-pill.shared{ border-color:var(--moss); color:var(--moss); }
-
-  /* ===== Data tables (keywords + pages) ===== */
-  .kw-table{ width:100%; border-collapse:collapse; margin-bottom:28px; }
-  .kw-table th{ text-align:start; font-size:11.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--ink-soft); font-weight:700; padding:0 14px 10px; border-bottom:1px solid var(--hair); }
-  .kw-table td{ padding:13px 14px; border-bottom:1px solid var(--hair); font-size:14.5px; vertical-align:top; }
-  .kw-table tr:last-child td{ border-bottom:none; }
-  .kw-pos{ font-weight:700; }
-  .kw-rank{
-    display:inline-flex; align-items:center; justify-content:center;
-    width:20px; height:20px; margin-inline-end:9px; border-radius:6px;
-    background:var(--ink); color:#fff; font-size:11px; font-weight:800;
-  }
-
-  /* ===== Marketing action plan ===== */
-  .mkt-plan{ margin-bottom:30px; }
-  .mkt-plan-title{
-    display:flex; align-items:center; gap:9px; font-size:16.5px; font-weight:800; margin:0 0 6px; color:var(--ink);
-  }
-  .mkt-plan-title svg{ width:19px; height:19px; color:var(--moss); flex-shrink:0; }
-  .mkt-card{
-    border:1px solid var(--hair); border-radius:14px; padding:16px 18px; margin-bottom:12px; background:var(--paper-card);
-  }
-  .mkt-card-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; }
-  .mkt-card-title{ font-size:14px; font-weight:800; color:var(--ink); }
-  .mkt-card-badge{
-    font-size:11px; font-weight:800; padding:3px 10px; border-radius:100px;
-    background:rgba(19,71,82,0.09); color:var(--teal); flex-shrink:0;
-  }
-  .mkt-card-why, .mkt-card-how{ font-size:12.5px; color:var(--ink-soft); margin-top:7px; line-height:1.6; }
-  .mkt-card-how strong{ color:var(--ink); font-weight:700; }
-  .mkt-card-toggle{
-    display:inline-flex; align-items:center; gap:4px; margin-top:10px; font-size:12px; font-weight:700;
-    color:var(--signal); cursor:pointer; user-select:none; background:none; border:none; padding:0; font-family:inherit;
-  }
-  .mkt-card-toggle::after{ content:"›"; font-weight:900; transition:transform .15s ease; }
-  .mkt-card-toggle.open::after{ transform:rotate(90deg); }
-  .mkt-card-pages{ display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--hair); font-size:12.5px; color:var(--ink-soft); line-height:2; }
-  .mkt-card-pages.open{ display:block; }
-  .kw-pos.weak{ color:var(--poor); }
-  .kw-pos.mid{ color:var(--amber); }
-  .kw-pos.strong{ color:var(--moss); }
-  .page-url{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-soft); display:block; margin-top:2px; }
-  .reco-text{ font-size:13px; color:var(--ink-soft); }
-  .status-pill{ display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; padding:4px 11px; border-radius:100px; white-space:nowrap; }
-  .row-page-link{ color:var(--ink); text-decoration:none; border-bottom:1px dashed var(--hair); transition:color .15s, border-color .15s; }
-  .row-page-link:hover{ color:var(--signal); border-bottom-color:var(--signal); }
-  .status-pill::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
-  .status-pill.measured{ background:var(--moss-bg); color:var(--moss); }
-  .status-pill.pending{ background:var(--amber-bg); color:var(--amber); }
-  .status-pill.poor{ background:var(--poor-bg); color:var(--poor); }
-  .status-pill.clickable{ cursor:pointer; user-select:none; }
-  .status-pill.clickable::after{ content:"›"; margin-inline-start:3px; display:inline-block; font-weight:900; transition:transform .15s ease; }
-  .status-pill.clickable.open::after{ transform:rotate(90deg); }
-  .status-pill.clickable:focus-visible{ outline:2px solid currentColor; outline-offset:2px; }
-  .issue-detail{ display:none; font-size:11px; color:var(--ink-soft); margin-top:5px; max-width:240px; line-height:1.55; }
-  .issue-detail.open{ display:block; }
-  .issue-detail-label{ font-weight:800; color:var(--ink); margin-bottom:2px; }
-  .issue-detail-more{ opacity:.65; font-style:italic; }
-  .cell-num{ font-size:15px; font-weight:700; }
-  .cell-dash{ color:#b7bfc2; }
-  @media (max-width:700px){
-    .kw-table{ font-size:13px; }
-    .kw-table th:nth-child(3), .kw-table td:nth-child(3){ display:none; }
-  }
-
-  /* ===== Opportunities ===== */
-  .opp-list{ display:grid; gap:10px; margin-bottom:28px; }
-  .opp-item{
-    display:flex; gap:13px; align-items:flex-start; background:var(--paper-card);
-    border:1px solid var(--hair); border-radius:12px; padding:15px 17px;
-  }
-  .opp-item svg{ width:18px; height:18px; flex-shrink:0; color:var(--amber); margin-top:2px; }
-  .opp-item p{ margin:0; font-size:14px; color:var(--ink-soft); }
-  .opp-item strong{ color:var(--ink); font-weight:700; }
-
-  /* ===== Device mix ===== */
-  .device-grid{ display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:center; }
-  .stackbar{ height:34px; border-radius:10px; overflow:hidden; display:flex; box-shadow:inset 0 0 0 1px var(--hair); }
-  .stackbar .seg{ height:100%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; }
-  .device-legend{ display:flex; flex-direction:column; gap:12px; margin-top:18px; }
-  .device-legend li{ list-style:none; display:flex; align-items:center; gap:10px; font-size:14px; }
-  .device-legend .sw{ width:11px; height:11px; border-radius:3px; flex-shrink:0; }
-  .device-legend .v{ margin-inline-start:auto; font-weight:700; }
-  .device-note{ font-size:14.5px; color:var(--ink-soft); }
-  .device-note strong{ color:var(--ink); }
-  .excluded-tag{ display:inline-block; font-size:10px; font-weight:700; color:var(--ink-soft); background:rgba(11,29,38,0.06); border-radius:100px; padding:2px 8px; margin-inline-start:8px; vertical-align:middle; }
-  @media (max-width:760px){ .device-grid{ grid-template-columns:1fr; } }
-
-  /* ===== Device toggle ===== */
-  .device-toggle{
-    display:inline-flex; gap:4px; background:rgba(247,245,241,0.07); border:1px solid var(--hair-dark);
-    border-radius:100px; padding:4px; margin-bottom:24px;
-  }
-  .device-btn{
-    background:none; border:none; padding:8px 16px; border-radius:100px;
-    font-size:13px; font-weight:700; color:#9fb3b8; font-family:'Cairo',sans-serif;
-    display:flex; align-items:center; gap:7px; transition:background .15s ease, color .15s ease;
-  }
-  .device-btn svg{ width:15px; height:15px; }
-  .device-btn:hover{ color:#dfe9ea; }
-  .device-btn.is-active{ background:var(--signal); color:#fff; }
-
-  /* ===== Range filter ===== */
-  .range-filter{
-    display:inline-flex; gap:4px; background:var(--paper-card); border:1px solid var(--hair);
-    border-radius:100px; padding:4px; margin-bottom:26px; box-shadow:var(--shadow);
-  }
-  .range-btn{
-    background:none; border:none; padding:9px 18px; border-radius:100px;
-    font-size:13.5px; font-weight:700; color:var(--ink-soft);
-    font-family:'Cairo',sans-serif; transition:background .15s ease, color .15s ease;
-  }
-  .range-btn:hover{ color:var(--ink); }
-  .range-btn.is-active{ background:var(--ink); color:var(--paper); }
-  @media (max-width:480px){ .range-filter{ display:flex; } .range-btn{ flex:1; padding:9px 8px; font-size:12.5px; } }
-
-  /* ===== Marketing/SEO section ===== */
-  .seo-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px; }
-  .seo-score-card{
-    background:var(--paper-card); border:1px solid var(--hair); border-radius:14px;
-    padding:20px; text-align:center; box-shadow:var(--shadow);
-  }
-  .seo-score-card .score{ font-size:34px; font-weight:700; color:var(--moss); }
-  .seo-score-card .score.partial{ color:var(--amber); }
-  .seo-score-card .label{ font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:4px; }
-  .seo-score-card .score-target{ font-size:11px; color:var(--ink-soft); margin-top:6px; min-height:14px; }
-  .seo-score-card .score-target strong{ color:var(--moss); }
-  .tool-chip{
-    font-size:12.5px; font-weight:700; padding:8px 15px; border-radius:100px;
-    background:rgba(19,71,82,0.07); color:var(--teal); border:1px solid rgba(19,71,82,0.18);
-  }
-
-  /* ===== PDF export button ===== */
-  .pdf-export-row{
-    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
-    background:var(--paper-card); border:1px solid var(--hair); border-radius:14px;
-    padding:18px 20px; margin-bottom:26px; box-shadow:var(--shadow);
-  }
-  .pdf-export-text{ font-size:13px; color:var(--ink-soft); max-width:480px; }
-  .pdf-export-text strong{ color:var(--ink); }
-  .pdf-btn{
-    display:inline-flex; align-items:center; gap:9px; flex-shrink:0;
-    background:var(--signal); color:#fff; border:none; border-radius:100px;
-    padding:12px 22px; font-family:inherit; font-size:14px; font-weight:700;
-    cursor:pointer; transition:opacity .15s, transform .15s;
-  }
-  .pdf-btn:hover{ opacity:.9; }
-  .pdf-btn:active{ transform:scale(.97); }
-  .pdf-btn:disabled{ opacity:.6; cursor:wait; }
-  .pdf-btn svg{ width:16px; height:16px; flex-shrink:0; }
-  .pdf-btn .spin{ animation:pdfSpin .8s linear infinite; }
-  @keyframes pdfSpin{ to{ transform:rotate(360deg); } }
-
-  /* Off-screen printable template that html2canvas renders into an image.
-     Positioned off the visible viewport (not display:none — html2canvas
-     can't lay out a display:none element) rather than hidden, and only
-     ever exists in the DOM for the few seconds a PDF is being built.
-
-     Design language deliberately matches the standalone branded PDF
-     report (Aug 2026): brand red, card-based findings, IT/Marketing
-     split columns, score badges. Scoped entirely under #pdfPrintable so
-     none of it touches the live dashboard's own --signal/--ink palette
-     above. Cairo (already loaded site-wide via Google Fonts, see <head>)
-     stands in for Noto Kufi/Sans Arabic here rather than adding a second
-     font family — same geometric-sans character, one less network
-     dependency for a template that only ever renders in the visitor's
-     own browser. */
-  #pdfPrintable{
-    position:fixed; top:0; inset-inline-start:-99999px; width:900px;
-    background:#fff; color:#211C1C; font-family:'Cairo',sans-serif;
-    padding:0; font-size:13px; line-height:1.75;
-    --pb:#8E1E22;      /* brand red        */
-    --pb-dark:#5E1317;
-    --pb-tint:#FBEEED;
-    --pi:#211C1C;      /* ink              */
-    --pi-soft:#655C5A;
-    --pline:#E9E1DF;
-    --ppaper:#FAF7F6;
-    --pgood:#1E7A4C; --pgood-tint:#E7F5EE;
-    --pwarn:#A8681B; --pwarn-tint:#FBF1E2;
-    --pbad:#B23A2E;  --pbad-tint:#FBEAE8;
-  }
-  #pdfPrintable .pdf-page{ padding:34px 40px; }
-  #pdfPrintable .pdf-eyebrow{ font-size:11px; font-weight:700; color:var(--pb); margin:0 0 5px; }
-  #pdfPrintable h1{ font-size:23px; margin:0 0 6px; color:var(--pi); font-weight:800; }
-  #pdfPrintable h2{ font-size:19px; margin:0 0 14px; padding-bottom:10px; border-bottom:2px solid var(--pline); color:var(--pi); font-weight:800; }
-  #pdfPrintable h3.pdf-sub{ font-size:15px; margin:18px 0 8px; color:var(--pb-dark); font-weight:800; }
-  #pdfPrintable .pdf-lede{ font-size:13px; color:var(--pi-soft); margin:0 0 16px; }
-  #pdfPrintable p{ margin:0 0 9px; }
-  #pdfPrintable .pdf-sub-meta{ font-size:12px; color:var(--pi-soft); margin:0 0 20px; }
-  #pdfPrintable b, #pdfPrintable strong{ color:var(--pi); font-weight:700; }
-  #pdfPrintable bdi{ unicode-bidi:isolate; }
-  /* Rendered as a real block list rather than a comma-joined inline
-     string: html2canvas's own bidi/text-shaping does not reliably
-     reproduce correct visual order for several RTL names joined by a
-     neutral separator inside an LTR sentence (or vice-versa) — a real
-     browser gets it right, html2canvas's from-scratch text layout does
-     not. Each name as its own block sidesteps the mismatch entirely
-     instead of fighting it with isolation markup. */
-  #pdfPrintable ul.pdf-inline-list{ margin:6px 0 0; padding-inline-start:18px; }
-  #pdfPrintable ul.pdf-inline-list li{ font-size:12.5px; color:var(--pi-soft); margin-bottom:3px; }
-
-  /* score cards */
-  #pdfPrintable .pdf-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 16px; }
-  #pdfPrintable .pdf-card{ flex:1 1 28%; min-width:150px; border:1px solid var(--pline); border-radius:8px; background:var(--ppaper); padding:14px 10px; text-align:center; }
-  #pdfPrintable .pdf-card .n{ font-size:26px; font-weight:800; }
-  #pdfPrintable .pdf-card .l{ font-size:11px; color:var(--pi-soft); margin-top:4px; line-height:1.5; }
-  #pdfPrintable .pdf-card .bt{ height:4px; border-radius:3px; background:#EEE7E5; margin-top:8px; overflow:hidden; }
-  #pdfPrintable .pdf-card .bf{ height:100%; border-radius:3px; }
-  #pdfPrintable .pdf-card.good .n{ color:var(--pgood); } #pdfPrintable .pdf-card.good .bf{ background:var(--pgood); }
-  #pdfPrintable .pdf-card.warn .n{ color:var(--pwarn); } #pdfPrintable .pdf-card.warn .bf{ background:var(--pwarn); }
-  #pdfPrintable .pdf-card.bad  .n{ color:var(--pbad);  } #pdfPrintable .pdf-card.bad  .bf{ background:var(--pbad); }
-
-  /* finding cards */
-  #pdfPrintable .pdf-finding{ border:1px solid var(--pline); border-radius:8px; margin-bottom:10px; overflow:hidden; }
-  #pdfPrintable .pdf-f-head{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:9px 14px; background:var(--ppaper); border-bottom:1px solid var(--pline); }
-  #pdfPrintable .pdf-f-head .nm{ font-weight:800; font-size:13.5px; }
-  #pdfPrintable .pdf-tag{ font-weight:800; font-size:12px; padding:3px 11px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
-  #pdfPrintable .pdf-tag.bad{ background:var(--pbad-tint); color:var(--pbad); }
-  #pdfPrintable .pdf-tag.warn{ background:var(--pwarn-tint); color:var(--pwarn); }
-  #pdfPrintable .pdf-tag.good{ background:var(--pgood-tint); color:var(--pgood); }
-  #pdfPrintable .pdf-f-body{ padding:10px 14px; font-size:12.5px; color:var(--pi-soft); }
-
-  #pdfPrintable .pdf-note{ background:var(--pb-tint); border-inline-start:4px solid var(--pb); border-radius:3px; padding:11px 14px; margin:14px 0; font-size:12.5px; color:var(--pi-soft); }
-  #pdfPrintable .pdf-note b{ color:var(--pb-dark); }
-
-  /* IT / Marketing recommendation columns */
-  #pdfPrintable .pdf-reco{ display:flex; gap:12px; margin-top:10px; }
-  #pdfPrintable .pdf-reco-col{ flex:1; border:1px solid var(--pline); border-radius:8px; overflow:hidden; }
-  #pdfPrintable .pdf-reco-head{ padding:11px 14px; font-weight:800; font-size:14px; color:#fff; background:var(--pb); }
-  #pdfPrintable .pdf-reco-col.mkt .pdf-reco-head{ background:var(--pi); }
-  #pdfPrintable .pdf-reco-list{ padding:6px 12px 8px; }
-  #pdfPrintable .pdf-reco-item{ display:flex; gap:8px; padding:8px 0; border-bottom:1px solid var(--pline); }
-  #pdfPrintable .pdf-reco-item:last-child{ border-bottom:none; }
-  #pdfPrintable .pdf-pri{ flex-shrink:0; font-weight:800; font-size:10px; color:#fff; border-radius:4px; padding:2px 7px; height:fit-content; white-space:nowrap; }
-  #pdfPrintable .pdf-pri.p1{ background:var(--pbad); }
-  #pdfPrintable .pdf-pri.p2{ background:var(--pwarn); }
-  #pdfPrintable .pdf-pri.p3{ background:#6B7280; }
-  #pdfPrintable .pdf-reco-item .tx{ font-size:12px; line-height:1.65; }
-
-  /* keyword table */
-  #pdfPrintable table.pdf-kw{ width:100%; border-collapse:collapse; font-size:12.5px; margin:10px 0; }
-  #pdfPrintable table.pdf-kw thead th{ text-align:start; background:var(--pb); color:#fff; padding:9px 11px; font-weight:800; font-size:11.5px; }
-  #pdfPrintable table.pdf-kw tbody td{ padding:8px 11px; border-bottom:1px solid var(--pline); color:var(--pi-soft); }
-  #pdfPrintable table.pdf-kw tbody tr:nth-child(even){ background:var(--ppaper); }
-  #pdfPrintable table.pdf-kw td.kw{ color:var(--pi); font-weight:700; }
-  #pdfPrintable .pdf-pill{ display:inline-block; font-size:10.5px; font-weight:700; padding:2px 10px; border-radius:20px; }
-  #pdfPrintable .pdf-pill.good{ background:var(--pgood-tint); color:var(--pgood); }
-  #pdfPrintable .pdf-pill.bad{ background:var(--pbad-tint); color:var(--pbad); }
-
-  /* roadmap */
-  #pdfPrintable .pdf-road{ display:flex; gap:12px; margin-top:10px; }
-  #pdfPrintable .pdf-road-col{ flex:1; }
-  #pdfPrintable .pdf-road-head{ font-weight:800; font-size:13px; padding-bottom:7px; border-bottom:2px solid var(--pb); margin-bottom:8px; }
-  #pdfPrintable .pdf-road-col ul{ margin:0; padding-inline-start:16px; }
-  #pdfPrintable .pdf-road-col li{ font-size:12px; color:var(--pi-soft); margin-bottom:7px; line-height:1.6; }
-
-  #pdfPrintable .pdf-foot{ margin-top:18px; padding-top:12px; border-top:1px solid var(--pline); font-size:10.5px; color:var(--pi-soft); line-height:1.7; }
-
-  footer{ background:var(--ink); color:#aebcc0; padding:44px 0 36px; }
-  footer h4{ color:#fff; font-size:15px; margin:0 0 10px; }
-  footer p{ font-size:13.5px; line-height:1.75; max-width:680px; margin:0 0 14px; }
-  .foot-credit{ font-size:12.5px; color:#7c8d92; border-top:1px solid var(--hair-dark); padding-top:18px; margin-top:18px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
-
-  /* reduced motion */
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
-    .pulse-path{ stroke-dashoffset:0; }
-  }
-
-  /* reveal on load (not scroll-dependent, guarantees content always appears) */
-  .reveal{ opacity:0; transform:translateY(14px); animation:revealIn .6s cubic-bezier(.4,0,.2,1) forwards; animation-delay:.05s; }
-  @keyframes revealIn{ to{ opacity:1; transform:translateY(0); } }
-</style>
-</head>
-<body>
-
-<header class="topbar">
-  <div class="wrap">
-    <div class="brand">
-      <span class="dot"></span>
-      <span>
-        <span data-i18n="brandName">صلة</span>
-        <small data-i18n="brandSub">تقنية المعلومات</small>
-      </span>
-    </div>
-    <button class="refresh-btn" id="refreshBtn" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16m0 5v-5h5"/></svg>
-      <span id="refreshBtnLabel" data-i18n="refreshBtnLabel">تحديث البيانات الآن</span>
-    </button>
-    <button class="lang-btn" id="langToggle" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z"/></svg>
-      <span data-i18n="langToggleLabel">English</span>
-    </button>
-  </div>
-  <div class="refresh-status" id="refreshStatus"></div>
-  <div class="refresh-status" id="lastRefreshedLine"></div>
-</header>
-
-<section class="hero">
-  <div class="wrap">
-    <div class="pulse-wrap" aria-hidden="true">
-      <svg viewBox="0 0 600 64" preserveAspectRatio="none">
-        <path class="pulse-path" d="M0,32 L80,32 L100,32 L115,10 L130,54 L145,18 L160,32 L190,32 L210,32 L225,32 L240,12 L255,52 L270,32 L300,32 L600,32" />
-        <circle class="pulse-dot" cx="600" cy="32" r="4.5"/>
-      </svg>
-    </div>
-
-    <p class="eyebrow"><span class="live"></span><span data-i18n="heroEyebrow">تقرير أداء الموقع الإلكتروني · بيانات حقيقية من زوّار الموقع</span></p>
-
-    <div class="device-toggle" role="group" aria-label="Device">
-      <button class="device-btn is-active" data-device="mobile" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
-        <span data-i18n="deviceMobileBtn">الجوال</span>
-      </button>
-      <button class="device-btn" data-device="desktop" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        <span data-i18n="deviceDesktopBtn">سطح المكتب</span>
-      </button>
-    </div>
-
-    <div class="hero-stat" id="heroStat">
-      <div class="figure from" id="heroFromWrap"><span class="num" id="heroFromNum">700</span></div>
-      <div class="hero-arrow" id="heroArrowWrap" aria-hidden="true">
-        <svg viewBox="0 0 30 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9h24M18 2l8 7-8 7"/></svg>
-      </div>
-      <div class="figure to"><span class="num" id="heroToNum">165</span><span class="unit" id="heroUnit" data-i18n="msUnit">جزء من الثانية</span></div>
-    </div>
-
-    <div class="improve-badge" id="heroBadge">
-      <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" id="heroBadgeIcon"><path d="M8 13V3M3 8l5-5 5 5"/></svg>
-      <span id="heroBadgeText" data-i18n="improveBadge">أسرع بنسبة 76%</span>
-    </div>
-
-    <h1 data-i18n="heroH1" id="heroH1">استجابة الموقع لتفاعل الزوّار تحسّنت بشكل كبير خلال الأشهر الماضية</h1>
-    <p class="lede" data-i18n="heroLede" id="heroLede">في فبراير الماضي، واجه الموقع تباطؤاً ملحوظاً في الاستجابة عند تفاعل الزوّار معه. بعد المتابعة والتحسينات التقنية، عاد الموقع الآن أسرع وأكثر استجابة من أي وقت مضى — والدليل بيانات حقيقية من زوّار فعليين، وليس اختباراً معملياً فقط.</p>
-
-    <div class="meta-line">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
-      <span data-i18n="heroMeta" id="heroMeta">بيانات Chrome الحقيقية للزوّار (CrUX) · أغسطس 2025 – يونيو 2026 · أجهزة الجوال</span>
-    </div>
-  </div>
-</section>
-
-<section class="block" style="padding-bottom:16px;">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" id="prioEyebrowEl">أولويات الشهر</p>
-      <h2 data-i18n="prioH2">أهم الأشياء التي تستحق الاهتمام الآن</h2>
-      <p data-i18n="prioP">ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.</p>
-    </div>
-    <div class="priority-list reveal" id="priorityList"></div>
-  </div>
-</section>
-
-<section class="block" style="padding-top:8px;">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="targetsEyebrow">المعايير والأهداف</p>
-      <h2 data-i18n="targetsH2">أين نقف اليوم، وما الهدف المطلوب الوصول له</h2>
-      <p data-i18n="targetsP"></p>
-    </div>
-    <div class="reveal" style="overflow-x:auto;">
-      <table class="kw-table" id="targetsTable"></table>
-    </div>
-    <p class="reveal" data-i18n="tgMeasureNote" style="font-size:13px;color:var(--ink-soft);margin-top:12px;line-height:1.7;"></p>
-  </div>
-</section>
-
-<section class="block" style="padding-top:8px;">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="summaryEyebrow">نظرة سريعة</p>
-      <h2 data-i18n="summaryH2">كيف تجربة الزائر اليوم؟</h2>
-      <p data-i18n="summaryP">ثلاثة مقاييس رئيسية يستخدمها جوجل لقياس تجربة أي موقع إلكتروني — وهي نفس المقاييس التي تؤثر على ظهور الموقع في نتائج البحث.</p>
-    </div>
-
-    <div class="stat-pair reveal" id="statPair"></div>
-
-    <div class="cards">
-      <div class="card reveal">
-        <div class="card-top">
-          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/></svg></div>
-          <span class="badge ni" data-i18n="badgeNI">يحتاج تحسين</span>
-        </div>
-        <h3 data-i18n="card1Title">سرعة التحميل</h3>
-        <p class="card-sub" data-i18n="card1Sub">3.1 ثانية لظهور أهم عنصر في الصفحة</p>
-        <svg class="spark" data-spark="lcp" viewBox="0 0 280 46" preserveAspectRatio="none"></svg>
-      </div>
-
-      <div class="card reveal" style="animation-delay:.13s">
-        <div class="card-top">
-          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 9h.01M15 9h.01M8 13s1.5 2 4 2 4-2 4-2"/><circle cx="12" cy="12" r="9"/></svg></div>
-          <span class="badge good" data-i18n="badgeGood">جيد</span>
-        </div>
-        <h3 data-i18n="card2Title">سرعة الاستجابة</h3>
-        <p class="card-sub" data-i18n="card2Sub">165 جزء من الثانية لاستجابة النقر</p>
-        <svg class="spark" data-spark="inp" viewBox="0 0 280 46" preserveAspectRatio="none"></svg>
-      </div>
-
-      <div class="card reveal" style="animation-delay:.21s">
-        <div class="card-top">
-          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg></div>
-          <span class="badge ni" data-i18n="badgeNI">يحتاج تحسين</span>
-        </div>
-        <h3 data-i18n="card3Title">ثبات العرض</h3>
-        <p class="card-sub" data-i18n="card3Sub">عناصر الصفحة تتحرك بنسبة بسيطة أثناء التحميل</p>
-        <svg class="spark" data-spark="cls" viewBox="0 0 280 46" preserveAspectRatio="none"></svg>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="block" style="padding-top:8px;">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="detailEyebrow">بالتفصيل</p>
-      <h2 data-i18n="detailH2">كل مقياس على حدة</h2>
-      <p data-i18n="detailP">اضغط على أي مقياس لعرض تعريفه، واتجاهه، وما يعنيه عملياً.</p>
-    </div>
-
-    <div class="range-filter reveal" id="rangeFilterWrap" role="group" aria-label="Time period">
-      <button class="range-btn" data-range="june" type="button"><span data-i18n="rangeJune">يونيو فقط</span></button>
-      <button class="range-btn" data-range="last3" type="button"><span data-i18n="rangeLast3">آخر 3 أشهر</span></button>
-      <button class="range-btn is-active" data-range="full" type="button"><span data-i18n="rangeFull">الفترة الكاملة</span></button>
-    </div>
-
-    <div class="accordion reveal" id="accordion"></div>
-  </div>
-</section>
-
-<section class="block" style="padding-top:8px;">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="deviceEyebrow">السياق</p>
-      <h2 data-i18n="deviceH2">من أين يزورنا الناس</h2>
-    </div>
-    <div class="device-grid reveal">
-      <div>
-        <div class="stackbar">
-          <div class="seg" style="width:73%;background:var(--teal);">73%</div>
-          <div class="seg" style="width:24%;background:var(--signal);">24%</div>
-          <div class="seg" style="width:3%;background:#c7c2b4;color:var(--ink);">‎</div>
-        </div>
-        <ul class="device-legend">
-          <li><span class="sw" style="background:var(--teal)"></span><span data-i18n="deviceLegendPhone">جوال</span><span class="v num">73%</span></li>
-          <li><span class="sw" style="background:var(--signal)"></span><span data-i18n="deviceLegendDesktop">كمبيوتر مكتبي</span><span class="v num">24%</span></li>
-          <li><span class="sw" style="background:#c7c2b4"></span><span data-i18n="deviceLegendTablet">جهاز لوحي</span><span class="v num">3%</span></li>
-        </ul>
-      </div>
-      <p class="device-note" data-i18n="deviceNote">٣ من كل ٤ زوّار يفتحون الموقع من الجوال — لهذا تركّز هذه البيانات على تجربة الجوال تحديداً، فهي التجربة التي يشعر بها أغلب زوّار الموقع فعلياً.</p>
-    </div>
-  </div>
-</section>
-
-<section class="block" style="padding-top:8px;" id="pagePerf">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="pageEyebrow">لكل صفحة على حدة</p>
-      <h2 data-i18n="pageH2">أداء أهم صفحات الموقع</h2>
-      <p data-i18n="pageP">البيانات أعلاه سيتك (Chrome) تعكس الموقع ككل. هنا تفصيل أقرب لواقع كل صفحة تسويقية على حدة، ليعرف الفريق أين يركّز أولاً.</p>
-    </div>
-    <table class="kw-table reveal" id="pageTable">
-      <thead><tr>
-        <th data-i18n="pageColName">الصفحة</th>
-        <th data-i18n="pageColMobile">الجوال</th>
-        <th data-i18n="pageColDesktop">سطح المكتب</th>
-        <th data-i18n="pageColStatus">الحالة</th>
-        <th data-i18n="pageColReco">ملاحظة</th>
-      </tr></thead>
-      <tbody id="pageTableBody"></tbody>
-    </table>
-  </div>
-</section>
-
-<section class="block" style="padding-top:8px;" id="pageHealth">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="healthEyebrow">فحص تلقائي شهري</p>
-      <h2 data-i18n="healthH2">سلامة الصفحات التقنية</h2>
-      <p data-i18n="healthP">يفحص هذا الجزء تلقائياً كل شهر: بيانات Schema المهيكلة، نصوص alt للصور، حجم CSS/JS غير المستخدم، ومشاكل SEO الفنية — نفس الفحوصات التي تُجرى يدوياً، لكن بشكل دوري بدون تدخل.</p>
-    </div>
-    <div class="seo-score-card reveal" id="pageHealthScoreCard" style="max-width:300px;margin-bottom:22px;">
-      <div class="score num" id="pageHealthScoreVal">—</div>
-      <div class="label" data-i18n="pageHealthScoreLabel">متوسط صحة الصفحات</div>
-      <div class="score-target" id="pageHealthScoreNote"></div>
-    </div>
-    <table class="kw-table reveal" id="healthTable">
-      <thead><tr>
-        <th data-i18n="healthColName">الصفحة</th>
-        <th data-i18n="healthColSchema">Schema</th>
-        <th data-i18n="healthColAlt">Alt للصور</th>
-        <th data-i18n="healthColSeo">مشاكل SEO</th>
-        <th data-i18n="healthColCss">CSS غير مستخدم</th>
-        <th data-i18n="healthColScore">أداء الجوال</th>
-      </tr></thead>
-      <tbody id="healthTableBody"></tbody>
-    </table>
-    <p class="device-note" id="healthCheckedNote" data-i18n="healthCheckedNote">لم يُشغَّل الفحص التلقائي بعد لهذه الصفحات — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.</p>
-  </div>
-</section>
-
-<!-- ================================================================
-     OWNER-TAGGED ISSUE BOARD  (added Sept 2026)
-     ----------------------------------------------------------------
-     Renders the `issues` / `issueSummary` / `scanCoverage` /
-     `pageHealthHistory` fields written by scripts/update_data.py.
-
-     Deliberately self-contained — its own <style>, markup, and
-     <script> with its own data.json fetch — so it can be pasted in
-     as one block without touching a single line of the existing
-     report code. The tradeoff is a second fetch of data.json; that
-     file is already cached by the browser from the first fetch, so
-     in practice it costs a cache hit, not a second download. Worth
-     it to keep this additive rather than surgical.
-
-     Language: follows the existing report's toggle by watching
-     <html lang> rather than hooking into applyLang(), for the same
-     no-touching-existing-code reason.
-     ================================================================ -->
-<section class="block" style="padding-top:8px;" id="issueBoard">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" id="ibEyebrow">مقسّم حسب الجهة المسؤولة</p>
-      <h2 id="ibH2">ما المطلوب من كل فريق</h2>
-      <p id="ibLede">كل ملاحظة في هذا التقرير موسومة بالجهة المسؤولة عنها. اختر فريقك لترى مهامك أنت فقط.</p>
-    </div>
-
-    <div class="ib-coverage reveal" id="ibCoverage"></div>
-
-    <div class="ib-summary reveal" id="ibSummary"></div>
-
-    <div class="ib-controls reveal" id="ibControls">
-      <div class="ib-tabs" id="ibTabs" role="group"></div>
-      <label class="ib-low-toggle" id="ibLowToggleWrap">
-        <input type="checkbox" id="ibLowToggle">
-        <span id="ibLowToggleLabel">عرض الملاحظات منخفضة الأهمية</span>
-      </label>
-    </div>
-
-    <div class="ib-list reveal" id="ibList"></div>
-
-    <div class="ib-trend reveal" id="ibTrend"></div>
-
-    <p class="device-note" id="ibEmptyNote" style="display:none;"></p>
-  </div>
-</section>
-
-<style>
-  #issueBoard .ib-coverage{
-    font-size:13px; color:var(--ink-soft); background:var(--paper-card);
-    border:1px solid var(--hair); border-inline-start:4px solid var(--teal);
-    border-radius:10px; padding:12px 16px; margin-bottom:18px; line-height:1.7;
-  }
-  #issueBoard .ib-coverage.warn{ border-inline-start-color:var(--amber); }
-  #issueBoard .ib-coverage strong{ color:var(--ink); }
-
-  #issueBoard .ib-summary{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
-  #issueBoard .ib-sum-card{
-    background:var(--paper-card); border:1px solid var(--hair); border-radius:14px;
-    padding:18px; box-shadow:var(--shadow); text-align:center;
-  }
-  #issueBoard .ib-sum-card .n{ font-size:30px; font-weight:700; font-family:'JetBrains Mono',monospace; }
-  #issueBoard .ib-sum-card .l{ font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:4px; }
-  #issueBoard .ib-sum-card.tech .n{ color:var(--teal); }
-  #issueBoard .ib-sum-card.mkt .n{ color:var(--amber); }
-  #issueBoard .ib-sum-card.shared .n{ color:var(--moss); }
-  @media (max-width:640px){ #issueBoard .ib-summary{ grid-template-columns:1fr; } }
-
-  #issueBoard .ib-controls{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:14px; flex-wrap:wrap; margin-bottom:18px;
-  }
-  #issueBoard .ib-tabs{
-    display:inline-flex; gap:4px; background:var(--paper-card); border:1px solid var(--hair);
-    border-radius:100px; padding:4px; box-shadow:var(--shadow);
-  }
-  #issueBoard .ib-tab{
-    background:none; border:none; padding:9px 16px; border-radius:100px;
-    font-size:13.5px; font-weight:700; color:var(--ink-soft);
-    font-family:'Cairo',sans-serif; transition:background .15s, color .15s;
-  }
-  #issueBoard .ib-tab:hover{ color:var(--ink); }
-  #issueBoard .ib-tab.is-active{ background:var(--ink); color:var(--paper); }
-  #issueBoard .ib-tab .c{ font-family:'JetBrains Mono',monospace; opacity:.7; margin-inline-start:5px; font-size:12px; }
-  #issueBoard .ib-low-toggle{
-    display:inline-flex; align-items:center; gap:8px; font-size:13px;
-    color:var(--ink-soft); font-weight:600; cursor:pointer; user-select:none;
-  }
-  #issueBoard .ib-low-toggle input{ width:15px; height:15px; accent-color:var(--signal); cursor:pointer; }
-
-  #issueBoard .ib-group{
-    background:var(--paper-card); border:1px solid var(--hair);
-    border-inline-start:4px solid var(--ink-soft);
-    border-radius:12px; padding:15px 18px; margin-bottom:10px;
-  }
-  #issueBoard .ib-group.sev-high{ border-inline-start-color:var(--poor); }
-  #issueBoard .ib-group.sev-medium{ border-inline-start-color:var(--amber); }
-  #issueBoard .ib-group.sev-low{ border-inline-start-color:#b7bfc2; }
-  #issueBoard .ib-g-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; }
-  #issueBoard .ib-g-title{ font-size:14.5px; font-weight:800; color:var(--ink); }
-  #issueBoard .ib-g-meta{ display:flex; align-items:center; gap:7px; flex-shrink:0; }
-  #issueBoard .ib-sev{
-    font-size:11px; font-weight:800; padding:3px 10px; border-radius:100px; white-space:nowrap;
-  }
-  #issueBoard .ib-sev.high{ background:var(--poor-bg); color:var(--poor); }
-  #issueBoard .ib-sev.medium{ background:var(--amber-bg); color:var(--amber); }
-  #issueBoard .ib-sev.low{ background:rgba(11,29,38,0.06); color:var(--ink-soft); }
-  #issueBoard .ib-count{
-    font-size:11.5px; font-weight:800; padding:3px 10px; border-radius:100px;
-    background:rgba(19,71,82,0.09); color:var(--teal); white-space:nowrap;
-  }
-  #issueBoard .ib-toggle{
-    display:inline-flex; align-items:center; gap:4px; margin-top:9px; font-size:12px;
-    font-weight:700; color:var(--signal); cursor:pointer; background:none; border:none;
-    padding:0; font-family:inherit;
-  }
-  #issueBoard .ib-toggle::after{ content:"›"; font-weight:900; transition:transform .15s ease; }
-  #issueBoard .ib-toggle.open::after{ transform:rotate(90deg); }
-  #issueBoard .ib-pages{
-    display:none; margin-top:9px; padding-top:9px; border-top:1px solid var(--hair);
-    font-size:12.5px; color:var(--ink-soft); line-height:2;
-  }
-  #issueBoard .ib-pages.open{ display:block; }
-
-  #issueBoard .ib-trend{
-    background:var(--paper-card); border:1px solid var(--hair); border-radius:14px;
-    padding:18px 20px; margin-top:22px; box-shadow:var(--shadow);
-  }
-  #issueBoard .ib-trend h4{ font-size:14.5px; font-weight:800; margin:0 0 12px; color:var(--ink); }
-  #issueBoard .ib-trend-row{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    padding:9px 0; border-bottom:1px solid var(--hair); font-size:13.5px; color:var(--ink-soft);
-  }
-  #issueBoard .ib-trend-row:last-child{ border-bottom:none; }
-  #issueBoard .ib-delta{ font-size:12.5px; font-weight:800; padding:3px 10px; border-radius:100px; font-family:'JetBrains Mono',monospace; }
-  #issueBoard .ib-delta.up{ background:var(--moss-bg); color:var(--moss); }
-  #issueBoard .ib-delta.down{ background:var(--poor-bg); color:var(--poor); }
-  #issueBoard .ib-delta.flat{ background:rgba(11,29,38,0.06); color:var(--ink-soft); }
-</style>
-
-<script>
-(function(){
-  "use strict";
-
-  var T = {
-    ar:{
-      eyebrow:"مقسّم حسب الجهة المسؤولة",
-      h2:"ما المطلوب من كل فريق",
-      lede:"كل ملاحظة في هذا التقرير موسومة بالجهة المسؤولة عنها. اختر فريقك لترى مهامك أنت فقط.",
-      all:"الكل", it:"تقنية المعلومات", mkt:"التسويق", shared:"مشترك",
-      lowToggle:"عرض الملاحظات منخفضة الأهمية",
-      sevHigh:"عالية", sevMedium:"متوسطة", sevLow:"منخفضة",
-      pages:function(n){ return n + " " + (n===1 ? "صفحة" : "صفحات"); },
-      showPages:"عرض الصفحات",
-      cardHigh:"ملاحظة عالية الأهمية", cardTotal:"إجمالي الملاحظات", cardPages:"صفحة مفحوصة",
-      coverageFull:function(n){ return "تم فحص <strong>جميع صفحات خريطة الموقع (" + n + " صفحة)</strong> في آخر تشغيل."; },
-      coveragePartial:function(s,t){ return "تم فحص <strong>" + s + " صفحة من أصل " + t + "</strong> في خريطة الموقع — الصفحات المتبقية لم تُفحص هذا الشهر، وفحص الصفحات اليتيمة مُعطَّل لأن النتيجة غير موثوقة على فحص جزئي."; },
-      coverageFallback:"تعذّر قراءة خريطة الموقع في آخر تشغيل — تم فحص القائمة الاحتياطية الثابتة فقط، والأرقام أدناه لا تمثل الموقع كاملاً.",
-      psiFailures:function(n){ return " كما تعذّر على Google قياس أداء <strong>" + n + "</strong> " + (n===1?"صفحة":"صفحات") + " في هذا التشغيل، لذا تظهر خاناتها فارغة في جدول سلامة الصفحات — هذا لا يعني أنها سليمة، بل أنها لم تُقَس."; },
-      empty:"لا توجد ملاحظات بهذا التصنيف — إما أن الفحص لم يُشغَّل بعد، أو لا توجد مشاكل ضمن هذا الفريق ومستوى الأهمية.",
-      notRunYet:"لم يُشغَّل الفحص التلقائي بعد — سيُملأ هذا القسم تلقائياً بعد أول تشغيل يتضمن وسم الجهة المسؤولة.",
-      trendTitle:function(a,b){ return "الحركة مقارنة بالفحص السابق (" + a + " ← " + b + ")"; },
-      trendScore:"متوسط صحة الصفحات", trendIssues:"إجمالي الملاحظات", trendAlt:"صور بلا نص بديل",
-      trendNone:"لا توجد بيانات شهر سابق للمقارنة بعد — ستظهر الحركة الشهرية هنا بعد التشغيل القادم.",
-      better:"تحسّن", worse:"تراجع", same:"بلا تغيير"
-    },
-    en:{
-      eyebrow:"Split by owner",
-      h2:"What each team needs to do",
-      lede:"Every finding in this report is tagged with the team that owns it. Pick your team to see only your work.",
-      all:"All", it:"IT", mkt:"Marketing", shared:"Shared",
-      lowToggle:"Show low-priority findings",
-      sevHigh:"High", sevMedium:"Medium", sevLow:"Low",
-      pages:function(n){ return n + " page" + (n===1 ? "" : "s"); },
-      showPages:"Show pages",
-      cardHigh:"high-priority findings", cardTotal:"findings total", cardPages:"pages scanned",
-      coverageFull:function(n){ return "<strong>All " + n + " sitemap pages</strong> were scanned on the last run."; },
-      coveragePartial:function(s,t){ return "<strong>" + s + " of " + t + " sitemap pages</strong> were scanned — the rest weren't covered this month, and orphan-page detection is disabled because it can't be trusted on a partial scan."; },
-      coverageFallback:"The sitemap couldn't be read on the last run — only the fixed fallback list was scanned, so the numbers below don't represent the whole site.",
-      psiFailures:function(n){ return " Google also couldn't measure performance for <strong>" + n + "</strong> page" + (n===1?"":"s") + " on this run, so their cells are blank in the page-health table — that means unmeasured, not healthy."; },
-      empty:"No findings in this view — either the scan hasn't run yet, or there's nothing outstanding for this team at this priority.",
-      notRunYet:"The automatic scan hasn't produced owner-tagged data yet — this section fills in after the next run.",
-      trendTitle:function(a,b){ return "Movement since the previous scan (" + a + " → " + b + ")"; },
-      trendScore:"Average page health", trendIssues:"Total findings", trendAlt:"Images missing alt text",
-      trendNone:"No previous month to compare against yet — month-over-month movement appears here after the next run.",
-      better:"better", worse:"worse", same:"no change"
-    }
-  };
-
-  var OWNER_KEYS = { it:"it", marketing:"mkt", shared:"shared" };
-  var state = { owner:"all", showLow:false, lang:"ar", data:null };
-
-  function esc(s){
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
-      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
-    });
-  }
-  // Only ever fed page URLs from the site's own sitemap, but scheme-checked
-  // anyway rather than trusting that to stay true — same reasoning as
-  // safeHref() in the main report script.
-  function safeHref(u){
-    return (typeof u === "string" && /^https?:\/\//i.test(u.trim())) ? esc(u.trim()) : "#";
-  }
-  function t(){ return T[state.lang]; }
-
-  function allIssues(){
-    var out = [];
-    ((state.data && state.data.pageHealth) || []).forEach(function(p){
-      (p.issues || []).forEach(function(i){
-        out.push({ issue:i, page:p });
-      });
-    });
-    return out;
-  }
-
-  function visibleIssues(){
-    return allIssues().filter(function(x){
-      if(state.owner !== "all" && x.issue.owner !== state.owner) return false;
-      if(!state.showLow && x.issue.severity === "low") return false;
-      return true;
-    });
-  }
-
-  function renderCoverage(){
-    var el = document.getElementById("ibCoverage");
-    var cov = state.data && state.data.scanCoverage;
-    if(!cov){ el.style.display = "none"; return; }
-    el.style.display = "";
-    var msg, warn;
-    if(cov.source === "fallback"){
-      msg = t().coverageFallback; warn = true;
-    } else if(cov.truncated){
-      msg = t().coveragePartial(cov.scannedPages, cov.totalPages); warn = true;
-    } else {
-      msg = t().coverageFull(cov.scannedPages); warn = false;
-    }
-    // A blank performance cell and a healthy one look identical in the table,
-    // so the count of pages PSI couldn't measure is stated here rather than
-    // left for someone to notice. Only present on runs written by the Sept
-    // 2026 scanner onward; older data.json simply omits it.
-    if(cov.psiFailures){ msg += t().psiFailures(cov.psiFailures); warn = true; }
-    el.className = "ib-coverage reveal" + (warn ? " warn" : "");
-    el.innerHTML = msg;
-  }
-
-  function renderSummary(){
-    var el = document.getElementById("ibSummary");
-    var s = state.data && state.data.issueSummary;
-    var pages = ((state.data && state.data.pageHealth) || []).length;
-    if(!s){ el.style.display = "none"; return; }
-    el.style.display = "";
-    // Counted from the same per-page issue lists the tabs and the list below
-    // read, rather than from issueSummary's precomputed totals. Both are
-    // written by the same run so they should always agree — but if they ever
-    // didn't, showing one number in the cards and a different one on the tabs
-    // is the kind of inconsistency that makes people stop trusting the whole
-    // report. issueSummary is still what tells us the scan produced
-    // owner-tagged data at all.
-    var all = allIssues();
-    var high = all.filter(function(x){ return x.issue.severity === "high"; }).length;
-    el.innerHTML =
-      '<div class="ib-sum-card"><div class="n">' + all.length + '</div><div class="l">' + esc(t().cardTotal) + '</div></div>' +
-      '<div class="ib-sum-card"><div class="n" style="color:var(--poor)">' + high + '</div><div class="l">' + esc(t().cardHigh) + '</div></div>' +
-      '<div class="ib-sum-card"><div class="n">' + pages + '</div><div class="l">' + esc(t().cardPages) + '</div></div>';
-  }
-
-  function renderTabs(){
-    var el = document.getElementById("ibTabs");
-    var s = state.data && state.data.issueSummary;
-    if(!s) return;
-    // Counts shown on each tab are severity-filtered the same way the list
-    // below is, so a tab never advertises 91 items and then shows 20 once
-    // low-priority findings are hidden.
-    function countFor(owner){
-      return allIssues().filter(function(x){
-        if(owner !== "all" && x.issue.owner !== owner) return false;
-        if(!state.showLow && x.issue.severity === "low") return false;
-        return true;
-      }).length;
-    }
-    var tabs = [
-      ["all", t().all], ["it", t().it], ["marketing", t().mkt], ["shared", t().shared]
-    ];
-    el.innerHTML = tabs.map(function(pair){
-      var active = state.owner === pair[0] ? " is-active" : "";
-      return '<button type="button" class="ib-tab' + active + '" data-owner="' + pair[0] + '">' +
-             esc(pair[1]) + '<span class="c">' + countFor(pair[0]) + '</span></button>';
-    }).join("");
-  }
-
-  function renderList(){
-    var el = document.getElementById("ibList");
-    var note = document.getElementById("ibEmptyNote");
-    var items = visibleIssues();
-
-    if(!state.data || !state.data.issueSummary){
-      el.innerHTML = "";
-      note.style.display = "";
-      note.textContent = t().notRunYet;
-      return;
-    }
-    if(!items.length){
-      el.innerHTML = "";
-      note.style.display = "";
-      note.textContent = t().empty;
-      return;
-    }
-    note.style.display = "none";
-
-    // Grouped by issue code rather than listed per page: 195 individual rows
-    // is a wall nobody reads, while "23 pages missing a meta description" is
-    // one decision. The affected pages stay one click away.
-    var groups = {};
-    items.forEach(function(x){
-      var code = x.issue.code;
-      if(!groups[code]){
-        groups[code] = { code:code, issue:x.issue, pages:[] };
-      }
-      groups[code].pages.push(x.page);
-    });
-
-    var sevRank = { high:0, medium:1, low:2 };
-    var ordered = Object.keys(groups).map(function(k){ return groups[k]; })
-      .sort(function(a,b){
-        var d = sevRank[a.issue.severity] - sevRank[b.issue.severity];
-        return d !== 0 ? d : b.pages.length - a.pages.length;
-      });
-
-    var sevLabel = { high:t().sevHigh, medium:t().sevMedium, low:t().sevLow };
-
-    el.innerHTML = ordered.map(function(g){
-      var label = state.lang === "ar" ? g.issue.labelAr : g.issue.labelEn;
-      var pagesHtml = g.pages.map(function(p){
-        var name = (state.lang === "ar" ? p.nameAr : p.nameEn) || p.id;
-        return p.url
-          ? '<div><a class="row-page-link" href="' + safeHref(p.url) + '" target="_blank" rel="noopener noreferrer">' + esc(name) + '</a></div>'
-          : '<div>' + esc(name) + '</div>';
-      }).join("");
-      return '<div class="ib-group sev-' + g.issue.severity + '">' +
-        '<div class="ib-g-head">' +
-          '<span class="ib-g-title">' + esc(label) + '</span>' +
-          '<span class="ib-g-meta">' +
-            '<span class="ib-sev ' + g.issue.severity + '">' + esc(sevLabel[g.issue.severity]) + '</span>' +
-            '<span class="ib-count">' + esc(t().pages(g.pages.length)) + '</span>' +
-          '</span>' +
-        '</div>' +
-        '<button class="ib-toggle" type="button" aria-expanded="false">' + esc(t().showPages) + '</button>' +
-        '<div class="ib-pages">' + pagesHtml + '</div>' +
-      '</div>';
-    }).join("");
-  }
-
-  function renderTrend(){
-    var el = document.getElementById("ibTrend");
-    var hist = state.data && state.data.pageHealthHistory;
-    var months = hist ? Object.keys(hist).sort() : [];
-    if(months.length < 2){
-      el.innerHTML = '<h4>' + esc(t().trendScore) + '</h4><div class="ib-trend-row"><span>' + esc(t().trendNone) + '</span></div>';
-      return;
-    }
-    var prevKey = months[months.length - 2], curKey = months[months.length - 1];
-    var prev = hist[prevKey], cur = hist[curKey];
-
-    function avgScore(rows){
-      var vals = rows.filter(function(r){ return typeof r.seoScore === "number"; }).map(function(r){ return r.seoScore; });
-      return vals.length ? Math.round(vals.reduce(function(a,b){ return a+b; },0) / vals.length) : null;
-    }
-    function sum(rows, key){
-      return rows.reduce(function(a,r){ return a + (typeof r[key] === "number" ? r[key] : 0); }, 0);
-    }
-
-    // higherIsBetter differs per row — a rising health score is good, a
-    // rising issue count is not — so direction is passed in rather than
-    // assumed from the sign of the delta.
-    function row(label, before, after, higherIsBetter){
-      if(before === null || after === null) return "";
-      var delta = after - before;
-      var cls = delta === 0 ? "flat" : ((delta > 0) === higherIsBetter ? "up" : "down");
-      var word = delta === 0 ? t().same : ((delta > 0) === higherIsBetter ? t().better : t().worse);
-      var sign = delta > 0 ? "+" : "";
-      return '<div class="ib-trend-row"><span>' + esc(label) + '</span>' +
-             '<span><span class="ib-delta ' + cls + '">' + sign + delta + '</span> ' +
-             '<span style="font-size:12px">' + before + ' → ' + after + ' · ' + esc(word) + '</span></span></div>';
-    }
-
-    el.innerHTML = '<h4>' + esc(t().trendTitle(prevKey, curKey)) + '</h4>' +
-      row(t().trendScore, avgScore(prev), avgScore(cur), true) +
-      row(t().trendIssues, sum(prev, "issueCount"), sum(cur, "issueCount"), false) +
-      row(t().trendAlt, sum(prev, "altIssueCount"), sum(cur, "altIssueCount"), false);
-  }
-
-  function renderAll(){
-    var d = t();
-    document.getElementById("ibEyebrow").textContent = d.eyebrow;
-    document.getElementById("ibH2").textContent = d.h2;
-    document.getElementById("ibLede").textContent = d.lede;
-    document.getElementById("ibLowToggleLabel").textContent = d.lowToggle;
-    renderCoverage();
-    renderSummary();
-    renderTabs();
-    renderList();
-    renderTrend();
-  }
-
-  document.getElementById("ibTabs").addEventListener("click", function(e){
-    var btn = e.target.closest(".ib-tab");
-    if(!btn) return;
-    state.owner = btn.getAttribute("data-owner");
-    renderTabs();
-    renderList();
-  });
-
-  document.getElementById("ibLowToggle").addEventListener("change", function(e){
-    state.showLow = e.target.checked;
-    renderTabs();
-    renderList();
-  });
-
-  document.getElementById("ibList").addEventListener("click", function(e){
-    var btn = e.target.closest(".ib-toggle");
-    if(!btn) return;
-    var pages = btn.nextElementSibling;
-    var open = pages.classList.toggle("open");
-    btn.classList.toggle("open", open);
-    btn.setAttribute("aria-expanded", open ? "true" : "false");
-  });
-
-  // Follows the existing language toggle without hooking into applyLang() —
-  // that function lives inside the main script's IIFE and isn't reachable
-  // from here. Watching the <html lang> attribute it already sets achieves
-  // the same thing without needing a single edit to that file.
-  new MutationObserver(function(){
-    var lang = document.documentElement.lang === "en" ? "en" : "ar";
-    if(lang !== state.lang){ state.lang = lang; renderAll(); }
-  }).observe(document.documentElement, { attributes:true, attributeFilter:["lang"] });
-
-  state.lang = document.documentElement.lang === "en" ? "en" : "ar";
-
-  fetch("data.json?v=" + Date.now())
-    .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(D){ state.data = D; renderAll(); })
-    .catch(function(){ renderAll(); });
-})();
-</script>
-
-<section class="block" style="padding-top:8px;" id="aiReadiness">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="aiEyebrow">جاهزية الظهور في محركات الذكاء الاصطناعي</p>
-      <h2 data-i18n="aiH2">هل تقدر أدوات الذكاء الاصطناعي تصل لموقعنا؟</h2>
-      <p data-i18n="aiP">عند سؤال أدوات مثل ChatGPT أو Claude أو Perplexity عن خدمات مشابهة لخدماتنا، هل تقدر تصل لمحتوى الموقع أصلاً؟ هذا الجزء يفحص شهرياً ملف robots.txt للتأكد من عدم حظر روبوتات الذكاء الاصطناعي الرئيسية.</p>
-    </div>
-    <table class="kw-table reveal" id="aiTable">
-      <thead><tr>
-        <th data-i18n="aiColCrawler">الروبوت</th>
-        <th data-i18n="aiColPurpose">الغرض</th>
-        <th data-i18n="aiColStatus">الحالة</th>
-      </tr></thead>
-      <tbody id="aiTableBody"></tbody>
-    </table>
-    <p class="device-note" id="aiLlmsTxtLine" style="margin-top:14px;"></p>
-    <p class="device-note" id="aiCheckedNote" data-i18n="aiCheckedNote">لم يُشغَّل الفحص بعد — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.</p>
-  </div>
-</section>
-
-<section class="block" style="padding-top:8px;">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="seoEyebrow">لفريق التسويق</p>
-      <h2 data-i18n="seoH2">ماذا يعني هذا لتحسين محركات البحث (SEO)</h2>
-      <p data-i18n="seoP">سرعة الموقع وصحته التقنية عاملان مباشران ضمن خوارزمية ترتيب جوجل — هذا القسم يربط الأرقام أعلاه بما يهم فريق التسويق تحديداً.</p>
-    </div>
-
-    <div class="pdf-export-row reveal">
-      <p class="pdf-export-text" data-i18n="pdfExportText">تقرير PDF كامل بكل ما يلزم تحسينه في الـSEO — يعكس بيانات آخر مزامنة تلقائياً، لحظة الضغط على الزر.</p>
-      <button class="pdf-btn" id="pdfDownloadBtn" type="button">
-        <svg id="pdfBtnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0-4-4m4 4 4-4M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
-        <span id="pdfBtnLabel" data-i18n="pdfBtnLabel">تحميل تقرير SEO (PDF)</span>
-      </button>
-    </div>
-
-    <div class="seo-grid reveal">
-      <div class="seo-score-card">
-        <div class="score num" id="seoScoreVal">—</div>
-        <div class="label" data-i18n="seoScoreLabel">تحسين محركات البحث (SEO)</div>
-        <div class="score-target" id="seoScoreTarget"></div>
-      </div>
-      <div class="seo-score-card">
-        <div class="score num" id="bpScoreVal">—</div>
-        <div class="label" data-i18n="bpScoreLabel">أفضل الممارسات</div>
-      </div>
-      <div class="seo-score-card">
-        <div class="score num" id="a11yScoreVal">—</div>
-        <div class="label" data-i18n="a11yScoreLabel">إمكانية الوصول (جوال–مكتبي)</div>
-      </div>
-    </div>
-    <p class="pdf-export-text" id="scoresFreshnessNote" style="margin:-4px 0 20px;"></p>
-
-    <h3 style="font-size:16.5px;font-weight:800;margin:0 0 6px;" data-i18n="kwTitle">أين تقف الكلمات المفتاحية المستهدفة اليوم</h3>
-    <p class="pdf-export-text" style="margin:0 0 14px;" data-i18n="kwTitleCaption"></p>
-    <table class="kw-table reveal">
-      <thead><tr>
-        <th data-i18n="kwColPhrase">الكلمة المفتاحية</th>
-        <th data-i18n="kwColPos">الترتيب الحالي</th>
-      </tr></thead>
-      <tbody id="kwTableBody"></tbody>
-    </table>
-    <p class="device-note" id="kwSourceNote" style="margin:-6px 0 20px;"></p>
-
-    <div class="mkt-plan reveal" id="mktPlanSection">
-      <h3 class="mkt-plan-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <span data-i18n="mktPlanTitle">خطة عمل جاهزة لفريق التسويق</span>
-      </h3>
-      <p class="pdf-export-text" style="margin:0 0 16px;" data-i18n="mktPlanIntro"></p>
-      <div id="mktPlanList"></div>
-    </div>
-
-    <h3 style="font-size:16.5px;font-weight:800;margin:0 0 14px;" data-i18n="oppTitle">فرص تحسين مرصودة</h3>
-    <div class="opp-list reveal">
-      <div class="opp-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-        <p data-i18n="opp1"><strong>توحيد صفحات التوطين:</strong> عدة صفحات منفصلة تستهدف موضوعات متقاربة — دمجها في صفحة مرجعية واحدة قوية يقوّي إشارة الترتيب بدلاً من تشتيتها.</p>
-      </div>
-      <div class="opp-item" id="oppSchemaWrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-        <p id="oppSchemaText"></p>
-      </div>
-      <div class="opp-item" id="oppAltWrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-        <p id="oppAltText"></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <h4 data-i18n="footH4">عن هذه البيانات</h4>
-    <p data-i18n="footP1">البيانات أعلاه مأخوذة من تقرير Chrome لتجربة المستخدم الحقيقية (CrUX) — قياسات حقيقية من زوّار فعليين يستخدمون متصفح Chrome، وليست اختباراً معملياً. تغطي الفترة من أغسطس 2025 إلى يونيو 2026، عند النسبة المئوية 75 — أي أن 75% من الزوّار حصلوا على تجربة تساوي أو أفضل من الرقم الموضّح.</p>
-    <p data-i18n="footP2">زمن استجابة الخادم (TTFB) كان أقل المقاييس تحسّناً خلال هذه الفترة، وهو محور التركيز القادم.</p>
-    <p data-i18n="footP3">الأولويات وجدول الصفحات أعلاه يُحسبان تلقائياً من بيانات هذا الشهر. عرض بيانات الزيارات والنقرات لكل صفحة يتطلب استكمال إعداد صلاحية الوصول إلى Google Search Console أولاً.</p>
-    <div class="foot-credit">
-      <span data-i18n="footCredit">إعداد: تقنية المعلومات — شركة صلة</span>
-      <span data-i18n="footDate">آخر تحديث: 30 يونيو 2026</span>
-    </div>
-  </div>
-</footer>
-
-<script>
-(function(){
-  "use strict";
-
-  /* ================================================================
-     MONTHLY UPDATE RUNBOOK
-     ----------------------------------------------------------------
-     To roll this report forward to a new month (e.g. July 2026):
-
-     1) SITEWIDE MOBILE (CrUX field data — real visitors):
-        - PageSpeed Insights (pagespeed.web.dev) → test silah.com.sa
-        - Under "Discover what your real users experienced", note
-          LCP / INP / CLS / FCP / TTFB at the 75th percentile.
-        - Append one new value to the END of each `data` array inside
-          the `metrics` array below (keep the same order as `months`).
-
-     2) SITEWIDE DESKTOP (Lighthouse lab — single snapshot):
-        - Run Lighthouse (Chrome DevTools, or pagespeed.web.dev's
-          Desktop tab) against silah.com.sa.
-        - Replace the single-value `data:[...]` in each entry of
-          `desktopMetrics`, and update `desktopPerfScore`.
-
-     3) PERFORMANCE SCORE TREND (mobile, 0-100 Lighthouse score):
-        - This is a DIFFERENT number from the CWV metrics above — it's
-          PageSpeed Insights' overall 0-100 "Performance" score.
-        - Update `mobilePerfNow` / `mobilePerfPrev` below.
-
-     4) PER-PAGE PERFORMANCE TABLE (pageRegistry — still manual):
-        - Run PageSpeed Insights against each URL in `pageRegistry`
-          (mobile + desktop) and add an entry keyed by "YYYY-MM":
-            monthly: { "2026-07": { mobile: 84, desktop: 97 } }
-        - To track a new page, add a new object to `pageRegistry`
-          with a real url (or leave url:null with a note until the
-          URL is confirmed — don't guess a URL you're not sure of).
-        - NOTE: this is a *different* per-page system from item 7
-          below. This one (perf scores) is still manual. Item 7
-          (schema/alt-text/unused CSS) is automatic. Kept separate
-          on purpose — merging them would mean one broken fetch
-          blanks out data the other system already has.
-
-     5) KEYWORDS:
-        - Once Search Console access is set up: Performance → Search
-          results → filter by query, for each tracked phrase.
-        - Update `pos` / `page` / `tier` in the `keywords` array.
-        - This is the one piece still fully manual/undecided — real
-          position tracking needs Search Console API (OAuth, a bigger
-          integration than the API-key-only calls used elsewhere in
-          this file). Everything else in this runbook is now automatic
-          except where noted.
-
-     6) Update REPORT_MONTH below and `footDate` in the dict.
-
-     7) PAGE HEALTH — schema / alt-text / unused CSS+JS / SEO issues
-        (automatic, added August 2026, auto-discovery added same day —
-        not a manual step, listed here for reference only):
-        - scripts/update_data.py auto-discovers every WordPress "Page" URL
-          from the site's own Yoast sitemap every run (see
-          discover_pages_from_sitemap()) — no hand-maintained list to keep
-          in sync with the real site anymore. Capped at MAX_AUTO_PAGES per
-          run (currently 30) to keep run time reasonable; falls back to a
-          fixed 5-page list (PAGE_LIST_FALLBACK) if the sitemap can't be
-          reached or parsed, so a sitemap hiccup never means "scan zero
-          pages this month."
-        - For each discovered page: checks for a valid application/ld+json
-          Schema block (a specific expected type for pages listed in
-          KNOWN_PAGE_NAMES, otherwise "does it have any schema at all"),
-          scans <img> tags for missing/empty/generic alt text (same-origin
-          content images only — third-party widgets/trackers and data: URIs
-          are excluded on purpose, see check_alt_text()'s docstring for why),
-          and pulls unused-CSS/unused-JS bytes PLUS failing Lighthouse
-          SEO-category audits (meta description, link text, crawlability,
-          etc.) from the same PageSpeed call already made for that page's
-          score — no extra API calls for any of this.
-        - Pages not in KNOWN_PAGE_NAMES get their display name from their
-          own <title> tag (trimmed of the "| Site Name" suffix) — Arabic
-          only, since there's no reliable auto-translation available; add
-          a page to KNOWN_PAGE_NAMES for a proper bilingual name instead.
-        - Writes into data.json as `pageHealth` (array) +
-          `pageHealthCheckedMonth`. Rendered by renderPageHealthTable() into
-          the "Page Health" section below the per-page perf table, including
-          the actual failing-audit titles (not just a count) so there's
-          something concrete to act on or hand to marketing.
-        - New pages need NO code change to be tracked — they're picked up
-          automatically the next time the sitemap is read. Add an entry to
-          KNOWN_PAGE_NAMES only if you want a specific bilingual name or a
-          specific expected Schema type instead of the automatic fallbacks.
-        - Runs every time the Action runs (unlike the CrUX block above,
-          which only updates when Google actually publishes new data) —
-          intentional, since schema/alt-text/SEO audits can change
-          independent of CrUX's publish schedule.
-
-     Everything else — the priorities panel, page-table status pills,
-     and the Performance Score delta — recomputes automatically from
-     the data above. Nothing else needs to be touched by hand.
-     ================================================================ */
-
-  let REPORT_MONTH = "2026-06";
-
-  /* ---------------- i18n ---------------- */
-  const dict = {
-    ar: {
-      brandName:"صلة", brandSub:"تقنية المعلومات", langToggleLabel:"English",
-      refreshBtnLabel:"تحديث البيانات الآن", refreshBtnBusy:"جاري التحديث…",
-      refreshStatusWait:"سيستغرق حوالي ٩ دقائق. لا تغلق الصفحة، بس تقدر تكمل تصفحها.",
-      refreshStatusGenericErr:"صار خطأ غير متوقع، جرّب مرة ثانية بعد شوي.",
-      lastRefreshedLabel:(exact,rel)=>`آخر تحديث فعلي للبيانات: ${exact} (${rel})`,
-      relJustNow:"الآن", relMinutes:(n)=>`قبل ${n} ${n===1?'دقيقة':'دقائق'}`,
-      relHours:(n)=>`قبل ${n} ${n===1?'ساعة':'ساعات'}`,
-      relDays:(n)=>`قبل ${n} ${n===1?'يوم':'أيام'}`,
-      heroEyebrow:"تقرير أداء الموقع الإلكتروني · بيانات حقيقية من زوّار الموقع",
-      msUnit:"جزء من الثانية",
-      improveBadge:"أسرع بنسبة 76%",
-      heroH1:"استجابة الموقع لتفاعل الزوّار تحسّنت بشكل كبير خلال الأشهر الماضية",
-      heroLede:"في فبراير الماضي، واجه الموقع تباطؤاً ملحوظاً في الاستجابة عند تفاعل الزوّار معه. بعد المتابعة والتحسينات التقنية، عاد الموقع الآن أسرع وأكثر استجابة من أي وقت مضى — والدليل بيانات حقيقية من زوّار فعليين، وليس اختباراً معملياً فقط.",
-      heroMeta:"بيانات Chrome الحقيقية للزوّار (CrUX) · أغسطس 2025 – يونيو 2026 · أجهزة الجوال",
-      heroMetaJune:"بيانات Chrome الحقيقية للزوّار (CrUX) · يونيو 2026 · أجهزة الجوال",
-      heroH1June:"استجابة الموقع لتفاعل الزوّار حالياً في وضع جيد",
-      heroLedeJune:"هذا هو وضع الموقع الحالي خلال يونيو، بحسب بيانات حقيقية من زوّار فعليين على متصفح Chrome — وليس اختباراً معملياً.",
-      summaryEyebrow:"نظرة سريعة", summaryH2:"كيف تجربة الزائر اليوم؟",
-      summaryP:"ثلاثة مقاييس رئيسية يستخدمها جوجل لقياس تجربة أي موقع إلكتروني — وهي نفس المقاييس التي تؤثر على ظهور الموقع في نتائج البحث.",
-      badgeGood:"جيد", badgeNI:"يحتاج تحسين", badgePoor:"ضعيف",
-      card1Title:"سرعة التحميل",
-      card2Title:"سرعة الاستجابة",
-      card3Title:"ثبات العرض",
-      detailEyebrow:"بالتفصيل", detailH2:"كل مقياس على حدة",
-      detailP:"اضغط على أي مقياس لعرض تعريفه، واتجاهه خلال آخر 10 أشهر، وما يعنيه عملياً.",
-      deviceEyebrow:"السياق", deviceH2:"من أين يزورنا الناس",
-      deviceLegendPhone:"جوال", deviceLegendDesktop:"كمبيوتر مكتبي", deviceLegendTablet:"جهاز لوحي",
-      deviceNote:"٣ من كل ٤ زوّار يفتحون الموقع من الجوال — لهذا تركّز هذه البيانات على تجربة الجوال تحديداً، فهي التجربة التي يشعر بها أغلب زوّار الموقع فعلياً.",
-      footH4:"عن هذه البيانات",
-      footP1:"البيانات أعلاه مأخوذة من تقرير Chrome لتجربة المستخدم الحقيقية (CrUX) — قياسات حقيقية من زوّار فعليين يستخدمون متصفح Chrome، وليست اختباراً معملياً. تغطي الفترة من أغسطس 2025 إلى يونيو 2026، عند النسبة المئوية 75 — أي أن 75% من الزوّار حصلوا على تجربة تساوي أو أفضل من الرقم الموضّح.",
-      footP2:"زمن استجابة الخادم (TTFB) كان أقل المقاييس تحسّناً خلال هذه الفترة، وهو محور التركيز القادم.",
-      footP3:"الأولويات وجدول الصفحات أعلاه يُحسبان تلقائياً من بيانات هذا الشهر. عرض بيانات الزيارات والنقرات لكل صفحة يتطلب استكمال إعداد صلاحية الوصول إلى Google Search Console أولاً.",
-      footCredit:"إعداد: تقنية المعلومات — شركة صلة", footDate:"آخر تحديث: 5 يوليو 2026 (بيانات يونيو 2026 — أحدث المتاح)",
-      gaugeGood:"جيد", gaugeNI:"يحتاج تحسين", gaugePoor:"ضعيف",
-      ownerLabel:"المسؤول", ownerTech:"التقنية", ownerMkt:"التسويق", ownerShared:"مشترك — تقنية + تسويق",
-      targetsEyebrow:"المعايير والأهداف", targetsH2:"أين نقف اليوم، وما الهدف المطلوب الوصول له",
-      targetsP:"لكل مؤشر: قيمته الحالية، المعيار المرجعي وفق تصنيف جوجل الرسمي، والهدف المتفق على الوصول له خلال الربع القادم — مع تحديد الطرف المسؤول، لتكون خطة العمل مبنية على أرقام واضحة.",
-      tgColMetric:"المؤشر", tgColCurrent:"القيمة الحالية", tgColBench:"المعيار المرجعي (جوجل)", tgColTarget:"الهدف — الربع القادم", tgColOwner:"المسؤول",
-      tgLighthouseMobile:"مؤشر أداء الجوال (Lighthouse)", tgLighthouseDesktop:"مؤشر أداء سطح المكتب (Lighthouse)",
-      tgTargetMobile:"الوصول إلى 90 أو أعلى", tgTargetKeep:"الحفاظ على 95 أو أعلى",
-      tgKwName:"كلمة «خدمات التوطين» في نتائج البحث", tgKwCurrent:"لا تظهر حالياً", tgKwTarget:"دخول أفضل 20 نتيجة عبر صفحة مخصصة",
-      tgSchemaName:"البيانات المنظّمة (Schema)", tgSchemaCurrent:"غير مفعّلة", tgSchemaTarget:"تفعيلها على الصفحات الرئيسية",
-      tgMeasureNote:"ملاحظة حول حداثة البيانات: قياسات Lighthouse تُحدَّث تلقائياً مطلع كل شهر. أما بيانات الزوّار الحقيقية (CrUX) فتصدرها جوجل بتأخير يقارب 28 يوماً عن الشهر الفعلي — لذا تكون بيانات الشهر السابق غالباً هي الأحدث المتاحة فعلياً.",
-      meaningLabel:"ماذا يعني هذا عملياً",
-      chartTitle:"الاتجاه",
-      rangeJune:"يونيو فقط", rangeLast3:"آخر 3 أشهر", rangeFull:"الفترة الكاملة",
-      deviceMobileBtn:"الجوال", deviceDesktopBtn:"سطح المكتب",
-      outOf100:"من 100", excellentBadge:"ممتاز",
-      heroH1Desktop:"أداء الموقع على أجهزة الكمبيوتر ممتاز",
-      heroLedeDesktop:"هذا اختبار معملي (Lighthouse) — قياس واحد في لحظة محددة، وليس بيانات حقيقية متراكمة من زوّار فعليين عبر الوقت كما في عرض الجوال. الأرقام التالية كلها ضمن النطاق الجيد.",
-      heroMetaDesktop:"اختبار معملي (Lighthouse 13.4.0) · 30 يونيو 2026 · أجهزة الكمبيوتر المكتبي",
-      card1SubDesktop:"1.0 ثانية لظهور أهم عنصر في الصفحة",
-      card2SubDesktop:"0 جزء من الثانية حظر — لا تأخير في الاستجابة",
-      seoEyebrow:"لفريق التسويق", seoH2:"ماذا يعني هذا لتحسين محركات البحث (SEO)",
-      seoP:"سرعة الموقع وصحته التقنية عاملان مباشران ضمن خوارزمية ترتيب جوجل — هذا القسم يربط الأرقام أعلاه بما يهم فريق التسويق تحديداً.",
-      seoScoreLabel:"تحسين محركات البحث (SEO)", bpScoreLabel:"أفضل الممارسات", a11yScoreLabel:"إمكانية الوصول (جوال–مكتبي)",
-      kwTitle:"ترتيب أولوية الكلمات المفتاحية — من الأهم للأقل إلحاحًا",
-      kwTitleCaption:"مرتّبة تلقائيًا: رقم 1 يحتاج عمل أولاً. القائمة حاليًا 5 كلمات متابَعة يدويًا — تتبّع تلقائي لعدد أكبر يحتاج ربط Google Search Console.",
-      mktPlanTitle:"خطة عمل جاهزة لفريق التسويق",
-      mktPlanIntro:"كل بند هنا قابل للتنفيذ مباشرة من لوحة تحكم ووردبريس — بدون الحاجة لمبرمج.",
-      mktShowPages:"عرض القائمة",
-      mktBadgeCount:(n)=>`${n} ${n===1?'صفحة':'صفحات'}`,
-      mktMetaTitle:(n)=>`صياغة وصف تعريفي (Meta Description) لـ ${n} صفحة`,
-      mktMetaWhy:"بدون وصف تعريفي، جوجل يختار سطرًا عشوائيًا من محتوى الصفحة لعرضه في نتائج البحث — غالبًا لا يشجّع الزائر على الضغط.",
-      mktMetaHow:"من ووردبريس: افتح الصفحة للتعديل ← مربع Yoast SEO أسفل المحرر ← اكتب وصف من <strong>120-155 حرف</strong> يتضمن الكلمة المفتاحية المستهدفة.",
-      mktKwTitle:(n)=>`تقوية المحتوى لـ ${n} كلمات مفتاحية متأخرة`,
-      mktKwWhy:"هذه الكلمات إما خارج أفضل 5 صفحات في نتائج البحث أو في صفحة نتائج ثانية — محتوى أعمق ومخصص لها يرفع ترتيبها تدريجيًا.",
-      mktKwHow:"راجعي الصفحة الحالية المستهدفة لكل كلمة، وأضيفي فقرات أعمق حولها، أو أنشئي صفحة مخصصة إذا ما فيه صفحة واضحة تستهدفها فعليًا.",
-      mktAltTitle:(n)=>`إضافة نص بديل (Alt Text) لصور في ${n} صفحة`,
-      mktAltWhy:"النص البديل يساعد جوجل على فهم محتوى الصور، ويحسّن تجربة الوصول لذوي الإعاقة البصرية.",
-      mktAltHow:"من مكتبة الوسائط في ووردبريس: افتحي كل صورة ← حقل <strong>Alternative Text</strong> ← صف الصورة بجملة قصيرة وواضحة.",
-      mktPlanEmpty:"لا توجد بيانات كافية بعد — بانتظار أول مزامنة لبيانات الصفحات.",
-      kwColPhrase:"الكلمة المفتاحية", kwColPos:"الترتيب الحالي",
-      oppTitle:"فرص تحسين مرصودة",
-      opp1:"<strong>توحيد صفحات التوطين:</strong> عدة صفحات منفصلة تستهدف موضوعات متقاربة — دمجها في صفحة مرجعية واحدة قوية يقوّي إشارة الترتيب بدلاً من تشتيتها.",
-      oppSchemaLabel:"بيانات منظَّمة (Schema):", oppAltLabel:"نصوص بديلة للصور (Alt Text):",
-      pdfExportText:"تقرير PDF كامل بكل ما يلزم تحسينه في الـSEO — يعكس بيانات آخر مزامنة تلقائياً، لحظة الضغط على الزر.",
-      pdfBtnLabel:"تحميل تقرير SEO (PDF)", pdfBtnBusy:"جاري إعداد التقرير…",
-      pdfReportTitle:"تقرير تحسين محركات البحث (SEO) — صلة",
-      pdfGeneratedOn:(d)=>`تم إنشاؤه في ${d}`,
-      pdfSyncedThrough:(d)=>`يعكس بيانات الفحص التلقائي الأخير: ${d}`,
-      pdfSyncedThroughUnknown:"الفحص التلقائي لم يُشغَّل بعد لهذه الصفحات",
-      pdfPrioHeading:"أولويات هذا الشهر", pdfKwHeading:"الكلمات المفتاحية المستهدفة",
-      pdfHealthHeading:"سلامة الصفحات التقنية — كل الصفحات الممسوحة",
-      pdfHealthColUrl:"الرابط",
-      pdfFootNote:"تم إنشاء هذا التقرير تلقائياً من نفس البيانات المعروضة في لوحة المتابعة اللحظية على sila-website-report.vercel.app وقت التحميل. بيانات Chrome الحقيقية (CrUX) تصدر عن جوجل بتأخير يقارب 28 يوماً. إعداد: تقنية المعلومات — شركة صلة.",
-      pdfFileBase:"تقرير-تحسين-السيو-صلة",
-      pdfContinued:"تابع",
-      pdfCoverKicker:"تقرير داخلي — تقنية المعلومات",
-      pdfCoverSub:"قراءة تفصيلية للحالة الفنية الحالية للموقع، مبنية على بيانات حقيقية من Google Search Console، وبيانات PageSpeed Insights، مع خطة عمل مقسّمة بوضوح بين تقنية المعلومات والتسويق.",
-      pdfExecEyebrow:"01 — نظرة عامة", pdfExecH2:"الملخص التنفيذي",
-      pdfExecLedeGood:"الأساس التقني لموقع صلة الإلكتروني في وضع قوي، والفجوة المتبقية محصورة ومحددة بدقة.",
-      pdfExecLedeWork:"عدة نقاط تحتاج إلى معالجة مباشرة لرفع جاهزية الموقع لمحركات البحث.",
-      pdfExecBody:(scored,total)=>`المؤشرات أدناه محسوبة من بيانات حقيقية وقت التحميل. مؤشر «صحة الصفحات» هو متوسط ${scored} صفحة مؤهَّلة للتقييم من أصل ${total} صفحة مفحوصة (صفحات السلة والدفع والحساب مستثناة من الاحتساب لأنها غير مخصصة للظهور في نتائج البحث أصلاً).`,
-      pdfCardSeo:"السيو العام (الصفحة الرئيسية)", pdfCardDesktop:"أداء سطح المكتب", pdfCardMobile:"أداء الجوال",
-      pdfCardA11yDesktop:"إمكانية الوصول — سطح المكتب", pdfCardA11yMobile:"إمكانية الوصول — الجوال",
-      pdfCardBP:"أفضل الممارسات التقنية", pdfCardHealth:"صحة الصفحات (مجتمعة)",
-      pdfMobileWas:(n)=>`(كان ${n})`,
-      pdfFindEyebrow:"02 — النتائج التفصيلية", pdfFindH2:"أبرز النقاط التي تحتاج معالجة",
-      pdfFindLede:"الصفحات التالية هي الأكثر تأثراً حالياً، مرتّبة حسب الأولوية.",
-      pdfFindNoneTitle:"لا توجد نقاط حرجة حالياً",
-      pdfFindNoneBody:"جميع الصفحات المفحوصة هذا الشهر ضمن مستوى جيد إلى ممتاز — لا توجد صفحة تحتاج تدخلاً عاجلاً وقت إعداد هذا التقرير.",
-      pdfFindNotScanned:"الفحص الشهري للصفحات الفردية لم يُشغَّل بعد. القسم التالي يعتمد على المؤشرات العامة أعلاه فقط.",
-      pdfFactSchemaMissing:"بيانات Schema المتوقعة غير موجودة على الصفحة.",
-      pdfFactAlt:(n,total)=>`${n} من أصل ${total} صورة بلا نص بديل.`,
-      pdfFactJs:(kb)=>`${kb.toLocaleString("en-US")} كيلوبايت من JavaScript غير مستخدَم يُحمَّل مع الصفحة.`,
-      pdfFactSeo:(txt)=>`مشاكل SEO: ${txt}`,
-      pdfFactNone:"لا توجد ملاحظات إضافية على هذه الصفحة.",
-      pdfAltRootCause:"<b>ملاحظة:</b> عندما تتكرر نسبة عالية من الصور بلا نص بديل عبر عدة صفحات مختلفة في آن واحد، غالباً يكون السبب عناصر متكررة — كالشعار والأيقونات الظاهرة في كل صفحة — لا تحمل نص بديل على مستوى قالب الموقع نفسه، وليس صور محتوى منسية فرادى. إصلاحها مرة واحدة على مستوى القالب ينعكس تلقائياً على كل صفحة.",
-      pdfMetaMissingLabel:"صفحات تفتقد وصف الميتا (Meta Description) حالياً:",
-      pdfRecoEyebrow:"03 — خطة العمل", pdfRecoH2:"التوصيات، مقسّمة حسب الجهة المسؤولة",
-      pdfRecoLede:"حتى نصل لأفضل نتيجة ممكنة في السيو، لكل جهة مهامها المحددة أدناه.",
-      pdfRecoColIT:"تقنية المعلومات", pdfRecoColITsub:"مهام فنية على الموقع والقالب",
-      pdfRecoColMkt:"التسويق", pdfRecoColMktsub:"مهام محتوى ونصوص",
-      pdfPriP1:"عاجل", pdfPriP2:"متوسط", pdfPriP3:"مستمر",
-      pdfRecoAltTpl:(n)=>`إضافة نص بديل للصور الناقصة (${n} صورة حالياً) — يُعطى أولوية للعناصر المتكررة على مستوى القالب.`,
-      pdfRecoEvergreenIT:"مراجعة شهرية لأي فحوصات PSI فاشلة أو جزئية، والتأكد أن كل صفحة تُقيَّم على كامل المعايير.",
-      pdfRecoEvergreenMkt1:"كتابة نصوص بديلة لصور المحتوى الفردية (شعارات العملاء، أيقونات الخدمات) في الصفحات ذات النسبة الأعلى.",
-      pdfRecoEvergreenMkt2:"توسيع قائمة الكلمات المفتاحية المتابَعة لتغطية جوانب أخرى من خدمات الشركة.",
-      pdfKwSub:"أداء الكلمات المفتاحية المتابَعة", pdfKwLede:"بيانات حقيقية من Google Search Console، بمتوسط آخر 28 يوماً.",
-      pdfKwLedeManual:"قائمة الكلمات المفتاحية المتابَعة (بيانات النقرات ومرات الظهور غير متاحة قبل ربط Google Search Console).",
-      pdfKwColPhrase:"الكلمة المفتاحية", pdfKwColPos:"الترتيب", pdfKwColClicks:"النقرات", pdfKwColImpr:"مرات الظهور", pdfKwColStatus:"الحالة",
-      pdfKwGood:"ضمن نتائج البحث", pdfKwBad:"لا تظهر في النتائج",
-      pdfKwNoneWeak:"جميع الكلمات المتابَعة تظهر حالياً ضمن أفضل 5 صفحات في نتائج البحث.",
-      pdfKwWeakLabel:"لا تظهر حالياً في نتائج البحث:",
-      pdfRoadEyebrow:"04 — الخلاصة", pdfRoadH2:"خطوات تنفيذية مقترحة",
-      pdfRoadWeek:"عاجل", pdfRoadMonth:"متوسط الأولوية", pdfRoadOngoing:"مستمر",
-      pdfRoadEmpty:"لا يوجد",
-      pdfClosing:"أرقام هذا التقرير مأخوذة مباشرة من بيانات Google Search Console، وبيانات PageSpeed Insights المعروضة في لوحة المتابعة اللحظية وقت التحميل، بلا إدخال يدوي.",
-      pdfNeedsReview:"يحتاج مراجعة",
-      scoresNotSyncedYet:"سيظهر هنا رقم حقيقي بعد أول مزامنة تالية — هذا القسم كان نصًا ثابتًا قبل الآن.",
-      scoresSyncedOn:(d)=>`محدَّث اعتبارًا من فحص ${d}`,
-      scoreTargetReached:"✓ الهدف محقَّق بالفعل",
-      scoreTargetGap:(n)=>`الهدف: <strong>100</strong> — بعد إصلاح ${n} ${n===1?'مشكلة':'مشاكل'}`,
-      kwNotInTop5:"خارج أفضل 5 صفحات",
-      prioEyebrowBase:"أولويات الشهر",
-      prioH2:"أهم الأشياء التي تستحق الاهتمام الآن",
-      prioP:"ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.",
-      prioCwv:"{metric} على الجوال يحتاج تحسين — هذا أضعف مقياس أداء حالياً، ويؤثر مباشرة على تجربة الـ73% من الزوّار الذين يفتحون الموقع من الجوال.",
-      prioBroken:(n)=>`${n} ${n===1?'صفحة تُرجع':'صفحات تُرجع'} خطأ فعلي عند الفحص (HTTP غير ناجح) — أولوية عاجلة، الصفحة قد تكون معطّلة فعليًا للزوّار.`,
-      prioKw:"الكلمة المفتاحية {kw} لا تظهر ضمن نتائج البحث حالياً — فرصة حقيقية لصفحة مخصصة تستهدفها مباشرة.",
-      prioPending:"{n} صفحات رئيسية لم تُقَس بعد هذا الشهر — {link} لإضافتها والحصول على صورة كاملة.",
-      prioPendingLink:"انتقل لجدول الصفحات",
-      prioSchema:"تمت إضافة بيانات Schema يدوياً لـ 5 من صفحات الخدمات اليوم — الصفحة الرئيسية لا تزال بدونها.",
-      prioSchemaCount:(n)=>`${n} ${n===1?'صفحة':'صفحات'} بدون بيانات Schema — إضافتها تفتح فرصة الظهور في نتائج بحث غنية.`,
-      prioAlt:"تم إصلاح نصوص alt الناقصة في صفحات الخدمات الخمس اليوم — الصفحة الرئيسية لم تُفحص بعد.",
-      prioAltCount:(n)=>`${n} ${n===1?'صفحة فيها':'صفحات فيها'} صور بدون نص بديل (Alt Text) — إصلاح بسيط يحسّن الوصول وفهم جوجل للمحتوى.`,
-      statMobilePerf:"مؤشر أداء الجوال (Lighthouse)",
-      statDesktopPerf:"مؤشر أداء سطح المكتب",
-      statVsLastMonth:"مقارنة بالشهر الماضي",
-      pageEyebrow:"لكل صفحة على حدة",
-      pageH2:"أداء أهم صفحات الموقع",
-      pageP:"البيانات أعلاه (CrUX) تعكس الموقع ككل. هنا تفصيل أقرب لواقع كل صفحة تسويقية على حدة، ليعرف الفريق أين يركّز أولاً.",
-      pageColName:"الصفحة", pageColMobile:"الجوال", pageColDesktop:"سطح المكتب", pageColStatus:"الحالة", pageColReco:"ملاحظة",
-      pageStatusMeasured:"تم القياس", pageStatusPending:"بانتظار القياس",
-      healthEyebrow:"فحص تلقائي شهري", healthH2:"سلامة الصفحات التقنية",
-      healthP:"يفحص هذا الجزء تلقائياً كل شهر: بيانات Schema المهيكلة، نصوص alt للصور، وحجم CSS/JS غير المستخدم — نفس الفحوصات التي تُجرى يدوياً، لكن بشكل دوري بدون تدخل.",
-      healthColName:"الصفحة", healthColSchema:"Schema", healthColAlt:"Alt للصور", healthColSeo:"مشاكل SEO", healthColCss:"CSS غير مستخدم", healthColScore:"أداء الجوال",
-      healthSeoOk:"سليم", healthSeoIssue:(n)=>`${n} ${n===1?'مشكلة':'مشاكل'}`,
-      healthSchemaOk:"موجود ✓", healthSchemaMissing:"غير موجود", healthSchemaUnknown:"—",
-      healthAltOk:"سليم", healthAltIssue:(n)=>`${n} مشكلة`,
-      healthAltDetailLabel:"صور بلا نص alt:", healthMoreCount:(n)=>`+ ${n} ${n===1?'صورة أخرى':'صور أخرى'}`,
-      healthCheckedNote:"لم يُشغَّل الفحص التلقائي بعد لهذه الصفحات — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.",
-      healthCheckedOn:(d)=>`آخر فحص: ${d}`,
-      pageHealthScoreLabel:"متوسط صحة الصفحات",
-      pageHealthScoreNote:(scored,excluded)=>`بمتوسط ${scored} صفحة محتوى فعلية — استُبعدت ${excluded} صفحة (سلة تسوق/حساب/صفحات فعاليات منتهية) من الحساب لأنها أصلاً لا يُفترض ظهورها في نتائج البحث.`,
-      healthExcludedTag:"غير محسوبة",
-      aiEyebrow:"جاهزية الظهور في محركات الذكاء الاصطناعي", aiH2:"هل تقدر أدوات الذكاء الاصطناعي تصل لموقعنا؟",
-      aiP:"عند سؤال أدوات مثل ChatGPT أو Claude أو Perplexity عن خدمات مشابهة لخدماتنا، هل تقدر تصل لمحتوى الموقع أصلاً؟ هذا الجزء يفحص شهرياً ملف robots.txt للتأكد من عدم حظر روبوتات الذكاء الاصطناعي الرئيسية.",
-      aiColCrawler:"الروبوت", aiColPurpose:"الغرض", aiColStatus:"الحالة",
-      aiAllowed:"مسموح ✓", aiBlocked:"محظور",
-      aiLlmsTxtLabel:"ملف llms.txt", aiLlmsTxtPresent:"موجود", aiLlmsTxtMissing:"غير موجود",
-      aiLlmsTxtNote:"ملاحظة: جوجل صرّحت رسمياً إنها تتجاهل هذا الملف تماماً في البحث ونتائج الذكاء الاصطناعي — لا يؤثر على الظهور في جوجل. قد يفيد فقط بعض روبوتات الذكاء الاصطناعي الأخرى (غير جوجل).",
-      aiCheckedNote:"لم يُشغَّل الفحص بعد — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.",
-      aiCheckedOn:(d)=>`آخر فحص: ${d}`,
-      kwSourceGsc:(d)=>`المصدر: بيانات حقيقية من Google Search Console (آخر تحديث: ${d}) — متوسط الترتيب الفعلي خلال آخر 28 يوماً.`,
-      kwSourceManual:"المصدر: بيانات مُدخلة يدوياً حالياً. تُستبدل تلقائياً ببيانات Google Search Console الحقيقية بمجرد اكتمال الربط.",
-      prioAiCrawler:(n)=>`${n} ${n===1?'روبوت ذكاء اصطناعي محظور':'روبوتات ذكاء اصطناعي محظورة'} في robots.txt — يمنع ظهور الموقع في إجابات ChatGPT/Claude/Perplexity.`,
-      recoPoorMobile:"أداء الجوال ضعيف — يحتاج أولوية عالية",
-      recoNiMobile:"أداء متوسط — تحسينات إضافية ممكنة",
-      recoGood:"أداء جيد هذا الشهر",
-      recoGap:(m,de)=>`الجوال ${m} (يحتاج تحسين) مقابل سطح المكتب ${de} (جيد) — فجوة حقيقية بين الجهازين تستحق المتابعة.`,
-      calendarMonths:["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]
-    },
-    en: {
-      brandName:"Silah", brandSub:"Information Technology", langToggleLabel:"العربية",
-      refreshBtnLabel:"Refresh data now", refreshBtnBusy:"Refreshing…",
-      refreshStatusWait:"Takes about 9 minutes. Don't close the page — feel free to keep browsing though.",
-      refreshStatusGenericErr:"Something unexpected went wrong, try again in a bit.",
-      lastRefreshedLabel:(exact,rel)=>`Data last actually refreshed: ${exact} (${rel})`,
-      relJustNow:"just now", relMinutes:(n)=>`${n} minute${n===1?"":"s"} ago`,
-      relHours:(n)=>`${n} hour${n===1?"":"s"} ago`, relDays:(n)=>`${n} day${n===1?"":"s"} ago`,
-      heroEyebrow:"Website Performance Report · Real data from actual visitors",
-      msUnit:"milliseconds",
-      improveBadge:"76% faster",
-      heroH1:"The site's responsiveness to visitor interactions improved significantly over the past months",
-      heroLede:"Last February, the website slowed down noticeably whenever visitors tried to interact with it. After investigation and technical fixes, the site is now faster and more responsive than ever — confirmed by real visitor data, not just a lab test.",
-      heroMeta:"Real Chrome visitor data (CrUX) · Aug 2025 – Jun 2026 · Mobile devices",
-      heroMetaJune:"Real Chrome visitor data (CrUX) · June 2026 · Mobile devices",
-      heroH1June:"The site's responsiveness to visitor interactions is currently in good shape",
-      heroLedeJune:"This is where the site stands right now, as of June — based on real Chrome visitor data, not a lab test.",
-      summaryEyebrow:"At a glance", summaryH2:"How's the visitor experience today?",
-      summaryP:"Three core metrics Google uses to measure any website's user experience — the same metrics that influence how the site ranks in search results.",
-      badgeGood:"Good", badgeNI:"Needs Improvement", badgePoor:"Poor",
-      card1Title:"Loading Performance",
-      card2Title:"Interactivity",
-      card3Title:"Visual Stability",
-      detailEyebrow:"In detail", detailH2:"Each metric, one by one",
-      detailP:"Tap any metric to see its definition, its trend over the last 10 months, and what it actually means.",
-      deviceEyebrow:"Context", deviceH2:"Where people visit us from",
-      deviceLegendPhone:"Phone", deviceLegendDesktop:"Desktop", deviceLegendTablet:"Tablet",
-      deviceNote:"3 out of 4 visitors open the site from their phone — that's why this data focuses specifically on the mobile experience, since that's what most visitors actually feel.",
-      footH4:"About this data",
-      footP1:"The data above comes from the Chrome Real User Experience Report (CrUX) — real measurements from actual visitors using Chrome, not a lab test. It covers August 2025 to June 2026, at the 75th percentile, meaning 75% of visitors had an experience equal to or better than the number shown.",
-      footP2:"Server response time (TTFB) improved the least over this period, and is the next area of focus.",
-      footP3:"The priorities and page table above are computed automatically from this month's data. Showing per-page traffic and click data requires finishing the Google Search Console access setup first.",
-      footCredit:"Prepared by: Information Technology — Silah", footDate:"Last updated: July 5, 2026 (June 2026 data — latest available)",
-      gaugeGood:"Good", gaugeNI:"Needs Improvement", gaugePoor:"Poor",
-      ownerLabel:"Owner", ownerTech:"IT", ownerMkt:"Marketing", ownerShared:"Shared — IT + Marketing",
-      targetsEyebrow:"Benchmarks & Targets", targetsH2:"Where we stand today, and where we need to get",
-      targetsP:"For each metric: its current value, the official Google benchmark, the agreed target for next quarter — and who owns it, so the action plan is built on clear numbers.",
-      tgColMetric:"Metric", tgColCurrent:"Current", tgColBench:"Google Benchmark", tgColTarget:"Target — Next Quarter", tgColOwner:"Owner",
-      tgLighthouseMobile:"Mobile Performance Score (Lighthouse)", tgLighthouseDesktop:"Desktop Performance Score (Lighthouse)",
-      tgTargetMobile:"Reach 90 or above", tgTargetKeep:"Maintain 95 or above",
-      tgKwName:"“Saudization services” keyword in search results", tgKwCurrent:"Not ranking", tgKwTarget:"Enter top 20 via a dedicated page",
-      tgSchemaName:"Structured Data (Schema)", tgSchemaCurrent:"Not implemented", tgSchemaTarget:"Enable on key pages",
-      tgMeasureNote:"Data freshness note: Lighthouse scores are re-run automatically at the start of each month. Real-visitor data (CrUX) is published by Google with a ~28-day lag behind the current month — so the previous month's data is usually the most recent genuinely available.",
-      meaningLabel:"What this means in practice",
-      chartTitle:"Trend",
-      rangeJune:"June only", rangeLast3:"Last 3 months", rangeFull:"Full period",
-      deviceMobileBtn:"Mobile", deviceDesktopBtn:"Desktop",
-      outOf100:"/ 100", excellentBadge:"Excellent",
-      heroH1Desktop:"Desktop performance is in excellent shape",
-      heroLedeDesktop:"This is a lab test (Lighthouse) — a single point-in-time measurement, not accumulated real-visitor data over time like the mobile view. Every metric below sits in the good range.",
-      heroMetaDesktop:"Lab test (Lighthouse 13.4.0) · June 30, 2026 · Desktop devices",
-      card1SubDesktop:"1.0s for the main content to appear",
-      card2SubDesktop:"0ms blocking — no response delay",
-      seoEyebrow:"For the marketing team", seoH2:"What this means for SEO",
-      seoP:"Site speed and technical health are direct factors in Google's ranking algorithm — this section connects the numbers above to what actually matters for marketing.",
-      seoScoreLabel:"SEO Score", bpScoreLabel:"Best Practices", a11yScoreLabel:"Accessibility (mobile–desktop)",
-      kwTitle:"Keyword priority ranking — most urgent first",
-      kwTitleCaption:"Auto-ranked: #1 needs work first. This list is currently 5 manually-tracked keywords — automatic tracking of more needs Google Search Console connected.",
-      mktPlanTitle:"Ready-to-run action plan for marketing",
-      mktPlanIntro:"Every item here is doable directly from the WordPress admin — no developer needed.",
-      mktShowPages:"Show list",
-      mktBadgeCount:(n)=>`${n} page${n===1?'':'s'}`,
-      mktMetaTitle:(n)=>`Write a meta description for ${n} page${n===1?'':'s'}`,
-      mktMetaWhy:"Without a meta description, Google picks a random line from the page to show in search results — usually not compelling enough to click.",
-      mktMetaHow:"In WordPress: open the page to edit ← Yoast SEO box below the editor ← write <strong>120-155 characters</strong> including the target keyword.",
-      mktKwTitle:(n)=>`Strengthen content for ${n} underperforming keyword${n===1?'':'s'}`,
-      mktKwWhy:"These keywords are either outside the top 5 results or on a second results page — deeper, dedicated content gradually improves ranking.",
-      mktKwHow:"Review the current page targeting each keyword and add deeper content around it, or create a dedicated page if none clearly targets it yet.",
-      mktAltTitle:(n)=>`Add alt text to images on ${n} page${n===1?'':'s'}`,
-      mktAltWhy:"Alt text helps Google understand image content, and improves accessibility for visually impaired visitors.",
-      mktAltHow:"In the WordPress Media Library: open each image ← <strong>Alternative Text</strong> field ← describe it in one short, clear sentence.",
-      mktPlanEmpty:"Not enough data yet — waiting on the first page-data sync.",
-      kwColPhrase:"Keyword", kwColPos:"Current position",
-      oppTitle:"Opportunities found",
-      opp1:"<strong>Consolidate localization pages:</strong> Several separate pages target overlapping topics — merging them into one strong reference page concentrates ranking signal instead of splitting it.",
-      oppSchemaLabel:"Structured data (Schema):", oppAltLabel:"Image alt text:",
-      pdfExportText:"A complete PDF report of everything worth fixing for SEO — reflects the latest auto-sync, at the moment you click.",
-      pdfBtnLabel:"Download SEO report (PDF)", pdfBtnBusy:"Building the report…",
-      pdfReportTitle:"SEO Improvement Report — Silah",
-      pdfGeneratedOn:(d)=>`Generated ${d}`,
-      pdfSyncedThrough:(d)=>`Reflects the latest automatic scan: ${d}`,
-      pdfSyncedThroughUnknown:"The automatic scan hasn't run for these pages yet",
-      pdfPrioHeading:"This month's priorities", pdfKwHeading:"Target keywords",
-      pdfHealthHeading:"Technical page health — every page scanned",
-      pdfHealthColUrl:"URL",
-      pdfFootNote:"This report was generated automatically from the same data shown on the live dashboard at sila-website-report.vercel.app at the moment of download. Real Chrome visitor data (CrUX) is published by Google with a ~28-day lag. Prepared by: Information Technology — Silah.",
-      pdfFileBase:"silah-seo-report",
-      pdfContinued:"continued",
-      pdfCoverKicker:"Internal report — Information Technology",
-      pdfCoverSub:"A detailed read of the site's current technical state, built from real Google Search Console and PageSpeed Insights data, with an action plan clearly split between IT and Marketing.",
-      pdfExecEyebrow:"01 — Overview", pdfExecH2:"Executive Summary",
-      pdfExecLedeGood:"Silah's website has a strong technical foundation, and the remaining gap is narrow and precisely defined.",
-      pdfExecLedeWork:"Several points need direct attention to raise the site's search-engine readiness.",
-      pdfExecBody:(scored,total)=>`The figures below are computed from real data at download time. The "Page Health" score is the average of ${scored} scoreable pages out of ${total} pages scanned (cart, checkout, and account pages are excluded, since they were never meant to appear in search results).`,
-      pdfCardSeo:"Overall SEO (homepage)", pdfCardDesktop:"Desktop performance", pdfCardMobile:"Mobile performance",
-      pdfCardA11yDesktop:"Accessibility — desktop", pdfCardA11yMobile:"Accessibility — mobile",
-      pdfCardBP:"Technical best practices", pdfCardHealth:"Page health (combined)",
-      pdfMobileWas:(n)=>`(was ${n})`,
-      pdfFindEyebrow:"02 — Detailed findings", pdfFindH2:"The pages that need attention most",
-      pdfFindLede:"The pages below are the most affected right now, ranked by priority.",
-      pdfFindNoneTitle:"No critical issues right now",
-      pdfFindNoneBody:"Every page scanned this month is in good-to-excellent shape — nothing needs urgent attention as of this report.",
-      pdfFindNotScanned:"The monthly per-page scan hasn't run yet. The section below relies on the overall scores above only.",
-      pdfFactSchemaMissing:"The expected Schema markup is missing from this page.",
-      pdfFactAlt:(n,total)=>`${n} of ${total} images have no alt text.`,
-      pdfFactJs:(kb)=>`${kb.toLocaleString("en-US")} KB of unused JavaScript loads with this page.`,
-      pdfFactSeo:(txt)=>`SEO issues: ${txt}`,
-      pdfFactNone:"No further notes on this page.",
-      pdfAltRootCause:"<b>Note:</b> when a high share of images lack alt text across several pages at once, it's usually repeated elements — the logo and icons that appear on every page — missing alt text at the template level, not individually forgotten content images. Fixing it once at the template level reflects automatically on every page.",
-      pdfMetaMissingLabel:"Pages currently missing a meta description:",
-      pdfRecoEyebrow:"03 — Action plan", pdfRecoH2:"Recommendations, split by owner",
-      pdfRecoLede:"For the best possible SEO outcome, each side has its own tasks below.",
-      pdfRecoColIT:"Information Technology", pdfRecoColITsub:"Technical work on the site and template",
-      pdfRecoColMkt:"Marketing", pdfRecoColMktsub:"Content and copy work",
-      pdfPriP1:"Urgent", pdfPriP2:"Medium", pdfPriP3:"Ongoing",
-      pdfRecoAltTpl:(n)=>`Add alt text to the missing images (${n} currently) — prioritise repeated template-level elements first.`,
-      pdfRecoEvergreenIT:"Monthly review of any failed or partial PSI checks, to make sure every page is scored on the full set of criteria.",
-      pdfRecoEvergreenMkt1:"Write alt text for individual content images (client logos, service icons) on the highest-ratio pages.",
-      pdfRecoEvergreenMkt2:"Expand the list of tracked keywords to cover other aspects of the company's services.",
-      pdfKwSub:"Tracked keyword performance", pdfKwLede:"Real data from Google Search Console, averaged over the last 28 days.",
-      pdfKwLedeManual:"List of tracked keywords (click and impression data isn't available until Google Search Console is connected).",
-      pdfKwColPhrase:"Keyword", pdfKwColPos:"Rank", pdfKwColClicks:"Clicks", pdfKwColImpr:"Impressions", pdfKwColStatus:"Status",
-      pdfKwGood:"Ranking in search results", pdfKwBad:"Not ranking",
-      pdfKwNoneWeak:"All tracked keywords currently rank within the top 5 search-result pages.",
-      pdfKwWeakLabel:"Not currently ranking in search results:",
-      pdfRoadEyebrow:"04 — Summary", pdfRoadH2:"Suggested next steps",
-      pdfRoadWeek:"Urgent", pdfRoadMonth:"Medium priority", pdfRoadOngoing:"Ongoing",
-      pdfRoadEmpty:"None",
-      pdfClosing:"The figures in this report are taken directly from the Google Search Console and PageSpeed Insights data shown on the live dashboard at download time, with no manual entry.",
-      pdfNeedsReview:"Needs review",
-      scoresNotSyncedYet:"A real number will appear here after the next sync — this section was static text before now.",
-      scoresSyncedOn:(d)=>`Updated as of the ${d} scan`,
-      scoreTargetReached:"✓ Target already reached",
-      scoreTargetGap:(n)=>`Target: <strong>100</strong> — after fixing ${n} issue${n===1?'':'s'}`,
-      kwNotInTop5:"Outside top 5 pages",
-      prioEyebrowBase:"This Month's Priorities",
-      prioH2:"The top things worth your attention right now",
-      prioP:"Auto-generated from this month's data — ranking what's worth acting on first.",
-      prioCwv:"{metric} on mobile needs improvement — it's currently the weakest performance metric, and it directly affects the 73% of visitors who open the site on mobile.",
-      prioBroken:(n)=>`${n} page${n===1?'':'s'} returning an actual error on check (unsuccessful HTTP status) — urgent, the page may genuinely be broken for visitors.`,
-      prioKw:"The keyword {kw} isn't ranking in search results at all — a real opportunity for a dedicated page targeting it directly.",
-      prioPending:"{n} key pages haven't been measured yet this month — {link} to add them for the full picture.",
-      prioPendingLink:"jump to the page table",
-      prioSchema:"Schema structured data was manually added to 5 service pages today — the homepage still doesn't have it.",
-      prioSchemaCount:(n)=>`${n} page${n===1?'':'s'} missing Schema data — adding it opens the door to rich search results.`,
-      prioAlt:"Missing alt text was fixed on the 5 service pages today — the homepage hasn't been checked yet.",
-      prioAltCount:(n)=>`${n} page${n===1?'':'s'} with images missing alt text — a simple fix that improves accessibility and helps Google understand the content.`,
-      statMobilePerf:"Mobile Performance Score (Lighthouse)",
-      statDesktopPerf:"Desktop Performance Score",
-      statVsLastMonth:"vs. last month",
-      pageEyebrow:"Page by page",
-      pageH2:"How the site's key pages are performing",
-      pageP:"The data above (CrUX) reflects the site as a whole. This is a closer look at each marketing-relevant page individually, so the team knows where to focus first.",
-      pageColName:"Page", pageColMobile:"Mobile", pageColDesktop:"Desktop", pageColStatus:"Status", pageColReco:"Note",
-      pageStatusMeasured:"Measured", pageStatusPending:"Pending",
-      healthEyebrow:"Automatic monthly scan", healthH2:"Technical page health",
-      healthP:"This section checks automatically every month: structured Schema data, image alt text, and unused CSS/JS size — the same checks done manually, just running on a schedule with no upkeep needed.",
-      healthColName:"Page", healthColSchema:"Schema", healthColAlt:"Alt text", healthColSeo:"SEO issues", healthColCss:"Unused CSS", healthColScore:"Mobile score",
-      healthSeoOk:"Clean", healthSeoIssue:(n)=>`${n} issue${n===1?'':'s'}`,
-      healthSchemaOk:"Present ✓", healthSchemaMissing:"Missing", healthSchemaUnknown:"—",
-      healthAltOk:"Clean", healthAltIssue:(n)=>`${n} issue${n===1?"":"s"}`,
-      pageHealthScoreLabel:"Page Health Score",
-      pageHealthScoreNote:(scored,excluded)=>`Averaged across ${scored} real content pages — ${excluded} page${excluded===1?"":"s"} (cart/account/expired event pages) excluded, since those were never meant to show up in search results anyway.`,
-      healthExcludedTag:"not scored",
-      aiEyebrow:"AI search readiness", aiH2:"Can AI tools actually reach our site?",
-      aiP:"When someone asks ChatGPT, Claude, or Perplexity about services like ours, can those tools even access the site's content? This checks robots.txt every month to confirm the major AI crawlers aren't blocked.",
-      aiColCrawler:"Crawler", aiColPurpose:"Purpose", aiColStatus:"Status",
-      aiAllowed:"Allowed ✓", aiBlocked:"Blocked",
-      aiLlmsTxtLabel:"llms.txt file", aiLlmsTxtPresent:"Present", aiLlmsTxtMissing:"Missing",
-      aiLlmsTxtNote:"Note: Google has stated it ignores this file entirely for Search and AI features — it doesn't affect Google visibility. It may only help some non-Google AI crawlers.",
-      aiCheckedNote:"Not checked yet — this fills in automatically after the first GitHub Action run.",
-      aiCheckedOn:(d)=>`Last checked: ${d}`,
-      kwSourceGsc:(d)=>`Source: real Google Search Console data (last updated: ${d}) — average position over the trailing 28 days.`,
-      kwSourceManual:"Source: manually entered for now. Replaced automatically with real Google Search Console data once that connection is complete.",
-      prioAiCrawler:(n)=>`${n} AI crawler${n===1?"":"s"} blocked in robots.txt — keeps the site out of ChatGPT/Claude/Perplexity answers.`,
-      healthAltDetailLabel:"Images missing alt text:", healthMoreCount:(n)=>`+ ${n} more`,
-      healthCheckedNote:"The automatic scan hasn't run for these pages yet — this table fills in automatically after the first GitHub Action run.",
-      healthCheckedOn:(d)=>`Last checked: ${d}`,
-      recoPoorMobile:"Mobile performance is poor — needs high priority",
-      recoNiMobile:"Middle of the range — further optimization possible",
-      recoGood:"Good performance this month",
-      recoGap:(m,de)=>`Mobile ${m} (needs improvement) vs. Desktop ${de} (good) — a real gap between the two devices worth following up on.`,
-      calendarMonths:["January","February","March","April","May","June","July","August","September","October","November","December"]
-    }
-  };
-
-  /* ---------------- keyword tracking (from Abdulhadi's original tracked phrases) ---------------- */
-  const keywords = [
-    { ar:"العمل عن بعد", en:"Remote work (العمل عن بعد)", pos:8, page:2, tier:"weak" },
-    { ar:"توظيف السعوديين", en:"Saudi hiring (توظيف السعوديين)", pos:7, page:1, tier:"strong" },
-    { ar:"خدمات التوطين", en:"Localization services (خدمات التوطين)", pos:null, page:null, tier:"weak" },
-    { ar:"معاهد الشراكات الاستراتيجية", en:"Strategic partnership institutes", pos:7, page:1, tier:"strong" },
-    { ar:"اسناد السعوديين", en:"Saudi outsourcing (اسناد السعوديين)", pos:1, page:2, tier:"mid" }
-  ];
-
-  function renderKeywordTable(){
-    const body = document.getElementById("kwTableBody");
-    const d = dict[currentLang];
-    // Ranked worst-first, computed from the real page+pos numbers rather
-    // than the tier field: not ranking at all is worst (Infinity), then
-    // page dominates position (being on page 1 at all matters far more
-    // for real clicks than a few positions within a page), position
-    // breaks ties within the same page.
-    const scored = keywords.map(k => ({
-      k, score: k.pos === null ? Infinity : (k.page * 100 + k.pos)
-    })).sort((a,b) => b.score - a.score);
-
-    body.innerHTML = scored.map(({k}, i)=>{
-      const name = currentLang==="ar" ? k.ar : k.en;
-      const posText = k.pos===null ? d.kwNotInTop5 : `${currentLang==="ar"?"صفحة":"Page"} ${k.page} · #${k.pos}`;
-      return `<tr><td><span class="kw-rank">${i+1}</span>${escapeHtml(name)}</td><td class="kw-pos ${k.tier}">${escapeHtml(posText)}</td></tr>`;
-    }).join("");
-
-    const sourceNote = document.getElementById("kwSourceNote");
-    if(sourceNote){
-      sourceNote.textContent = window.__keywordsSource === "gsc"
-        ? d.kwSourceGsc(window.__keywordsCheckedMonth || "")
-        : d.kwSourceManual;
-    }
-  }
-
-  /* ---------------- per-page registry ----------------
-     Only real, confirmed URLs are pre-filled. Pages without a
-     confirmed URL are listed as placeholders (url:null) rather
-     than guessed, so the table stays honest about what's actually
-     been measured. See runbook item 4 to extend this list. */
-  const pageRegistry = [
-    {
-      id:"home", url:"/", labelAr:"الصفحة الرئيسية", labelEn:"Homepage",
-      monthly:{ "2026-05":{ mobile:72 }, "2026-06":{ mobile:81, desktop:96 } }
-    },
-    {
-      id:"gov", url:null, labelAr:"صفحة المشاريع الحكومية", labelEn:"Government Projects Page",
-      monthly:{},
-      noteAr:"أضف الرابط لبدء القياس",
-      noteEn:"Add the URL to start tracking"
-    },
-    {
-      id:"services", url:null, labelAr:"صفحة الخدمات الرئيسية", labelEn:"Main Services Page",
-      monthly:{},
-      noteAr:"أضف الرابط لبدء القياس",
-      noteEn:"Add the URL to start tracking"
-    }
-  ];
-
-  function pagesPendingThisMonth(){
-    return pageRegistry.filter(p => !p.monthly[REPORT_MONTH]);
-  }
-
-  /* ---------------- page health (schema / alt-text / unused CSS) ----------------
-     Populated entirely from data.json's "pageHealth" array (written by the
-     scripts/update_data.py monthly scan) — empty until the Action has run at
-     least once. No hardcoded fallback rows here on purpose: showing fabricated
-     schema/alt-text numbers would be worse than an honest "not run yet" note. */
-  let pageHealthData = [];
-  let pageHealthCheckedMonth = null;
-
-  function pageReco(cur){
-    const d = dict[currentLang];
-    const tier = v => v < 50 ? "poor" : v < 90 ? "ni" : "good";
-    const tierText = t => t === "poor" ? d.recoPoorMobile : t === "ni" ? d.recoNiMobile : d.recoGood;
-    const hasMobile = cur.mobile !== undefined;
-    const hasDesktop = cur.desktop !== undefined;
-
-    if(hasMobile && hasDesktop){
-      const mt = tier(cur.mobile), dt = tier(cur.desktop);
-      // Previously this branch never ran -- mobile alone decided the note
-      // whenever it existed, so a page could have desktop already fine and
-      // the recommendation would never say so. Only worth calling out as a
-      // distinct "gap" when the two are actually in different tiers, not
-      // just different by a couple of points within the same tier.
-      if(mt !== dt) return d.recoGap(cur.mobile, cur.desktop);
-      return tierText(mt);
-    }
-    if(hasMobile) return tierText(tier(cur.mobile));
-    if(hasDesktop) return tierText(tier(cur.desktop));
-    return "";
-  }
-
-  function renderPageTable(){
-    const body = document.getElementById("pageTableBody");
-    const d = dict[currentLang];
-    body.innerHTML = pageRegistry.map(p=>{
-      const cur = p.monthly[REPORT_MONTH] || {};
-      const hasMobile = cur.mobile !== undefined;
-      const hasDesktop = cur.desktop !== undefined;
-      const measured = hasMobile || hasDesktop;
-      const label = currentLang==="ar" ? p.labelAr : p.labelEn;
-      const urlLine = p.url ? `<span class="page-url">${escapeHtml(p.url)}</span>` : "";
-      const mobileCell = hasMobile ? `<span class="cell-num num">${cur.mobile}</span>` : `<span class="cell-dash">—</span>`;
-      const desktopCell = hasDesktop ? `<span class="cell-num num">${cur.desktop}</span>` : `<span class="cell-dash">—</span>`;
-      const statusCls = measured ? "measured" : "pending";
-      const statusText = measured ? d.pageStatusMeasured : d.pageStatusPending;
-      const reco = measured ? pageReco(cur) : (currentLang==="ar" ? p.noteAr : p.noteEn);
-      return `<tr>
-        <td><strong>${escapeHtml(label)}</strong>${urlLine}</td>
-        <td>${mobileCell}</td>
-        <td>${desktopCell}</td>
-        <td><span class="status-pill ${statusCls}">${statusText}</span></td>
-        <td class="reco-text">${reco}</td>
-      </tr>`;
-    }).join("");
-  }
-
-  // Real PSI audit titles can contain literal HTML-special characters — e.g.
-  // the actual "document-title" audit text is `Document doesn't have a
-  // <title> element` (confirmed in this site's own scanned data). Inserted
-  // raw via innerHTML, that <title> would get parsed as a real element
-  // instead of displayed as text. Same defensive escaping applies to image
-  // filenames in the alt-text detail list.
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  }
-
-  // escapeHtml() above only escapes HTML metacharacters -- it does NOT
-  // validate URL scheme, so escapeHtml("javascript:...") passes through
-  // unchanged and would still execute on click if placed directly in an
-  // href. Page URLs currently only ever come from this site's own Yoast
-  // sitemap (not external/user input), so this isn't exploitable today --
-  // but that's trusting the upstream source to always stay clean forever,
-  // which isn't a real security boundary. Anything going into href/src
-  // should go through this first.
-  function safeHref(url){
-    if(typeof url !== "string") return "#";
-    const trimmed = url.trim();
-    if(/^https?:\/\//i.test(trimmed)) return escapeHtml(trimmed);
-    return "#";
-  }
-
-  function renderPageHealthTable(){
-    const body = document.getElementById("healthTableBody");
-    const note = document.getElementById("healthCheckedNote");
-    const d = dict[currentLang];
-    if(!pageHealthData.length){
-      body.innerHTML = "";
-      note.style.display = "";
-      note.textContent = d.healthCheckedNote;
-      return;
-    }
-    note.style.display = "none";
-    body.innerHTML = pageHealthData.map(p=>{
-      // Falls back to the page's id/slug if both nameAr and nameEn are null —
-      // happens when a page's HTML fetch fails on a given run (no curated
-      // name AND no <title> to extract from), so there's nothing better to
-      // show. Every other column here already has a null-guard; this one was
-      // missing it, which is why a failed fetch showed literal "null" as the
-      // page name instead of degrading like the rest of the row.
-      const label = (currentLang==="ar" ? p.nameAr : p.nameEn) || p.id;
-      const excludedTag = p.excludedFromScore ? `<span class="excluded-tag">${d.healthExcludedTag}</span>` : "";
-      let schemaCls, schemaText;
-      if(p.schema == null){ schemaCls = "pending"; schemaText = d.healthSchemaUnknown; }
-      else if(p.schema.hasExpectedType){ schemaCls = "measured"; schemaText = d.healthSchemaOk; }
-      else { schemaCls = "poor"; schemaText = d.healthSchemaMissing; }
-
-      let altCls, altText, altDetail = "", altClickable = "";
-      if(p.altText == null){ altCls = "pending"; altText = d.healthSchemaUnknown; }
-      else if(p.altText.issueCount === 0){ altCls = "measured"; altText = d.healthAltOk; }
-      else {
-        altCls = p.altText.issueCount > 3 ? "poor" : "pending";
-        altText = d.healthAltIssue(p.altText.issueCount);
-        altClickable = "clickable";
-        const shown = p.altText.examples || [];
-        // Handles both the current {file,url} shape and the older bare-
-        // string shape (pre-Aug-2026-fix data.json) - a string just never
-        // gets a link, since there's no url to point it at.
-        let rows = `<div class="issue-detail-label">${d.healthAltDetailLabel}</div>` + shown.map(f=>{
-          const isObj = f && typeof f === "object";
-          const file = isObj ? f.file : f;
-          const url = isObj ? f.url : null;
-          return url
-            ? `<div><a class="row-page-link" href="${safeHref(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(file)}</a></div>`
-            : `<div>${escapeHtml(file)}</div>`;
-        }).join("");
-        if(p.altText.issueCount > shown.length){
-          rows += `<div class="issue-detail-more">${d.healthMoreCount(p.altText.issueCount - shown.length)}</div>`;
+#!/usr/bin/env python3
+"""
+Monthly data refresher for the Silah site performance report.
+
+Pulls:
+  1. CrUX History API   -> real-visitor monthly series (LCP, INP, CLS, FCP, TTFB) for the origin
+  2. PageSpeed Insights -> Lighthouse performance scores (mobile + desktop) for the homepage,
+                            plus a per-page health scan (see below)
+  3. Per-page health scan -> pages are now auto-discovered from the site's own
+                            Yoast sitemap every run (see discover_pages_from_sitemap()),
+                            not a hand-maintained list. For each discovered URL: fetches
+                            the live HTML directly and checks Schema.org structured data,
+                            image alt text, and on-page basics (canonical, robots/noindex,
+                            title, meta description, H1s, internal links), and pulls
+                            unused-CSS / unused-JS byte estimates plus failing SEO-category
+                            audits from the same PSI call already being made for that
+                            page's performance score.
+
+Writes the results into data.json (which the report reads at load time).
+
+Sept 2026 additions (shared IT/Marketing documentation goal):
+  - Every finding is now tagged with an OWNER (it / marketing / shared) so each
+    team can read its own row without someone translating the report verbally.
+  - pageHealthHistory keeps a compact per-month snapshot (rolling 12 months) so
+    month-over-month movement is visible instead of being overwritten each run.
+  - On-page checks added on HTML this script already fetches — no new requests:
+    canonical tag, noindex, title text/length, duplicate titles across pages,
+    H1 count, meta description length, and internal-link graph (orphan pages).
+  - Sitemap truncation is now surfaced in data.json, not just stderr.
+
+CrUX real-user data is best-effort: lower-traffic origins/pages often don't
+have enough anonymized Chrome samples yet for Google to publish a record (a
+documented 404/NOT_FOUND response, not an auth or config problem). When that
+happens this script skips the real-user chart update for this run but still
+refreshes the PSI/Lighthouse scores, so the report never goes stale just
+because CrUX has nothing yet.
+
+Env:
+  PSI_API_KEY  (required) — Google API key with "Chrome UX Report API" and
+                "PageSpeed Insights API" enabled.
+  GSC_SERVICE_ACCOUNT_JSON (optional) — service account for real keyword data.
+
+Exit codes: 0 = updated (or already current), 1 = hard failure (Action goes red).
+"""
+
+import json
+import os
+import re
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+import urllib.robotparser
+import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
+
+ORIGIN = "https://www.silah.com.sa"
+DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data.json")
+
+# Safety cap on how many pages get the full scan (HTML fetch + a PSI/Lighthouse
+# run each) in a single execution. PSI calls typically take 5-15s apiece, so at
+# ~30 pages this run stays in the few-minutes range instead of risking a very
+# long or rate-limited Action run.
+#
+# Sept 2026: raised 30 -> 80. At 30 the scan could silently cover only part of
+# the site while the report still read as complete — the warning about it only
+# ever went to stderr, where nobody looks. Two changes: the cap is high enough
+# to cover the whole sitemap with headroom (the Sept 6 run found 63 pages and
+# scanned 60, which also suppressed orphan detection — see analyze_cross_page
+# for why a partial scan can't tell a real orphan from an unscanned linker),
+# AND the truncation state is now written into data.json (scanCoverage) so the
+# report itself can say "scanned 60 of 63" instead of quietly implying full
+# coverage.
+MAX_AUTO_PAGES = 80
+
+# Seconds to wait between each page's direct HTML fetch in run_page_health_scan().
+# Added Aug 2026 after the Aug 15 run showed only page 1 (home) getting real
+# schema/alt-text data and the other 29 coming back null — a same-day repro
+# of two unrelated pages returning HTTP 429 pointed at the site's own
+# rate-limiting/WAF reacting to a burst of same-IP requests, not a code bug
+# (the Aug 9 run, same code, same 30 URLs, succeeded 30/30). PSI-based fields
+# (mobileScore, unusedCssKb/JsKb, seoIssues) are unaffected either way since
+# those come from Google's PSI servers hitting the site, not this fetch.
+PAGE_FETCH_DELAY_SECONDS = 2
+# Extra wait before a single retry if a fetch still fails — separate from the
+# steady per-page delay above, since a failure is a stronger signal to back
+# off further than the routine gap between pages.
+PAGE_FETCH_RETRY_BACKOFF_SECONDS = 5
+
+# PSI retry policy, added after the Sept 6 2026 run returned HTTP 500 from
+# Google's PageSpeed API for ~20 of 60 pages, leaving their mobileScore /
+# unusedCss / unusedJs / seoIssues columns blank in the report. Two things
+# point at rate-limiting rather than a genuine server fault or a problem with
+# the site itself: the same pages' direct HTML fetches succeeded seconds
+# earlier in the same run, and the failures clustered in the first block of
+# pages, right where a burst of back-to-back PSI requests would hit hardest.
+# Google returns a generic 500 here rather than a clean 429, so there's no
+# way to distinguish the two from the response — which is exactly why the
+# earlier fetch_psi_score() retry deliberately covered only timeouts and not
+# error responses.
+#
+# Retrying a 500 is safe in a way retrying a 4xx is not: PSI is a read-only
+# analysis endpoint, so a repeat request can't double-apply anything, and a
+# transient 5xx is by definition the class of error where the same request
+# may succeed later. Retries are capped and backoff grows between attempts,
+# so a genuinely broken page costs three tries and moves on rather than
+# stalling the run.
+PSI_RETRY_STATUSES = {429, 500, 502, 503, 504}
+PSI_MAX_RETRIES = 2
+PSI_RETRY_BACKOFF_SECONDS = [8, 20]  # waited before attempt 2 and attempt 3
+
+# Steady gap between per-page PSI calls, separate from PAGE_FETCH_DELAY_SECONDS
+# (which paces requests at Silah's own server). This one paces requests at
+# Google's API. Cheap insurance: at ~63 pages it adds about a minute to a run
+# that already takes ~22, and a slower run that returns complete data beats a
+# faster one with a third of its cells blank.
+PSI_CALL_DELAY_SECONDS = 1
+
+# How many monthly snapshots of pageHealth to keep in data.json. 12 gives a
+# full year of month-over-month comparison; the snapshot is deliberately
+# compact (see snapshot_page_health()) so a year of them stays small rather
+# than turning data.json into an archive the frontend has to download.
+PAGE_HEALTH_HISTORY_MONTHS = 12
+
+# Manually-curated bilingual names + expected Schema type for pages already
+# worked on directly (Aug 2026 SEO pass). Anything the sitemap discovers that
+# ISN'T listed here still gets scanned — it just falls back to (a) the page's
+# own <title> tag for a name (Arabic only; this site's titles are Arabic-first
+# and there's no reliable way to auto-translate, so until someone adds a real
+# translation here the EN view will show the same Arabic text), and (b) "does
+# this page have ANY valid schema at all" instead of checking for one specific
+# type, since we don't know in advance what type an arbitrary new page should have.
+KNOWN_PAGE_NAMES = {
+    "otj-training-services": {
+        "nameAr": "التوطين عبر معاهد الشراكات الاستراتيجية",
+        "nameEn": "OTJ Training via Strategic Partnerships", "expectSchemaType": "Service"},
+    "engineering-technician-center": {
+        "nameAr": "خدمات توطين المهن الفنية الهندسية",
+        "nameEn": "Engineering Technician Localization", "expectSchemaType": "Service"},
+    "training-disclosure-services": {
+        "nameAr": "بناء وتنفيذ خطة الإفصاح التدريبي",
+        "nameEn": "Training Disclosure Plan", "expectSchemaType": "Service"},
+    "outsourcing-services": {
+        "nameAr": "خدمات تعهيد الأعمال",
+        "nameEn": "Business Outsourcing Services", "expectSchemaType": "Service"},
+}
+# The Saudi-hiring page's slug is fully Arabic and WordPress stores it
+# percent-encoded internally — matching by substring in the URL instead of
+# an exact slug comparison, same workaround needed for the Code Snippets
+# is_page() check earlier today (dashes vs. spaces caused a silent mismatch
+# there; percent-encoding could do the same here, so URL-substring is safer
+# than an exact-match on a decoded slug).
+KNOWN_PAGE_NAMES_BY_URL_SUBSTRING = {
+    "%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86": {
+        "nameAr": "خدمات توظيف السعوديين", "nameEn": "Saudi Hiring Services", "expectSchemaType": "Service"},
+}
+
+# Used only if sitemap discovery fails outright (network error, unexpected
+# site structure, etc.) — a sitemap hiccup should never mean "scan zero pages
+# this month." This is exactly the fixed 5-page list from before auto-discovery.
+PAGE_LIST_FALLBACK = [
+    {"id": "otj_training", "url": f"{ORIGIN}/otj-training-services/", **KNOWN_PAGE_NAMES["otj-training-services"]},
+    {"id": "engineering_center", "url": f"{ORIGIN}/engineering-technician-center/", **KNOWN_PAGE_NAMES["engineering-technician-center"]},
+    {"id": "saudi_hiring", "url": f"{ORIGIN}/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%AA%D9%88%D8%B8%D9%8A%D9%81-%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86/",
+     "nameAr": "خدمات توظيف السعوديين", "nameEn": "Saudi Hiring Services", "expectSchemaType": "Service"},
+    {"id": "training_disclosure", "url": f"{ORIGIN}/training-disclosure-services/", **KNOWN_PAGE_NAMES["training-disclosure-services"]},
+    {"id": "outsourcing", "url": f"{ORIGIN}/outsourcing-services/", **KNOWN_PAGE_NAMES["outsourcing-services"]},
+]
+
+SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+
+# alt="" or alt attribute missing entirely, or a generic single-word
+# placeholder that isn't real descriptive text (case-insensitive).
+GENERIC_ALT_VALUES = {"icon", "image", "img", "photo", "logo", ""}
+
+# ---------------------------------------------------------------------------
+# Ownership model (Sept 2026)
+# ---------------------------------------------------------------------------
+# The single change that makes this report usable as shared IT/Marketing
+# documentation rather than one undifferentiated pile of findings. Every issue
+# emitted below carries an owner so each team can filter to its own work:
+#
+#   "it"        — server, template, markup, and build-output concerns. Fixed in
+#                 WordPress theme/plugin/hosting layers.
+#   "marketing" — copy, content and keyword concerns. Fixed by writing words.
+#   "shared"    — needs both: content decides the wording, IT enters/implements
+#                 it. Alt text is the canonical example (Marketing confirms
+#                 partner/certification logo naming, IT fills the fields).
+#
+# Deliberately three values, not a free-text field: anything more granular
+# stops being filterable and starts being prose.
+OWNER_IT = "it"
+OWNER_MARKETING = "marketing"
+OWNER_SHARED = "shared"
+
+# Owner for each failing Lighthouse SEO-category audit id. Anything not listed
+# defaults to OWNER_IT — an unrecognised technical audit is far more likely to
+# be a markup/template issue than a copywriting one, and mis-routing something
+# to Marketing that they can't action is worse than the reverse.
+SEO_AUDIT_OWNERS = {
+    "meta-description": OWNER_MARKETING,
+    "document-title": OWNER_MARKETING,
+    "link-text": OWNER_MARKETING,
+    "hreflang": OWNER_IT,
+    "canonical": OWNER_IT,
+    "is-crawlable": OWNER_IT,
+    "http-status-code": OWNER_IT,
+    "crawlable-anchors": OWNER_IT,
+    "robots-txt": OWNER_IT,
+    "viewport": OWNER_IT,
+}
+
+# Thresholds for the on-page checks below. These are conventional SEO ranges,
+# not Google-guaranteed limits — Google truncates by pixel width, not character
+# count, so treat these as "worth a look", which is why they're emitted at
+# severity "info"/"warn" rather than as hard failures.
+TITLE_MIN_CHARS = 25
+TITLE_MAX_CHARS = 65
+META_DESC_MIN_CHARS = 70
+META_DESC_MAX_CHARS = 165
+
+
+def slug_from_url(url):
+    """Path-based slug, not domain-based — url.rsplit("/") alone breaks on
+    the homepage URL itself (the // after https: is also a "/", so naive
+    splitting returns the domain name instead of a real slug). Caught this
+    with a homepage-URL test case; urlparse's .path avoids the whole class
+    of bug by only ever looking at the path component."""
+    path = urllib.parse.urlparse(url).path.strip("/")
+    return path.rsplit("/", 1)[-1] if path else "home"
+
+
+def normalize_url(url):
+    """Canonical form used for comparing URLs to each other (internal-link
+    graph, canonical-tag self-reference check). Drops the fragment and query,
+    and forces exactly one trailing slash, so /page, /page/, /page?x=1 and
+    /page#top all compare equal. Deliberately does NOT touch percent-encoding:
+    this site's Arabic slugs are stored encoded and re-encoding them
+    inconsistently is exactly the class of silent mismatch that already bit
+    the KNOWN_PAGE_NAMES lookup (see the substring workaround above)."""
+    if not url:
+        return ""
+    url = url.split("#", 1)[0].split("?", 1)[0].strip()
+    if not url:
+        return ""
+    return url.rstrip("/") + "/"
+
+
+def discover_pages_from_sitemap():
+    """Auto-discovers every WordPress 'Page' URL from this site's Yoast-
+    generated sitemap instead of relying on a hand-maintained list. Standard
+    Yoast structure (confirmed installed on this site — Yoast SEO v27.9):
+    sitemap_index.xml lists one sub-sitemap per post type, one of which is
+    page-sitemap.xml (or page-sitemap1.xml, page-sitemap2.xml, ... if there
+    are enough pages that Yoast splits them — it paginates at 200 URLs per
+    file, hence matching by substring below rather than an exact filename).
+
+    Returns (urls, total_found) where urls is capped at MAX_AUTO_PAGES and
+    total_found is the real uncapped count, or (None, 0) on any failure — not
+    an empty list — so the caller can tell "genuinely zero pages" apart from
+    "something went wrong" and fall back to PAGE_LIST_FALLBACK accordingly.
+    total_found is returned rather than only logged so the report can show
+    real coverage instead of implying it scanned everything."""
+    index_xml = fetch_html(f"{ORIGIN}/sitemap_index.xml")
+    if not index_xml:
+        print("WARNING: could not fetch sitemap_index.xml", file=sys.stderr)
+        return None, 0
+    try:
+        root = ET.fromstring(index_xml)
+    except ET.ParseError as e:
+        print(f"WARNING: sitemap_index.xml did not parse as XML: {e}", file=sys.stderr)
+        return None, 0
+
+    sub_sitemaps = [loc.text.strip() for loc in root.findall(".//sm:loc", SITEMAP_NS) if loc.text]
+    page_sitemaps = [s for s in sub_sitemaps if "page-sitemap" in s]
+    if not page_sitemaps:
+        print("WARNING: no page-sitemap*.xml listed in sitemap_index.xml — "
+              "site's sitemap structure may not match the expected Yoast layout.",
+              file=sys.stderr)
+        return None, 0
+
+    urls = []
+    for sm_url in page_sitemaps:
+        sm_xml = fetch_html(sm_url)
+        if not sm_xml:
+            print(f"WARNING: could not fetch {sm_url}, skipping it", file=sys.stderr)
+            continue
+        try:
+            sm_root = ET.fromstring(sm_xml)
+        except ET.ParseError as e:
+            print(f"WARNING: {sm_url} did not parse as XML: {e}", file=sys.stderr)
+            continue
+        urls.extend(loc.text.strip() for loc in sm_root.findall(".//sm:loc", SITEMAP_NS) if loc.text)
+
+    if not urls:
+        return None, 0
+    total = len(urls)
+    if total > MAX_AUTO_PAGES:
+        print(f"WARNING: sitemap has {total} pages — scanning the first "
+              f"{MAX_AUTO_PAGES} this run (raise MAX_AUTO_PAGES for more).",
+              file=sys.stderr)
+    return urls[:MAX_AUTO_PAGES], total
+
+
+def build_page_list():
+    """Combines automatic sitemap discovery with the known bilingual names
+    above. Falls back to PAGE_LIST_FALLBACK if discovery fails for any reason.
+
+    Returns (pages, coverage) — coverage records how many pages the sitemap
+    actually lists vs. how many got scanned, so the report can state its own
+    completeness rather than leaving a truncated scan looking like a full one."""
+    discovered, total_found = discover_pages_from_sitemap()
+    if not discovered:
+        print("Sitemap discovery unavailable this run — using the fixed 5-page fallback list.")
+        return PAGE_LIST_FALLBACK, {
+            "source": "fallback",
+            "totalPages": len(PAGE_LIST_FALLBACK),
+            "scannedPages": len(PAGE_LIST_FALLBACK),
+            "truncated": False,
+            "maxAutoPages": MAX_AUTO_PAGES,
         }
-        altDetail = `<div class="issue-detail">${rows}</div>`;
-      }
 
-      let seoCls, seoText, seoDetail = "", seoClickable = "";
-      if(p.seoIssues == null){ seoCls = "pending"; seoText = d.healthSchemaUnknown; }
-      else if(p.seoIssues.length === 0){ seoCls = "measured"; seoText = d.healthSeoOk; }
-      else {
-        seoCls = p.seoIssues.length > 2 ? "poor" : "pending";
-        seoText = d.healthSeoIssue(p.seoIssues.length);
-        seoClickable = "clickable";
-        seoDetail = `<div class="issue-detail">${p.seoIssues.map(s=>`<div>${escapeHtml(s.title)}</div>`).join("")}</div>`;
-      }
-
-      const cssCell = (p.unusedCssKb === null || p.unusedCssKb === undefined) ? `<span class="cell-dash">—</span>` : `<span class="cell-num num">${p.unusedCssKb} KB</span>`;
-      const scoreCell = (p.mobileScore === null || p.mobileScore === undefined) ? `<span class="cell-dash">—</span>` : `<span class="cell-num num">${p.mobileScore}</span>`;
-
-      return `<tr>
-        <td><a class="row-page-link" href="${safeHref(p.url)}" target="_blank" rel="noopener noreferrer"><strong>${label}</strong></a>${excludedTag}</td>
-        <td><span class="status-pill ${schemaCls}">${schemaText}</span></td>
-        <td><span class="status-pill ${altCls} ${altClickable}"${altClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${altText}</span>${altDetail}</td>
-        <td><span class="status-pill ${seoCls} ${seoClickable}"${seoClickable?' tabindex="0" role="button" aria-expanded="false"':''}>${seoText}</span>${seoDetail}</td>
-        <td>${cssCell}</td>
-        <td>${scoreCell}</td>
-      </tr>`;
-    }).join("");
-    if(pageHealthCheckedMonth){
-      note.style.display = "";
-      note.textContent = d.healthCheckedOn(pageHealthCheckedMonth);
+    pages = []
+    for url in discovered:
+        slug = slug_from_url(url)
+        known = KNOWN_PAGE_NAMES.get(slug)
+        if not known:
+            url_lower = url.lower()
+            known = next((v for k, v in KNOWN_PAGE_NAMES_BY_URL_SUBSTRING.items() if k in url_lower), None)
+        pages.append({
+            "id": slug,
+            "url": url,
+            "nameAr": known["nameAr"] if known else None,   # filled from <title> below if still None
+            "nameEn": known["nameEn"] if known else None,
+            "expectSchemaType": known.get("expectSchemaType") if known else None,
+        })
+    coverage = {
+        "source": "sitemap",
+        "totalPages": total_found,
+        "scannedPages": len(pages),
+        "truncated": total_found > len(pages),
+        "maxAutoPages": MAX_AUTO_PAGES,
     }
-  }
+    return pages, coverage
 
-  // Composite score built from pageHealthData itself (schema/alt-text/SEO
-  // issues/performance/CSS-JS bloat, averaged across real content pages) —
-  // distinct from window.__seoScore in renderScoreCards() above, which is
-  // Lighthouse's own homepage-only SEO category audit. Hidden entirely
-  // (rather than showing a "—") when there's no pageHealthData yet, same
-  // reasoning as healthCheckedNote's empty-state above: a blank score card
-  // reads as broken, no card at all just reads as "not run yet."
-  function renderPageHealthScore(){
-    const card = document.getElementById("pageHealthScoreCard");
-    if(!card) return;
-    const d = dict[currentLang];
-    const valEl = document.getElementById("pageHealthScoreVal");
-    const noteEl = document.getElementById("pageHealthScoreNote");
-    if(!pageHealthData.length || typeof window.__pageHealthScore !== "number"){
-      card.style.display = "none";
-      return;
-    }
-    card.style.display = "";
-    valEl.textContent = window.__pageHealthScore;
-    valEl.classList.toggle("partial", window.__pageHealthScore < 80);
-    const excludedCount = pageHealthData.filter(p => p.excludedFromScore).length;
-    const scoredCount = pageHealthData.length - excludedCount;
-    noteEl.textContent = d.pageHealthScoreNote(scoredCount, excludedCount);
-  }
 
-  // AI crawler access (robots.txt) + llms.txt presence - see
-  // check_ai_search_readiness() in update_data.py. Same empty-state
-  // reasoning as the rest of this report: no data yet shows the "not
-  // checked" note instead of an empty table or a misleading "all clear".
-  function renderAiReadiness(){
-    const section = document.getElementById("aiReadiness");
-    if(!section) return;
-    const d = dict[currentLang];
-    const body = document.getElementById("aiTableBody");
-    const table = document.getElementById("aiTable");
-    const note = document.getElementById("aiCheckedNote");
-    const llmsLine = document.getElementById("aiLlmsTxtLine");
-    const data = window.__aiSearchReadiness;
+def extract_title_raw(html):
+    """The page's <title> text, whitespace-collapsed but otherwise untouched —
+    including the "| Site Name" suffix. Length checks and duplicate-title
+    detection both need the real string Google sees, not the trimmed display
+    name extract_title() returns."""
+    m = re.search(r'<title[^>]*>(.*?)</title>', html, re.DOTALL | re.IGNORECASE)
+    if not m:
+        return None
+    return re.sub(r'\s+', ' ', m.group(1)).strip() or None
 
-    if(!data){
-      table.style.display = "none";
-      llmsLine.style.display = "none";
-      note.style.display = "";
-      note.textContent = d.aiCheckedNote;
-      return;
-    }
-    table.style.display = "";
-    note.style.display = "none";
 
-    body.innerHTML = data.crawlers.map(c=>{
-      const cls = c.allowed ? "measured" : (c.flagIfBlocked ? "poor" : "pending");
-      const statusText = c.allowed ? d.aiAllowed : d.aiBlocked;
-      return `<tr>
-        <td><strong>${escapeHtml(c.agent)}</strong><span class="page-url">${escapeHtml(c.owner)}</span></td>
-        <td>${escapeHtml(c.purpose)}</td>
-        <td><span class="status-pill ${cls}">${statusText}</span></td>
-      </tr>`;
-    }).join("");
+def extract_title(html):
+    """Pulls the page's own <title> text as a fallback display name for
+    pages without a curated entry in KNOWN_PAGE_NAMES. WordPress/Yoast titles
+    are usually "Page Name | Site Name" — trims that suffix so the report
+    shows just the page-specific part, not the same site name on every row."""
+    title = extract_title_raw(html)
+    if not title:
+        return None
+    for sep in (" | ", " – ", " - "):
+        if sep in title:
+            title = title.split(sep)[0].strip()
+            break
+    return title or None
 
-    llmsLine.style.display = "";
-    llmsLine.innerHTML = `<strong>${d.aiLlmsTxtLabel}:</strong> ${data.llmsTxtPresent ? d.aiLlmsTxtPresent : d.aiLlmsTxtMissing} — ${d.aiLlmsTxtNote}`;
+AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+             "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
+EN_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+EN_MONTHS_FULL = ["January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"]
 
-    if(window.__aiCheckedMonth){
-      note.style.display = "";
-      note.textContent = d.aiCheckedOn(window.__aiCheckedMonth);
-    }
-  }
+CRUX_METRIC_MAP = {
+    "largest_contentful_paint": "lcp",
+    "interaction_to_next_paint": "inp",
+    "cumulative_layout_shift": "cls",
+    "first_contentful_paint": "fcp",
+    "experimental_time_to_first_byte": "ttfb",
+    "time_to_first_byte": "ttfb",  # newer name, same series
+}
 
-  // "When was this actually last refreshed" - added Aug 19 2026 after
-  // repeated confusion in practice about whether a given number on the
-  // page was current or stale. Distinct from the various *CheckedMonth
-  // notes scattered through other sections (those are per-section and
-  // month-granularity); this is one single, precise answer, shown right
-  // next to the refresh button since that's where the question naturally
-  // comes up.
-  function renderLastRefreshed(){
-    const el = document.getElementById("lastRefreshedLine");
-    if(!el) return;
-    const iso = window.__lastRefreshedAt;
-    if(!iso){ el.style.display = "none"; return; }
-    const d = dict[currentLang];
-    const then = new Date(iso);
-    if(isNaN(then.getTime())){ el.style.display = "none"; return; }
+API_KEY = os.environ.get("PSI_API_KEY", "").strip()
 
-    const exact = then.toLocaleString(currentLang==="ar" ? "ar-SA" : "en-US", {
-      dateStyle: "medium", timeStyle: "short",
-    });
 
-    const diffMs = Date.now() - then.getTime();
-    const mins = Math.floor(diffMs / 60000);
-    const hours = Math.floor(mins / 60);
-    const days = Math.floor(hours / 24);
-    let rel;
-    if(mins < 1) rel = d.relJustNow;
-    else if(mins < 60) rel = d.relMinutes(mins);
-    else if(hours < 24) rel = d.relHours(hours);
-    else rel = d.relDays(days);
+def http_json(url, payload=None, extra_headers=None, timeout=120):
+    headers = {"Content-Type": "application/json"}
+    if extra_headers:
+        headers.update(extra_headers)
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode() if payload is not None else None,
+        headers=headers,
+        method="POST" if payload is not None else "GET",
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode())
 
-    el.style.display = "";
-    el.textContent = d.lastRefreshedLabel(exact, rel);
-  }
 
-  // Expand/collapse for the Alt-text and SEO-issue pills above. Delegated on
-  // the (static) tbody rather than bound per-pill, because renderPageHealthTable()
-  // fully replaces the tbody's innerHTML on every re-render (language toggle,
-  // initial load) — a delegated listener attached once here survives that,
-  // no re-binding needed after each render.
-  (function initPageHealthExpand(){
-    const tbody = document.getElementById("healthTableBody");
-    function toggle(pill){
-      const detail = pill.nextElementSibling;
-      if(!detail || !detail.classList.contains("issue-detail")) return;
-      const open = detail.classList.toggle("open");
-      pill.classList.toggle("open", open);
-      pill.setAttribute("aria-expanded", open ? "true" : "false");
-    }
-    tbody.addEventListener("click", function(e){
-      const pill = e.target.closest(".status-pill.clickable");
-      if(pill) toggle(pill);
-    });
-    tbody.addEventListener("keydown", function(e){
-      if(e.key !== "Enter" && e.key !== " ") return;
-      const pill = e.target.closest(".status-pill.clickable");
-      if(!pill) return;
-      e.preventDefault();
-      toggle(pill);
-    });
-  })();
+def fetch_crux_history():
+    """Return (months:[(y,m)], series:{key:[p75,...]}) from the CrUX History API.
 
-  /* ---------------- this month's priorities (auto-generated) ---------------- */
-  function calendarLabel(monthStr, lang){
-    const [y, mm] = monthStr.split("-");
-    return `${dict[lang].calendarMonths[parseInt(mm,10)-1]} ${y}`;
-  }
+    Raises urllib.error.HTTPError with code 404 if Google has no CrUX record
+    for this origin (insufficient anonymized sample volume) — caller decides
+    how to handle that.
+    """
+    url = f"https://chromeuxreport.googleapis.com/v1/records:queryHistoryRecord?key={API_KEY}"
+    metric_sets = [
+        ["largest_contentful_paint", "interaction_to_next_paint",
+         "cumulative_layout_shift", "first_contentful_paint",
+         "experimental_time_to_first_byte"],
+        ["largest_contentful_paint", "interaction_to_next_paint",
+         "cumulative_layout_shift", "first_contentful_paint",
+         "time_to_first_byte"],
+    ]
+    last_err = None
+    for mset in metric_sets:
+        try:
+            body = {"origin": ORIGIN, "metrics": mset}
+            resp = http_json(url, body)
+            break
+        except urllib.error.HTTPError as e:
+            last_err = e
+            if e.code == 400:
+                continue
+            raise
+    else:
+        raise RuntimeError(f"CrUX request failed with both TTFB metric names: {last_err}")
 
-  function healthCounts(){
+    record = resp["record"]
+    periods = record["collectionPeriods"]
+    months = [(p["lastDate"]["year"], p["lastDate"]["month"]) for p in periods]
+
+    series = {}
+    for api_name, ts in record["metrics"].items():
+        key = CRUX_METRIC_MAP.get(api_name)
+        if not key:
+            continue
+        p75s = ts["percentilesTimeseries"]["p75s"]
+        vals = []
+        for v in p75s:
+            if v is None:
+                vals.append(None)
+            elif key == "cls":
+                vals.append(round(float(v), 2))
+            else:
+                vals.append(int(round(float(v))))
+        series[key] = vals
+
+    for key, vals in series.items():
+        prev = None
+        for i, v in enumerate(vals):
+            if v is None:
+                vals[i] = prev if prev is not None else 0
+            else:
+                prev = vals[i]
+    return months, series
+
+
+def fetch_psi_score(strategy, retry=True):
+    """Homepage PSI run for the given strategy. Returns all four Lighthouse
+    category scores from one call -- Performance, SEO, Accessibility, and
+    Best Practices are all computed together by Lighthouse regardless of
+    which categories you ask for in scoring terms; requesting them
+    explicitly just makes the API return them. Previously this only asked
+    for (and returned) performance, so the SEO/Best Practices/Accessibility
+    score cards on the site were hand-typed once and never updated by any
+    automated process since -- correct fix is to actually read the numbers
+    already present in the response we were already making, not add a
+    second request.
+
+    Uses a longer timeout than the default (200s, not 120s) and retries
+    once on a timeout before giving up -- added after an Aug 19 2026 run
+    crashed entirely because a single slow mobile Lighthouse test (these
+    run a full simulated-connection audit and are the slowest of the API
+    calls this script makes) exceeded the old 120s default. A retry after
+    a real timeout is a legitimate thing to attempt here, unlike blindly
+    retrying a 4xx/5xx error response: a timeout means no response came
+    back at all, not that the server rejected something retrying would
+    repeat identically."""
+    url = ("https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
+           f"?url={urllib.parse.quote(ORIGIN + '/', safe='')}"
+           f"&strategy={strategy}&category=performance&category=seo"
+           f"&category=accessibility&category=best-practices&key={API_KEY}")
+    try:
+        resp = http_json(url, timeout=200)
+    except (TimeoutError, urllib.error.URLError) as e:
+        if retry:
+            print(f"  WARNING: PSI {strategy} request timed out, retrying once: {e}", file=sys.stderr)
+            return fetch_psi_score(strategy, retry=False)
+        raise
+    cats = resp["lighthouseResult"]["categories"]
+
+    def pct(key):
+        c = cats.get(key, {})
+        s = c.get("score")
+        return int(round(s * 100)) if isinstance(s, (int, float)) else None
+
     return {
-      missingSchema: pageHealthData.filter(p => p.schema && !p.schema.hasExpectedType).length,
-      withAltIssues: pageHealthData.filter(p => p.altText && p.altText.issueCount > 0).length
-    };
-  }
-
-  function computePriorities(){
-    const list = [];
-
-    // 0) pages actually returning a broken HTTP status — checked first and
-    // deliberately not competing with the .slice(0,5) cap below, since an
-    // actively broken/inaccessible page is more urgent than anything else
-    // this function tracks. Found while building the marketing action plan
-    // (business-center-cost: both missing <title> AND a failing status code
-    // turned up together) -- this is IT's problem, not marketing's, so it's
-    // surfaced here rather than in the marketing section.
-    const broken = pageHealthData.filter(p => (p.seoIssues||[]).some(i => i.id === "http-status-code"));
-    const brokenList = broken.length ? [{ sev:"poor", type:"broken", count: broken.length, pages: broken }] : [];
-
-    // 0.5) AI crawlers blocked in robots.txt - grouped with broken pages
-    // above since both are access problems, not optimization opportunities:
-    // a crawler that can't reach the site at all makes every other content
-    // improvement moot for that channel. Only counts the answer-serving
-    // crawlers (flagIfBlocked) - CCBot and training-only crawlers are
-    // commonly blocked on purpose and aren't flagged here.
-    const aiData = window.__aiSearchReadiness;
-    const blockedCrawlers = aiData ? aiData.crawlers.filter(c => c.flagIfBlocked && !c.allowed) : [];
-    const aiCrawlerList = blockedCrawlers.length ? [{ sev:"poor", type:"aiCrawler", count: blockedCrawlers.length }] : [];
-
-    // 1) weakest sitewide mobile CWV metric
-    let worst = null, worstRank = -1;
-    metrics.forEach(m=>{
-      const latest = m.data[m.data.length-1];
-      const cls = classify(latest, m.good, m.ni);
-      const rank = cls==="poor" ? 2 : (cls==="ni" ? 1 : 0);
-      if(rank > worstRank){ worstRank = rank; worst = {m, cls}; }
-    });
-    if(worstRank > 0) list.push({ sev: worst.cls, type:"cwv", m: worst.m });
-
-    // 2) keywords with no ranking at all
-    keywords.filter(k=>k.pos===null).forEach(k=> list.push({ sev:"poor", type:"kw", k }) );
-
-    // 3) pages not yet measured this month
-    const pending = pagesPendingThisMonth();
-    if(pending.length) list.push({ sev:"ni", type:"pending", count: pending.length });
-
-    // 4) SEO opportunities — schema & alt text.
-    // Once the automatic page-health scan has run (pageHealthData populated
-    // from data.json's "pageHealth"), compute this from real per-page
-    // results instead of the static assumption below — so these items
-    // disappear from the list entirely once actually resolved everywhere,
-    // and come back accurately (with a real count) if something regresses.
-    // Before the first scan has ever run, falls back to the manually-updated
-    // static text in the dict (prioSchema/prioAlt) rather than an assumption
-    // that nothing's been done — see SETUP.md for when the scan first runs.
-    if(pageHealthData.length){
-      const { missingSchema, withAltIssues } = healthCounts();
-      if(missingSchema > 0) list.push({ sev:"ni", type:"schema", count: missingSchema });
-      if(withAltIssues > 0) list.push({ sev:"ni", type:"alt", count: withAltIssues });
-    } else {
-      list.push({ sev:"ni", type:"schema" });
-      list.push({ sev:"ni", type:"alt" });
+        "performance": pct("performance"),
+        "seo": pct("seo"),
+        "accessibility": pct("accessibility"),
+        "bestPractices": pct("best-practices"),
     }
 
-    return brokenList.concat(aiCrawlerList).concat(list.slice(0,5));
-  }
 
-  function renderPriorities(){
-    const el = document.getElementById("priorityList");
-    const d = dict[currentLang];
-    document.getElementById("prioEyebrowEl").textContent = d.prioEyebrowBase + " — " + calendarLabel(REPORT_MONTH, currentLang);
+# Lighthouse audits deliberately not reported, because a check in this file
+# already covers the same ground more precisely:
+#   image-alt        — check_alt_text() names the actual image files; Lighthouse
+#                      only says pass/fail for the page.
+#   meta-description — check_onpage() reads the tag directly and also measures
+#                      its length. Sept 6 2026: leaving both in produced two
+#                      separate findings for the same problem (14 pages under
+#                      the Arabic label, 10 under Lighthouse's English one, on
+#                      overlapping page sets), which inflated the totals and
+#                      made Marketing's queue look longer than it is. Note the
+#                      counts differ because the checks genuinely differ —
+#                      Lighthouse only fires when the tag is absent, while
+#                      check_onpage() also catches a tag that's present but
+#                      empty. Keeping the more thorough one.
+SKIP_SEO_AUDITS = {"image-alt", "meta-description"}
 
-    const items = computePriorities();
-    el.innerHTML = items.map((it,i)=>{
-      let text = "";
-      if(it.type==="broken"){
-        text = d.prioBroken(it.count);
-      } else if(it.type==="aiCrawler"){
-        text = d.prioAiCrawler(it.count);
-      } else if(it.type==="cwv"){
-        const name = currentLang==="ar" ? it.m.nameAr : it.m.nameEn;
-        text = d.prioCwv.replace("{metric}", `<strong>${escapeHtml(name)}</strong>`);
-      } else if(it.type==="kw"){
-        const name = currentLang==="ar" ? it.k.ar : it.k.en;
-        text = d.prioKw.replace("{kw}", `<strong>${escapeHtml(name)}</strong>`);
-      } else if(it.type==="pending"){
-        text = d.prioPending
-          .replace("{n}", it.count)
-          .replace("{link}", `<a href="#pagePerf">${d.prioPendingLink}</a>`);
-      } else if(it.type==="schema"){
-        text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
-      } else if(it.type==="alt"){
-        text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
-      }
-      const ownerMap = { broken:["tech",d.ownerTech], aiCrawler:["tech",d.ownerTech], cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared] };
-      const [ocls, otxt] = ownerMap[it.type] || ["tech", d.ownerTech];
-      return `<div class="priority-item ${it.sev}">
-        <span class="priority-num num">0${i+1}</span>
-        <span class="priority-text">${text}<br><span class="owner-pill ${ocls}">${d.ownerLabel}: ${otxt}</span></span>
-      </div>`;
-    }).join("");
-  }
 
-  /* Schema/Alt-text opportunity cards — same live pageHealthData the
-     priorities panel uses, so this can't drift out of sync with it or
-     go stale the way the old hardcoded opp2/opp3 copy did (it kept
-     saying "homepage not checked yet" long after the scan covered it).
-     Before the first scan has ever run, falls back to the same static
-     dict text as computePriorities() does, for the same reason. */
-  /* Score cards used to be hand-typed literals (100 / 100 / "93-100")
-     sitting in the HTML, never touched by any automated process since
-     whenever someone first typed them in. Now reads the real numbers
-     from the same PSI homepage run that already feeds mobilePerfNow —
-     see fetch_psi_score() in update_data.py. Falls back to an honest
-     "not synced yet" message rather than a silent dash if the site's
-     data.json predates this fix and doesn't have the fields at all. */
-  function renderScoreCards(){
-    const d = dict[currentLang];
-    const seoEl = document.getElementById("seoScoreVal");
-    const bpEl = document.getElementById("bpScoreVal");
-    const a11yEl = document.getElementById("a11yScoreVal");
-    const noteEl = document.getElementById("scoresFreshnessNote");
-    const targetEl = document.getElementById("seoScoreTarget");
-    if(!seoEl) return;
+def get_gsc_access_token():
+    """Loads the service account from the GSC_SERVICE_ACCOUNT_JSON secret and
+    exchanges it for a short-lived access token. Returns None (not an
+    exception) if the secret isn't set yet, or if auth fails for any
+    reason - GSC data is a "nice to have on top of" the rest of this
+    script, not something that should take down a run that would
+    otherwise succeed. Requires google-auth (added to the workflow's pip
+    install step alongside this function - unlike everything else in this
+    file, correctly signing a service-account JWT isn't something worth
+    hand-rolling against stdlib; this is exactly the kind of auth-critical
+    code where the well-audited official library is the right call).
 
-    const have = typeof window.__seoScore === "number";
-    seoEl.textContent = have ? window.__seoScore : "—";
-    bpEl.textContent = typeof window.__bpScore === "number" ? window.__bpScore : "—";
-    if(typeof window.__a11yMobile === "number" && typeof window.__a11yDesktop === "number"){
-      const lo = Math.min(window.__a11yMobile, window.__a11yDesktop);
-      const hi = Math.max(window.__a11yMobile, window.__a11yDesktop);
-      a11yEl.textContent = lo === hi ? String(lo) : `${lo}–${hi}`;
-      a11yEl.classList.toggle("partial", lo < 90);
-    } else {
-      a11yEl.textContent = "—";
+    Read-only scope on purpose - this integration only ever needs to query
+    existing Search Analytics data, never modify anything about the
+    property."""
+    raw = os.environ.get("GSC_SERVICE_ACCOUNT_JSON")
+    if not raw:
+        print("  GSC_SERVICE_ACCOUNT_JSON not set - skipping GSC, keywords stay as-is this run.")
+        return None
+    try:
+        from google.oauth2 import service_account
+        from google.auth.transport.requests import Request as GoogleAuthRequest
+        info = json.loads(raw)
+        creds = service_account.Credentials.from_service_account_info(
+            info, scopes=["https://www.googleapis.com/auth/webmasters.readonly"]
+        )
+        creds.refresh(GoogleAuthRequest())
+        return creds.token
+    except Exception as e:
+        print(f"  WARNING: GSC auth failed, keywords stay as-is this run: {e}", file=sys.stderr)
+        return None
+
+
+# Silah's GSC property was verified via DNS TXT record (see project history),
+# which is the verification method specific to Domain properties, not
+# URL-prefix ones - so sc-domain: is the expected format. Falls back to the
+# URL-prefix format automatically if that guess is wrong, rather than just
+# failing outright on a property-type mismatch we can recover from.
+GSC_SITE_URL_CANDIDATES = ["sc-domain:silah.com.sa", "https://www.silah.com.sa/"]
+
+
+def fetch_gsc_position(access_token, keyword_query, days=28):
+    """Average position/clicks/impressions over the trailing `days` for
+    everything Search Console logged containing `keyword_query` - a
+    "contains" match rather than exact, since real searches rarely match a
+    tracked phrase word-for-word, and this is meant to track how the TOPIC
+    is doing, not one exact string. Returns None if there's no data for
+    this phrase in the window (genuinely not appearing in any real search,
+    as opposed to appearing but ranking poorly - those are different
+    findings and shouldn't be conflated)."""
+    from datetime import timedelta
+    end = datetime.now(timezone.utc).date()
+    start = end - timedelta(days=days)
+    payload = {
+        "startDate": start.isoformat(), "endDate": end.isoformat(),
+        "dimensions": ["query"], "rowLimit": 1,
+        "dimensionFilterGroups": [{"filters": [
+            {"dimension": "query", "operator": "contains", "expression": keyword_query}
+        ]}],
+    }
+    headers = {"Authorization": f"Bearer {access_token}"}
+    last_err = None
+    for site_url in GSC_SITE_URL_CANDIDATES:
+        endpoint = ("https://searchconsole.googleapis.com/webmasters/v3/sites/"
+                    f"{urllib.parse.quote(site_url, safe='')}/searchAnalytics/query")
+        try:
+            resp = http_json(endpoint, payload=payload, extra_headers=headers)
+            rows = resp.get("rows", [])
+            if not rows:
+                return None
+            r = rows[0]
+            return {"position": r["position"], "clicks": r["clicks"], "impressions": r["impressions"]}
+        except urllib.error.HTTPError as e:
+            last_err = e
+            continue  # try the next site_url candidate - likely a property-type mismatch
+    if last_err:
+        print(f"  WARNING: GSC query failed for '{keyword_query}' against both site URL formats: {last_err}", file=sys.stderr)
+    return None
+
+
+def update_keywords_with_gsc(keywords, access_token):
+    """Updates each tracked keyword's pos/page/tier IN PLACE from real GSC
+    data. position is GSC's average over the window as a float (e.g. 6.8);
+    converted here to the report's existing page/pos pair the same way
+    Google's own results pages are numbered - 10 results per page, so
+    overall rank 15 is page 2, position 5 on that page. A keyword with no
+    GSC rows this window keeps its previous manually-recorded value rather
+    than being overwritten with a false null - going from "we measured
+    this once" to "we have no idea" isn't right either. Only ever called
+    with a real access_token; caller skips this entirely when auth failed,
+    so keywords silently keep their last-known values on any GSC outage."""
+    import math
+    for kw in keywords:
+        result = fetch_gsc_position(access_token, kw["ar"])
+        if result is None:
+            continue
+        overall_rank = round(result["position"])
+        page = max(1, math.ceil(overall_rank / 10))
+        pos = overall_rank - (page - 1) * 10
+        kw["pos"] = pos
+        kw["page"] = page
+        kw["tier"] = "strong" if page == 1 else "weak"
+        kw["gscClicks"] = result["clicks"]
+        kw["gscImpressions"] = round(result["impressions"])
+
+
+def fetch_psi_full(page_url, strategy):
+    """Like fetch_psi_score, but for an arbitrary URL and returns the extra
+    diagnostics — unused CSS/JS byte estimates AND failing SEO-category audits
+    — from the same Lighthouse run. No separate API call for either; Lighthouse
+    already computes an "seo" category alongside "performance" on every run,
+    we just weren't reading it before.
+
+    Sept 2026: each returned SEO issue now carries an `owner` (see
+    SEO_AUDIT_OWNERS) so a failing meta-description audit lands on Marketing's
+    row and a failing hreflang audit lands on IT's, without either team having
+    to interpret Lighthouse audit ids.
+
+    Also retries on the retryable statuses in PSI_RETRY_STATUSES with growing
+    backoff — see that constant for why a 500 from this endpoint is worth
+    retrying when a 4xx isn't. Raises the last error if every attempt fails,
+    so the caller still marks the page's PSI fields unavailable rather than
+    inventing values."""
+    url = ("https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
+           f"?url={urllib.parse.quote(page_url, safe='')}"
+           f"&strategy={strategy}&category=performance&category=seo&key={API_KEY}")
+
+    resp = None
+    for attempt in range(PSI_MAX_RETRIES + 1):
+        try:
+            resp = http_json(url)
+            break
+        except urllib.error.HTTPError as e:
+            if e.code not in PSI_RETRY_STATUSES or attempt == PSI_MAX_RETRIES:
+                raise
+            wait = PSI_RETRY_BACKOFF_SECONDS[min(attempt, len(PSI_RETRY_BACKOFF_SECONDS) - 1)]
+            print(f"    PSI HTTP {e.code} for {page_url} — retrying in {wait}s "
+                  f"(attempt {attempt + 2} of {PSI_MAX_RETRIES + 1})", file=sys.stderr)
+            time.sleep(wait)
+        except (TimeoutError, urllib.error.URLError) as e:
+            # A timeout means no response came back at all, so the same request
+            # may well succeed — same reasoning as fetch_psi_score's retry.
+            if attempt == PSI_MAX_RETRIES:
+                raise
+            wait = PSI_RETRY_BACKOFF_SECONDS[min(attempt, len(PSI_RETRY_BACKOFF_SECONDS) - 1)]
+            print(f"    PSI network error for {page_url} ({e}) — retrying in {wait}s "
+                  f"(attempt {attempt + 2} of {PSI_MAX_RETRIES + 1})", file=sys.stderr)
+            time.sleep(wait)
+
+    lh = resp.get("lighthouseResult", {})
+    audits = lh.get("audits", {})
+    score = lh["categories"]["performance"]["score"]
+
+    def savings_kb(audit_id):
+        bytes_ = audits.get(audit_id, {}).get("details", {}).get("overallSavingsBytes")
+        return round(bytes_ / 1024) if isinstance(bytes_, (int, float)) else None
+
+    # Only binary/numeric-scored SEO audits that actually failed (score != 1).
+    # Skips manual-only checks Lighthouse can't auto-verify (e.g. structured-data
+    # has scoreDisplayMode="manual" and is excluded by the filter below on its own).
+    seo_issues = []
+    seo_cat = lh.get("categories", {}).get("seo", {})
+    for ref in seo_cat.get("auditRefs", []):
+        aid = ref.get("id")
+        if aid in SKIP_SEO_AUDITS:
+            continue
+        a = audits.get(aid, {})
+        if a.get("scoreDisplayMode") not in ("binary", "numeric"):
+            continue
+        a_score = a.get("score")
+        if a_score is None or a_score >= 1:
+            continue
+        seo_issues.append({
+            "id": aid,
+            "title": a.get("title", aid),
+            "owner": SEO_AUDIT_OWNERS.get(aid, OWNER_IT),
+        })
+
+    return {
+        "score": int(round(score * 100)),
+        "unusedCssKb": savings_kb("unused-css-rules"),
+        "unusedJsKb": savings_kb("unused-javascript"),
+        "seoIssues": seo_issues,
     }
 
-    // Target isn't a guessed/projected number — 100 is Lighthouse's actual
-    // ceiling for the SEO category, reached for real if every currently-
-    // failing audit passes. Reuses the homepage's own seoIssues list
-    // (pageHealthData id "home") rather than a separate calculation, since
-    // that's the same page this score card is measuring.
-    if(targetEl){
-      const home = pageHealthData.find(p => p.id === "home");
-      if(!home || home.seoIssues == null){
-        targetEl.textContent = "";
-      } else if(home.seoIssues.length === 0){
-        targetEl.textContent = d.scoreTargetReached;
-      } else {
-        targetEl.innerHTML = d.scoreTargetGap(home.seoIssues.length);
-      }
+
+def fetch_html(page_url, retry=True):
+    """Fetch a page's rendered-server HTML. Returns None on any failure —
+    callers treat a missing fetch as 'skip this page this run', matching the
+    existing best-effort pattern used for CrUX above (a page hiccup shouldn't
+    fail the whole monthly run).
+
+    Retries once after PAGE_FETCH_RETRY_BACKOFF_SECONDS on failure (still a
+    single extra attempt, not a loop) — cheap insurance against a transient
+    rate-limit/WAF response on an otherwise-fine page, without turning one
+    stuck page into a long hang."""
+    try:
+        req = urllib.request.Request(page_url, headers={"User-Agent": "Mozilla/5.0 (compatible; SilahReportBot/1.0)"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return r.read().decode("utf-8", errors="replace")
+    except Exception as e:
+        if retry:
+            print(f"  WARNING: fetch failed for {page_url}, retrying once in "
+                  f"{PAGE_FETCH_RETRY_BACKOFF_SECONDS}s: {e}", file=sys.stderr)
+            time.sleep(PAGE_FETCH_RETRY_BACKOFF_SECONDS)
+            return fetch_html(page_url, retry=False)
+        print(f"  WARNING: could not fetch {page_url}: {e}", file=sys.stderr)
+        return None
+
+
+def check_schema(html):
+    """Pulls every <script type="application/ld+json"> block out of the page
+    and reports which @type values are present. Regex-based on purpose (no
+    extra pip installs / no HTML parser dependency for the Action to manage) —
+    fine here because we're only looking for a well-formed <script> tag, not
+    parsing arbitrary HTML structure."""
+    blocks = re.findall(
+        r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        html, re.DOTALL | re.IGNORECASE,
+    )
+    types_found = []
+    for b in blocks:
+        try:
+            parsed = json.loads(b.strip())
+        except json.JSONDecodeError:
+            continue
+        candidates = parsed if isinstance(parsed, list) else [parsed]
+        for c in candidates:
+            if isinstance(c, dict) and "@type" in c:
+                t = c["@type"]
+                types_found.extend(t if isinstance(t, list) else [t])
+            # some sites nest an @graph array (e.g. Yoast) — check inside it too
+            for g in (c.get("@graph") if isinstance(c, dict) else None) or []:
+                if isinstance(g, dict) and "@type" in g:
+                    t = g["@type"]
+                    types_found.extend(t if isinstance(t, list) else [t])
+    return {"blockCount": len(blocks), "types": sorted(set(types_found))}
+
+
+def check_alt_text(html, page_url):
+    """Flags <img> tags with a missing, empty, or generic-placeholder alt
+    attribute — but only among real, same-origin content images. Two kinds
+    of noise deliberately excluded, found by inspecting the first real scan's
+    output on Aug 8 2026:
+      - data: URIs (inline SVGs/icons) — not a checkable "image with a src",
+        and rsplit("/")-ing the encoded data itself produced garbage filenames.
+      - third-party images (chat widgets, tracking pixels, embeds) — these
+        load from a different domain than the page, which is a reliable general
+        signal without having to hardcode specific vendor patterns. Not ours
+        to add alt text to even if flagged.
+    `totalImages` counts only these checkable images too, so the ratio in the
+    report (e.g. "1 of 6") means what it looks like it means."""
+    imgs = re.findall(r'<img\b[^>]*>', html, re.IGNORECASE)
+    checkable = 0
+    issues = []
+    for tag in imgs:
+        src_match = re.search(r'src=["\']([^"\']*)["\']', tag, re.IGNORECASE)
+        src = src_match.group(1).strip() if src_match else ""
+        if not src or src.startswith("data:"):
+            continue
+        resolved = urllib.parse.urljoin(page_url, src)
+        if not resolved.startswith(ORIGIN):
+            continue
+        checkable += 1
+        alt_match = re.search(r'alt=["\']([^"\']*)["\']', tag, re.IGNORECASE)
+        alt_val = alt_match.group(1).strip() if alt_match else None
+        is_bad = alt_val is None or alt_val.lower() in GENERIC_ALT_VALUES
+        if is_bad:
+            issues.append({
+                "file": resolved.rsplit("/", 1)[-1],
+                "url": resolved,
+                # Distinguishes "no alt attribute at all" from "alt is a
+                # generic placeholder like logo/image" — same fix either way,
+                # but the second kind is invisible in a browser devtools check
+                # (which only finds empty ones), so naming it here stops the
+                # two counts looking like a discrepancy in the report.
+                "reason": "missing" if alt_val is None else "placeholder",
+            })
+    # "examples" used to be capped at issues[:5] — kept only a sample, so the
+    # report could show a count but never the full picture. Now that the report
+    # has a click-to-expand detail view (Aug 9 2026), it needs every flagged
+    # filename, not a truncated sample, so the list here is complete.
+    # Each example carries the full resolved `url` alongside `file` (Aug 2026)
+    # so the report can link straight to the image instead of showing a bare
+    # filename with nothing to click - `resolved` was already being computed
+    # above, it just wasn't being kept past the rsplit that trims it to a
+    # display name.
+    return {"totalImages": checkable, "issueCount": len(issues), "examples": issues}
+
+
+def check_onpage(html, page_url):
+    """On-page fundamentals read off HTML this script already fetched — no
+    extra requests, no new API quota. Everything here was previously invisible
+    to the report despite the markup being right there in the same string the
+    schema and alt-text checks were already scanning.
+
+    Collected per page:
+      canonical      — the rel=canonical href, and whether it points at this
+                       page itself. A canonical pointing somewhere else means
+                       this page is asking Google not to rank it, which is
+                       occasionally intentional and usually not.
+      noindex        — meta robots noindex. Not a fault on its own: the
+                       cart/checkout/account pages SHOULD be noindexed (see
+                       SCORE_EXCLUDED_SLUGS), so this is reported as a fact and
+                       only flagged as an issue on pages that aren't excluded.
+      title          — raw <title> and its length.
+      metaDescription— the description text and its length (presence itself is
+                       also caught by Lighthouse's meta-description audit; the
+                       length check is the part Lighthouse doesn't give us).
+      h1Count        — number of <h1> elements. Zero or several both indicate a
+                       heading structure worth a look.
+      internalLinks  — same-origin link targets, normalized. Aggregated across
+                       all pages in run_page_health_scan() to find orphans.
+    """
+    canonical = None
+    m = re.search(r'<link[^>]+rel=["\']canonical["\'][^>]*>', html, re.IGNORECASE)
+    if m:
+        h = re.search(r'href=["\']([^"\']+)["\']', m.group(0), re.IGNORECASE)
+        canonical = h.group(1).strip() if h else None
+
+    robots_content = ""
+    m = re.search(r'<meta[^>]+name=["\']robots["\'][^>]*>', html, re.IGNORECASE)
+    if m:
+        c = re.search(r'content=["\']([^"\']*)["\']', m.group(0), re.IGNORECASE)
+        robots_content = (c.group(1) if c else "").lower()
+
+    meta_desc = None
+    m = re.search(r'<meta[^>]+name=["\']description["\'][^>]*>', html, re.IGNORECASE)
+    if m:
+        c = re.search(r'content=["\']([^"\']*)["\']', m.group(0), re.IGNORECASE)
+        meta_desc = ((c.group(1) if c else "") or "").strip() or None
+
+    title = extract_title_raw(html)
+    h1s = re.findall(r'<h1\b[^>]*>(.*?)</h1>', html, re.DOTALL | re.IGNORECASE)
+
+    hrefs = re.findall(r'<a\b[^>]*href=["\']([^"\']+)["\']', html, re.IGNORECASE)
+    internal = set()
+    for h in hrefs:
+        h = h.strip()
+        if not h or h.startswith(("#", "mailto:", "tel:", "javascript:")):
+            continue
+        resolved = urllib.parse.urljoin(page_url, h)
+        if resolved.startswith(ORIGIN):
+            internal.add(normalize_url(resolved))
+    internal.discard(normalize_url(page_url))  # self-links aren't inbound links
+
+    return {
+        "canonical": canonical,
+        "canonicalIsSelf": normalize_url(canonical) == normalize_url(page_url) if canonical else None,
+        "noindex": "noindex" in robots_content,
+        "robotsMeta": robots_content or None,
+        "title": title,
+        "titleLength": len(title) if title else 0,
+        "metaDescription": meta_desc,
+        "metaDescriptionLength": len(meta_desc) if meta_desc else 0,
+        "h1Count": len(h1s),
+        "internalLinks": sorted(internal),
     }
 
-    if(!have){
-      noteEl.textContent = d.scoresNotSyncedYet;
-      return;
+
+def build_issue_list(entry):
+    """Flattens everything known about one page into a single owner-tagged
+    issue list. This is what makes the report readable as shared documentation:
+    each team filters to its own owner and sees exactly its outstanding work,
+    with no interpretation step in between.
+
+    Severity is "high" / "medium" / "low" — high means it affects whether the
+    page can rank at all, medium means it measurably weakens it, low is
+    hygiene. Deliberately conservative: things that are merely conventional
+    (title length, H1 count) are never "high", because treating a style
+    convention as a blocker is how a report trains people to ignore it.
+
+    Checks that didn't run this time (null, same graceful-degradation rule as
+    everywhere else in this file) produce no issues rather than false ones —
+    "we didn't measure it" must never render as "it's fine"."""
+    issues = []
+    excluded = entry.get("excludedFromScore", False)
+
+    def add(code, owner, severity, ar, en, detail=None):
+        item = {"code": code, "owner": owner, "severity": severity,
+                "labelAr": ar, "labelEn": en}
+        if detail is not None:
+            item["detail"] = detail
+        issues.append(item)
+
+    # Funnel/test/expired pages (SCORE_EXCLUDED_SLUGS) are already kept out of
+    # the aggregate score for a reason: nobody should be writing a meta
+    # description for the shopping cart. That reasoning applies just as much to
+    # the issue list — leaving them in would put "cart page has no meta
+    # description" onto Marketing's queue every month, which is exactly the
+    # noise the exclusion list exists to prevent, and would make the owner
+    # counts overstate real outstanding work. These pages still get scanned and
+    # still appear in the table with all their raw data; they just contribute
+    # one actionable finding at most (should they be noindexed), and nothing
+    # content-related.
+    if excluded:
+        op_ex = entry.get("onPage")
+        if op_ex is not None and not op_ex["noindex"]:
+            add("should_be_noindex", OWNER_IT, "low",
+                "صفحة غير تسويقية يُفضّل منع فهرستها",
+                "Non-content funnel page that should probably be noindexed")
+        return issues
+
+    schema = entry.get("schema")
+    if schema is not None and not schema["hasExpectedType"]:
+        if schema["typesFound"]:
+            add("schema_wrong_type", OWNER_IT, "medium",
+                "بيانات منظمة موجودة لكن ليست من النوع المتوقع",
+                "Structured data present but not the expected type",
+                {"typesFound": schema["typesFound"]})
+        else:
+            add("schema_missing", OWNER_IT, "high",
+                "لا توجد بيانات منظمة (Schema) على الصفحة",
+                "No Schema.org structured data on the page")
+
+    alt = entry.get("altText")
+    if alt is not None and alt["issueCount"] > 0:
+        add("alt_text_missing", OWNER_SHARED, "medium",
+            f"{alt['issueCount']} صورة بدون نص بديل",
+            f"{alt['issueCount']} image(s) missing alt text",
+            {"count": alt["issueCount"], "totalImages": alt["totalImages"]})
+
+    op = entry.get("onPage")
+    if op is not None:
+        if op["noindex"]:
+            # Reachable only for non-excluded pages — the excluded case returns
+            # early above, so a noindex here is genuinely a content page hidden
+            # from Google, which is the highest-severity thing this scan finds.
+            add("noindex_unexpected", OWNER_IT, "high",
+                "الصفحة تمنع الفهرسة (noindex) رغم أنها صفحة محتوى",
+                "Page is set to noindex despite being a content page")
+        if not op["canonical"]:
+            add("canonical_missing", OWNER_IT, "medium",
+                "لا يوجد وسم canonical",
+                "No rel=canonical tag")
+        elif op["canonicalIsSelf"] is False:
+            add("canonical_points_elsewhere", OWNER_IT, "high",
+                "وسم canonical يشير إلى صفحة أخرى",
+                "Canonical tag points to a different URL",
+                {"canonical": op["canonical"]})
+        if not op["title"]:
+            add("title_missing", OWNER_MARKETING, "high",
+                "لا يوجد عنوان للصفحة (title)",
+                "Page has no <title>")
+        elif op["titleLength"] > TITLE_MAX_CHARS:
+            add("title_too_long", OWNER_MARKETING, "low",
+                f"عنوان الصفحة طويل ({op['titleLength']} حرف)",
+                f"Title is long ({op['titleLength']} chars)",
+                {"length": op["titleLength"], "max": TITLE_MAX_CHARS})
+        elif op["titleLength"] < TITLE_MIN_CHARS:
+            add("title_too_short", OWNER_MARKETING, "low",
+                f"عنوان الصفحة قصير ({op['titleLength']} حرف)",
+                f"Title is short ({op['titleLength']} chars)",
+                {"length": op["titleLength"], "min": TITLE_MIN_CHARS})
+        if not op["metaDescription"]:
+            add("meta_description_missing", OWNER_MARKETING, "medium",
+                "لا يوجد وصف تعريفي (meta description)",
+                "No meta description")
+        elif op["metaDescriptionLength"] > META_DESC_MAX_CHARS:
+            add("meta_description_too_long", OWNER_MARKETING, "low",
+                f"الوصف التعريفي طويل ({op['metaDescriptionLength']} حرف)",
+                f"Meta description is long ({op['metaDescriptionLength']} chars)")
+        elif op["metaDescriptionLength"] < META_DESC_MIN_CHARS:
+            add("meta_description_too_short", OWNER_MARKETING, "low",
+                f"الوصف التعريفي قصير ({op['metaDescriptionLength']} حرف)",
+                f"Meta description is short ({op['metaDescriptionLength']} chars)")
+        if op["h1Count"] == 0:
+            add("h1_missing", OWNER_MARKETING, "medium",
+                "لا يوجد عنوان رئيسي H1",
+                "No H1 heading on the page")
+        elif op["h1Count"] > 1:
+            add("h1_multiple", OWNER_MARKETING, "low",
+                f"يوجد {op['h1Count']} عناوين H1",
+                f"{op['h1Count']} H1 headings on the page")
+
+    if entry.get("inboundInternalLinks") == 0 and not excluded:
+        add("orphan_page", OWNER_MARKETING, "high",
+            "صفحة يتيمة — لا ترتبط بها أي صفحة أخرى",
+            "Orphan page — no other scanned page links to it")
+
+    if entry.get("mobileScore") is not None and entry["mobileScore"] < 50:
+        add("mobile_performance_poor", OWNER_IT, "high",
+            f"أداء الجوال ضعيف ({entry['mobileScore']}/100)",
+            f"Poor mobile performance ({entry['mobileScore']}/100)")
+    elif entry.get("mobileScore") is not None and entry["mobileScore"] < 90:
+        add("mobile_performance_below_target", OWNER_IT, "medium",
+            f"أداء الجوال دون الهدف ({entry['mobileScore']}/100)",
+            f"Mobile performance below target ({entry['mobileScore']}/100)")
+
+    if entry.get("unusedCssKb") is not None and entry["unusedCssKb"] > 60:
+        add("unused_css_high", OWNER_IT, "medium",
+            f"CSS غير مستخدم ({entry['unusedCssKb']}KB)",
+            f"High unused CSS ({entry['unusedCssKb']}KB)")
+    if entry.get("unusedJsKb") is not None and entry["unusedJsKb"] > 150:
+        add("unused_js_high", OWNER_IT, "medium",
+            f"JavaScript غير مستخدم ({entry['unusedJsKb']}KB)",
+            f"High unused JavaScript ({entry['unusedJsKb']}KB)")
+
+    for si in entry.get("seoIssues") or []:
+        add(f"lighthouse_{si['id']}", si.get("owner", OWNER_IT), "medium",
+            si.get("title", si["id"]), si.get("title", si["id"]))
+
+    if entry.get("duplicateTitleWith"):
+        add("duplicate_title", OWNER_MARKETING, "medium",
+            "عنوان الصفحة مكرر مع صفحة أخرى",
+            "Title is duplicated on another page",
+            {"sharedWith": entry["duplicateTitleWith"]})
+
+    return issues
+
+
+def run_page_health_scan():
+    """One pass over the auto-discovered page list: HTML-based schema/alt-text/
+    on-page checks + a PSI run per page for score, unused CSS/JS, and SEO
+    issues. Any single page failing doesn't stop the others — each result just
+    gets marked unavailable for this run.
+
+    Returns (results, coverage). Cross-page analysis (internal-link graph for
+    orphan detection, duplicate titles) happens after the per-page loop, since
+    both need every page's data before either can be decided."""
+    page_list, coverage = build_page_list()
+    print(f"  Page list: {len(page_list)} page(s) to scan this run.")
+    results = []
+    psi_failures = []
+    for i, page in enumerate(page_list):
+        if i > 0:
+            time.sleep(PAGE_FETCH_DELAY_SECONDS)
+        print(f"  Scanning {page['id']} ({page['url']}) ...")
+        entry = {"id": page["id"], "nameAr": page["nameAr"], "nameEn": page["nameEn"],
+                  "url": page["url"], "checkedAt": datetime.now(timezone.utc).strftime("%Y-%m-%d")}
+        if not entry["nameAr"]:
+            # Baseline fallback before we even try the fetch: the slug, so a
+            # failed fetch below still leaves a real (if unpolished) name
+            # instead of null. Upgraded to the page's actual <title> further
+            # down if the fetch succeeds and a nicer name is available.
+            entry["nameAr"] = page["id"]
+            entry["nameEn"] = page["id"]
+
+        html = fetch_html(page["url"])
+        if html is not None:
+            if not page.get("nameAr"):
+                # No curated name for this one — use the page's own <title>
+                # for both languages (see extract_title()'s docstring for why
+                # there's no separate EN version: no reliable auto-translation).
+                extracted = extract_title(html) or page["id"]
+                entry["nameAr"] = extracted
+                entry["nameEn"] = extracted
+            schema = check_schema(html)
+            expected = page.get("expectSchemaType")
+            has_expected = (expected in schema["types"]) if expected else (len(schema["types"]) > 0)
+            entry["schema"] = {"hasExpectedType": has_expected, "typesFound": schema["types"]}
+            entry["altText"] = check_alt_text(html, page["url"])
+            entry["onPage"] = check_onpage(html, page["url"])
+        else:
+            entry["schema"] = None
+            entry["altText"] = None
+            entry["onPage"] = None
+
+        try:
+            if i > 0:
+                time.sleep(PSI_CALL_DELAY_SECONDS)
+            psi = fetch_psi_full(page["url"], "mobile")
+            entry["mobileScore"] = psi["score"]
+            entry["unusedCssKb"] = psi["unusedCssKb"]
+            entry["unusedJsKb"] = psi["unusedJsKb"]
+            entry["seoIssues"] = psi["seoIssues"]
+        except Exception as e:
+            print(f"  WARNING: PSI failed for {page['id']}: {e}", file=sys.stderr)
+            psi_failures.append(page["id"])
+            entry["mobileScore"] = None
+            entry["unusedCssKb"] = None
+            entry["unusedJsKb"] = None
+            entry["seoIssues"] = None
+
+        results.append(entry)
+
+    analyze_cross_page(results)
+    # Surfaced in the return value (and from there into data.json) rather than
+    # only logged: a page whose PSI call failed shows blank cells in the
+    # report, which is indistinguishable from "measured and fine" unless the
+    # report can say how many pages this affected. Same principle as
+    # scanCoverage — the report should state the limits of its own data.
+    coverage["psiFailures"] = len(psi_failures)
+    coverage["psiFailedPages"] = psi_failures
+    if psi_failures:
+        print(f"  NOTE: PSI returned no data for {len(psi_failures)} page(s) after retries: "
+              f"{', '.join(psi_failures[:8])}{' …' if len(psi_failures) > 8 else ''}")
+    return results, coverage
+
+
+def analyze_cross_page(results):
+    """Cross-page analysis that can only run once every page has been scanned:
+
+    Internal-link graph -> inbound link counts and orphan detection. An orphan
+    is a page in the sitemap that no OTHER scanned page links to. Note the
+    honest limitation: this only sees links on pages that were scanned this
+    run, so if the sitemap was truncated (see MAX_AUTO_PAGES) a page could look
+    orphaned only because the page linking to it wasn't scanned. That's why
+    orphan flagging is skipped entirely on a truncated run rather than
+    reporting findings we can't stand behind.
+
+    Duplicate titles -> two pages sharing an identical <title> compete with
+    each other in search results. This site has had exactly this bug before
+    (a duplicate title tag fixed by the WordPress developer in Aug 2026), so
+    it's worth catching automatically rather than by eye.
+
+    Mutates entries IN PLACE, same pattern as compute_site_seo_score below."""
+    all_links = set()
+    scanned_ok = [e for e in results if e.get("onPage")]
+    for e in scanned_ok:
+        all_links.update(e["onPage"]["internalLinks"])
+
+    for e in results:
+        if not e.get("onPage"):
+            e["inboundInternalLinks"] = None
+            continue
+        target = normalize_url(e["url"])
+        inbound = sum(1 for other in scanned_ok
+                      if other is not e and target in other["onPage"]["internalLinks"])
+        e["inboundInternalLinks"] = inbound
+
+    titles = {}
+    for e in scanned_ok:
+        t = (e["onPage"].get("title") or "").strip()
+        if t:
+            titles.setdefault(t, []).append(e["id"])
+    for e in results:
+        e["duplicateTitleWith"] = None
+        if not e.get("onPage"):
+            continue
+        t = (e["onPage"].get("title") or "").strip()
+        if t and len(titles.get(t, [])) > 1:
+            e["duplicateTitleWith"] = [pid for pid in titles[t] if pid != e["id"]]
+
+
+# Slugs excluded from the SEO score: checkout/cart/account funnel pages
+# (never meant to be indexed or ranked - noindex is the real fix for these,
+# not a meta description), one leftover test page, and expired trade-show
+# landing pages. Matched against the URL-decoded slug so the Arabic ones
+# are readable here instead of raw percent-encoding. Excluded pages still
+# get scanned normally and still appear in the table - only the aggregate
+# score skips them, since averaging in "does the shopping cart page have a
+# meta description" would punish the score for something that was never a
+# real SEO target. Aug 2026: see the pageHealth review that flagged these.
+SCORE_EXCLUDED_SLUGS = {
+    "طلب-باقة", "عربة-التسوق", "الدفع",                                # checkout/cart funnel
+    "user-account", "user-public-account", "wishlist", "thank-you",       # account funnel
+    "normal-form-test",                                                  # leftover test page
+    "gitex2022", "gitex2023", "gitex2023_en", "gitex-form",              # expired trade-show pages
+}
+
+
+def is_excluded_from_score(page_id):
+    return urllib.parse.unquote(page_id) in SCORE_EXCLUDED_SLUGS
+
+
+def compute_page_seo_score(entry):
+    """Weighted 0-100 SEO score for one pageHealth entry, built entirely from
+    checks already being collected here - nothing new to fetch. Weights are
+    loosely modeled on common external audit frameworks (technical/schema,
+    on-page, performance, and images all contribute); this scanner doesn't
+    check content-quality/E-E-A-T or AI-search-readiness, so those aren't
+    part of this score.
+
+    Each component is (points_earned, points_possible). A component whose
+    underlying check is unavailable this run (null, same reasons as
+    elsewhere in this file) is left out of BOTH the numerator and the
+    denominator, so a page isn't punished for a check that didn't run -
+    same graceful-degradation principle used throughout this script.
+    Returns None if every component is unavailable.
+
+    Sept 2026 note: the new on-page checks (canonical, title, H1, internal
+    links) are deliberately NOT folded into this formula. Changing the weights
+    would move every page's score for reasons unrelated to the site actually
+    changing, which would make the first month of pageHealthHistory a
+    meaningless comparison and undermine the point of keeping history at all.
+    Those findings surface in the owner-tagged issue list instead. Revisit
+    after there are a few months of history worth comparing against."""
+    parts = []
+
+    if entry.get("schema") is not None:
+        if entry["schema"]["hasExpectedType"]:
+            pts = 20
+        elif entry["schema"]["typesFound"]:
+            pts = 10  # has *some* schema, just not the expected type
+        else:
+            pts = 0
+        parts.append((pts, 20))
+
+    if entry.get("altText") is not None:
+        total = entry["altText"]["totalImages"]
+        issues = entry["altText"]["issueCount"]
+        ratio = 1.0 if total == 0 else max(0.0, (total - issues) / total)
+        parts.append((round(20 * ratio), 20))
+
+    if entry.get("seoIssues") is not None:
+        parts.append((max(0, 20 - len(entry["seoIssues"]) * 10), 20))
+
+    if entry.get("mobileScore") is not None:
+        parts.append((round(entry["mobileScore"] / 100 * 25), 25))
+
+    if entry.get("unusedCssKb") is not None and entry.get("unusedJsKb") is not None:
+        # Full 15 pts under ~20KB unused CSS / ~50KB unused JS, tapering to
+        # 0 at roughly 3x those thresholds. Bounded by whichever is worse.
+        css_frac = max(0.0, 1 - max(0, entry["unusedCssKb"] - 20) / 40)
+        js_frac = max(0.0, 1 - max(0, entry["unusedJsKb"] - 50) / 100)
+        parts.append((round(15 * min(css_frac, js_frac)), 15))
+
+    if not parts:
+        return None
+    earned = sum(p[0] for p in parts)
+    possible = sum(p[1] for p in parts)
+    return round(earned / possible * 100)
+
+
+def compute_site_seo_score(page_health):
+    """Adds `seoScore` (0-100, or null if nothing to score) and
+    `excludedFromScore` (bool) onto each pageHealth entry IN PLACE, and
+    returns the overall site score - a plain average across included pages
+    that have at least one scoreable component - or None if nothing on the
+    whole list could be scored (e.g. every fetch failed this run)."""
+    scored = []
+    for entry in page_health:
+        excluded = is_excluded_from_score(entry["id"])
+        entry["excludedFromScore"] = excluded
+        if excluded:
+            entry["seoScore"] = None
+            continue
+        s = compute_page_seo_score(entry)
+        entry["seoScore"] = s
+        if s is not None:
+            scored.append(s)
+    return round(sum(scored) / len(scored)) if scored else None
+
+
+def attach_issues(page_health, coverage):
+    """Builds each page's owner-tagged issue list and returns a site-wide
+    summary grouped by owner. Must run AFTER compute_site_seo_score, since
+    build_issue_list() reads excludedFromScore to decide whether noindex on a
+    given page is correct or a fault.
+
+    Orphan detection is suppressed on a truncated run — see analyze_cross_page
+    for why a partial scan can't distinguish a real orphan from a page whose
+    only inbound link lives on a page that wasn't scanned."""
+    truncated = coverage.get("truncated", False)
+    summary = {OWNER_IT: 0, OWNER_MARKETING: 0, OWNER_SHARED: 0}
+    by_severity = {"high": 0, "medium": 0, "low": 0}
+    for entry in page_health:
+        issues = build_issue_list(entry)
+        if truncated:
+            issues = [i for i in issues if i["code"] != "orphan_page"]
+        entry["issues"] = issues
+        for i in issues:
+            summary[i["owner"]] = summary.get(i["owner"], 0) + 1
+            by_severity[i["severity"]] = by_severity.get(i["severity"], 0) + 1
+    return {
+        "byOwner": summary,
+        "bySeverity": by_severity,
+        "totalIssues": sum(summary.values()),
+        "orphanDetectionSkipped": truncated,
     }
-    const syncedMonth = window.__lighthouseScoresCheckedMonth;
-    noteEl.textContent = syncedMonth ? d.scoresSyncedOn(calendarLabel(syncedMonth, currentLang)) : "";
-  }
-
-  /* Marketing action plan — everything here is deliberately scoped to
-     tasks doable from the WordPress admin with no developer involved:
-     meta descriptions and alt text are both plain content-editing fields,
-     keyword content gaps are a writing/content-strategy task. Schema
-     markup, unused CSS/JS, and Core Web Vitals stay out of this section
-     on purpose — those need code changes and belong with IT instead.
-     Built from the same pageHealthData/keywords already driving every
-     other section, so this can't say something different from what the
-     rest of the report says. */
-  function mktCard(id, title, badge, why, how, items){
-    // items is either plain strings (keywords - no natural URL to link to)
-    // or {name,url} objects (pages - always link straight to the page, so
-    // marketing doesn't have to go hunting for it manually). Aug 2026: this
-    // used to render page names as inert text with no way to reach the
-    // actual page from here.
-    const itemsHtml = items.length
-      ? `<button class="mkt-card-toggle" type="button" aria-expanded="false">${dict[currentLang].mktShowPages}</button>
-         <div class="mkt-card-pages">${items.map(it=>{
-           const isObj = it && typeof it === "object";
-           const name = escapeHtml(isObj ? it.name : it);
-           const url = isObj ? it.url : null;
-           return url
-             ? `<div><a class="row-page-link" href="${safeHref(url)}" target="_blank" rel="noopener noreferrer">${name}</a></div>`
-             : `<div>${name}</div>`;
-         }).join("")}</div>`
-      : "";
-    return `<div class="mkt-card">
-      <div class="mkt-card-head"><span class="mkt-card-title">${escapeHtml(title)}</span><span class="mkt-card-badge">${escapeHtml(badge)}</span></div>
-      <div class="mkt-card-why">${escapeHtml(why)}</div>
-      <div class="mkt-card-how">${how}</div>
-      ${itemsHtml}
-    </div>`;
-  }
-
-  function renderMarketingPlan(){
-    const d = dict[currentLang];
-    const list = document.getElementById("mktPlanList");
-    if(!list) return;
-
-    const cards = [];
-
-    const metaMissing = pageHealthData.filter(p => (p.seoIssues||[]).some(i => i.id === "meta-description"));
-    if(metaMissing.length){
-      cards.push(mktCard(
-        "meta", d.mktMetaTitle(metaMissing.length), d.mktBadgeCount(metaMissing.length),
-        d.mktMetaWhy, d.mktMetaHow,
-        metaMissing.map(p => ({ name: (currentLang==="ar" ? p.nameAr : p.nameEn) || p.id, url: p.url }))
-      ));
-    }
-
-    const kwScored = [...keywords].sort((a,b) => {
-      const sa = a.pos===null?Infinity:(a.page*100+a.pos), sb = b.pos===null?Infinity:(b.page*100+b.pos);
-      return sb - sa;
-    }).filter(k => k.pos === null || k.page > 1);
-    if(kwScored.length){
-      cards.push(mktCard(
-        "kw", d.mktKwTitle(kwScored.length), d.mktBadgeCount(kwScored.length),
-        d.mktKwWhy, d.mktKwHow,
-        kwScored.map(k => currentLang==="ar" ? k.ar : k.en)
-      ));
-    }
-
-    const altMissing = pageHealthData.filter(p => p.altText && p.altText.issueCount > 0);
-    if(altMissing.length){
-      cards.push(mktCard(
-        "alt", d.mktAltTitle(altMissing.length), d.mktBadgeCount(altMissing.length),
-        d.mktAltWhy, d.mktAltHow,
-        altMissing.map(p => ({ name: (currentLang==="ar" ? p.nameAr : p.nameEn) || p.id, url: p.url }))
-      ));
-    }
-
-    list.innerHTML = cards.length ? cards.join("") : `<p class="pdf-export-text">${d.mktPlanEmpty}</p>`;
-  }
-
-  (function initMktPlanExpand(){
-    const list = document.getElementById("mktPlanList");
-    if(!list) return;
-    list.addEventListener("click", function(e){
-      const btn = e.target.closest(".mkt-card-toggle");
-      if(!btn) return;
-      const detail = btn.nextElementSibling;
-      const open = detail.classList.toggle("open");
-      btn.classList.toggle("open", open);
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-    });
-  })();
-
-  function renderOpportunities(){
-    const d = dict[currentLang];
-    const schemaEl = document.getElementById("oppSchemaText");
-    const schemaWrap = document.getElementById("oppSchemaWrap");
-    const altEl = document.getElementById("oppAltText");
-    const altWrap = document.getElementById("oppAltWrap");
-    if(!schemaEl || !altEl) return;
-
-    if(pageHealthData.length){
-      const { missingSchema, withAltIssues } = healthCounts();
-      schemaWrap.style.display = missingSchema > 0 ? "" : "none";
-      schemaEl.innerHTML = missingSchema > 0 ? `<strong>${d.oppSchemaLabel}</strong> ${d.prioSchemaCount(missingSchema)}` : "";
-      altWrap.style.display = withAltIssues > 0 ? "" : "none";
-      altEl.innerHTML = withAltIssues > 0 ? `<strong>${d.oppAltLabel}</strong> ${d.prioAltCount(withAltIssues)}` : "";
-    } else {
-      schemaWrap.style.display = "";
-      schemaEl.innerHTML = `<strong>${d.oppSchemaLabel}</strong> ${d.prioSchema}`;
-      altWrap.style.display = "";
-      altEl.innerHTML = `<strong>${d.oppAltLabel}</strong> ${d.prioAlt}`;
-    }
-  }
-
-  /* ---------------- PDF export: "Download SEO Report" ----------------
-     Builds the report from the exact same in-memory variables the live
-     tables render from (pageHealthData, keywords, computePriorities()),
-     so it's mechanically impossible for the PDF to say something
-     different from what's on screen at click-time — no separate fetch,
-     no separate data path to drift out of sync.
-     Renders into an off-screen HTML template, rasterizes it with
-     html2canvas, then slices that image across A4 pages with jsPDF —
-     the same combination (same CDN versions) already used for the
-     cost-calculator PDF elsewhere on silah.com.sa. Arabic renders
-     correctly this way because the browser's own text engine draws it
-     (same as the on-screen tables), sidestepping jsPDF's native text()
-     API, which has no real Arabic shaping support. */
-  function pdfScoreBand(v){ return v>=80 ? "good" : (v>=50 ? "warn" : "bad"); }
-
-  /* One card per page in the "findings" sheet. Every fact line is
-     conditional on the field actually being present/meaningful for that
-     page, so this reads correctly whether a page has one issue or four,
-     and works unchanged as pages get fixed and drop out of the list
-     entirely next month. */
-  function pdfFindingCard(p, lang, d){
-    const label = (lang==="ar" ? p.nameAr : p.nameEn) || p.id;
-    let tagTxt, tagCls;
-    const of100 = (n) => lang==="ar" ? `${n} من 100` : `${n} / 100`;
-    if(typeof p.seoScore === "number"){ tagTxt = of100(p.seoScore); tagCls = pdfScoreBand(p.seoScore); }
-    else if(typeof p.mobileScore === "number"){ tagTxt = of100(p.mobileScore); tagCls = pdfScoreBand(p.mobileScore); }
-    else { tagTxt = d.pdfNeedsReview; tagCls = "warn"; }
-
-    const lines = [];
-    if(p.schema && !p.schema.hasExpectedType) lines.push(d.pdfFactSchemaMissing);
-    if(p.altText && p.altText.issueCount > 0) lines.push(d.pdfFactAlt(p.altText.issueCount, p.altText.totalImages));
-    if(typeof p.unusedJsKb === "number" && p.unusedJsKb >= 200) lines.push(d.pdfFactJs(p.unusedJsKb));
-    if(p.seoIssues && p.seoIssues.length){
-      const sep = lang==="ar" ? "، " : ", ";
-      lines.push(d.pdfFactSeo(p.seoIssues.map(s=>escapeHtml(s.title)).join(sep)));
-    }
-    if(!lines.length) lines.push(d.pdfFactNone);
-
-    return `<div class="pdf-finding">
-      <div class="pdf-f-head"><div class="nm">${escapeHtml(label)}</div><div class="pdf-tag ${tagCls}">${escapeHtml(String(tagTxt))}</div></div>
-      <div class="pdf-f-body">${lines.map(l=>`<div>${l}</div>`).join("")}</div>
-    </div>`;
-  }
-
-  /* ---------------- PDF export: "Download SEO Report" ----------------
-     Builds the report from the exact same in-memory variables the live
-     tables render from (pageHealthData, keywords, computePriorities(),
-     the score globals set from data.json), so it's mechanically
-     impossible for the PDF to say something different from what's on
-     screen at click-time — no separate fetch, no separate data path to
-     drift out of sync.
-     Layout/visual language matches the standalone branded SEO report
-     (cover-style summary, score cards, per-page finding cards, an
-     IT/Marketing recommendation split, a keyword table, a roadmap) —
-     see #pdfPrintable CSS above. Every section degrades gracefully when
-     a data source is missing (scan not run yet, GSC not connected,
-     nothing currently wrong) instead of assuming today's specific
-     numbers.
-     Renders into an off-screen HTML template, rasterizes it with
-     html2canvas, then slices that image across A4 pages with jsPDF.
-     Arabic renders correctly this way because the browser's own text
-     engine draws it (same as the on-screen tables), sidestepping
-     jsPDF's native text() API, which has no real Arabic shaping
-     support. */
-  function buildPdfSheets(lang){
-    const d = dict[lang];
-    const sep = lang==="ar" ? "، " : ", ";
-    const now = new Date();
-    const generatedStr = now.toLocaleDateString(lang==="ar"?"ar-SA":"en-GB", {year:"numeric",month:"long",day:"numeric"})
-      + " " + now.toLocaleTimeString(lang==="ar"?"ar-SA":"en-GB", {hour:"2-digit",minute:"2-digit"});
-    const syncedStr = pageHealthCheckedMonth ? d.pdfSyncedThrough(calendarLabel(pageHealthCheckedMonth, lang)) : d.pdfSyncedThroughUnknown;
-
-    // ---- sheet 1: cover + executive summary + score cards ----
-    const health = window.__pageHealthScore;
-    const cardDefs = [
-      [window.__seoScore, d.pdfCardSeo],
-      [desktopPerfScore, d.pdfCardDesktop],
-      [mobilePerfNow, d.pdfCardMobile, (typeof mobilePerfPrev==="number" && mobilePerfPrev!==mobilePerfNow) ? d.pdfMobileWas(mobilePerfPrev) : ""],
-      [window.__bpScore, d.pdfCardBP],
-      [window.__a11yDesktop, d.pdfCardA11yDesktop],
-      [window.__a11yMobile, d.pdfCardA11yMobile],
-      [health, d.pdfCardHealth],
-    ];
-    const cardsHtml = cardDefs.filter(c=>typeof c[0]==="number").map(([n,l,sub])=>{
-      const cls = pdfScoreBand(n);
-      return `<div class="pdf-card ${cls}"><div class="n">${n}</div><div class="l">${escapeHtml(l)}${sub?" "+escapeHtml(sub):""}</div><div class="bt"><div class="bf" style="width:${Math.max(0,Math.min(100,n))}%"></div></div></div>`;
-    }).join("");
-
-    const scoredPages = pageHealthData.filter(p => !p.excludedFromScore && typeof p.seoScore==="number");
-    const execLede = (typeof health==="number" && health<80) ? d.pdfExecLedeWork : d.pdfExecLedeGood;
-
-    const sheets = [`<div class="pdf-page">
-      <div class="pdf-eyebrow">${d.pdfCoverKicker}</div>
-      <h1>${d.pdfReportTitle}</h1>
-      <p class="pdf-sub-meta">${d.pdfCoverSub}</p>
-      <p class="pdf-sub-meta">${d.pdfGeneratedOn(generatedStr)} · ${syncedStr}</p>
-      <h2 style="margin-top:20px">${d.pdfExecH2}</h2>
-      <p class="pdf-lede">${execLede}</p>
-      ${pageHealthData.length ? `<p>${d.pdfExecBody(scoredPages.length, pageHealthData.length)}</p>` : ""}
-      <div class="pdf-grid">${cardsHtml}</div>
-    </div>`];
-
-    // ---- sheet 2: findings ----
-    const sevOf = p =>
-      (p.seoIssues ? p.seoIssues.length * 20 : 0) +
-      (p.schema && !p.schema.hasExpectedType ? 15 : 0) +
-      (p.altText ? p.altText.issueCount * 0.6 : 0) +
-      (typeof p.mobileScore==="number" && p.mobileScore<50 ? (50-p.mobileScore) : 0) +
-      (typeof p.unusedJsKb==="number" && p.unusedJsKb>300 ? Math.min(30, p.unusedJsKb/50) : 0);
-
-    const findingPages = scoredPages
-      .map(p=>({p, sev:sevOf(p)}))
-      .filter(x=>x.sev>5)
-      .sort((a,b)=>b.sev-a.sev)
-      .slice(0,4)
-      .map(x=>x.p);
-
-    let findingsHtml;
-    if(!pageHealthData.length){
-      findingsHtml = `<p>${d.pdfFindNotScanned}</p>`;
-    } else if(!findingPages.length){
-      findingsHtml = `<div class="pdf-finding"><div class="pdf-f-head"><div class="nm">${d.pdfFindNoneTitle}</div><div class="pdf-tag good">✓</div></div><div class="pdf-f-body">${d.pdfFindNoneBody}</div></div>`;
-    } else {
-      findingsHtml = findingPages.map(p=>pdfFindingCard(p, lang, d)).join("");
-    }
-
-    const highAltCount = findingPages.filter(p=>p.altText && p.altText.totalImages>0 && (p.altText.issueCount/p.altText.totalImages)>=0.7).length;
-    const altNoteHtml = highAltCount>=2 ? `<div class="pdf-note">${d.pdfAltRootCause}</div>` : "";
-
-    const metaMissingPages = scoredPages.filter(p=>p.seoIssues && p.seoIssues.some(i=>i.id==="meta-description"));
-    const metaNoteHtml = metaMissingPages.length
-      ? `<p>${d.pdfMetaMissingLabel}</p><ul class="pdf-inline-list">${metaMissingPages.slice(0,4).map(p=>`<li>${escapeHtml((lang==="ar"?p.nameAr:p.nameEn)||p.id)}</li>`).join("")}</ul>`
-      : "";
-
-    sheets.push(`<div class="pdf-page">
-      <div class="pdf-eyebrow">${d.pdfFindEyebrow}</div>
-      <h2>${d.pdfFindH2}</h2>
-      <p class="pdf-lede">${d.pdfFindLede}</p>
-      ${findingsHtml}
-      ${altNoteHtml}
-      ${metaNoteHtml}
-    </div>`);
-
-    // ---- sheet 3: recommendations (IT / Marketing) + keyword table ----
-    const itItems = [], mktItems = [];
-    computePriorities().forEach(it=>{
-      const pri = it.sev==="poor" ? "p1" : "p2";
-      let text = "";
-      if(it.type==="broken") text = d.prioBroken(it.count);
-      else if(it.type==="aiCrawler") text = d.prioAiCrawler(it.count);
-      else if(it.type==="cwv"){ const name = lang==="ar"?it.m.nameAr:it.m.nameEn; text = d.prioCwv.replace("{metric}", `<b>${escapeHtml(name)}</b>`); }
-      else if(it.type==="kw"){ const name = lang==="ar"?it.k.ar:it.k.en; text = d.prioKw.replace("{kw}", `<b>${escapeHtml(name)}</b>`); }
-      else if(it.type==="pending") text = d.prioPending.replace("{n}", it.count).replace("{link}", d.prioPendingLink);
-      else if(it.type==="schema") text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
-      else if(it.type==="alt") text = d.pdfRecoAltTpl(it.count || 0);
-      if(!text) return;
-      (it.type==="kw" ? mktItems : itItems).push({pri, text});
-    });
-    itItems.push({pri:"p3", text:d.pdfRecoEvergreenIT});
-    mktItems.push({pri:"p2", text:d.pdfRecoEvergreenMkt1});
-    mktItems.push({pri:"p3", text:d.pdfRecoEvergreenMkt2});
-
-    const priLabel = p => p==="p1" ? d.pdfPriP1 : (p==="p2" ? d.pdfPriP2 : d.pdfPriP3);
-    const recoCol = (items, head, sub, cls) => `<div class="pdf-reco-col ${cls}">
-      <div class="pdf-reco-head">${escapeHtml(head)}<div style="font-weight:400;font-size:11px;opacity:.85;margin-top:2px">${escapeHtml(sub)}</div></div>
-      <div class="pdf-reco-list">${items.map(it=>`<div class="pdf-reco-item"><div class="pdf-pri ${it.pri}">${priLabel(it.pri)}</div><div class="tx">${it.text}</div></div>`).join("")}</div>
-    </div>`;
-    const recoHtml = `<div class="pdf-reco">${recoCol(itItems, d.pdfRecoColIT, d.pdfRecoColITsub, "")}${recoCol(mktItems, d.pdfRecoColMkt, d.pdfRecoColMktsub, "mkt")}</div>`;
-
-    const hasGscData = keywords.some(k=>typeof k.gscClicks==="number");
-    const kwRowsHtml = keywords.map(k=>{
-      const name = lang==="ar" ? k.ar : k.en;
-      const ranking = k.pos !== null;
-      const posTxt = ranking ? `#${k.pos}` : "—";
-      const clicksTxt = typeof k.gscClicks==="number" ? k.gscClicks : "—";
-      const imprTxt = typeof k.gscImpressions==="number" ? k.gscImpressions : "—";
-      const pillHtml = ranking ? `<span class="pdf-pill good">${d.pdfKwGood}</span>` : `<span class="pdf-pill bad">${d.pdfKwBad}</span>`;
-      return `<tr><td class="kw">${escapeHtml(name)}</td><td>${posTxt}</td><td>${clicksTxt}</td><td>${imprTxt}</td><td>${pillHtml}</td></tr>`;
-    }).join("");
-    const kwTableHtml = `<table class="pdf-kw"><thead><tr><th>${d.pdfKwColPhrase}</th><th>${d.pdfKwColPos}</th><th>${d.pdfKwColClicks}</th><th>${d.pdfKwColImpr}</th><th>${d.pdfKwColStatus}</th></tr></thead><tbody>${kwRowsHtml}</tbody></table>`;
-
-    const weakKws = keywords.filter(k=>k.pos===null);
-    const kwNoteHtml = weakKws.length
-      ? `<div class="pdf-note"><b>${d.pdfKwWeakLabel}</b><ul class="pdf-inline-list">${weakKws.map(k=>`<li>${escapeHtml(lang==="ar"?k.ar:k.en)}</li>`).join("")}</ul></div>`
-      : `<div class="pdf-note">${d.pdfKwNoneWeak}</div>`;
-
-    sheets.push(`<div class="pdf-page">
-      <div class="pdf-eyebrow">${d.pdfRecoEyebrow}</div>
-      <h2>${d.pdfRecoH2}</h2>
-      <p class="pdf-lede">${d.pdfRecoLede}</p>
-      ${recoHtml}
-      <h3 class="pdf-sub">${d.pdfKwSub}</h3>
-      <p class="pdf-lede">${hasGscData ? d.pdfKwLede : d.pdfKwLedeManual}</p>
-      ${keywords.length ? kwTableHtml : ""}
-      ${keywords.length ? kwNoteHtml : ""}
-    </div>`);
-
-    // ---- sheet 4: roadmap + closing ----
-    const allItems = itItems.concat(mktItems);
-    const bucket = pri => allItems.filter(x=>x.pri===pri).map(x=>`<li>${x.text}</li>`).join("") || `<li>${d.pdfRoadEmpty}</li>`;
-
-    sheets.push(`<div class="pdf-page">
-      <div class="pdf-eyebrow">${d.pdfRoadEyebrow}</div>
-      <h2>${d.pdfRoadH2}</h2>
-      <div class="pdf-road">
-        <div class="pdf-road-col"><div class="pdf-road-head">${d.pdfRoadWeek}</div><ul>${bucket("p1")}</ul></div>
-        <div class="pdf-road-col"><div class="pdf-road-head">${d.pdfRoadMonth}</div><ul>${bucket("p2")}</ul></div>
-        <div class="pdf-road-col"><div class="pdf-road-head">${d.pdfRoadOngoing}</div><ul>${bucket("p3")}</ul></div>
-      </div>
-      <p style="margin-top:16px">${d.pdfClosing}</p>
-      <div class="pdf-foot">${d.pdfFootNote}</div>
-    </div>`);
-
-    return sheets;
-  }
-
-  async function downloadSeoPdf(){
-    const btn = document.getElementById("pdfDownloadBtn");
-    const label = document.getElementById("pdfBtnLabel");
-    const icon = document.getElementById("pdfBtnIcon");
-    const d = dict[currentLang];
-    if(btn.disabled) return;
-
-    if(typeof window.jspdf === "undefined" || typeof window.html2canvas === "undefined"){
-      alert(currentLang==="ar" ? "مكتبات إنشاء الـPDF لم تُحمَّل بعد — تأكد من الاتصال بالإنترنت وحاول مرة أخرى." : "PDF libraries haven't loaded yet — check your connection and try again.");
-      return;
-    }
-
-    btn.disabled = true;
-    const origLabel = label.textContent;
-    label.textContent = d.pdfBtnBusy;
-    icon.classList.add("spin");
-
-    const container = document.getElementById("pdfPrintable");
-    try{
-      const sheets = buildPdfSheets(currentLang);
-      container.dir = currentLang === "ar" ? "rtl" : "ltr";
-      if(document.fonts && document.fonts.ready) await document.fonts.ready;
-
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF("p", "mm", "a4");
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-      const margin = 10;
-      const imgWidth = pageWidth - margin * 2;
-      const pageContentHeight = pageHeight - margin * 2;
-
-      for(let s=0; s<sheets.length; s++){
-        container.innerHTML = sheets[s];
-        // let the browser lay this sheet out (fonts, table widths) before
-        // html2canvas measures/rasterizes it
-        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-        const canvas = await window.html2canvas(container, { useCORS:true, backgroundColor:"#ffffff", scale:1.5 });
-        const imgData = canvas.toDataURL("image/png");
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        if(s > 0) doc.addPage();
-        let position = margin;
-        // "MEDIUM" applies real (Flate) compression to the embedded image
-        // stream instead of jsPDF's uncompressed default, which is what
-        // was actually behind a previous ~59MB file-size bug — the fix
-        // then was smaller/more images (chunking); this is the other half
-        // of that same fix, compressing each one properly regardless of
-        // how many there are.
-        doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight, undefined, "MEDIUM");
-        // safety net: if this particular sheet still ends up taller than
-        // one page (e.g. a page with an unusually long issue list), keep
-        // paginating it rather than cutting it off
-        let shown = pageContentHeight;
-        while(shown < imgHeight){
-          position -= pageContentHeight;
-          doc.addPage();
-          doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight, undefined, "MEDIUM");
-          shown += pageContentHeight;
-        }
-      }
-
-      const fileDate = (pageHealthCheckedMonth || REPORT_MONTH || "report").toString();
-      doc.save(`${d.pdfFileBase}-${fileDate}.pdf`);
-    } catch(err){
-      console.error("SEO PDF generation failed:", err);
-      alert(currentLang==="ar" ? "تعذّر إنشاء التقرير — حاول مرة أخرى." : "Couldn't generate the report — please try again.");
-    } finally {
-      container.innerHTML = "";
-      btn.disabled = false;
-      label.textContent = origLabel;
-      icon.classList.remove("spin");
-    }
-  }
-
-  /* ---------------- Benchmarks & Targets table ---------------- */
-  function renderTargets(){
-    const el = document.getElementById("targetsTable");
-    if(!el) return;
-    const d = dict[currentLang];
-    const unitTxt = (m)=> m.unit==="s" ? (currentLang==="ar"?"ث":"s") : (m.unit==="ms" ? (currentLang==="ar"?"م.ث":"ms") : "");
-    const pill = (cls,txt)=>`<span class="owner-pill ${cls}">${txt}</span>`;
-    const rows = [];
-    metrics.forEach(m=>{
-      const latest = m.data[m.data.length-1];
-      const name = currentLang==="ar" ? m.nameAr : m.nameEn;
-      rows.push(`<tr>
-        <td><strong>${escapeHtml(name)}</strong><span class="page-url">${escapeHtml(m.fullAr)}</span></td>
-        <td class="num">${fmt(latest,m)} ${unitTxt(m)}</td>
-        <td class="num">≤ ${fmt(m.good,m)} ${unitTxt(m)}</td>
-        <td class="num">≤ ${fmt(m.good,m)} ${unitTxt(m)}</td>
-        <td>${pill("tech", d.ownerTech)}</td>
-      </tr>`);
-    });
-    rows.push(`<tr><td><strong>${d.tgLighthouseMobile}</strong></td><td class="num">${mobilePerfNow} / 100</td><td class="num">≥ 90</td><td>${d.tgTargetMobile}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
-    rows.push(`<tr><td><strong>${d.tgLighthouseDesktop}</strong></td><td class="num">${desktopPerfScore} / 100</td><td class="num">≥ 90</td><td>${d.tgTargetKeep}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
-    rows.push(`<tr><td><strong>${d.tgKwName}</strong></td><td>${d.tgKwCurrent}</td><td>—</td><td>${d.tgKwTarget}</td><td>${pill("mkt",d.ownerMkt)}</td></tr>`);
-    rows.push(`<tr><td><strong>${d.tgSchemaName}</strong></td><td>${d.tgSchemaCurrent}</td><td>—</td><td>${d.tgSchemaTarget}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
-    el.innerHTML = `<thead><tr><th>${d.tgColMetric}</th><th>${d.tgColCurrent}</th><th>${d.tgColBench}</th><th>${d.tgColTarget}</th><th>${d.tgColOwner}</th></tr></thead><tbody>${rows.join("")}</tbody>`;
-  }
-
-  /* ---------------- Performance Score trend (mobile, Lighthouse 0-100) ---------------- */
-  let mobilePerfPrev = 72;
-  let mobilePerfNow = 81;
-
-  function renderStatPair(){
-    const el = document.getElementById("statPair");
-    const d = dict[currentLang];
-    const delta = mobilePerfNow - mobilePerfPrev;
-    const deltaCls = delta >= 0 ? "up" : "down";
-    const arrow = delta >= 0 ? "▲" : "▼";
-    el.innerHTML = `
-      <div class="stat-pair-item">
-        <span class="num">${mobilePerfNow}<small>${d.outOf100}</small></span>
-        <div>
-          <div class="lbl">${d.statMobilePerf}</div>
-          <span class="delta ${deltaCls}">${arrow} ${delta>=0?"+":""}${delta} ${d.statVsLastMonth}</span>
-        </div>
-      </div>
-      <div class="stat-pair-item">
-        <span class="num">${desktopPerfScore}<small>${d.outOf100}</small></span>
-        <div><div class="lbl">${d.statDesktopPerf}</div></div>
-      </div>
-    `;
-  }
-
-  /* ---------------- metric data (CrUX, real-user, phone, 75th percentile) ---------------- */
-  const monthLabels = {ar:["أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر","يناير","فبراير","مارس","أبريل","مايو","يونيو"],
-                        en:["Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"]};
-  const metrics = [
-    {
-      key:"lcp", icon:'<path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/>',
-      nameAr:"سرعة التحميل", nameEn:"Loading Performance",
-      fullAr:"Largest Contentful Paint (LCP)", fullEn:"Largest Contentful Paint (LCP)",
-      unit:"s", divisor:1000, decimals:1,
-      defAr:"الوقت الذي يستغرقه ظهور أهم وأكبر عنصر بالصفحة (عادة صورة أو عنوان رئيسي) أمام الزائر.",
-      defEn:"How long it takes for the largest, most important piece of content on the page (usually an image or headline) to appear.",
-      meanAr:"كل ما كان هذا الرقم أقل، شعر الزائر أن الصفحة فتحت بسرعة.",
-      meanEn:"The lower this number, the faster the page feels like it opened.",
-      good:2500, ni:4000, visMax:5200,
-      data:[4100,3950,3550,3500,3150,3300,3950,3850,3300,3100,3150]
-    },
-    {
-      key:"inp", icon:'<path d="M9 9h.01M15 9h.01M8 13s1.5 2 4 2 4-2 4-2"/><circle cx="12" cy="12" r="9"/>',
-      nameAr:"سرعة الاستجابة", nameEn:"Interactivity",
-      fullAr:"Interaction to Next Paint (INP)", fullEn:"Interaction to Next Paint (INP)",
-      unit:"ms", divisor:1, decimals:0,
-      defAr:"مدى سرعة استجابة الموقع عندما يضغط الزائر على زر أو رابط — أي مدى السلاسة التي يشعر بها أثناء الاستخدام.",
-      defEn:"How quickly the site responds when a visitor clicks a button or link — essentially how smooth the site feels to use.",
-      meanAr:"هذا هو المقياس الذي شهد أكبر تحسّن — من تجربة بطيئة ومحبطة إلى استجابة فورية تقريباً.",
-      meanEn:"This is the metric that saw the biggest turnaround — from a slow, frustrating experience to a near-instant response.",
-      good:200, ni:500, visMax:760,
-      data:[350,380,400,420,380,420,650,700,350,180,165]
-    },
-    {
-      key:"cls", icon:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/>',
-      nameAr:"ثبات العرض", nameEn:"Visual Stability",
-      fullAr:"Cumulative Layout Shift (CLS)", fullEn:"Cumulative Layout Shift (CLS)",
-      unit:"", divisor:1, decimals:2,
-      defAr:"مدى تحرك عناصر الصفحة بشكل غير متوقع أثناء التحميل، مثل قفز زر أو نص لحظة قبل ما يضغط عليه الزائر.",
-      defEn:"How much the page's elements unexpectedly shift while loading — like a button or text jumping right before a visitor taps it.",
-      meanAr:"رقم أقل يعني عناصر الصفحة تبقى ثابتة في مكانها، فلا يضغط الزائر بالخطأ على الشي الخطأ.",
-      meanEn:"A lower number means page elements stay put, so visitors don't accidentally tap the wrong thing.",
-      good:0.10, ni:0.25, visMax:0.34,
-      data:[0.11,0.11,0.04,0.11,0.11,0.04,0.11,0.11,0.03,0.11,0.11]
-    },
-    {
-      key:"fcp", icon:'<path d="M5 12h.01M12 12h.01M19 12h.01"/><circle cx="12" cy="12" r="9"/>',
-      nameAr:"ظهور أول محتوى", nameEn:"First Contentful Paint",
-      fullAr:"First Contentful Paint (FCP)", fullEn:"First Contentful Paint (FCP)",
-      unit:"s", divisor:1000, decimals:1,
-      defAr:"الوقت الذي يستغرقه ظهور أول جزء من محتوى الصفحة على الشاشة، ولو كان بسيطاً — أول إشارة إن الصفحة بدأت تفتح.",
-      defEn:"How long until the very first piece of content appears on screen — the first sign that something is happening.",
-      meanAr:"يطمئن الزائر إن في شي يحصل، وما هو واقف أمام صفحة فاضية.",
-      meanEn:"It reassures the visitor that the page is actually loading, not stuck on a blank screen.",
-      good:1800, ni:3000, visMax:3900,
-      data:[2450,2400,2350,2150,2150,2200,2900,2750,2350,2050,2050]
-    },
-    {
-      key:"ttfb", icon:'<path d="M12 3v6l4 2"/><circle cx="12" cy="12" r="9"/>',
-      nameAr:"زمن استجابة الخادم", nameEn:"Server Response Time",
-      fullAr:"Time to First Byte (TTFB)", fullEn:"Time to First Byte (TTFB)",
-      unit:"s", divisor:1000, decimals:1,
-      defAr:"الوقت الذي يستغرقه الخادم (السيرفر) للرد على أول طلب من المتصفح — قبل ما تبدأ الصفحة تتحمّل أصلاً.",
-      defEn:"How long the server takes to respond to the very first request from the browser — before the page even starts loading.",
-      meanAr:"هذا الرقم مرتبط بسرعة الاستضافة والخادم نفسه، وهو أقل عنصر تحسّن خلال الفترة — نقطة نركّز عليها قادماً.",
-      meanEn:"This one is tied to hosting/server speed, and it improved the least over this period — a focus area going forward.",
-      good:800, ni:1800, visMax:2400,
-      data:[1650,1700,1600,1750,1650,1750,2050,1900,1650,1550,1550]
-    }
-  ];
-
-  /* ---------------- desktop metrics — real Lighthouse LAB data, single test, 30 Jun 2026 ---------------- */
-  /* Note: lab methodology differs from the mobile CrUX field data above — TBT/Speed Index have no CrUX field equivalent */
-  const desktopMetrics = [
-    {
-      key:"d_fcp", icon:'<path d="M5 12h.01M12 12h.01M19 12h.01"/><circle cx="12" cy="12" r="9"/>',
-      nameAr:"ظهور أول محتوى", nameEn:"First Contentful Paint",
-      fullAr:"First Contentful Paint (FCP)", fullEn:"First Contentful Paint (FCP)",
-      unit:"s", divisor:1000, decimals:1,
-      defAr:"الوقت الذي يستغرقه ظهور أول جزء من محتوى الصفحة على الشاشة، ولو كان بسيطاً.",
-      defEn:"How long until the very first piece of content appears on screen.",
-      meanAr:"يطمئن الزائر إن في شي يحصل، وما هو واقف أمام صفحة فاضية.",
-      meanEn:"It reassures the visitor that the page is actually loading, not stuck on a blank screen.",
-      good:1800, ni:3000, visMax:3900, data:[600]
-    },
-    {
-      key:"d_lcp", icon:'<path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/>',
-      nameAr:"سرعة التحميل", nameEn:"Loading Performance",
-      fullAr:"Largest Contentful Paint (LCP)", fullEn:"Largest Contentful Paint (LCP)",
-      unit:"s", divisor:1000, decimals:1,
-      defAr:"الوقت الذي يستغرقه ظهور أهم وأكبر عنصر بالصفحة أمام الزائر.",
-      defEn:"How long it takes for the largest, most important piece of content to appear.",
-      meanAr:"كل ما كان هذا الرقم أقل، شعر الزائر أن الصفحة فتحت بسرعة.",
-      meanEn:"The lower this number, the faster the page feels like it opened.",
-      good:2500, ni:4000, visMax:5200, data:[1000]
-    },
-    {
-      key:"d_tbt", icon:'<path d="M9 9h.01M15 9h.01M8 13s1.5 2 4 2 4-2 4-2"/><circle cx="12" cy="12" r="9"/>',
-      nameAr:"إجمالي وقت الحظر", nameEn:"Total Blocking Time",
-      fullAr:"Total Blocking Time (TBT)", fullEn:"Total Blocking Time (TBT)",
-      unit:"ms", divisor:1, decimals:0,
-      defAr:"الوقت الذي يبقى فيه المتصفح مشغولاً عن الاستجابة لتفاعل الزائر أثناء تحميل الصفحة.",
-      defEn:"How long the browser stays too busy to respond to visitor interaction while the page loads.",
-      meanAr:"رقم صفر يعني المتصفح كان جاهزاً للاستجابة فوراً طوال وقت التحميل.",
-      meanEn:"A zero means the browser was ready to respond instantly throughout loading.",
-      good:200, ni:600, visMax:900, data:[0]
-    },
-    {
-      key:"d_cls", icon:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/>',
-      nameAr:"ثبات العرض", nameEn:"Visual Stability",
-      fullAr:"Cumulative Layout Shift (CLS)", fullEn:"Cumulative Layout Shift (CLS)",
-      unit:"", divisor:1, decimals:2,
-      defAr:"مدى تحرك عناصر الصفحة بشكل غير متوقع أثناء التحميل.",
-      defEn:"How much the page's elements unexpectedly shift while loading.",
-      meanAr:"رقم أقل يعني عناصر الصفحة تبقى ثابتة في مكانها.",
-      meanEn:"A lower number means page elements stay put.",
-      good:0.10, ni:0.25, visMax:0.34, data:[0]
-    },
-    {
-      key:"d_si", icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
-      nameAr:"مؤشر السرعة", nameEn:"Speed Index",
-      fullAr:"Speed Index (SI)", fullEn:"Speed Index (SI)",
-      unit:"s", divisor:1000, decimals:1,
-      defAr:"يقيس مدى سرعة ظهور محتوى الصفحة بشكل مرئي للزائر أثناء التحميل.",
-      defEn:"Measures how quickly the page's content visually appears to the visitor while loading.",
-      meanAr:"رقم أقل يعني الزائر يرى محتوى الصفحة يتشكل بسرعة، بدل الانتظار أمام شاشة شبه فارغة.",
-      meanEn:"A lower number means the visitor sees the page take shape quickly, instead of waiting on a near-empty screen.",
-      good:3400, ni:5800, visMax:7200, data:[1600]
-    }
-  ];
-  let desktopPerfScore = 96;
-
-  function classify(v, good, ni){ return v<=good ? "good" : (v<=ni ? "ni" : "poor"); }
-  function fmt(v, m){ return (v/m.divisor).toFixed(m.decimals); }
-
-  /* ---------------- SVG line chart ---------------- */
-  function lineChart(svgEl, data, good, ni, w, h, withZones){
-    const pad = 6;
-    const max = Math.max(...data, ni) * 1.08;
-    const min = 0;
-    const y = v => h - pad - ((v-min)/(max-min)) * (h - pad*2);
-
-    let svg = "";
-    if(withZones){
-      const yGood = y(good), yNi = y(ni);
-      svg += `<rect x="0" y="${yGood}" width="${w}" height="${h-yGood}" fill="#cfe3d6" opacity=".35"/>`;
-      svg += `<rect x="0" y="${yNi}" width="${w}" height="${yGood-yNi}" fill="#ecdcc0" opacity=".4"/>`;
-      svg += `<rect x="0" y="0" width="${w}" height="${yNi}" fill="#ecd0d0" opacity=".4"/>`;
-    }
-    if(data.length===1){
-      const cy = y(data[0]).toFixed(1), cx=(w/2).toFixed(1);
-      svg += `<line x1="${pad}" y1="${cy}" x2="${w-pad}" y2="${cy}" stroke="#134752" stroke-width="2" stroke-dasharray="4,5" opacity=".55"/>`;
-      svg += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="#E8483A"/>`;
-      svgEl.innerHTML = svg;
-      return;
-    }
-    const x = i => pad + (i/(data.length-1)) * (w - pad*2);
-    let d = "";
-    data.forEach((v,i)=>{ d += (i===0?"M":"L") + x(i).toFixed(1) + "," + y(v).toFixed(1) + " "; });
-    svg += `<path d="${d}" fill="none" stroke="#134752" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
-    data.forEach((v,i)=>{
-      const isEnd = i===data.length-1;
-      svg += `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="${isEnd?4.2:0}" fill="#E8483A"/>`;
-    });
-    svgEl.innerHTML = svg;
-  }
-
-  /* ---------------- range filter state ---------------- */
-  let currentRange = "full";
-  function sliceForRange(arr, range){
-    if(range==="june") return arr.slice(-1);
-    if(range==="last3") return arr.slice(-3);
-    return arr;
-  }
-  function rangeStartEndLabels(range, lang){
-    const mm = monthLabels[lang];
-    if(range==="june") return [mm[mm.length-1], mm[mm.length-1]];
-    const last = mm.length - 1;
-    if(range==="last3") return [mm[Math.max(0,last-2)], mm[last]];
-    return [mm[0], mm[last]];
-  }
-
-  /* ---------------- build accordion ---------------- */
-  const accEl = document.getElementById("accordion");
-  let currentLang = "ar";
-
-  let currentDevice = "mobile";
-  function getActiveMetrics(){ return currentDevice==="mobile" ? metrics : desktopMetrics; }
-  const cardSlotMap = {
-    mobile:  { lcp:"lcp",   inp:"inp",  cls:"cls" },
-    desktop: { lcp:"d_lcp", inp:"d_tbt", cls:"d_cls" }
-  };
-
-  /* live-computed card captions (pull the actual latest value, so they
-     can never drift out of sync with the chart data next month) */
-  function card1Caption(lang){
-    const key = currentDevice==="mobile" ? "lcp" : "d_lcp";
-    const m = getActiveMetrics().find(x=>x.key===key);
-    const v = fmt(m.data[m.data.length-1], m);
-    return lang==="ar" ? `${v} ثانية لظهور أهم عنصر في الصفحة` : `${v}s for the main content to appear`;
-  }
-  function card2Caption(lang){
-    if(currentDevice==="mobile"){
-      const m = metrics.find(x=>x.key==="inp");
-      const v = fmt(m.data[m.data.length-1], m);
-      return lang==="ar" ? `${v} جزء من الثانية لاستجابة النقر` : `${v}ms response time to taps/clicks`;
-    }
-    const m = desktopMetrics.find(x=>x.key==="d_tbt");
-    const v = fmt(m.data[m.data.length-1], m);
-    return lang==="ar" ? `${v} جزء من الثانية حظر — لا تأخير في الاستجابة` : `${v}ms blocking — no response delay`;
-  }
-  function card3Caption(lang){
-    const key = currentDevice==="mobile" ? "cls" : "d_cls";
-    const m = getActiveMetrics().find(x=>x.key===key);
-    const v = m.data[m.data.length-1];
-    if(v===0) return lang==="ar" ? "لا يوجد أي تحرك غير متوقع في عناصر الصفحة" : "No unexpected element movement at all";
-    return lang==="ar" ? "عناصر الصفحة تتحرك بنسبة بسيطة أثناء التحميل" : "Page elements shift slightly while loading";
-  }
-
-  function buildAccordion(){
-    accEl.innerHTML = "";
-    getActiveMetrics().forEach((m, idx)=>{
-      const cls = classify(m.data[m.data.length-1], m.good, m.ni);
-      const item = document.createElement("div");
-      item.className = "acc-item";
-      item.innerHTML = `
-        <button class="acc-trigger" aria-expanded="false">
-          <span class="acc-num num">0${idx+1}</span>
-          <span class="acc-name-wrap">
-            <span class="acc-name" data-acc="name-${m.key}"></span>
-            <span class="acc-full num" data-acc="full-${m.key}"></span>
-          </span>
-          <span class="acc-value">
-            <span class="badge ${cls}" data-acc="badge-${m.key}"></span>
-            <span class="num" data-acc="val-${m.key}"></span>
-          </span>
-          <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="acc-panel"><div class="acc-panel-inner">
-          <div class="acc-body">
-            <div>
-              <p class="acc-def" data-acc="def-${m.key}"></p>
-              <div class="gauge">
-                <div class="gauge-bar">
-                  <div class="seg g" style="width:${(m.good/m.visMax*100).toFixed(1)}%"></div>
-                  <div class="seg n" style="width:${((m.ni-m.good)/m.visMax*100).toFixed(1)}%"></div>
-                  <div class="seg p" style="width:${((m.visMax-m.ni)/m.visMax*100).toFixed(1)}%"></div>
-                  <div class="gauge-marker" style="right:${(100-Math.min(m.data[m.data.length-1]/m.visMax*100,100)).toFixed(1)}%"></div>
-                </div>
-                <div class="gauge-labels">
-                  <span data-acc="gg-${m.key}"></span><span data-acc="gn-${m.key}"></span><span data-acc="gp-${m.key}"></span>
-                </div>
-              </div>
-              <p class="acc-meaning"><span data-acc="meaninglabel-${m.key}"></span>: <span data-acc="meaning-${m.key}"></span></p>
-            </div>
-            <div class="chart-box">
-              <div class="chart-title" data-acc="chartlabel-${m.key}"></div>
-              <svg class="trend-svg" data-chart="${m.key}" viewBox="0 0 560 120" preserveAspectRatio="none"></svg>
-              <div class="chart-range" style="${currentDevice==='desktop'?'justify-content:center':''}">
-                ${currentDevice==='desktop' ? `<span class="rng-snapshot">${rangeStartEndLabels("full",currentLang)[1]} · Lighthouse</span>` : (()=>{const se=rangeStartEndLabels("full",currentLang);return `<span class="rng-start">${se[0]}</span><span class="rng-end">${se[1]}</span>`;})()}
-              </div>
-            </div>
-          </div>
-        </div></div>
-      `;
-      accEl.appendChild(item);
-
-      const trigger = item.querySelector(".acc-trigger");
-      trigger.addEventListener("click", ()=>{
-        const willOpen = !item.classList.contains("open");
-        item.classList.toggle("open", willOpen);
-        trigger.setAttribute("aria-expanded", String(willOpen));
-        if(willOpen){
-          requestAnimationFrame(()=>{
-            const svgEl = item.querySelector(`[data-chart="${m.key}"]`);
-            lineChart(svgEl, sliceForRange(m.data, currentRange), m.good, m.ni, 560, 120, true);
-          });
-        }
-      });
-    });
-    applyLang(currentLang);
-    renderKeywordTable();
-    renderCardSparklines();
-    renderPageTable();
-    renderPageHealthTable();
-    renderPageHealthScore();
-    renderAiReadiness();
-    renderLastRefreshed();
-    renderPriorities();
-    renderOpportunities();
-    renderScoreCards();
-    renderMarketingPlan();
-    renderTargets();
-    renderStatPair();
-  }
-
-  function renderCardSparklines(){
-    document.querySelectorAll("[data-spark]").forEach(svgEl=>{
-      const slot = svgEl.getAttribute("data-spark");
-      const actualKey = cardSlotMap[currentDevice][slot];
-      const m = getActiveMetrics().find(mm=>mm.key===actualKey);
-      lineChart(svgEl, sliceForRange(m.data, currentRange), m.good, m.ni, 280, 46, false);
-      const card = svgEl.closest(".card");
-      const badgeEl = card.querySelector(".badge");
-      const subEl = card.querySelector(".card-sub");
-      const cls = classify(m.data[m.data.length-1], m.good, m.ni);
-      const d = dict[currentLang];
-      badgeEl.className = "badge " + cls;
-      badgeEl.textContent = cls==="good"?d.badgeGood:(cls==="ni"?d.badgeNI:d.badgePoor);
-      if(slot==="lcp") subEl.textContent = card1Caption(currentLang);
-      else if(slot==="inp") subEl.textContent = card2Caption(currentLang);
-      else if(slot==="cls") subEl.textContent = card3Caption(currentLang);
-    });
-  }
-
-  function applyLang(lang){
-    currentLang = lang;
-    const d = dict[lang];
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang==="ar" ? "rtl" : "ltr";
-    const htmlKeys = new Set(["opp1"]);
-    document.querySelectorAll("[data-i18n]").forEach(el=>{
-      const k = el.getAttribute("data-i18n");
-      if(d[k]!==undefined){
-        if(htmlKeys.has(k)) el.innerHTML = d[k]; else el.textContent = d[k];
-      }
-    });
-    document.getElementById("heroMeta").textContent = currentRange==="june" && currentDevice==="mobile" ? d.heroMetaJune : d.heroMeta;
-    getActiveMetrics().forEach(m=>{
-      const cls = classify(m.data[m.data.length-1], m.good, m.ni);
-      const set = (sel,val)=>{ const el = document.querySelector(`[data-acc="${sel}-${m.key}"]`); if(el) el.textContent = val; };
-      set("name", lang==="ar" ? m.nameAr : m.nameEn);
-      set("full", lang==="ar" ? m.fullAr : m.fullEn);
-      set("def", lang==="ar" ? m.defAr : m.defEn);
-      set("meaning", lang==="ar" ? m.meanAr : m.meanEn);
-      set("meaninglabel", d.meaningLabel);
-      set("chartlabel", d.chartTitle);
-      set("gg", d.gaugeGood); set("gn", d.gaugeNI); set("gp", d.gaugePoor);
-      const valEl = document.querySelector(`[data-acc="val-${m.key}"]`);
-      if(valEl) valEl.textContent = fmt(m.data[m.data.length-1], m) + (m.unit?(m.unit==="s"?"s":"ms"):"");
-      const badgeEl = document.querySelector(`[data-acc="badge-${m.key}"]`);
-      if(badgeEl) badgeEl.textContent = cls==="good"?d.badgeGood:(cls==="ni"?d.badgeNI:d.badgePoor);
-    });
-    if(currentDevice==="mobile"){
-      const [rs, re] = rangeStartEndLabels(currentRange, lang);
-      document.querySelectorAll(".rng-start").forEach(el=>el.textContent = rs);
-      document.querySelectorAll(".rng-end").forEach(el=>el.textContent = re);
-    }
-    // re-render any currently-open trend charts so labels/orientation refresh correctly
-    document.querySelectorAll(".acc-item.open").forEach(item=>{
-      const svgEl = item.querySelector("[data-chart]");
-      const key = svgEl.getAttribute("data-chart");
-      const m = getActiveMetrics().find(mm=>mm.key===key);
-      lineChart(svgEl, sliceForRange(m.data, currentRange), m.good, m.ni, 560, 120, true);
-    });
-    renderCardSparklines();
-    renderKeywordTable();
-    renderPageTable();
-    renderPageHealthTable();
-    renderPageHealthScore();
-    renderAiReadiness();
-    renderLastRefreshed();
-    renderPriorities();
-    renderOpportunities();
-    renderScoreCards();
-    renderMarketingPlan();
-    renderTargets();
-    renderStatPair();
-    if(currentDevice==="mobile") updateHero(currentRange); else updateHeroDesktop();
-  }
-
-  /* ---------------- hero range-aware update ---------------- */
-  function updateHero(range){
-    currentRange = range;
-    document.querySelectorAll(".range-btn").forEach(b=>b.classList.toggle("is-active", b.dataset.range===range));
-    const d = dict[currentLang];
-    const inp = metrics.find(m=>m.key==="inp");
-    const sliced = sliceForRange(inp.data, range);
-    const fromWrap = document.getElementById("heroFromWrap");
-    const arrowWrap = document.getElementById("heroArrowWrap");
-    const toNum = document.getElementById("heroToNum");
-    const badgeText = document.getElementById("heroBadgeText");
-    const badgeIcon = document.getElementById("heroBadgeIcon");
-    const h1 = document.getElementById("heroH1");
-    const lede = document.getElementById("heroLede");
-    const heroMeta = document.getElementById("heroMeta");
-
-    toNum.textContent = sliced[sliced.length-1];
-
-    if(range==="june"){
-      fromWrap.style.display = "none";
-      arrowWrap.style.display = "none";
-      const cls = classify(sliced[0], inp.good, inp.ni);
-      badgeIcon.style.display = "none";
-      badgeText.textContent = (cls==="good"?d.badgeGood:(cls==="ni"?d.badgeNI:d.badgePoor));
-      h1.textContent = d.heroH1June;
-      lede.textContent = d.heroLedeJune;
-      heroMeta.textContent = d.heroMetaJune;
-    } else {
-      fromWrap.style.display = "";
-      arrowWrap.style.display = "";
-      badgeIcon.style.display = "";
-      const peak = Math.max(...sliced);
-      document.getElementById("heroFromNum").textContent = peak;
-      const pct = Math.round(((peak-sliced[sliced.length-1])/peak)*100);
-      const tpl = currentLang==="ar" ? `أسرع بنسبة ${pct}%` : `${pct}% faster`;
-      badgeText.textContent = tpl;
-      h1.textContent = d.heroH1;
-      lede.textContent = d.heroLede;
-      heroMeta.textContent = d.heroMeta;
-    }
-  }
-
-  /* ---------------- desktop hero (single Lighthouse snapshot, no historical range) ---------------- */
-  function updateHeroDesktop(){
-    const d = dict[currentLang];
-    document.getElementById("heroFromWrap").style.display = "none";
-    document.getElementById("heroArrowWrap").style.display = "none";
-    document.getElementById("heroBadgeIcon").style.display = "none";
-    document.getElementById("heroToNum").textContent = desktopPerfScore;
-    document.getElementById("heroUnit").textContent = d.outOf100;
-    document.getElementById("heroBadgeText").textContent = d.excellentBadge;
-    document.getElementById("heroH1").textContent = d.heroH1Desktop;
-    document.getElementById("heroLede").textContent = d.heroLedeDesktop;
-    document.getElementById("heroMeta").textContent = d.heroMetaDesktop;
-  }
-
-  function setDevice(device){
-    currentDevice = device;
-    document.querySelectorAll(".device-btn").forEach(b=>b.classList.toggle("is-active", b.dataset.device===device));
-    document.getElementById("rangeFilterWrap").style.display = device==="mobile" ? "" : "none";
-    buildAccordion();
-    if(device==="mobile") updateHero(currentRange); else updateHeroDesktop();
-  }
-
-  document.querySelectorAll(".device-btn").forEach(btn=>{
-    btn.addEventListener("click", ()=> setDevice(btn.dataset.device));
-  });
-
-  document.querySelectorAll(".range-btn").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const range = btn.dataset.range;
-      currentRange = range;
-      updateHero(range);
-      renderCardSparklines();
-      const [rs, re] = rangeStartEndLabels(range, currentLang);
-      document.querySelectorAll(".rng-start").forEach(el=>el.textContent = rs);
-      document.querySelectorAll(".rng-end").forEach(el=>el.textContent = re);
-      document.querySelectorAll(".acc-item.open").forEach(item=>{
-        const svgEl = item.querySelector("[data-chart]");
-        const key = svgEl.getAttribute("data-chart");
-        const m = getActiveMetrics().find(mm=>mm.key===key);
-        lineChart(svgEl, sliceForRange(m.data, range), m.good, m.ni, 560, 120, true);
-      });
-    });
-  });
-
-  document.getElementById("langToggle").addEventListener("click", ()=>{
-    applyLang(currentLang==="ar" ? "en" : "ar");
-  });
-
-  document.getElementById("pdfDownloadBtn").addEventListener("click", downloadSeoPdf);
-
-  // Calls the Vercel serverless function (api/refresh-report.js), which
-  // holds the GitHub token server-side and triggers the Action on our
-  // behalf - see that file for why this can't just call GitHub directly
-  // from here. Does NOT wait for the ~9 minute scan to finish; it only
-  // confirms the trigger itself succeeded, then tells the person to check
-  // back later. The button disables itself immediately on click to avoid
-  // a burst of double-clicks all firing before the first response returns.
-  document.getElementById("refreshBtn").addEventListener("click", async () => {
-    const btn = document.getElementById("refreshBtn");
-    const label = document.getElementById("refreshBtnLabel");
-    const status = document.getElementById("refreshStatus");
-    const d = dict[currentLang];
-
-    btn.disabled = true;
-    btn.classList.add("spinning");
-    label.textContent = d.refreshBtnBusy;
-    status.className = "refresh-status";
-    status.textContent = "";
-
-    try {
-      const res = await fetch("/api/refresh-report", { method: "POST" });
-      const data = await res.json().catch(() => ({}));
-
-      if (res.ok && data.ok) {
-        status.className = "refresh-status ok";
-        status.textContent = data.message || d.refreshStatusWait;
-      } else {
-        // already_running / cooldown / GitHub errors all carry their own
-        // Arabic-or-English-appropriate message from the server; fall
-        // back to a generic one only if the response is malformed.
-        status.className = "refresh-status err";
-        status.textContent = data.message || d.refreshStatusGenericErr;
-      }
-    } catch (e) {
-      status.className = "refresh-status err";
-      status.textContent = d.refreshStatusGenericErr;
-    } finally {
-      btn.disabled = false;
-      btn.classList.remove("spinning");
-      label.textContent = d.refreshBtnLabel;
-    }
-  });
-
-  buildAccordion();
-
-  /* ---------------- data.json auto-sync loader ----------------
-     Deployed alongside this file, data.json is refreshed monthly by a
-     GitHub Action (CrUX + PageSpeed Insights APIs). If the fetch fails
-     (e.g. opening the file locally), the hardcoded values above remain
-     as fallback and the report still renders fully. ---------------- */
-    fetch("data.json?v=" + Date.now())
-      .then(r => r.ok ? r.json() : null)
-      .then(D => {
-        if(!D) return;
-        REPORT_MONTH     = D.reportMonth     || REPORT_MONTH;
-        mobilePerfPrev   = (D.mobilePerfPrev   ?? mobilePerfPrev);
-        mobilePerfNow    = (D.mobilePerfNow    ?? mobilePerfNow);
-        desktopPerfScore = (D.desktopPerfScore ?? desktopPerfScore);
-        if(D.monthLabels){ monthLabels.ar = D.monthLabels.ar; monthLabels.en = D.monthLabels.en; }
-        (D.metrics||[]).forEach(dm => { const m = metrics.find(x=>x.key===dm.key); if(m && Array.isArray(dm.data)) m.data = dm.data; });
-        (D.desktopMetrics||[]).forEach(dm => { const m = desktopMetrics.find(x=>x.key===dm.key); if(m && Array.isArray(dm.data)) m.data = dm.data; });
-        if(Array.isArray(D.keywords)){ keywords.length = 0; D.keywords.forEach(k=>keywords.push(k)); }
-        window.__keywordsSource = D.keywordsSource || "manual";
-        window.__keywordsCheckedMonth = D.keywordsCheckedMonth || null;
-        (D.pages||[]).forEach(pp => { const p = pageRegistry.find(x=>x.id===pp.id); if(p && pp.monthly) Object.assign(p.monthly, pp.monthly); });
-        if(Array.isArray(D.pageHealth)){ pageHealthData = D.pageHealth; pageHealthCheckedMonth = D.pageHealthCheckedMonth || null; }
-        if(typeof D.pageHealthScore === "number") window.__pageHealthScore = D.pageHealthScore;
-        if(D.aiSearchReadiness){ window.__aiSearchReadiness = D.aiSearchReadiness; window.__aiCheckedMonth = D.aiSearchReadinessCheckedMonth || null; }
-        window.__lastRefreshedAt = D.lastRefreshedAt || null;
-        if(typeof D.seoScore === "number") window.__seoScore = D.seoScore;
-        if(typeof D.bestPracticesScore === "number") window.__bpScore = D.bestPracticesScore;
-        if(typeof D.a11yScoreMobile === "number") window.__a11yMobile = D.a11yScoreMobile;
-        if(typeof D.a11yScoreDesktop === "number") window.__a11yDesktop = D.a11yScoreDesktop;
-        if(D.lighthouseScoresCheckedMonth) window.__lighthouseScoresCheckedMonth = D.lighthouseScoresCheckedMonth;
-        // refresh period wording so future months never show stale text
-        ["ar","en"].forEach(l => {
-          const dd = dict[l];
-          if(D.periodLabel && D.periodLabel[l]){
-            const rx = l==="ar" ? /أغسطس 2025[^"،.·]*2026/ : /Aug(?:ust)? 2025\s*(?:–|-|to)\s*Jun(?:e)? 2026/;
-            ["heroMeta","footP1"].forEach(k => { if(dd[k]) dd[k] = dd[k].replace(rx, D.periodLabel[l]); });
-          }
-          if(D.latestMonthLabel && D.latestMonthLabel[l]){
-            const rxJ = l==="ar" ? /يونيو 2026/ : /June 2026/;
-            if(dd.heroMetaJune) dd.heroMetaJune = dd.heroMetaJune.replace(rxJ, D.latestMonthLabel[l]);
-            dd.footDate = l==="ar" ? `آخر تحديث: بيانات ${D.latestMonthLabel[l]} — أحدث المتاح` : `Last updated: ${D.latestMonthLabel[l]} data — most recent available`;
-            dd.heroMetaDesktop = l==="ar" ? `اختبار معملي (Lighthouse 13.4.0) · ${D.latestMonthLabel[l]} · أجهزة الكمبيوتر المكتبي` : `Lab test (Lighthouse 13.4.0) · ${D.latestMonthLabel[l]} · Desktop devices`;
-          }
-          if(D.latestShort && D.latestShort[l]){
-            dd.rangeJune = l==="ar" ? (D.latestShort[l] + " فقط") : (D.latestShort[l] + " only");
-          }
-        });
-        applyLang(currentLang); // full re-render with live data
-      })
-      .catch(()=>{ /* offline / local file — fallback values already rendered */ });
-  })();
-
-</script>
-  <div id="pdfPrintable" aria-hidden="true"></div>
-
-</body>
-</html>
+
+
+def snapshot_page_health(page_health):
+    """A compact per-page record for the monthly history. Deliberately NOT the
+    full entry: keeping every alt-text filename and internal-link list for 12
+    months would balloon data.json (which the frontend downloads in full on
+    every page load) for no benefit — history exists to answer "is this getting
+    better or worse", which needs numbers, not detail. The current month's full
+    detail always lives in data["pageHealth"]."""
+    return [{
+        "id": e["id"],
+        "nameAr": e.get("nameAr"),
+        "seoScore": e.get("seoScore"),
+        "mobileScore": e.get("mobileScore"),
+        "altIssueCount": (e["altText"]["issueCount"] if e.get("altText") else None),
+        "schemaOk": (e["schema"]["hasExpectedType"] if e.get("schema") else None),
+        "issueCount": len(e.get("issues") or []),
+    } for e in page_health]
+
+
+# AI crawlers worth checking explicitly for AI-search visibility (ChatGPT,
+# Claude, Perplexity) as distinct from Google-Extended, which governs
+# Gemini/AI Overviews grounding specifically. CCBot (Common Crawl) is
+# checked too but not flagged as a problem if blocked - many sites block it
+# on purpose since it's training data, not a live-answer crawler, and
+# blocking it doesn't affect whether Silah gets cited in an answer.
+# Source for which of these matter and why: Google's own AI optimization
+# guide plus the crawler-purpose table this was cross-checked against
+# (Aug 2026 SEO review) - Google-Agent/ChatGPT-User/Google-NotebookLM are
+# deliberately left out of this list since those are user-triggered
+# fetchers that ignore robots.txt by design, so checking them here would
+# always show "allowed" regardless of what the file says and just add
+# noise.
+AI_CRAWLERS_TO_CHECK = [
+    {"agent": "GPTBot", "owner": "OpenAI", "purpose": "ChatGPT web search", "flagIfBlocked": True},
+    {"agent": "OAI-SearchBot", "owner": "OpenAI", "purpose": "OpenAI search features", "flagIfBlocked": True},
+    {"agent": "ClaudeBot", "owner": "Anthropic", "purpose": "Claude web features", "flagIfBlocked": True},
+    {"agent": "PerplexityBot", "owner": "Perplexity", "purpose": "Perplexity AI search", "flagIfBlocked": True},
+    {"agent": "Google-Extended", "owner": "Google", "purpose": "Gemini / AI Overviews grounding", "flagIfBlocked": True},
+    {"agent": "anthropic-ai", "owner": "Anthropic", "purpose": "Claude training", "flagIfBlocked": False},
+    {"agent": "CCBot", "owner": "Common Crawl", "purpose": "Training-data crawl (often blocked on purpose)", "flagIfBlocked": False},
+]
+
+
+def check_ai_search_readiness():
+    """Checks whether the site's actual robots.txt allows the AI crawlers
+    that power ChatGPT/Claude/Perplexity/Google-AI-Overviews answers, plus
+    whether /llms.txt exists. Uses urllib.robotparser (stdlib) rather than
+    hand-rolled parsing, since robots.txt group-matching (which User-agent
+    block applies, wildcard fallback, etc.) has enough edge cases that a
+    battle-tested parser is worth it over a regex.
+
+    llms.txt is checked for presence only, not scored as pass/fail - as of
+    Google's 2026-06-29 AI optimization guide update, Google Search
+    (including its AI features) explicitly ignores llms.txt entirely, so
+    treating its absence as a problem would be actively misleading. It's
+    reported here only because it may help non-Google AI crawlers, which
+    is a real but smaller benefit than the robots.txt access itself.
+
+    Returns None (not a dict of failures) if robots.txt itself couldn't be
+    read at all, so the caller can tell "checked, and X is blocked" apart
+    from "couldn't check this run" - same distinction made everywhere else
+    in this file for a failed fetch."""
+    rp = urllib.robotparser.RobotFileParser()
+    rp.set_url(f"{ORIGIN}/robots.txt")
+    try:
+        rp.read()
+    except Exception as e:
+        print(f"  WARNING: could not read robots.txt: {e}", file=sys.stderr)
+        return None
+
+    crawlers = []
+    for c in AI_CRAWLERS_TO_CHECK:
+        allowed = rp.can_fetch(c["agent"], ORIGIN + "/")
+        crawlers.append({**c, "allowed": allowed})
+
+    llms_txt_present = fetch_html(f"{ORIGIN}/llms.txt") is not None
+
+    return {"crawlers": crawlers, "llmsTxtPresent": llms_txt_present}
+
+
+def build_note(new_month, keywords_source, coverage):
+    """The report's own plain-language summary of what's live vs. still manual.
+
+    This used to be a hardcoded string containing the literal text "as of Aug
+    2026", rewritten identically on every run — so the one field whose entire
+    job was to stop the report going stale was itself guaranteed to go stale,
+    claiming August forever. Now every changing part is derived from this run's
+    actual state: the real month, whether keywords genuinely came from GSC this
+    time, and real scan coverage."""
+    year, month = new_month.split("-")
+    month_ar = AR_MONTHS[int(month) - 1]
+    kw_line = (f"الكلمات المفتاحية: بيانات فعلية من Google Search Console حتى {month_ar} {year}."
+               if keywords_source == "gsc" else
+               f"الكلمات المفتاحية: مُدخلة يدويًا — لم يتم تحديثها من Search Console "
+               f"في تشغيل {month_ar} {year}.")
+    if coverage.get("truncated"):
+        cov_line = (f"تم فحص {coverage['scannedPages']} صفحة من أصل {coverage['totalPages']} "
+                    f"في خريطة الموقع (الحد الأقصى الحالي {coverage['maxAutoPages']}).")
+    elif coverage.get("source") == "fallback":
+        cov_line = "تعذّر قراءة خريطة الموقع في هذا التشغيل — تم فحص القائمة الاحتياطية الثابتة فقط."
+    else:
+        cov_line = f"تم فحص جميع صفحات خريطة الموقع ({coverage['scannedPages']} صفحة)."
+    return (f"{kw_line} {cov_line} "
+            "كل ملاحظة في التقرير موسومة بالجهة المسؤولة عنها (تقنية / تسويق / مشتركة). "
+            "صفوف أداء الصفحات غير الرئيسية لا تزال تحتاج إضافة الروابط يدويًا "
+            "(راجع pageRegistry في index.html). كل ما عدا ذلك — سلامة الصفحات، وصول "
+            "زواحف الذكاء الاصطناعي، درجات Lighthouse، ومؤشرات CrUX — يُحدَّث تلقائيًا "
+            "شهريًا عبر GitHub Action من واجهات Google مباشرة ومن الموقع نفسه.")
+
+
+def main():
+    if not API_KEY:
+        print("ERROR: PSI_API_KEY env var is missing (set it as a repo secret).", file=sys.stderr)
+        return 1
+
+    with open(DATA_PATH, encoding="utf-8") as f:
+        data = json.load(f)
+
+    months, series = None, None
+    try:
+        print("Fetching CrUX history for", ORIGIN, "...")
+        months, series = fetch_crux_history()
+        y_last, m_last = months[-1]
+        print("Latest CrUX month:", f"{y_last:04d}-{m_last:02d}", "| points:", len(months))
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            print("No CrUX record yet for", ORIGIN, "— likely below Google's minimum "
+                  "sample threshold. Skipping real-user chart update this run; "
+                  "PSI/Lighthouse scores will still refresh below.")
+        else:
+            print(f"WARNING: CrUX request failed (HTTP {e.code}) — {e}. "
+                  "Skipping real-user chart update this run; PSI/Lighthouse "
+                  "scores will still refresh below.", file=sys.stderr)
+    except Exception as e:
+        # Catch-all is deliberate: this module's whole design promise (see
+        # docstring) is that a CrUX hiccup of ANY kind never fails the run.
+        # Before this, only HTTPError-404 was treated as "skip gracefully" —
+        # a 400 (e.g. both TTFB metric names rejected -> RuntimeError from
+        # fetch_crux_history's for/else), a 403/429, or a malformed response
+        # (KeyError) all fell through and crashed the whole Action red.
+        print(f"WARNING: CrUX history fetch failed unexpectedly ({type(e).__name__}: {e}). "
+              "Skipping real-user chart update this run; PSI/Lighthouse "
+              "scores will still refresh below.", file=sys.stderr)
+
+    if months is not None:
+        y_last, m_last = months[-1]
+        new_month = f"{y_last:04d}-{m_last:02d}"
+    else:
+        now = datetime.now(timezone.utc)
+        new_month = f"{now.year:04d}-{now.month:02d}"
+
+    # NOTE: the CrUX/PSI-homepage block below is gated on new_month actually
+    # advancing (Google only publishes new CrUX data periodically). The
+    # page-health scan further down is NOT gated on that — schema/alt-text/
+    # unused-CSS-JS can change on the site at any time and have nothing to do
+    # with CrUX's publish cadence, so it always runs once per invocation
+    # (i.e. every scheduled month, or on demand via workflow_dispatch).
+    # An earlier version of this script returned early here before the page
+    # scan ever ran, which meant page-health silently never updated on any
+    # month CrUX didn't advance — that's fixed by not early-returning.
+    homepage_updated = data.get("reportMonth") != new_month
+
+    # PSI/Lighthouse category scores (Performance, SEO, Accessibility, Best
+    # Practices) now run every invocation, NOT gated on whether CrUX itself
+    # advanced to a new month. These are lab scores from PSI's own crawl —
+    # there's no real coupling to CrUX's real-user publish cadence, same
+    # reasoning already applied to the page-health scan (see note above).
+    # Previously this whole fetch sat inside the homepage_updated branch
+    # below: since reportMonth had already been sitting at the same value
+    # CrUX kept reporting, homepage_updated was False on every run so far
+    # this month, so seoScore/bestPracticesScore/a11yScore* never got set
+    # even once, despite the frontend cards for them already being live and
+    # waiting on real data. Moving the fetch out fixes that; the CrUX-tied
+    # fields below (mobilePerfNow, reportMonth, monthLabels, etc.) still
+    # only update when homepage_updated is actually True.
+    print("Fetching PageSpeed Insights scores ...")
+    try:
+        mobile_psi = fetch_psi_score("mobile")
+        desktop_psi = fetch_psi_score("desktop")
+        mobile_score = mobile_psi["performance"]
+        desktop_score = desktop_psi["performance"]
+        print("PSI mobile:", mobile_score, "| desktop:", desktop_score)
+
+        # Real SEO/Best Practices/Accessibility scores from the PSI runs
+        # above -- previously these three were hand-typed once into
+        # index.html (100 / 100 / "93-100") and never touched again by any
+        # automated process. Mobile score used for the single-number cards
+        # (SEO and Best Practices don't meaningfully differ by device in
+        # Lighthouse); Accessibility kept as a mobile-desktop range since
+        # the existing card's own label already implied that was the intent.
+        data["seoScore"] = mobile_psi["seo"]
+        data["bestPracticesScore"] = mobile_psi["bestPractices"]
+        data["a11yScoreMobile"] = mobile_psi["accessibility"]
+        data["a11yScoreDesktop"] = desktop_psi["accessibility"]
+        data["lighthouseScoresCheckedMonth"] = new_month
+    except Exception as e:
+        # Both the direct timeout and the one retry inside fetch_psi_score
+        # already failed if execution reaches here - a persistent PSI
+        # slowdown, not a one-off blip. Falls back to leaving seoScore/
+        # bestPracticesScore/a11yScore*/mobilePerfNow/desktopPerfScore
+        # exactly as they already were in data.json, rather than writing
+        # nulls over real numbers or crashing the whole run (Aug 19 2026:
+        # an unhandled timeout here took down page-health, AI-crawler, and
+        # GSC keyword updates too, none of which have anything to do with
+        # PSI at all). mobile_score/desktop_score set to None so the
+        # homepage_updated branch below knows not to touch those two
+        # fields either.
+        print(f"  WARNING: PSI fetch failed after retry, keeping previous scores this run: {type(e).__name__}: {e}", file=sys.stderr)
+        mobile_score = desktop_score = None
+
+    if not homepage_updated:
+        print("CrUX/homepage data already at", new_month, "— skipping that part, still running page-health scan below.")
+    else:
+        prev_now = data.get("mobilePerfNow")
+        data["mobilePerfPrev"] = prev_now if prev_now is not None else data.get("mobilePerfPrev")
+        # Only overwrite if the fetch above actually succeeded this run -
+        # mobile_score/desktop_score are None specifically when PSI failed
+        # even after its retry, and reportMonth/monthLabels/etc still need
+        # to advance below regardless (CrUX itself did report a new month,
+        # independent of whether PSI cooperated), just not these two scores.
+        if mobile_score is not None:
+            data["mobilePerfNow"] = mobile_score
+            data["desktopPerfScore"] = desktop_score
+        data["reportMonth"] = new_month
+
+        if months is not None:
+            y0, m0 = months[0]
+            data["monthLabels"] = {
+                "ar": [AR_MONTHS[m - 1] for (_, m) in months],
+                "en": [EN_MONTHS[m - 1] for (_, m) in months],
+            }
+            data["periodLabel"] = {
+                "ar": f"{AR_MONTHS[m0-1]} {y0} – {AR_MONTHS[m_last-1]} {y_last}",
+                "en": f"{EN_MONTHS[m0-1]} {y0} – {EN_MONTHS[m_last-1]} {y_last}",
+            }
+            data["latestShort"] = {"ar": AR_MONTHS[m_last-1], "en": EN_MONTHS_FULL[m_last-1]}
+            data["latestMonthLabel"] = {
+                "ar": f"{AR_MONTHS[m_last-1]} {y_last}",
+                "en": f"{EN_MONTHS_FULL[m_last-1]} {y_last}",
+            }
+
+            by_key = {m["key"]: m for m in data.get("metrics", [])}
+            for key, vals in series.items():
+                if key in by_key:
+                    by_key[key]["data"] = vals
+                else:
+                    data.setdefault("metrics", []).append({"key": key, "data": vals})
+
+        for p in data.get("pages", []):
+            if p.get("id") == "home":
+                p.setdefault("monthly", {})[new_month] = {
+                    "mobile": mobile_score, "desktop": desktop_score,
+                }
+
+    print("Scanning per-page health (schema, alt text, on-page, unused CSS/JS) ...")
+    page_health, coverage = run_page_health_scan()
+    data["pageHealth"] = page_health
+    data["pageHealthCheckedMonth"] = new_month
+    data["scanCoverage"] = coverage
+    if coverage.get("truncated"):
+        print(f"  NOTE: scanned {coverage['scannedPages']} of {coverage['totalPages']} sitemap pages "
+              f"— raise MAX_AUTO_PAGES to cover the rest. Orphan detection skipped this run.")
+
+    # NOT the same thing as data["seoScore"] above, which is Lighthouse's
+    # own homepage-only SEO category audit (viewport tag, valid hreflang,
+    # descriptive link text, etc.). This one is a composite built from the
+    # per-page pageHealth data itself -- schema, alt-text, meta description,
+    # performance, and CSS/JS bloat -- averaged across every scanned page
+    # (not just the homepage), which is why it needed its own field name.
+    data["pageHealthScore"] = compute_site_seo_score(data["pageHealth"])
+    data["pageHealthScoreCheckedMonth"] = new_month
+    scored_count = sum(1 for e in data["pageHealth"] if not e["excludedFromScore"])
+    print(f"  Page Health score: {data['pageHealthScore']} (averaged over {scored_count} pages, "
+          f"{len(data['pageHealth']) - scored_count} excluded as non-content pages)")
+
+    # Owner-tagged issue lists. Runs after scoring because build_issue_list()
+    # needs excludedFromScore to judge whether noindex on a page is correct.
+    data["issueSummary"] = attach_issues(data["pageHealth"], coverage)
+    s = data["issueSummary"]
+    print(f"  Issues: {s['totalIssues']} total — IT {s['byOwner']['it']}, "
+          f"Marketing {s['byOwner']['marketing']}, Shared {s['byOwner']['shared']} "
+          f"({s['bySeverity']['high']} high / {s['bySeverity']['medium']} medium / "
+          f"{s['bySeverity']['low']} low)")
+
+    # Monthly history. Overwrites this month's own entry if the Action is run
+    # more than once in a month (workflow_dispatch) rather than appending a
+    # duplicate - the latest run within a month is the one that counts. Older
+    # months are never modified, only aged out past PAGE_HEALTH_HISTORY_MONTHS.
+    history = data.get("pageHealthHistory") or {}
+    history[new_month] = snapshot_page_health(data["pageHealth"])
+    for stale_key in sorted(history)[:-PAGE_HEALTH_HISTORY_MONTHS]:
+        del history[stale_key]
+    data["pageHealthHistory"] = history
+    print(f"  History: {len(history)} month(s) retained ({', '.join(sorted(history))})")
+
+    print("Checking AI crawler access (robots.txt) and llms.txt ...")
+    data["aiSearchReadiness"] = check_ai_search_readiness()
+    data["aiSearchReadinessCheckedMonth"] = new_month
+    if data["aiSearchReadiness"]:
+        blocked = [c["agent"] for c in data["aiSearchReadiness"]["crawlers"] if c["flagIfBlocked"] and not c["allowed"]]
+        print(f"  AI crawlers blocked: {blocked or 'none'} | llms.txt present: {data['aiSearchReadiness']['llmsTxtPresent']}")
+
+    print("Checking Google Search Console for real keyword rankings ...")
+    gsc_token = get_gsc_access_token()
+    if gsc_token and data.get("keywords"):
+        update_keywords_with_gsc(data["keywords"], gsc_token)
+        data["keywordsSource"] = "gsc"
+        data["keywordsCheckedMonth"] = new_month
+        print(f"  Updated {len(data['keywords'])} tracked keywords from real Search Console data.")
+    else:
+        # Not an error - just means the keywords array keeps whatever it
+        # already had (manually entered, or from the last successful GSC
+        # run). keywordsSource stays whatever it already was, so a report
+        # that's never had GSC connected still correctly says "manual"
+        # instead of silently claiming a source it doesn't have.
+        data.setdefault("keywordsSource", "manual")
+        print("  Skipped - keywords unchanged this run (see warning above if this is unexpected).")
+
+    data["_note"] = build_note(new_month, data.get("keywordsSource", "manual"), coverage)
+
+    # Exact timestamp of THIS run, set unconditionally regardless of which
+    # individual sections above succeeded, failed, or were skipped this
+    # time. Distinct on purpose from the various *CheckedMonth fields
+    # (pageHealthCheckedMonth, lighthouseScoresCheckedMonth, etc.) - those
+    # are month-granularity and only advance when that section's own data
+    # actually changed; this one is a precise date+time and always moves,
+    # since its only job is answering "when did the report last actually
+    # run" - a question that came up repeatedly on Aug 19 2026 with no
+    # single clear answer anywhere on the page.
+    data["lastRefreshedAt"] = datetime.now(timezone.utc).isoformat()
+
+    with open(DATA_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+    print("data.json updated —", "homepage+" if homepage_updated else "", "page-health refreshed for", new_month)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
