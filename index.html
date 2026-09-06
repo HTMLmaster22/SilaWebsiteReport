@@ -953,6 +953,7 @@
       coverageFull:function(n){ return "تم فحص <strong>جميع صفحات خريطة الموقع (" + n + " صفحة)</strong> في آخر تشغيل."; },
       coveragePartial:function(s,t){ return "تم فحص <strong>" + s + " صفحة من أصل " + t + "</strong> في خريطة الموقع — الصفحات المتبقية لم تُفحص هذا الشهر، وفحص الصفحات اليتيمة مُعطَّل لأن النتيجة غير موثوقة على فحص جزئي."; },
       coverageFallback:"تعذّر قراءة خريطة الموقع في آخر تشغيل — تم فحص القائمة الاحتياطية الثابتة فقط، والأرقام أدناه لا تمثل الموقع كاملاً.",
+      psiFailures:function(n){ return " كما تعذّر على Google قياس أداء <strong>" + n + "</strong> " + (n===1?"صفحة":"صفحات") + " في هذا التشغيل، لذا تظهر خاناتها فارغة في جدول سلامة الصفحات — هذا لا يعني أنها سليمة، بل أنها لم تُقَس."; },
       empty:"لا توجد ملاحظات بهذا التصنيف — إما أن الفحص لم يُشغَّل بعد، أو لا توجد مشاكل ضمن هذا الفريق ومستوى الأهمية.",
       notRunYet:"لم يُشغَّل الفحص التلقائي بعد — سيُملأ هذا القسم تلقائياً بعد أول تشغيل يتضمن وسم الجهة المسؤولة.",
       trendTitle:function(a,b){ return "الحركة مقارنة بالفحص السابق (" + a + " ← " + b + ")"; },
@@ -973,6 +974,7 @@
       coverageFull:function(n){ return "<strong>All " + n + " sitemap pages</strong> were scanned on the last run."; },
       coveragePartial:function(s,t){ return "<strong>" + s + " of " + t + " sitemap pages</strong> were scanned — the rest weren't covered this month, and orphan-page detection is disabled because it can't be trusted on a partial scan."; },
       coverageFallback:"The sitemap couldn't be read on the last run — only the fixed fallback list was scanned, so the numbers below don't represent the whole site.",
+      psiFailures:function(n){ return " Google also couldn't measure performance for <strong>" + n + "</strong> page" + (n===1?"":"s") + " on this run, so their cells are blank in the page-health table — that means unmeasured, not healthy."; },
       empty:"No findings in this view — either the scan hasn't run yet, or there's nothing outstanding for this team at this priority.",
       notRunYet:"The automatic scan hasn't produced owner-tagged data yet — this section fills in after the next run.",
       trendTitle:function(a,b){ return "Movement since the previous scan (" + a + " → " + b + ")"; },
@@ -1021,16 +1023,21 @@
     var cov = state.data && state.data.scanCoverage;
     if(!cov){ el.style.display = "none"; return; }
     el.style.display = "";
+    var msg, warn;
     if(cov.source === "fallback"){
-      el.className = "ib-coverage reveal warn";
-      el.innerHTML = t().coverageFallback;
+      msg = t().coverageFallback; warn = true;
     } else if(cov.truncated){
-      el.className = "ib-coverage reveal warn";
-      el.innerHTML = t().coveragePartial(cov.scannedPages, cov.totalPages);
+      msg = t().coveragePartial(cov.scannedPages, cov.totalPages); warn = true;
     } else {
-      el.className = "ib-coverage reveal";
-      el.innerHTML = t().coverageFull(cov.scannedPages);
+      msg = t().coverageFull(cov.scannedPages); warn = false;
     }
+    // A blank performance cell and a healthy one look identical in the table,
+    // so the count of pages PSI couldn't measure is stated here rather than
+    // left for someone to notice. Only present on runs written by the Sept
+    // 2026 scanner onward; older data.json simply omits it.
+    if(cov.psiFailures){ msg += t().psiFailures(cov.psiFailures); warn = true; }
+    el.className = "ib-coverage reveal" + (warn ? " warn" : "");
+    el.innerHTML = msg;
   }
 
   function renderSummary(){
