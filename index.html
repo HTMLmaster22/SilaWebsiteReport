@@ -108,6 +108,30 @@
   .refresh-status.err{ color:var(--poor); }
   .refresh-status.ok{ color:var(--moss); }
 
+  /* Live scan progress. The bar is an ELAPSED-vs-typical indicator, not a
+     real completion percentage — GitHub doesn't report one. It caps at 92%
+     so it never claims to be finished while work is still running, and turns
+     indeterminate (striped) if a run goes past its estimate rather than
+     sitting at a lying 99%. */
+  .refresh-progress{ max-width:520px; margin:8px auto 0; padding:0 16px; }
+  .rp-bar{ height:6px; border-radius:100px; background:rgba(11,29,38,0.10); overflow:hidden; }
+  .rp-fill{
+    height:100%; width:0%; border-radius:100px; background:var(--signal);
+    transition:width .6s linear;
+  }
+  .rp-fill.over{
+    width:100% !important;
+    background:repeating-linear-gradient(115deg,var(--signal) 0 12px,rgba(232,72,58,.45) 12px 24px);
+    animation:rpSlide 1.1s linear infinite;
+  }
+  @keyframes rpSlide{ from{ background-position:0 0; } to{ background-position:48px 0; } }
+  .rp-meta{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    font-size:12px; color:var(--ink-soft); margin-top:6px;
+  }
+  .rp-times{ display:flex; gap:8px; align-items:center; }
+  .rp-times .num{ font-family:'JetBrains Mono',monospace; font-weight:600; }
+
   /* ===== Hero ===== */
   .hero{
     background:radial-gradient(120% 140% at 18% -10%, #173d49 0%, var(--ink) 55%);
@@ -590,6 +614,13 @@
     </button>
   </div>
   <div class="refresh-status" id="refreshStatus"></div>
+  <div class="refresh-progress" id="refreshProgress" hidden>
+    <div class="rp-bar"><div class="rp-fill" id="rpFill"></div></div>
+    <div class="rp-meta">
+      <span id="rpPhase"></span>
+      <span class="rp-times"><span id="rpElapsed" class="num"></span><span id="rpEta"></span></span>
+    </div>
+  </div>
   <div class="refresh-status" id="lastRefreshedLine"></div>
 </header>
 
@@ -1449,6 +1480,17 @@
       refreshBtnLabel:"تحديث البيانات الآن", refreshBtnBusy:"جاري التحديث…",
       refreshStatusWait:"سيستغرق حوالي ٩ دقائق. لا تغلق الصفحة، بس تقدر تكمل تصفحها.",
       refreshStatusGenericErr:"صار خطأ غير متوقع، جرّب مرة ثانية بعد شوي.",
+      rpQueued:"في الانتظار — لم يبدأ التشغيل بعد",
+      rpStarting:"تجهيز بيئة التشغيل",
+      rpInstalling:"تثبيت المكتبات المطلوبة",
+      rpScanning:"جاري فحص صفحات الموقع — هذه أطول مرحلة",
+      rpSaving:"حفظ النتائج",
+      rpWorking:"جاري العمل",
+      rpEta:function(m){ return "المتوقع ~" + m + " دقيقة"; },
+      rpOver:"تجاوز الوقت المتوقع، لا يزال يعمل",
+      rpDone:"اكتمل التحديث — يتم تحميل البيانات الجديدة…",
+      rpFailed:"فشل التشغيل. راجع سجل GitHub Actions للتفاصيل.",
+      rpResumed:"يوجد تحديث قيد التشغيل حالياً",
       lastRefreshedLabel:(exact,rel)=>`آخر تحديث فعلي للبيانات: ${exact} (${rel})`,
       relJustNow:"الآن", relMinutes:(n)=>`قبل ${n} ${n===1?'دقيقة':'دقائق'}`,
       relHours:(n)=>`قبل ${n} ${n===1?'ساعة':'ساعات'}`,
@@ -1634,6 +1676,17 @@
       refreshBtnLabel:"Refresh data now", refreshBtnBusy:"Refreshing…",
       refreshStatusWait:"Takes about 9 minutes. Don't close the page — feel free to keep browsing though.",
       refreshStatusGenericErr:"Something unexpected went wrong, try again in a bit.",
+      rpQueued:"Queued — hasn't started yet",
+      rpStarting:"Setting up the runner",
+      rpInstalling:"Installing dependencies",
+      rpScanning:"Scanning the site's pages — this is the long part",
+      rpSaving:"Saving results",
+      rpWorking:"Working",
+      rpEta:function(m){ return "~" + m + " min expected"; },
+      rpOver:"Past the estimate, still running",
+      rpDone:"Finished — loading the new data…",
+      rpFailed:"The run failed. Check the GitHub Actions log for details.",
+      rpResumed:"A refresh is already running",
       lastRefreshedLabel:(exact,rel)=>`Data last actually refreshed: ${exact} (${rel})`,
       relJustNow:"just now", relMinutes:(n)=>`${n} minute${n===1?"":"s"} ago`,
       relHours:(n)=>`${n} hour${n===1?"":"s"} ago`, relDays:(n)=>`${n} day${n===1?"":"s"} ago`,
@@ -3249,6 +3302,108 @@
   // confirms the trigger itself succeeded, then tells the person to check
   // back later. The button disables itself immediately on click to avoid
   // a burst of double-clicks all firing before the first response returns.
+  /* ---------------- live scan progress ----------------
+     Polls /api/run-status while a scan is running. Three things this solves
+     that the old fire-and-forget message didn't:
+       1) The person can see it's actually running, and which phase it's in,
+          instead of trusting a static sentence.
+       2) The page reloads itself the moment the run finishes, so nobody has
+          to guess when to come back.
+       3) It resumes on load — if someone else triggered a scan, or you
+          refreshed mid-run, you still see live progress instead of a page
+          that looks idle while work is happening.
+     The bar tracks elapsed against the average of recent real runs (the
+     server computes that from GitHub's own history). GitHub reports no
+     completion percentage, so the bar caps at 92% and goes indeterminate
+     past the estimate rather than pretending to know. */
+  let pollTimer = null, pollBusy = false;
+
+  function fmtClock(secs){
+    const m = Math.floor(secs / 60), s = Math.floor(secs % 60);
+    return m + ":" + String(s).padStart(2, "0");
+  }
+
+  function showProgress(on){
+    const el = document.getElementById("refreshProgress");
+    if(el) el.hidden = !on;
+  }
+
+  function paintProgress(data){
+    const d = dict[currentLang];
+    const phaseEl = document.getElementById("rpPhase");
+    const elapsedEl = document.getElementById("rpElapsed");
+    const etaEl = document.getElementById("rpEta");
+    const fill = document.getElementById("rpFill");
+    const elapsed = (data.run && data.run.elapsedSeconds) || 0;
+    const eta = data.etaSeconds || 0;
+
+    const key = data.state === "queued" ? "queued" : ((data.phase && data.phase.key) || "working");
+    const phaseText = {
+      queued:d.rpQueued, starting:d.rpStarting, installing:d.rpInstalling,
+      scanning:d.rpScanning, saving:d.rpSaving, working:d.rpWorking
+    }[key] || d.rpWorking;
+
+    phaseEl.textContent = phaseText;
+    elapsedEl.textContent = fmtClock(elapsed);
+
+    if(eta && elapsed < eta){
+      fill.classList.remove("over");
+      // Capped at 92%: the last stretch of a run is the commit/push, and a
+      // bar sitting at 100% while the page hasn't reloaded reads as broken.
+      fill.style.width = Math.min(92, (elapsed / eta) * 92).toFixed(1) + "%";
+      etaEl.textContent = "· " + d.rpEta(Math.max(1, Math.round(eta / 60)));
+    } else {
+      fill.classList.add("over");
+      etaEl.textContent = eta ? "· " + d.rpOver : "";
+    }
+  }
+
+  async function pollStatus(){
+    if(pollBusy) return;
+    pollBusy = true;
+    const status = document.getElementById("refreshStatus");
+    const d = dict[currentLang];
+    try {
+      const res = await fetch("/api/run-status");
+      const data = await res.json().catch(() => ({}));
+      if(!data.ok){ return; }
+
+      if(data.state === "running" || data.state === "queued"){
+        showProgress(true);
+        paintProgress(data);
+      } else {
+        // Finished. Only reload if we were actually tracking a live run —
+        // otherwise a page opened long after a scan would reload on load
+        // for no reason.
+        if(pollTimer){
+          clearInterval(pollTimer); pollTimer = null;
+          const failed = data.run && data.run.conclusion && data.run.conclusion !== "success";
+          status.className = "refresh-status " + (failed ? "err" : "ok");
+          status.textContent = failed ? d.rpFailed : d.rpDone;
+          if(!failed){
+            document.getElementById("rpFill").classList.remove("over");
+            document.getElementById("rpFill").style.width = "100%";
+            setTimeout(() => window.location.reload(), 1500);
+          } else {
+            showProgress(false);
+          }
+        } else {
+          showProgress(false);
+        }
+      }
+    } catch(e){
+      /* transient network blip — keep polling, don't tear down the UI */
+    } finally {
+      pollBusy = false;
+    }
+  }
+
+  function startPolling(){
+    if(pollTimer) return;
+    pollStatus();
+    pollTimer = setInterval(pollStatus, 5000);
+  }
+
   document.getElementById("refreshBtn").addEventListener("click", async () => {
     const btn = document.getElementById("refreshBtn");
     const label = document.getElementById("refreshBtnLabel");
@@ -3268,12 +3423,17 @@
       if (res.ok && data.ok) {
         status.className = "refresh-status ok";
         status.textContent = data.message || d.refreshStatusWait;
+        startPolling();
       } else {
         // already_running / cooldown / GitHub errors all carry their own
         // Arabic-or-English-appropriate message from the server; fall
         // back to a generic one only if the response is malformed.
         status.className = "refresh-status err";
         status.textContent = data.message || d.refreshStatusGenericErr;
+        // "already_running" isn't really an error from the person's point of
+        // view — a scan IS happening, they just didn't start it. Show them
+        // the live progress instead of only refusing.
+        if(data.error === "already_running") startPolling();
       }
     } catch (e) {
       status.className = "refresh-status err";
@@ -3284,6 +3444,24 @@
       label.textContent = d.refreshBtnLabel;
     }
   });
+
+  // Resume on load: if a scan is already in flight when the page opens,
+  // show it. Runs once, quietly — a failed call here must never disturb a
+  // page that otherwise renders fine.
+  fetch("/api/run-status")
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if(data && data.ok && (data.state === "running" || data.state === "queued")){
+        const d = dict[currentLang];
+        const status = document.getElementById("refreshStatus");
+        status.className = "refresh-status ok";
+        status.textContent = d.rpResumed;
+        showProgress(true);
+        paintProgress(data);
+        startPolling();
+      }
+    })
+    .catch(() => {});
 
   buildAccordion();
 
