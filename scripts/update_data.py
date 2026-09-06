@@ -107,15 +107,43 @@ PAGE_FETCH_RETRY_BACKOFF_SECONDS = 5
 # so a genuinely broken page costs three tries and moves on rather than
 # stalling the run.
 PSI_RETRY_STATUSES = {429, 500, 502, 503, 504}
-PSI_MAX_RETRIES = 2
-PSI_RETRY_BACKOFF_SECONDS = [8, 20]  # waited before attempt 2 and attempt 3
+# Sept 6 2026, second revision. The first version of this (2 retries, 8s then
+# 20s, plus a 1s gap between every call) made things worse, not better: run #29
+# was cancelled at 52 minutes with the failure rate CLIMBING as it went — 6
+# retry lines at 18 min, 10 at 42, 16 at 51. That shape is the signature of
+# throttling, not of random transient errors, and this site sits behind a
+# Sucuri WAF that sees 63 full Lighthouse page loads from Google's crawlers as
+# exactly the sustained burst it exists to slow down. Every retry was another
+# request into a WAF that was already throttling.
+#
+# So: one retry, not two. Attempt 3 almost never rescued a page (whatsapp,
+# auto-calls, customer-service-bot, video-library and technology-recruitment-
+# solutions all burned it and still failed) while costing 20s each time.
+PSI_MAX_RETRIES = 1
+PSI_RETRY_BACKOFF_SECONDS = [8]  # waited before the single retry
 
-# Steady gap between per-page PSI calls, separate from PAGE_FETCH_DELAY_SECONDS
-# (which paces requests at Silah's own server). This one paces requests at
-# Google's API. Cheap insurance: at ~63 pages it adds about a minute to a run
-# that already takes ~22, and a slower run that returns complete data beats a
-# faster one with a third of its cells blank.
-PSI_CALL_DELAY_SECONDS = 1
+# Set back to 0. This was added to pace requests at Google's API, on the theory
+# that the 500s were Google rate-limiting us. Run #29 disproved that: the
+# timeouts are the site's own WAF throttling Google's crawler, so a delay on
+# our side buys nothing and just spends a minute per run.
+PSI_CALL_DELAY_SECONDS = 0
+
+# THE ACTUAL FIX for run length. PSI is the entire cost of this script: each
+# call runs a full simulated-connection Lighthouse audit against a live page,
+# takes 5-15s when it works, and is the only part that fails. Everything else
+# — schema, alt text, canonical, titles, H1s, the internal-link graph — comes
+# from one cheap HTML fetch that essentially never fails.
+#
+# So the two are decoupled. The HTML pass still covers EVERY page EVERY run,
+# because that's where most findings come from and it's nearly free. PSI runs
+# over a rotating subset, oldest-measured first, so every page still gets
+# performance data — just not every single month. Pages not measured this run
+# keep their previous numbers (see carry_forward_psi) rather than going blank,
+# with psiCheckedMonth recording when each was last really measured.
+#
+# At 15 per run every page is re-measured roughly quarterly, which matches how
+# fast these numbers actually move, and brings the run back under ~15 minutes.
+PSI_PAGES_PER_RUN = 15
 
 # How many monthly snapshots of pageHealth to keep in data.json. 12 gives a
 # full year of month-over-month comparison; the snapshot is deliberately
@@ -1038,17 +1066,66 @@ def build_issue_list(entry):
     return issues
 
 
-def run_page_health_scan():
-    """One pass over the auto-discovered page list: HTML-based schema/alt-text/
-    on-page checks + a PSI run per page for score, unused CSS/JS, and SEO
-    issues. Any single page failing doesn't stop the others — each result just
-    gets marked unavailable for this run.
+def select_psi_pages(page_list, previous, month):
+    """Chooses which pages get a live PSI/Lighthouse run this time.
+
+    Oldest-measured-first, so the rotation is self-balancing: a page never
+    measured has no psiCheckedMonth and sorts first, then the page measured
+    longest ago, and so on. No stored cursor to drift out of sync with the
+    page list, and pages added to the sitemap later automatically jump to the
+    front of the queue instead of waiting for a full cycle.
+
+    Ties (several pages last measured the same month) keep sitemap order,
+    which is stable between runs, so the rotation advances predictably rather
+    than reshuffling."""
+    prev_by_id = {p.get("id"): p for p in (previous or [])}
+
+    def last_measured(page):
+        prev = prev_by_id.get(page["id"])
+        # "" sorts before any real "YYYY-MM", putting never-measured pages first.
+        return (prev or {}).get("psiCheckedMonth") or ""
+
+    ordered = sorted(page_list, key=lambda pg: (last_measured(pg), page_list.index(pg)))
+    chosen = {pg["id"] for pg in ordered[:PSI_PAGES_PER_RUN]}
+    return chosen, prev_by_id
+
+
+def carry_forward_psi(entry, prev):
+    """Copies the last known PSI numbers onto a page that wasn't measured this
+    run. Without this, rotating PSI would blank two thirds of the performance
+    column every month, which is strictly worse than the old every-page scan.
+
+    psiCheckedMonth travels with the values, so the report can say how old each
+    one is instead of implying they're all current. A page with no previous
+    measurement at all stays null — that's honest, and it will be first in line
+    next run."""
+    entry["mobileScore"] = (prev or {}).get("mobileScore")
+    entry["unusedCssKb"] = (prev or {}).get("unusedCssKb")
+    entry["unusedJsKb"] = (prev or {}).get("unusedJsKb")
+    entry["seoIssues"] = (prev or {}).get("seoIssues")
+    entry["psiCheckedMonth"] = (prev or {}).get("psiCheckedMonth")
+    entry["psiFresh"] = False
+
+
+def run_page_health_scan(previous=None, month=None):
+    """One pass over the auto-discovered page list.
+
+    Two passes of differing cost, deliberately decoupled (see PSI_PAGES_PER_RUN):
+      - HTML checks (schema, alt text, on-page, links) run on EVERY page, every
+        run. One cheap fetch each.
+      - PSI/Lighthouse runs on a rotating subset. Pages not selected keep their
+        previous numbers via carry_forward_psi() rather than going blank.
+
+    Any single page failing doesn't stop the others — each result just gets
+    marked unavailable for this run.
 
     Returns (results, coverage). Cross-page analysis (internal-link graph for
     orphan detection, duplicate titles) happens after the per-page loop, since
     both need every page's data before either can be decided."""
     page_list, coverage = build_page_list()
-    print(f"  Page list: {len(page_list)} page(s) to scan this run.")
+    psi_ids, prev_by_id = select_psi_pages(page_list, previous, month)
+    print(f"  Page list: {len(page_list)} page(s) — HTML checks on all, "
+          f"live PSI on {len(psi_ids)} this run (rotating oldest-first).")
     results = []
     psi_failures = []
     for i, page in enumerate(page_list):
@@ -1085,21 +1162,27 @@ def run_page_health_scan():
             entry["altText"] = None
             entry["onPage"] = None
 
-        try:
-            if i > 0:
-                time.sleep(PSI_CALL_DELAY_SECONDS)
-            psi = fetch_psi_full(page["url"], "mobile")
-            entry["mobileScore"] = psi["score"]
-            entry["unusedCssKb"] = psi["unusedCssKb"]
-            entry["unusedJsKb"] = psi["unusedJsKb"]
-            entry["seoIssues"] = psi["seoIssues"]
-        except Exception as e:
-            print(f"  WARNING: PSI failed for {page['id']}: {e}", file=sys.stderr)
-            psi_failures.append(page["id"])
-            entry["mobileScore"] = None
-            entry["unusedCssKb"] = None
-            entry["unusedJsKb"] = None
-            entry["seoIssues"] = None
+        if page["id"] not in psi_ids:
+            carry_forward_psi(entry, prev_by_id.get(page["id"]))
+        else:
+            try:
+                if PSI_CALL_DELAY_SECONDS and i > 0:
+                    time.sleep(PSI_CALL_DELAY_SECONDS)
+                psi = fetch_psi_full(page["url"], "mobile")
+                entry["mobileScore"] = psi["score"]
+                entry["unusedCssKb"] = psi["unusedCssKb"]
+                entry["unusedJsKb"] = psi["unusedJsKb"]
+                entry["seoIssues"] = psi["seoIssues"]
+                entry["psiCheckedMonth"] = month
+                entry["psiFresh"] = True
+            except Exception as e:
+                print(f"  WARNING: PSI failed for {page['id']}: {e}", file=sys.stderr)
+                psi_failures.append(page["id"])
+                # Falls back to whatever was last known rather than blanking the
+                # row: a failed measurement is not evidence the old one is wrong,
+                # and this page sorts to the front of next run's rotation anyway
+                # because its psiCheckedMonth didn't advance.
+                carry_forward_psi(entry, prev_by_id.get(page["id"]))
 
         results.append(entry)
 
@@ -1111,6 +1194,9 @@ def run_page_health_scan():
     # scanCoverage — the report should state the limits of its own data.
     coverage["psiFailures"] = len(psi_failures)
     coverage["psiFailedPages"] = psi_failures
+    coverage["psiAttempted"] = len(psi_ids)
+    coverage["psiFresh"] = sum(1 for e in results if e.get("psiFresh"))
+    coverage["psiRotating"] = len(psi_ids) < len(page_list)
     if psi_failures:
         print(f"  NOTE: PSI returned no data for {len(psi_failures)} page(s) after retries: "
               f"{', '.join(psi_failures[:8])}{' …' if len(psi_failures) > 8 else ''}")
@@ -1544,13 +1630,17 @@ def main():
                 }
 
     print("Scanning per-page health (schema, alt text, on-page, unused CSS/JS) ...")
-    page_health, coverage = run_page_health_scan()
+    page_health, coverage = run_page_health_scan(previous=data.get("pageHealth"), month=new_month)
     data["pageHealth"] = page_health
     data["pageHealthCheckedMonth"] = new_month
     data["scanCoverage"] = coverage
     if coverage.get("truncated"):
         print(f"  NOTE: scanned {coverage['scannedPages']} of {coverage['totalPages']} sitemap pages "
               f"— raise MAX_AUTO_PAGES to cover the rest. Orphan detection skipped this run.")
+    if coverage.get("psiRotating"):
+        print(f"  PSI: {coverage['psiFresh']} of {coverage['psiAttempted']} attempted pages measured live "
+              f"this run; the other {coverage['scannedPages'] - coverage['psiAttempted']} kept their "
+              f"previous performance numbers (rotating schedule).")
 
     # NOT the same thing as data["seoScore"] above, which is Lighthouse's
     # own homepage-only SEO category audit (viewport tag, valid hreflang,
