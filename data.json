@@ -509,6 +509,8 @@
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 60,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -627,6 +629,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -743,10 +747,12 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 94,
+      "mobileScore": 88,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -843,10 +849,12 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 73,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -909,8 +917,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (74/100)",
-          "labelEn": "Mobile performance below target (74/100)"
+          "labelAr": "أداء الجوال دون الهدف (73/100)",
+          "labelEn": "Mobile performance below target (73/100)"
         }
       ]
     },
@@ -985,10 +993,12 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 78,
+      "mobileScore": 77,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -1074,10 +1084,12 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 78,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -1192,14 +1204,16 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 62,
+      "mobileScore": 73,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 56,
+      "seoScore": 58,
       "issues": [
         {
           "code": "schema_missing",
@@ -1237,8 +1251,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (62/100)",
-          "labelEn": "Mobile performance below target (62/100)"
+          "labelAr": "أداء الجوال دون الهدف (73/100)",
+          "labelEn": "Mobile performance below target (73/100)"
         }
       ]
     },
@@ -1354,14 +1368,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 80,
+      "mobileScore": 74,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 77,
+      "seoScore": 75,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -1409,8 +1425,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (80/100)",
-          "labelEn": "Mobile performance below target (80/100)"
+          "labelAr": "أداء الجوال دون الهدف (74/100)",
+          "labelEn": "Mobile performance below target (74/100)"
         }
       ]
     },
@@ -1489,6 +1505,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -1599,10 +1617,12 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 71,
+      "mobileScore": 72,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -1637,8 +1657,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (71/100)",
-          "labelEn": "Mobile performance below target (71/100)"
+          "labelAr": "أداء الجوال دون الهدف (72/100)",
+          "labelEn": "Mobile performance below target (72/100)"
         }
       ]
     },
@@ -1724,14 +1744,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 88,
+      "mobileScore": 79,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 88,
+      "seoScore": 86,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -1766,8 +1788,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (88/100)",
-          "labelEn": "Mobile performance below target (88/100)"
+          "labelAr": "أداء الجوال دون الهدف (79/100)",
+          "labelEn": "Mobile performance below target (79/100)"
         }
       ]
     },
@@ -1847,14 +1869,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 89,
+      "mobileScore": 74,
       "unusedCssKb": 180,
       "unusedJsKb": 100,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 62,
+      "seoScore": 58,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -1902,8 +1926,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (89/100)",
-          "labelEn": "Mobile performance below target (89/100)"
+          "labelAr": "أداء الجوال دون الهدف (74/100)",
+          "labelEn": "Mobile performance below target (74/100)"
         },
         {
           "code": "unused_css_high",
@@ -2018,10 +2042,12 @@
           "https://www.silah.com.sa/wp-content/uploads/2022/10/نظام-صلة-لقياس-الإنتاجية-وإدارة-المشاريع.pdf/"
         ]
       },
-      "mobileScore": 65,
+      "mobileScore": 67,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -2106,14 +2132,22 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 94,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
-      "seoIssues": [],
+      "seoIssues": [
+        {
+          "id": "robots-txt",
+          "title": "robots.txt is not valid",
+          "owner": "it"
+        }
+      ],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 78,
+      "seoScore": 68,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -2136,6 +2170,13 @@
             "length": 17,
             "min": 25
           }
+        },
+        {
+          "code": "lighthouse_robots-txt",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "robots.txt is not valid",
+          "labelEn": "robots.txt is not valid"
         }
       ]
     },
@@ -2210,10 +2251,12 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 75,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": "2026-08",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -2258,8 +2301,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (76/100)",
-          "labelEn": "Mobile performance below target (76/100)"
+          "labelAr": "أداء الجوال دون الهدف (75/100)",
+          "labelEn": "Mobile performance below target (75/100)"
         }
       ]
     },
@@ -2338,6 +2381,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -2462,6 +2507,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -2589,6 +2636,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 1,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -2681,6 +2730,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 1,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -2770,6 +2821,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 2,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -2859,6 +2912,8 @@
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -2948,6 +3003,8 @@
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -3037,6 +3094,8 @@
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -3131,6 +3190,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": [
         "%d8%b4%d9%83%d8%b1%d8%a7%d9%8b"
@@ -3222,6 +3283,8 @@
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
@@ -3366,6 +3429,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -3496,6 +3561,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -3648,6 +3715,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 2,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -3881,6 +3950,8 @@
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -3997,6 +4068,8 @@
       "unusedCssKb": 129,
       "unusedJsKb": 1318,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -4129,6 +4202,8 @@
       "unusedCssKb": 129,
       "unusedJsKb": 1318,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -4283,6 +4358,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -4402,6 +4479,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 3,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -4520,6 +4599,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -4642,6 +4723,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -4804,6 +4887,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -4947,6 +5032,8 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -5071,6 +5158,8 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -5171,6 +5260,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -5341,6 +5432,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -5474,6 +5567,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -5644,6 +5739,8 @@
           "owner": "it"
         }
       ],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -5785,6 +5882,8 @@
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -5909,6 +6008,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -6016,6 +6117,8 @@
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -6153,6 +6256,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": [
         "thank-you"
@@ -6364,6 +6469,8 @@
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -6525,6 +6632,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -6601,6 +6710,8 @@
       "unusedCssKb": 15,
       "unusedJsKb": 466,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 14,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -6746,6 +6857,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 146,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -6864,6 +6977,8 @@
       "unusedCssKb": 27,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -6985,6 +7100,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -7243,6 +7360,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -7413,6 +7532,8 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -7587,6 +7708,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 1,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -7700,6 +7823,8 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -7853,6 +7978,8 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -7972,6 +8099,8 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -8074,6 +8203,8 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -8201,6 +8332,8 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -8331,6 +8464,8 @@
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 1,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -8594,6 +8729,8 @@
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -8672,6 +8809,8 @@
       "unusedCssKb": 19,
       "unusedJsKb": 0,
       "seoIssues": [],
+      "psiCheckedMonth": null,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
@@ -8777,7 +8916,7 @@
   "aiSearchReadinessCheckedMonth": "2026-08",
   "keywordsSource": "gsc",
   "keywordsCheckedMonth": "2026-08",
-  "lastRefreshedAt": "2026-09-06T11:34:24.011385+00:00",
+  "lastRefreshedAt": "2026-09-06T13:56:09.116017+00:00",
   "scanCoverage": {
     "source": "sitemap",
     "totalPages": 63,
@@ -8785,20 +8924,23 @@
     "truncated": false,
     "maxAutoPages": 80,
     "psiFailures": 0,
-    "psiFailedPages": []
+    "psiFailedPages": [],
+    "psiAttempted": 15,
+    "psiFresh": 15,
+    "psiRotating": true
   },
   "issueSummary": {
     "byOwner": {
-      "it": 72,
+      "it": 73,
       "marketing": 105,
       "shared": 50
     },
     "bySeverity": {
       "high": 34,
-      "medium": 154,
+      "medium": 155,
       "low": 39
     },
-    "totalIssues": 227,
+    "totalIssues": 228,
     "orphanDetectionSkipped": false
   },
   "pageHealthHistory": {
@@ -8825,7 +8967,7 @@
         "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
         "nameAr": "طلب باقة",
         "seoScore": null,
-        "mobileScore": 94,
+        "mobileScore": 88,
         "altIssueCount": 6,
         "schemaOk": false,
         "issueCount": 1
@@ -8834,7 +8976,7 @@
         "id": "%d9%85%d8%af%d9%88%d9%86%d8%a9",
         "nameAr": "مدونة",
         "seoScore": 84,
-        "mobileScore": 74,
+        "mobileScore": 73,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 7
@@ -8843,7 +8985,7 @@
         "id": "%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82",
         "nameAr": "عربة التسوق",
         "seoScore": null,
-        "mobileScore": 78,
+        "mobileScore": 77,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 1
@@ -8852,7 +8994,7 @@
         "id": "%d8%a7%d9%84%d8%af%d9%81%d8%b9",
         "nameAr": "الدفع",
         "seoScore": null,
-        "mobileScore": 75,
+        "mobileScore": 78,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 1
@@ -8860,8 +9002,8 @@
       {
         "id": "%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9",
         "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
-        "seoScore": 56,
-        "mobileScore": 62,
+        "seoScore": 58,
+        "mobileScore": 73,
         "altIssueCount": 14,
         "schemaOk": false,
         "issueCount": 5
@@ -8869,8 +9011,8 @@
       {
         "id": "%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a",
         "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
-        "seoScore": 77,
-        "mobileScore": 80,
+        "seoScore": 75,
+        "mobileScore": 74,
         "altIssueCount": 10,
         "schemaOk": true,
         "issueCount": 6
@@ -8888,7 +9030,7 @@
         "id": "defining-the-problem",
         "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية |",
         "seoScore": 72,
-        "mobileScore": 71,
+        "mobileScore": 72,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -8896,8 +9038,8 @@
       {
         "id": "infrastructure",
         "nameAr": "البنية التحتية |",
-        "seoScore": 88,
-        "mobileScore": 88,
+        "seoScore": 86,
+        "mobileScore": 79,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 4
@@ -8905,8 +9047,8 @@
       {
         "id": "%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
         "nameAr": "فرص وظيفية تقنية",
-        "seoScore": 62,
-        "mobileScore": 89,
+        "seoScore": 58,
+        "mobileScore": 74,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 7
@@ -8915,7 +9057,7 @@
         "id": "gitex2022",
         "nameAr": "Gitex2022 |",
         "seoScore": null,
-        "mobileScore": 65,
+        "mobileScore": 67,
         "altIssueCount": 7,
         "schemaOk": true,
         "issueCount": 1
@@ -8923,17 +9065,17 @@
       {
         "id": "terms-and-conditions",
         "nameAr": "الشروط والأحكام |",
-        "seoScore": 78,
-        "mobileScore": 97,
+        "seoScore": 68,
+        "mobileScore": 94,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 2
+        "issueCount": 3
       },
       {
         "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
         "nameAr": "دراسة مستقبل العمل لعام 2022م |",
         "seoScore": 73,
-        "mobileScore": 76,
+        "mobileScore": 75,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 5
