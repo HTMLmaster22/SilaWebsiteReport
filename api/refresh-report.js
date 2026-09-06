@@ -13,7 +13,7 @@
 //   HTMLmaster22/SilaWebsiteReport repository, with ONLY the
 //   "Actions: Read and write" permission. Nothing broader than that -
 //   this token can start a workflow run and check its status, and
-//   nothing else, even in a worst case where it somehow leaked.
+//   nothing else (the same token backs /api/run-status), even in a worst case where it somehow leaked.
 //
 // Guards against overlapping runs before triggering anything, for the
 // same reason the git-conflict bug happened in the first place (Aug 17
@@ -31,8 +31,8 @@ const GITHUB_API = `https://api.github.com/repos/${OWNER}/${REPO}/actions/workfl
 // manual trigger. Not about GitHub cost (Actions minutes are cheap) - it's
 // about the underlying data sources: PSI/CrUX/GSC numbers don't
 // meaningfully change minute to minute, so a second run five minutes
-// after the first would just burn API quota and 9 more minutes for
-// identical results.
+// after the first would just burn API quota and another full scan (~26
+// minutes with the Sept 2026 scanner) for identical results.
 const COOLDOWN_MINUTES = 15;
 
 async function githubRequest(path, options = {}) {
@@ -76,7 +76,7 @@ module.exports = async (req, res) => {
       res.status(409).json({
         ok: false,
         error: "already_running",
-        message: "تحديث قيد التشغيل بالفعل، يستغرق حوالي ٩ دقائق. جرّب بعد قليل.",
+        message: "تحديث قيد التشغيل بالفعل — تابع التقدّم أدناه.",
       });
       return;
     }
@@ -109,7 +109,7 @@ module.exports = async (req, res) => {
 
     res.status(200).json({
       ok: true,
-      message: "بدأ التحديث! يستغرق حوالي ٩ دقائق — أعد تحميل الصفحة بعدها لرؤية البيانات الجديدة.",
+      message: "بدأ التحديث — تابع التقدّم أدناه، وستتحدّث الصفحة تلقائياً عند الانتهاء.",
     });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message || "Unknown server error" });
