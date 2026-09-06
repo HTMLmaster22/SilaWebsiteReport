@@ -31,7 +31,12 @@ const API_ROOT = `https://api.github.com/repos/${OWNER}/${REPO}`;
 // the older one took ~10, and the ETA should follow that within a run or two
 // rather than being anchored to ancient history), large enough that one
 // unusually slow run doesn't skew it.
-const ETA_SAMPLE_RUNS = 5;
+// Sept 6 2026: lowered 5 -> 3. With 5, the estimate stayed anchored to older
+// ~10-minute runs and told someone "~17 min" on a run that took 42 — worse
+// than no estimate, because it looks broken rather than slow. Three samples
+// track a real change in run length within a run or two, which is what
+// matters on the day the scanner changes.
+const ETA_SAMPLE_RUNS = 3;
 // Used only when there is no completed-run history at all to average.
 const ETA_FALLBACK_SECONDS = 25 * 60;
 
