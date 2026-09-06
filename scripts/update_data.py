@@ -9,16 +9,24 @@ Pulls:
   3. Per-page health scan -> pages are now auto-discovered from the site's own
                             Yoast sitemap every run (see discover_pages_from_sitemap()),
                             not a hand-maintained list. For each discovered URL: fetches
-                            the live HTML directly and checks Schema.org structured data
-                            + image alt text, and pulls unused-CSS / unused-JS byte
-                            estimates plus failing SEO-category audits from the same PSI
-                            call already being made for that page's performance score.
+                            the live HTML directly and checks Schema.org structured data,
+                            image alt text, and on-page basics (canonical, robots/noindex,
+                            title, meta description, H1s, internal links), and pulls
+                            unused-CSS / unused-JS byte estimates plus failing SEO-category
+                            audits from the same PSI call already being made for that
+                            page's performance score.
 
 Writes the results into data.json (which the report reads at load time).
 
-Keyword RANKINGS are intentionally NOT touched — real position tracking needs
-Google Search Console API access (a separate, larger integration), so that
-part stays manual until that's set up. Everything else below is automatic.
+Sept 2026 additions (shared IT/Marketing documentation goal):
+  - Every finding is now tagged with an OWNER (it / marketing / shared) so each
+    team can read its own row without someone translating the report verbally.
+  - pageHealthHistory keeps a compact per-month snapshot (rolling 12 months) so
+    month-over-month movement is visible instead of being overwritten each run.
+  - On-page checks added on HTML this script already fetches — no new requests:
+    canonical tag, noindex, title text/length, duplicate titles across pages,
+    H1 count, meta description length, and internal-link graph (orphan pages).
+  - Sitemap truncation is now surfaced in data.json, not just stderr.
 
 CrUX real-user data is best-effort: lower-traffic origins/pages often don't
 have enough anonymized Chrome samples yet for Google to publish a record (a
@@ -30,6 +38,7 @@ because CrUX has nothing yet.
 Env:
   PSI_API_KEY  (required) — Google API key with "Chrome UX Report API" and
                 "PageSpeed Insights API" enabled.
+  GSC_SERVICE_ACCOUNT_JSON (optional) — service account for real keyword data.
 
 Exit codes: 0 = updated (or already current), 1 = hard failure (Action goes red).
 """
@@ -52,9 +61,15 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data.json")
 # Safety cap on how many pages get the full scan (HTML fetch + a PSI/Lighthouse
 # run each) in a single execution. PSI calls typically take 5-15s apiece, so at
 # ~30 pages this run stays in the few-minutes range instead of risking a very
-# long or rate-limited Action run. Raise this if the real sitemap needs more —
-# the discovery logic itself has no built-in limit, this is deliberate.
-MAX_AUTO_PAGES = 30
+# long or rate-limited Action run.
+#
+# Sept 2026: raised 30 -> 60. At 30 the scan could silently cover only part of
+# the site while the report still read as complete — the warning about it only
+# ever went to stderr, where nobody looks. Two changes: the cap is high enough
+# to cover the whole sitemap with headroom, AND the truncation state is now
+# written into data.json (sitemapTotalPages / sitemapTruncated) so the report
+# itself can say "scanned 60 of 78" instead of quietly implying full coverage.
+MAX_AUTO_PAGES = 60
 
 # Seconds to wait between each page's direct HTML fetch in run_page_health_scan().
 # Added Aug 2026 after the Aug 15 run showed only page 1 (home) getting real
@@ -69,6 +84,12 @@ PAGE_FETCH_DELAY_SECONDS = 2
 # steady per-page delay above, since a failure is a stronger signal to back
 # off further than the routine gap between pages.
 PAGE_FETCH_RETRY_BACKOFF_SECONDS = 5
+
+# How many monthly snapshots of pageHealth to keep in data.json. 12 gives a
+# full year of month-over-month comparison; the snapshot is deliberately
+# compact (see snapshot_page_health()) so a year of them stays small rather
+# than turning data.json into an archive the frontend has to download.
+PAGE_HEALTH_HISTORY_MONTHS = 12
 
 # Manually-curated bilingual names + expected Schema type for pages already
 # worked on directly (Aug 2026 SEO pass). Anything the sitemap discovers that
@@ -121,6 +142,52 @@ SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 # placeholder that isn't real descriptive text (case-insensitive).
 GENERIC_ALT_VALUES = {"icon", "image", "img", "photo", "logo", ""}
 
+# ---------------------------------------------------------------------------
+# Ownership model (Sept 2026)
+# ---------------------------------------------------------------------------
+# The single change that makes this report usable as shared IT/Marketing
+# documentation rather than one undifferentiated pile of findings. Every issue
+# emitted below carries an owner so each team can filter to its own work:
+#
+#   "it"        — server, template, markup, and build-output concerns. Fixed in
+#                 WordPress theme/plugin/hosting layers.
+#   "marketing" — copy, content and keyword concerns. Fixed by writing words.
+#   "shared"    — needs both: content decides the wording, IT enters/implements
+#                 it. Alt text is the canonical example (Marketing confirms
+#                 partner/certification logo naming, IT fills the fields).
+#
+# Deliberately three values, not a free-text field: anything more granular
+# stops being filterable and starts being prose.
+OWNER_IT = "it"
+OWNER_MARKETING = "marketing"
+OWNER_SHARED = "shared"
+
+# Owner for each failing Lighthouse SEO-category audit id. Anything not listed
+# defaults to OWNER_IT — an unrecognised technical audit is far more likely to
+# be a markup/template issue than a copywriting one, and mis-routing something
+# to Marketing that they can't action is worse than the reverse.
+SEO_AUDIT_OWNERS = {
+    "meta-description": OWNER_MARKETING,
+    "document-title": OWNER_MARKETING,
+    "link-text": OWNER_MARKETING,
+    "hreflang": OWNER_IT,
+    "canonical": OWNER_IT,
+    "is-crawlable": OWNER_IT,
+    "http-status-code": OWNER_IT,
+    "crawlable-anchors": OWNER_IT,
+    "robots-txt": OWNER_IT,
+    "viewport": OWNER_IT,
+}
+
+# Thresholds for the on-page checks below. These are conventional SEO ranges,
+# not Google-guaranteed limits — Google truncates by pixel width, not character
+# count, so treat these as "worth a look", which is why they're emitted at
+# severity "info"/"warn" rather than as hard failures.
+TITLE_MIN_CHARS = 25
+TITLE_MAX_CHARS = 65
+META_DESC_MIN_CHARS = 70
+META_DESC_MAX_CHARS = 165
+
 
 def slug_from_url(url):
     """Path-based slug, not domain-based — url.rsplit("/") alone breaks on
@@ -132,6 +199,22 @@ def slug_from_url(url):
     return path.rsplit("/", 1)[-1] if path else "home"
 
 
+def normalize_url(url):
+    """Canonical form used for comparing URLs to each other (internal-link
+    graph, canonical-tag self-reference check). Drops the fragment and query,
+    and forces exactly one trailing slash, so /page, /page/, /page?x=1 and
+    /page#top all compare equal. Deliberately does NOT touch percent-encoding:
+    this site's Arabic slugs are stored encoded and re-encoding them
+    inconsistently is exactly the class of silent mismatch that already bit
+    the KNOWN_PAGE_NAMES lookup (see the substring workaround above)."""
+    if not url:
+        return ""
+    url = url.split("#", 1)[0].split("?", 1)[0].strip()
+    if not url:
+        return ""
+    return url.rstrip("/") + "/"
+
+
 def discover_pages_from_sitemap():
     """Auto-discovers every WordPress 'Page' URL from this site's Yoast-
     generated sitemap instead of relying on a hand-maintained list. Standard
@@ -140,19 +223,22 @@ def discover_pages_from_sitemap():
     page-sitemap.xml (or page-sitemap1.xml, page-sitemap2.xml, ... if there
     are enough pages that Yoast splits them — it paginates at 200 URLs per
     file, hence matching by substring below rather than an exact filename).
-    Returns a list of URLs (capped at MAX_AUTO_PAGES, with a warning logged
-    if the real count is higher), or None — not an empty list — on any
-    failure, so the caller can tell "genuinely zero pages" apart from
-    "something went wrong" and fall back to PAGE_LIST_FALLBACK accordingly."""
+
+    Returns (urls, total_found) where urls is capped at MAX_AUTO_PAGES and
+    total_found is the real uncapped count, or (None, 0) on any failure — not
+    an empty list — so the caller can tell "genuinely zero pages" apart from
+    "something went wrong" and fall back to PAGE_LIST_FALLBACK accordingly.
+    total_found is returned rather than only logged so the report can show
+    real coverage instead of implying it scanned everything."""
     index_xml = fetch_html(f"{ORIGIN}/sitemap_index.xml")
     if not index_xml:
         print("WARNING: could not fetch sitemap_index.xml", file=sys.stderr)
-        return None
+        return None, 0
     try:
         root = ET.fromstring(index_xml)
     except ET.ParseError as e:
         print(f"WARNING: sitemap_index.xml did not parse as XML: {e}", file=sys.stderr)
-        return None
+        return None, 0
 
     sub_sitemaps = [loc.text.strip() for loc in root.findall(".//sm:loc", SITEMAP_NS) if loc.text]
     page_sitemaps = [s for s in sub_sitemaps if "page-sitemap" in s]
@@ -160,7 +246,7 @@ def discover_pages_from_sitemap():
         print("WARNING: no page-sitemap*.xml listed in sitemap_index.xml — "
               "site's sitemap structure may not match the expected Yoast layout.",
               file=sys.stderr)
-        return None
+        return None, 0
 
     urls = []
     for sm_url in page_sitemaps:
@@ -176,21 +262,32 @@ def discover_pages_from_sitemap():
         urls.extend(loc.text.strip() for loc in sm_root.findall(".//sm:loc", SITEMAP_NS) if loc.text)
 
     if not urls:
-        return None
-    if len(urls) > MAX_AUTO_PAGES:
-        print(f"WARNING: sitemap has {len(urls)} pages — scanning the first "
+        return None, 0
+    total = len(urls)
+    if total > MAX_AUTO_PAGES:
+        print(f"WARNING: sitemap has {total} pages — scanning the first "
               f"{MAX_AUTO_PAGES} this run (raise MAX_AUTO_PAGES for more).",
               file=sys.stderr)
-    return urls[:MAX_AUTO_PAGES]
+    return urls[:MAX_AUTO_PAGES], total
 
 
 def build_page_list():
     """Combines automatic sitemap discovery with the known bilingual names
-    above. Falls back to PAGE_LIST_FALLBACK if discovery fails for any reason."""
-    discovered = discover_pages_from_sitemap()
+    above. Falls back to PAGE_LIST_FALLBACK if discovery fails for any reason.
+
+    Returns (pages, coverage) — coverage records how many pages the sitemap
+    actually lists vs. how many got scanned, so the report can state its own
+    completeness rather than leaving a truncated scan looking like a full one."""
+    discovered, total_found = discover_pages_from_sitemap()
     if not discovered:
         print("Sitemap discovery unavailable this run — using the fixed 5-page fallback list.")
-        return PAGE_LIST_FALLBACK
+        return PAGE_LIST_FALLBACK, {
+            "source": "fallback",
+            "totalPages": len(PAGE_LIST_FALLBACK),
+            "scannedPages": len(PAGE_LIST_FALLBACK),
+            "truncated": False,
+            "maxAutoPages": MAX_AUTO_PAGES,
+        }
 
     pages = []
     for url in discovered:
@@ -206,7 +303,25 @@ def build_page_list():
             "nameEn": known["nameEn"] if known else None,
             "expectSchemaType": known.get("expectSchemaType") if known else None,
         })
-    return pages
+    coverage = {
+        "source": "sitemap",
+        "totalPages": total_found,
+        "scannedPages": len(pages),
+        "truncated": total_found > len(pages),
+        "maxAutoPages": MAX_AUTO_PAGES,
+    }
+    return pages, coverage
+
+
+def extract_title_raw(html):
+    """The page's <title> text, whitespace-collapsed but otherwise untouched —
+    including the "| Site Name" suffix. Length checks and duplicate-title
+    detection both need the real string Google sees, not the trimmed display
+    name extract_title() returns."""
+    m = re.search(r'<title[^>]*>(.*?)</title>', html, re.DOTALL | re.IGNORECASE)
+    if not m:
+        return None
+    return re.sub(r'\s+', ' ', m.group(1)).strip() or None
 
 
 def extract_title(html):
@@ -214,10 +329,9 @@ def extract_title(html):
     pages without a curated entry in KNOWN_PAGE_NAMES. WordPress/Yoast titles
     are usually "Page Name | Site Name" — trims that suffix so the report
     shows just the page-specific part, not the same site name on every row."""
-    m = re.search(r'<title[^>]*>(.*?)</title>', html, re.DOTALL | re.IGNORECASE)
-    if not m:
+    title = extract_title_raw(html)
+    if not title:
         return None
-    title = re.sub(r'\s+', ' ', m.group(1)).strip()
     for sep in (" | ", " – ", " - "):
         if sep in title:
             title = title.split(sep)[0].strip()
@@ -479,7 +593,12 @@ def fetch_psi_full(page_url, strategy):
     diagnostics — unused CSS/JS byte estimates AND failing SEO-category audits
     — from the same Lighthouse run. No separate API call for either; Lighthouse
     already computes an "seo" category alongside "performance" on every run,
-    we just weren't reading it before."""
+    we just weren't reading it before.
+
+    Sept 2026: each returned SEO issue now carries an `owner` (see
+    SEO_AUDIT_OWNERS) so a failing meta-description audit lands on Marketing's
+    row and a failing hreflang audit lands on IT's, without either team having
+    to interpret Lighthouse audit ids."""
     url = ("https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
            f"?url={urllib.parse.quote(page_url, safe='')}"
            f"&strategy={strategy}&category=performance&category=seo&key={API_KEY}")
@@ -507,7 +626,11 @@ def fetch_psi_full(page_url, strategy):
         a_score = a.get("score")
         if a_score is None or a_score >= 1:
             continue
-        seo_issues.append({"id": aid, "title": a.get("title", aid)})
+        seo_issues.append({
+            "id": aid,
+            "title": a.get("title", aid),
+            "owner": SEO_AUDIT_OWNERS.get(aid, OWNER_IT),
+        })
 
     return {
         "score": int(round(score * 100)),
@@ -599,7 +722,16 @@ def check_alt_text(html, page_url):
         alt_val = alt_match.group(1).strip() if alt_match else None
         is_bad = alt_val is None or alt_val.lower() in GENERIC_ALT_VALUES
         if is_bad:
-            issues.append({"file": resolved.rsplit("/", 1)[-1], "url": resolved})
+            issues.append({
+                "file": resolved.rsplit("/", 1)[-1],
+                "url": resolved,
+                # Distinguishes "no alt attribute at all" from "alt is a
+                # generic placeholder like logo/image" — same fix either way,
+                # but the second kind is invisible in a browser devtools check
+                # (which only finds empty ones), so naming it here stops the
+                # two counts looking like a discrepancy in the report.
+                "reason": "missing" if alt_val is None else "placeholder",
+            })
     # "examples" used to be capped at issues[:5] — kept only a sample, so the
     # report could show a count but never the full picture. Now that the report
     # has a click-to-expand detail view (Aug 9 2026), it needs every flagged
@@ -612,12 +744,237 @@ def check_alt_text(html, page_url):
     return {"totalImages": checkable, "issueCount": len(issues), "examples": issues}
 
 
+def check_onpage(html, page_url):
+    """On-page fundamentals read off HTML this script already fetched — no
+    extra requests, no new API quota. Everything here was previously invisible
+    to the report despite the markup being right there in the same string the
+    schema and alt-text checks were already scanning.
+
+    Collected per page:
+      canonical      — the rel=canonical href, and whether it points at this
+                       page itself. A canonical pointing somewhere else means
+                       this page is asking Google not to rank it, which is
+                       occasionally intentional and usually not.
+      noindex        — meta robots noindex. Not a fault on its own: the
+                       cart/checkout/account pages SHOULD be noindexed (see
+                       SCORE_EXCLUDED_SLUGS), so this is reported as a fact and
+                       only flagged as an issue on pages that aren't excluded.
+      title          — raw <title> and its length.
+      metaDescription— the description text and its length (presence itself is
+                       also caught by Lighthouse's meta-description audit; the
+                       length check is the part Lighthouse doesn't give us).
+      h1Count        — number of <h1> elements. Zero or several both indicate a
+                       heading structure worth a look.
+      internalLinks  — same-origin link targets, normalized. Aggregated across
+                       all pages in run_page_health_scan() to find orphans.
+    """
+    canonical = None
+    m = re.search(r'<link[^>]+rel=["\']canonical["\'][^>]*>', html, re.IGNORECASE)
+    if m:
+        h = re.search(r'href=["\']([^"\']+)["\']', m.group(0), re.IGNORECASE)
+        canonical = h.group(1).strip() if h else None
+
+    robots_content = ""
+    m = re.search(r'<meta[^>]+name=["\']robots["\'][^>]*>', html, re.IGNORECASE)
+    if m:
+        c = re.search(r'content=["\']([^"\']*)["\']', m.group(0), re.IGNORECASE)
+        robots_content = (c.group(1) if c else "").lower()
+
+    meta_desc = None
+    m = re.search(r'<meta[^>]+name=["\']description["\'][^>]*>', html, re.IGNORECASE)
+    if m:
+        c = re.search(r'content=["\']([^"\']*)["\']', m.group(0), re.IGNORECASE)
+        meta_desc = ((c.group(1) if c else "") or "").strip() or None
+
+    title = extract_title_raw(html)
+    h1s = re.findall(r'<h1\b[^>]*>(.*?)</h1>', html, re.DOTALL | re.IGNORECASE)
+
+    hrefs = re.findall(r'<a\b[^>]*href=["\']([^"\']+)["\']', html, re.IGNORECASE)
+    internal = set()
+    for h in hrefs:
+        h = h.strip()
+        if not h or h.startswith(("#", "mailto:", "tel:", "javascript:")):
+            continue
+        resolved = urllib.parse.urljoin(page_url, h)
+        if resolved.startswith(ORIGIN):
+            internal.add(normalize_url(resolved))
+    internal.discard(normalize_url(page_url))  # self-links aren't inbound links
+
+    return {
+        "canonical": canonical,
+        "canonicalIsSelf": normalize_url(canonical) == normalize_url(page_url) if canonical else None,
+        "noindex": "noindex" in robots_content,
+        "robotsMeta": robots_content or None,
+        "title": title,
+        "titleLength": len(title) if title else 0,
+        "metaDescription": meta_desc,
+        "metaDescriptionLength": len(meta_desc) if meta_desc else 0,
+        "h1Count": len(h1s),
+        "internalLinks": sorted(internal),
+    }
+
+
+def build_issue_list(entry):
+    """Flattens everything known about one page into a single owner-tagged
+    issue list. This is what makes the report readable as shared documentation:
+    each team filters to its own owner and sees exactly its outstanding work,
+    with no interpretation step in between.
+
+    Severity is "high" / "medium" / "low" — high means it affects whether the
+    page can rank at all, medium means it measurably weakens it, low is
+    hygiene. Deliberately conservative: things that are merely conventional
+    (title length, H1 count) are never "high", because treating a style
+    convention as a blocker is how a report trains people to ignore it.
+
+    Checks that didn't run this time (null, same graceful-degradation rule as
+    everywhere else in this file) produce no issues rather than false ones —
+    "we didn't measure it" must never render as "it's fine"."""
+    issues = []
+    excluded = entry.get("excludedFromScore", False)
+
+    def add(code, owner, severity, ar, en, detail=None):
+        item = {"code": code, "owner": owner, "severity": severity,
+                "labelAr": ar, "labelEn": en}
+        if detail is not None:
+            item["detail"] = detail
+        issues.append(item)
+
+    # Funnel/test/expired pages (SCORE_EXCLUDED_SLUGS) are already kept out of
+    # the aggregate score for a reason: nobody should be writing a meta
+    # description for the shopping cart. That reasoning applies just as much to
+    # the issue list — leaving them in would put "cart page has no meta
+    # description" onto Marketing's queue every month, which is exactly the
+    # noise the exclusion list exists to prevent, and would make the owner
+    # counts overstate real outstanding work. These pages still get scanned and
+    # still appear in the table with all their raw data; they just contribute
+    # one actionable finding at most (should they be noindexed), and nothing
+    # content-related.
+    if excluded:
+        op_ex = entry.get("onPage")
+        if op_ex is not None and not op_ex["noindex"]:
+            add("should_be_noindex", OWNER_IT, "low",
+                "صفحة غير تسويقية يُفضّل منع فهرستها",
+                "Non-content funnel page that should probably be noindexed")
+        return issues
+
+    schema = entry.get("schema")
+    if schema is not None and not schema["hasExpectedType"]:
+        if schema["typesFound"]:
+            add("schema_wrong_type", OWNER_IT, "medium",
+                "بيانات منظمة موجودة لكن ليست من النوع المتوقع",
+                "Structured data present but not the expected type",
+                {"typesFound": schema["typesFound"]})
+        else:
+            add("schema_missing", OWNER_IT, "high",
+                "لا توجد بيانات منظمة (Schema) على الصفحة",
+                "No Schema.org structured data on the page")
+
+    alt = entry.get("altText")
+    if alt is not None and alt["issueCount"] > 0:
+        add("alt_text_missing", OWNER_SHARED, "medium",
+            f"{alt['issueCount']} صورة بدون نص بديل",
+            f"{alt['issueCount']} image(s) missing alt text",
+            {"count": alt["issueCount"], "totalImages": alt["totalImages"]})
+
+    op = entry.get("onPage")
+    if op is not None:
+        if op["noindex"]:
+            # Reachable only for non-excluded pages — the excluded case returns
+            # early above, so a noindex here is genuinely a content page hidden
+            # from Google, which is the highest-severity thing this scan finds.
+            add("noindex_unexpected", OWNER_IT, "high",
+                "الصفحة تمنع الفهرسة (noindex) رغم أنها صفحة محتوى",
+                "Page is set to noindex despite being a content page")
+        if not op["canonical"]:
+            add("canonical_missing", OWNER_IT, "medium",
+                "لا يوجد وسم canonical",
+                "No rel=canonical tag")
+        elif op["canonicalIsSelf"] is False:
+            add("canonical_points_elsewhere", OWNER_IT, "high",
+                "وسم canonical يشير إلى صفحة أخرى",
+                "Canonical tag points to a different URL",
+                {"canonical": op["canonical"]})
+        if not op["title"]:
+            add("title_missing", OWNER_MARKETING, "high",
+                "لا يوجد عنوان للصفحة (title)",
+                "Page has no <title>")
+        elif op["titleLength"] > TITLE_MAX_CHARS:
+            add("title_too_long", OWNER_MARKETING, "low",
+                f"عنوان الصفحة طويل ({op['titleLength']} حرف)",
+                f"Title is long ({op['titleLength']} chars)",
+                {"length": op["titleLength"], "max": TITLE_MAX_CHARS})
+        elif op["titleLength"] < TITLE_MIN_CHARS:
+            add("title_too_short", OWNER_MARKETING, "low",
+                f"عنوان الصفحة قصير ({op['titleLength']} حرف)",
+                f"Title is short ({op['titleLength']} chars)",
+                {"length": op["titleLength"], "min": TITLE_MIN_CHARS})
+        if not op["metaDescription"]:
+            add("meta_description_missing", OWNER_MARKETING, "medium",
+                "لا يوجد وصف تعريفي (meta description)",
+                "No meta description")
+        elif op["metaDescriptionLength"] > META_DESC_MAX_CHARS:
+            add("meta_description_too_long", OWNER_MARKETING, "low",
+                f"الوصف التعريفي طويل ({op['metaDescriptionLength']} حرف)",
+                f"Meta description is long ({op['metaDescriptionLength']} chars)")
+        elif op["metaDescriptionLength"] < META_DESC_MIN_CHARS:
+            add("meta_description_too_short", OWNER_MARKETING, "low",
+                f"الوصف التعريفي قصير ({op['metaDescriptionLength']} حرف)",
+                f"Meta description is short ({op['metaDescriptionLength']} chars)")
+        if op["h1Count"] == 0:
+            add("h1_missing", OWNER_MARKETING, "medium",
+                "لا يوجد عنوان رئيسي H1",
+                "No H1 heading on the page")
+        elif op["h1Count"] > 1:
+            add("h1_multiple", OWNER_MARKETING, "low",
+                f"يوجد {op['h1Count']} عناوين H1",
+                f"{op['h1Count']} H1 headings on the page")
+
+    if entry.get("inboundInternalLinks") == 0 and not excluded:
+        add("orphan_page", OWNER_MARKETING, "high",
+            "صفحة يتيمة — لا ترتبط بها أي صفحة أخرى",
+            "Orphan page — no other scanned page links to it")
+
+    if entry.get("mobileScore") is not None and entry["mobileScore"] < 50:
+        add("mobile_performance_poor", OWNER_IT, "high",
+            f"أداء الجوال ضعيف ({entry['mobileScore']}/100)",
+            f"Poor mobile performance ({entry['mobileScore']}/100)")
+    elif entry.get("mobileScore") is not None and entry["mobileScore"] < 90:
+        add("mobile_performance_below_target", OWNER_IT, "medium",
+            f"أداء الجوال دون الهدف ({entry['mobileScore']}/100)",
+            f"Mobile performance below target ({entry['mobileScore']}/100)")
+
+    if entry.get("unusedCssKb") is not None and entry["unusedCssKb"] > 60:
+        add("unused_css_high", OWNER_IT, "medium",
+            f"CSS غير مستخدم ({entry['unusedCssKb']}KB)",
+            f"High unused CSS ({entry['unusedCssKb']}KB)")
+    if entry.get("unusedJsKb") is not None and entry["unusedJsKb"] > 150:
+        add("unused_js_high", OWNER_IT, "medium",
+            f"JavaScript غير مستخدم ({entry['unusedJsKb']}KB)",
+            f"High unused JavaScript ({entry['unusedJsKb']}KB)")
+
+    for si in entry.get("seoIssues") or []:
+        add(f"lighthouse_{si['id']}", si.get("owner", OWNER_IT), "medium",
+            si.get("title", si["id"]), si.get("title", si["id"]))
+
+    if entry.get("duplicateTitleWith"):
+        add("duplicate_title", OWNER_MARKETING, "medium",
+            "عنوان الصفحة مكرر مع صفحة أخرى",
+            "Title is duplicated on another page",
+            {"sharedWith": entry["duplicateTitleWith"]})
+
+    return issues
+
+
 def run_page_health_scan():
-    """One pass over the auto-discovered page list: HTML-based schema/alt-text
-    checks + a PSI run per page for score, unused CSS/JS, and SEO issues. Any
-    single page failing doesn't stop the others — each result just gets marked
-    unavailable for this run."""
-    page_list = build_page_list()
+    """One pass over the auto-discovered page list: HTML-based schema/alt-text/
+    on-page checks + a PSI run per page for score, unused CSS/JS, and SEO
+    issues. Any single page failing doesn't stop the others — each result just
+    gets marked unavailable for this run.
+
+    Returns (results, coverage). Cross-page analysis (internal-link graph for
+    orphan detection, duplicate titles) happens after the per-page loop, since
+    both need every page's data before either can be decided."""
+    page_list, coverage = build_page_list()
     print(f"  Page list: {len(page_list)} page(s) to scan this run.")
     results = []
     for i, page in enumerate(page_list):
@@ -648,9 +1005,11 @@ def run_page_health_scan():
             has_expected = (expected in schema["types"]) if expected else (len(schema["types"]) > 0)
             entry["schema"] = {"hasExpectedType": has_expected, "typesFound": schema["types"]}
             entry["altText"] = check_alt_text(html, page["url"])
+            entry["onPage"] = check_onpage(html, page["url"])
         else:
             entry["schema"] = None
             entry["altText"] = None
+            entry["onPage"] = None
 
         try:
             psi = fetch_psi_full(page["url"], "mobile")
@@ -665,9 +1024,55 @@ def run_page_health_scan():
             entry["unusedJsKb"] = None
             entry["seoIssues"] = None
 
-
         results.append(entry)
-    return results
+
+    analyze_cross_page(results)
+    return results, coverage
+
+
+def analyze_cross_page(results):
+    """Cross-page analysis that can only run once every page has been scanned:
+
+    Internal-link graph -> inbound link counts and orphan detection. An orphan
+    is a page in the sitemap that no OTHER scanned page links to. Note the
+    honest limitation: this only sees links on pages that were scanned this
+    run, so if the sitemap was truncated (see MAX_AUTO_PAGES) a page could look
+    orphaned only because the page linking to it wasn't scanned. That's why
+    orphan flagging is skipped entirely on a truncated run rather than
+    reporting findings we can't stand behind.
+
+    Duplicate titles -> two pages sharing an identical <title> compete with
+    each other in search results. This site has had exactly this bug before
+    (a duplicate title tag fixed by the WordPress developer in Aug 2026), so
+    it's worth catching automatically rather than by eye.
+
+    Mutates entries IN PLACE, same pattern as compute_site_seo_score below."""
+    all_links = set()
+    scanned_ok = [e for e in results if e.get("onPage")]
+    for e in scanned_ok:
+        all_links.update(e["onPage"]["internalLinks"])
+
+    for e in results:
+        if not e.get("onPage"):
+            e["inboundInternalLinks"] = None
+            continue
+        target = normalize_url(e["url"])
+        inbound = sum(1 for other in scanned_ok
+                      if other is not e and target in other["onPage"]["internalLinks"])
+        e["inboundInternalLinks"] = inbound
+
+    titles = {}
+    for e in scanned_ok:
+        t = (e["onPage"].get("title") or "").strip()
+        if t:
+            titles.setdefault(t, []).append(e["id"])
+    for e in results:
+        e["duplicateTitleWith"] = None
+        if not e.get("onPage"):
+            continue
+        t = (e["onPage"].get("title") or "").strip()
+        if t and len(titles.get(t, [])) > 1:
+            e["duplicateTitleWith"] = [pid for pid in titles[t] if pid != e["id"]]
 
 
 # Slugs excluded from the SEO score: checkout/cart/account funnel pages
@@ -704,7 +1109,15 @@ def compute_page_seo_score(entry):
     elsewhere in this file) is left out of BOTH the numerator and the
     denominator, so a page isn't punished for a check that didn't run -
     same graceful-degradation principle used throughout this script.
-    Returns None if every component is unavailable."""
+    Returns None if every component is unavailable.
+
+    Sept 2026 note: the new on-page checks (canonical, title, H1, internal
+    links) are deliberately NOT folded into this formula. Changing the weights
+    would move every page's score for reasons unrelated to the site actually
+    changing, which would make the first month of pageHealthHistory a
+    meaningless comparison and undermine the point of keeping history at all.
+    Those findings surface in the owner-tagged issue list instead. Revisit
+    after there are a few months of history worth comparing against."""
     parts = []
 
     if entry.get("schema") is not None:
@@ -760,6 +1173,52 @@ def compute_site_seo_score(page_health):
         if s is not None:
             scored.append(s)
     return round(sum(scored) / len(scored)) if scored else None
+
+
+def attach_issues(page_health, coverage):
+    """Builds each page's owner-tagged issue list and returns a site-wide
+    summary grouped by owner. Must run AFTER compute_site_seo_score, since
+    build_issue_list() reads excludedFromScore to decide whether noindex on a
+    given page is correct or a fault.
+
+    Orphan detection is suppressed on a truncated run — see analyze_cross_page
+    for why a partial scan can't distinguish a real orphan from a page whose
+    only inbound link lives on a page that wasn't scanned."""
+    truncated = coverage.get("truncated", False)
+    summary = {OWNER_IT: 0, OWNER_MARKETING: 0, OWNER_SHARED: 0}
+    by_severity = {"high": 0, "medium": 0, "low": 0}
+    for entry in page_health:
+        issues = build_issue_list(entry)
+        if truncated:
+            issues = [i for i in issues if i["code"] != "orphan_page"]
+        entry["issues"] = issues
+        for i in issues:
+            summary[i["owner"]] = summary.get(i["owner"], 0) + 1
+            by_severity[i["severity"]] = by_severity.get(i["severity"], 0) + 1
+    return {
+        "byOwner": summary,
+        "bySeverity": by_severity,
+        "totalIssues": sum(summary.values()),
+        "orphanDetectionSkipped": truncated,
+    }
+
+
+def snapshot_page_health(page_health):
+    """A compact per-page record for the monthly history. Deliberately NOT the
+    full entry: keeping every alt-text filename and internal-link list for 12
+    months would balloon data.json (which the frontend downloads in full on
+    every page load) for no benefit — history exists to answer "is this getting
+    better or worse", which needs numbers, not detail. The current month's full
+    detail always lives in data["pageHealth"]."""
+    return [{
+        "id": e["id"],
+        "nameAr": e.get("nameAr"),
+        "seoScore": e.get("seoScore"),
+        "mobileScore": e.get("mobileScore"),
+        "altIssueCount": (e["altText"]["issueCount"] if e.get("altText") else None),
+        "schemaOk": (e["schema"]["hasExpectedType"] if e.get("schema") else None),
+        "issueCount": len(e.get("issues") or []),
+    } for e in page_health]
 
 
 # AI crawlers worth checking explicitly for AI-search visibility (ChatGPT,
@@ -821,6 +1280,36 @@ def check_ai_search_readiness():
     llms_txt_present = fetch_html(f"{ORIGIN}/llms.txt") is not None
 
     return {"crawlers": crawlers, "llmsTxtPresent": llms_txt_present}
+
+
+def build_note(new_month, keywords_source, coverage):
+    """The report's own plain-language summary of what's live vs. still manual.
+
+    This used to be a hardcoded string containing the literal text "as of Aug
+    2026", rewritten identically on every run — so the one field whose entire
+    job was to stop the report going stale was itself guaranteed to go stale,
+    claiming August forever. Now every changing part is derived from this run's
+    actual state: the real month, whether keywords genuinely came from GSC this
+    time, and real scan coverage."""
+    year, month = new_month.split("-")
+    month_ar = AR_MONTHS[int(month) - 1]
+    kw_line = (f"الكلمات المفتاحية: بيانات فعلية من Google Search Console حتى {month_ar} {year}."
+               if keywords_source == "gsc" else
+               f"الكلمات المفتاحية: مُدخلة يدويًا — لم يتم تحديثها من Search Console "
+               f"في تشغيل {month_ar} {year}.")
+    if coverage.get("truncated"):
+        cov_line = (f"تم فحص {coverage['scannedPages']} صفحة من أصل {coverage['totalPages']} "
+                    f"في خريطة الموقع (الحد الأقصى الحالي {coverage['maxAutoPages']}).")
+    elif coverage.get("source") == "fallback":
+        cov_line = "تعذّر قراءة خريطة الموقع في هذا التشغيل — تم فحص القائمة الاحتياطية الثابتة فقط."
+    else:
+        cov_line = f"تم فحص جميع صفحات خريطة الموقع ({coverage['scannedPages']} صفحة)."
+    return (f"{kw_line} {cov_line} "
+            "كل ملاحظة في التقرير موسومة بالجهة المسؤولة عنها (تقنية / تسويق / مشتركة). "
+            "صفوف أداء الصفحات غير الرئيسية لا تزال تحتاج إضافة الروابط يدويًا "
+            "(راجع pageRegistry في index.html). كل ما عدا ذلك — سلامة الصفحات، وصول "
+            "زواحف الذكاء الاصطناعي، درجات Lighthouse، ومؤشرات CrUX — يُحدَّث تلقائيًا "
+            "شهريًا عبر GitHub Action من واجهات Google مباشرة ومن الموقع نفسه.")
 
 
 def main():
@@ -967,9 +1456,15 @@ def main():
                     "mobile": mobile_score, "desktop": desktop_score,
                 }
 
-    print("Scanning per-page health (schema, alt text, unused CSS/JS) ...")
-    data["pageHealth"] = run_page_health_scan()
+    print("Scanning per-page health (schema, alt text, on-page, unused CSS/JS) ...")
+    page_health, coverage = run_page_health_scan()
+    data["pageHealth"] = page_health
     data["pageHealthCheckedMonth"] = new_month
+    data["scanCoverage"] = coverage
+    if coverage.get("truncated"):
+        print(f"  NOTE: scanned {coverage['scannedPages']} of {coverage['totalPages']} sitemap pages "
+              f"— raise MAX_AUTO_PAGES to cover the rest. Orphan detection skipped this run.")
+
     # NOT the same thing as data["seoScore"] above, which is Lighthouse's
     # own homepage-only SEO category audit (viewport tag, valid hreflang,
     # descriptive link text, etc.). This one is a composite built from the
@@ -981,6 +1476,26 @@ def main():
     scored_count = sum(1 for e in data["pageHealth"] if not e["excludedFromScore"])
     print(f"  Page Health score: {data['pageHealthScore']} (averaged over {scored_count} pages, "
           f"{len(data['pageHealth']) - scored_count} excluded as non-content pages)")
+
+    # Owner-tagged issue lists. Runs after scoring because build_issue_list()
+    # needs excludedFromScore to judge whether noindex on a page is correct.
+    data["issueSummary"] = attach_issues(data["pageHealth"], coverage)
+    s = data["issueSummary"]
+    print(f"  Issues: {s['totalIssues']} total — IT {s['byOwner']['it']}, "
+          f"Marketing {s['byOwner']['marketing']}, Shared {s['byOwner']['shared']} "
+          f"({s['bySeverity']['high']} high / {s['bySeverity']['medium']} medium / "
+          f"{s['bySeverity']['low']} low)")
+
+    # Monthly history. Overwrites this month's own entry if the Action is run
+    # more than once in a month (workflow_dispatch) rather than appending a
+    # duplicate - the latest run within a month is the one that counts. Older
+    # months are never modified, only aged out past PAGE_HEALTH_HISTORY_MONTHS.
+    history = data.get("pageHealthHistory") or {}
+    history[new_month] = snapshot_page_health(data["pageHealth"])
+    for stale_key in sorted(history)[:-PAGE_HEALTH_HISTORY_MONTHS]:
+        del history[stale_key]
+    data["pageHealthHistory"] = history
+    print(f"  History: {len(history)} month(s) retained ({', '.join(sorted(history))})")
 
     print("Checking AI crawler access (robots.txt) and llms.txt ...")
     data["aiSearchReadiness"] = check_ai_search_readiness()
@@ -1005,17 +1520,7 @@ def main():
         data.setdefault("keywordsSource", "manual")
         print("  Skipped - keywords unchanged this run (see warning above if this is unexpected).")
 
-    # _note is the report's own plain-language summary of what's live vs.
-    # still manual - was hand-seeded once, long ago, and (like keywords used
-    # to be) never touched by any automated process since, so it drifted out
-    # of date the moment GSC went live this morning. Refreshing it here each
-    # run means it can't silently go stale again the way it just did.
-    data["_note"] = ("Keywords: real Google Search Console data as of Aug 2026. "
-                      "Non-home per-page performance rows still need URLs added manually "
-                      "(see pageRegistry in index.html). Everything else - page health, "
-                      "AI crawler access, Lighthouse scores, CrUX trend - auto-updates "
-                      "monthly via GitHub Action, sourced directly from Google APIs and "
-                      "the live site.")
+    data["_note"] = build_note(new_month, data.get("keywordsSource", "manual"), coverage)
 
     # Exact timestamp of THIS run, set unconditionally regardless of which
     # individual sections above succeeded, failed, or were skipped this
