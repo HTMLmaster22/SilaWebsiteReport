@@ -796,6 +796,443 @@
   </div>
 </section>
 
+<!-- ================================================================
+     OWNER-TAGGED ISSUE BOARD  (added Sept 2026)
+     ----------------------------------------------------------------
+     Renders the `issues` / `issueSummary` / `scanCoverage` /
+     `pageHealthHistory` fields written by scripts/update_data.py.
+
+     Deliberately self-contained — its own <style>, markup, and
+     <script> with its own data.json fetch — so it can be pasted in
+     as one block without touching a single line of the existing
+     report code. The tradeoff is a second fetch of data.json; that
+     file is already cached by the browser from the first fetch, so
+     in practice it costs a cache hit, not a second download. Worth
+     it to keep this additive rather than surgical.
+
+     Language: follows the existing report's toggle by watching
+     <html lang> rather than hooking into applyLang(), for the same
+     no-touching-existing-code reason.
+     ================================================================ -->
+<section class="block" style="padding-top:8px;" id="issueBoard">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" id="ibEyebrow">مقسّم حسب الجهة المسؤولة</p>
+      <h2 id="ibH2">ما المطلوب من كل فريق</h2>
+      <p id="ibLede">كل ملاحظة في هذا التقرير موسومة بالجهة المسؤولة عنها. اختر فريقك لترى مهامك أنت فقط.</p>
+    </div>
+
+    <div class="ib-coverage reveal" id="ibCoverage"></div>
+
+    <div class="ib-summary reveal" id="ibSummary"></div>
+
+    <div class="ib-controls reveal" id="ibControls">
+      <div class="ib-tabs" id="ibTabs" role="group"></div>
+      <label class="ib-low-toggle" id="ibLowToggleWrap">
+        <input type="checkbox" id="ibLowToggle">
+        <span id="ibLowToggleLabel">عرض الملاحظات منخفضة الأهمية</span>
+      </label>
+    </div>
+
+    <div class="ib-list reveal" id="ibList"></div>
+
+    <div class="ib-trend reveal" id="ibTrend"></div>
+
+    <p class="device-note" id="ibEmptyNote" style="display:none;"></p>
+  </div>
+</section>
+
+<style>
+  #issueBoard .ib-coverage{
+    font-size:13px; color:var(--ink-soft); background:var(--paper-card);
+    border:1px solid var(--hair); border-inline-start:4px solid var(--teal);
+    border-radius:10px; padding:12px 16px; margin-bottom:18px; line-height:1.7;
+  }
+  #issueBoard .ib-coverage.warn{ border-inline-start-color:var(--amber); }
+  #issueBoard .ib-coverage strong{ color:var(--ink); }
+
+  #issueBoard .ib-summary{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+  #issueBoard .ib-sum-card{
+    background:var(--paper-card); border:1px solid var(--hair); border-radius:14px;
+    padding:18px; box-shadow:var(--shadow); text-align:center;
+  }
+  #issueBoard .ib-sum-card .n{ font-size:30px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  #issueBoard .ib-sum-card .l{ font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:4px; }
+  #issueBoard .ib-sum-card.tech .n{ color:var(--teal); }
+  #issueBoard .ib-sum-card.mkt .n{ color:var(--amber); }
+  #issueBoard .ib-sum-card.shared .n{ color:var(--moss); }
+  @media (max-width:640px){ #issueBoard .ib-summary{ grid-template-columns:1fr; } }
+
+  #issueBoard .ib-controls{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:14px; flex-wrap:wrap; margin-bottom:18px;
+  }
+  #issueBoard .ib-tabs{
+    display:inline-flex; gap:4px; background:var(--paper-card); border:1px solid var(--hair);
+    border-radius:100px; padding:4px; box-shadow:var(--shadow);
+  }
+  #issueBoard .ib-tab{
+    background:none; border:none; padding:9px 16px; border-radius:100px;
+    font-size:13.5px; font-weight:700; color:var(--ink-soft);
+    font-family:'Cairo',sans-serif; transition:background .15s, color .15s;
+  }
+  #issueBoard .ib-tab:hover{ color:var(--ink); }
+  #issueBoard .ib-tab.is-active{ background:var(--ink); color:var(--paper); }
+  #issueBoard .ib-tab .c{ font-family:'JetBrains Mono',monospace; opacity:.7; margin-inline-start:5px; font-size:12px; }
+  #issueBoard .ib-low-toggle{
+    display:inline-flex; align-items:center; gap:8px; font-size:13px;
+    color:var(--ink-soft); font-weight:600; cursor:pointer; user-select:none;
+  }
+  #issueBoard .ib-low-toggle input{ width:15px; height:15px; accent-color:var(--signal); cursor:pointer; }
+
+  #issueBoard .ib-group{
+    background:var(--paper-card); border:1px solid var(--hair);
+    border-inline-start:4px solid var(--ink-soft);
+    border-radius:12px; padding:15px 18px; margin-bottom:10px;
+  }
+  #issueBoard .ib-group.sev-high{ border-inline-start-color:var(--poor); }
+  #issueBoard .ib-group.sev-medium{ border-inline-start-color:var(--amber); }
+  #issueBoard .ib-group.sev-low{ border-inline-start-color:#b7bfc2; }
+  #issueBoard .ib-g-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  #issueBoard .ib-g-title{ font-size:14.5px; font-weight:800; color:var(--ink); }
+  #issueBoard .ib-g-meta{ display:flex; align-items:center; gap:7px; flex-shrink:0; }
+  #issueBoard .ib-sev{
+    font-size:11px; font-weight:800; padding:3px 10px; border-radius:100px; white-space:nowrap;
+  }
+  #issueBoard .ib-sev.high{ background:var(--poor-bg); color:var(--poor); }
+  #issueBoard .ib-sev.medium{ background:var(--amber-bg); color:var(--amber); }
+  #issueBoard .ib-sev.low{ background:rgba(11,29,38,0.06); color:var(--ink-soft); }
+  #issueBoard .ib-count{
+    font-size:11.5px; font-weight:800; padding:3px 10px; border-radius:100px;
+    background:rgba(19,71,82,0.09); color:var(--teal); white-space:nowrap;
+  }
+  #issueBoard .ib-toggle{
+    display:inline-flex; align-items:center; gap:4px; margin-top:9px; font-size:12px;
+    font-weight:700; color:var(--signal); cursor:pointer; background:none; border:none;
+    padding:0; font-family:inherit;
+  }
+  #issueBoard .ib-toggle::after{ content:"›"; font-weight:900; transition:transform .15s ease; }
+  #issueBoard .ib-toggle.open::after{ transform:rotate(90deg); }
+  #issueBoard .ib-pages{
+    display:none; margin-top:9px; padding-top:9px; border-top:1px solid var(--hair);
+    font-size:12.5px; color:var(--ink-soft); line-height:2;
+  }
+  #issueBoard .ib-pages.open{ display:block; }
+
+  #issueBoard .ib-trend{
+    background:var(--paper-card); border:1px solid var(--hair); border-radius:14px;
+    padding:18px 20px; margin-top:22px; box-shadow:var(--shadow);
+  }
+  #issueBoard .ib-trend h4{ font-size:14.5px; font-weight:800; margin:0 0 12px; color:var(--ink); }
+  #issueBoard .ib-trend-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:9px 0; border-bottom:1px solid var(--hair); font-size:13.5px; color:var(--ink-soft);
+  }
+  #issueBoard .ib-trend-row:last-child{ border-bottom:none; }
+  #issueBoard .ib-delta{ font-size:12.5px; font-weight:800; padding:3px 10px; border-radius:100px; font-family:'JetBrains Mono',monospace; }
+  #issueBoard .ib-delta.up{ background:var(--moss-bg); color:var(--moss); }
+  #issueBoard .ib-delta.down{ background:var(--poor-bg); color:var(--poor); }
+  #issueBoard .ib-delta.flat{ background:rgba(11,29,38,0.06); color:var(--ink-soft); }
+</style>
+
+<script>
+(function(){
+  "use strict";
+
+  var T = {
+    ar:{
+      eyebrow:"مقسّم حسب الجهة المسؤولة",
+      h2:"ما المطلوب من كل فريق",
+      lede:"كل ملاحظة في هذا التقرير موسومة بالجهة المسؤولة عنها. اختر فريقك لترى مهامك أنت فقط.",
+      all:"الكل", it:"تقنية المعلومات", mkt:"التسويق", shared:"مشترك",
+      lowToggle:"عرض الملاحظات منخفضة الأهمية",
+      sevHigh:"عالية", sevMedium:"متوسطة", sevLow:"منخفضة",
+      pages:function(n){ return n + " " + (n===1 ? "صفحة" : "صفحات"); },
+      showPages:"عرض الصفحات",
+      cardHigh:"ملاحظة عالية الأهمية", cardTotal:"إجمالي الملاحظات", cardPages:"صفحة مفحوصة",
+      coverageFull:function(n){ return "تم فحص <strong>جميع صفحات خريطة الموقع (" + n + " صفحة)</strong> في آخر تشغيل."; },
+      coveragePartial:function(s,t){ return "تم فحص <strong>" + s + " صفحة من أصل " + t + "</strong> في خريطة الموقع — الصفحات المتبقية لم تُفحص هذا الشهر، وفحص الصفحات اليتيمة مُعطَّل لأن النتيجة غير موثوقة على فحص جزئي."; },
+      coverageFallback:"تعذّر قراءة خريطة الموقع في آخر تشغيل — تم فحص القائمة الاحتياطية الثابتة فقط، والأرقام أدناه لا تمثل الموقع كاملاً.",
+      empty:"لا توجد ملاحظات بهذا التصنيف — إما أن الفحص لم يُشغَّل بعد، أو لا توجد مشاكل ضمن هذا الفريق ومستوى الأهمية.",
+      notRunYet:"لم يُشغَّل الفحص التلقائي بعد — سيُملأ هذا القسم تلقائياً بعد أول تشغيل يتضمن وسم الجهة المسؤولة.",
+      trendTitle:function(a,b){ return "الحركة مقارنة بالفحص السابق (" + a + " ← " + b + ")"; },
+      trendScore:"متوسط صحة الصفحات", trendIssues:"إجمالي الملاحظات", trendAlt:"صور بلا نص بديل",
+      trendNone:"لا توجد بيانات شهر سابق للمقارنة بعد — ستظهر الحركة الشهرية هنا بعد التشغيل القادم.",
+      better:"تحسّن", worse:"تراجع", same:"بلا تغيير"
+    },
+    en:{
+      eyebrow:"Split by owner",
+      h2:"What each team needs to do",
+      lede:"Every finding in this report is tagged with the team that owns it. Pick your team to see only your work.",
+      all:"All", it:"IT", mkt:"Marketing", shared:"Shared",
+      lowToggle:"Show low-priority findings",
+      sevHigh:"High", sevMedium:"Medium", sevLow:"Low",
+      pages:function(n){ return n + " page" + (n===1 ? "" : "s"); },
+      showPages:"Show pages",
+      cardHigh:"high-priority findings", cardTotal:"findings total", cardPages:"pages scanned",
+      coverageFull:function(n){ return "<strong>All " + n + " sitemap pages</strong> were scanned on the last run."; },
+      coveragePartial:function(s,t){ return "<strong>" + s + " of " + t + " sitemap pages</strong> were scanned — the rest weren't covered this month, and orphan-page detection is disabled because it can't be trusted on a partial scan."; },
+      coverageFallback:"The sitemap couldn't be read on the last run — only the fixed fallback list was scanned, so the numbers below don't represent the whole site.",
+      empty:"No findings in this view — either the scan hasn't run yet, or there's nothing outstanding for this team at this priority.",
+      notRunYet:"The automatic scan hasn't produced owner-tagged data yet — this section fills in after the next run.",
+      trendTitle:function(a,b){ return "Movement since the previous scan (" + a + " → " + b + ")"; },
+      trendScore:"Average page health", trendIssues:"Total findings", trendAlt:"Images missing alt text",
+      trendNone:"No previous month to compare against yet — month-over-month movement appears here after the next run.",
+      better:"better", worse:"worse", same:"no change"
+    }
+  };
+
+  var OWNER_KEYS = { it:"it", marketing:"mkt", shared:"shared" };
+  var state = { owner:"all", showLow:false, lang:"ar", data:null };
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  // Only ever fed page URLs from the site's own sitemap, but scheme-checked
+  // anyway rather than trusting that to stay true — same reasoning as
+  // safeHref() in the main report script.
+  function safeHref(u){
+    return (typeof u === "string" && /^https?:\/\//i.test(u.trim())) ? esc(u.trim()) : "#";
+  }
+  function t(){ return T[state.lang]; }
+
+  function allIssues(){
+    var out = [];
+    ((state.data && state.data.pageHealth) || []).forEach(function(p){
+      (p.issues || []).forEach(function(i){
+        out.push({ issue:i, page:p });
+      });
+    });
+    return out;
+  }
+
+  function visibleIssues(){
+    return allIssues().filter(function(x){
+      if(state.owner !== "all" && x.issue.owner !== state.owner) return false;
+      if(!state.showLow && x.issue.severity === "low") return false;
+      return true;
+    });
+  }
+
+  function renderCoverage(){
+    var el = document.getElementById("ibCoverage");
+    var cov = state.data && state.data.scanCoverage;
+    if(!cov){ el.style.display = "none"; return; }
+    el.style.display = "";
+    if(cov.source === "fallback"){
+      el.className = "ib-coverage reveal warn";
+      el.innerHTML = t().coverageFallback;
+    } else if(cov.truncated){
+      el.className = "ib-coverage reveal warn";
+      el.innerHTML = t().coveragePartial(cov.scannedPages, cov.totalPages);
+    } else {
+      el.className = "ib-coverage reveal";
+      el.innerHTML = t().coverageFull(cov.scannedPages);
+    }
+  }
+
+  function renderSummary(){
+    var el = document.getElementById("ibSummary");
+    var s = state.data && state.data.issueSummary;
+    var pages = ((state.data && state.data.pageHealth) || []).length;
+    if(!s){ el.style.display = "none"; return; }
+    el.style.display = "";
+    // Counted from the same per-page issue lists the tabs and the list below
+    // read, rather than from issueSummary's precomputed totals. Both are
+    // written by the same run so they should always agree — but if they ever
+    // didn't, showing one number in the cards and a different one on the tabs
+    // is the kind of inconsistency that makes people stop trusting the whole
+    // report. issueSummary is still what tells us the scan produced
+    // owner-tagged data at all.
+    var all = allIssues();
+    var high = all.filter(function(x){ return x.issue.severity === "high"; }).length;
+    el.innerHTML =
+      '<div class="ib-sum-card"><div class="n">' + all.length + '</div><div class="l">' + esc(t().cardTotal) + '</div></div>' +
+      '<div class="ib-sum-card"><div class="n" style="color:var(--poor)">' + high + '</div><div class="l">' + esc(t().cardHigh) + '</div></div>' +
+      '<div class="ib-sum-card"><div class="n">' + pages + '</div><div class="l">' + esc(t().cardPages) + '</div></div>';
+  }
+
+  function renderTabs(){
+    var el = document.getElementById("ibTabs");
+    var s = state.data && state.data.issueSummary;
+    if(!s) return;
+    // Counts shown on each tab are severity-filtered the same way the list
+    // below is, so a tab never advertises 91 items and then shows 20 once
+    // low-priority findings are hidden.
+    function countFor(owner){
+      return allIssues().filter(function(x){
+        if(owner !== "all" && x.issue.owner !== owner) return false;
+        if(!state.showLow && x.issue.severity === "low") return false;
+        return true;
+      }).length;
+    }
+    var tabs = [
+      ["all", t().all], ["it", t().it], ["marketing", t().mkt], ["shared", t().shared]
+    ];
+    el.innerHTML = tabs.map(function(pair){
+      var active = state.owner === pair[0] ? " is-active" : "";
+      return '<button type="button" class="ib-tab' + active + '" data-owner="' + pair[0] + '">' +
+             esc(pair[1]) + '<span class="c">' + countFor(pair[0]) + '</span></button>';
+    }).join("");
+  }
+
+  function renderList(){
+    var el = document.getElementById("ibList");
+    var note = document.getElementById("ibEmptyNote");
+    var items = visibleIssues();
+
+    if(!state.data || !state.data.issueSummary){
+      el.innerHTML = "";
+      note.style.display = "";
+      note.textContent = t().notRunYet;
+      return;
+    }
+    if(!items.length){
+      el.innerHTML = "";
+      note.style.display = "";
+      note.textContent = t().empty;
+      return;
+    }
+    note.style.display = "none";
+
+    // Grouped by issue code rather than listed per page: 195 individual rows
+    // is a wall nobody reads, while "23 pages missing a meta description" is
+    // one decision. The affected pages stay one click away.
+    var groups = {};
+    items.forEach(function(x){
+      var code = x.issue.code;
+      if(!groups[code]){
+        groups[code] = { code:code, issue:x.issue, pages:[] };
+      }
+      groups[code].pages.push(x.page);
+    });
+
+    var sevRank = { high:0, medium:1, low:2 };
+    var ordered = Object.keys(groups).map(function(k){ return groups[k]; })
+      .sort(function(a,b){
+        var d = sevRank[a.issue.severity] - sevRank[b.issue.severity];
+        return d !== 0 ? d : b.pages.length - a.pages.length;
+      });
+
+    var sevLabel = { high:t().sevHigh, medium:t().sevMedium, low:t().sevLow };
+
+    el.innerHTML = ordered.map(function(g){
+      var label = state.lang === "ar" ? g.issue.labelAr : g.issue.labelEn;
+      var pagesHtml = g.pages.map(function(p){
+        var name = (state.lang === "ar" ? p.nameAr : p.nameEn) || p.id;
+        return p.url
+          ? '<div><a class="row-page-link" href="' + safeHref(p.url) + '" target="_blank" rel="noopener noreferrer">' + esc(name) + '</a></div>'
+          : '<div>' + esc(name) + '</div>';
+      }).join("");
+      return '<div class="ib-group sev-' + g.issue.severity + '">' +
+        '<div class="ib-g-head">' +
+          '<span class="ib-g-title">' + esc(label) + '</span>' +
+          '<span class="ib-g-meta">' +
+            '<span class="ib-sev ' + g.issue.severity + '">' + esc(sevLabel[g.issue.severity]) + '</span>' +
+            '<span class="ib-count">' + esc(t().pages(g.pages.length)) + '</span>' +
+          '</span>' +
+        '</div>' +
+        '<button class="ib-toggle" type="button" aria-expanded="false">' + esc(t().showPages) + '</button>' +
+        '<div class="ib-pages">' + pagesHtml + '</div>' +
+      '</div>';
+    }).join("");
+  }
+
+  function renderTrend(){
+    var el = document.getElementById("ibTrend");
+    var hist = state.data && state.data.pageHealthHistory;
+    var months = hist ? Object.keys(hist).sort() : [];
+    if(months.length < 2){
+      el.innerHTML = '<h4>' + esc(t().trendScore) + '</h4><div class="ib-trend-row"><span>' + esc(t().trendNone) + '</span></div>';
+      return;
+    }
+    var prevKey = months[months.length - 2], curKey = months[months.length - 1];
+    var prev = hist[prevKey], cur = hist[curKey];
+
+    function avgScore(rows){
+      var vals = rows.filter(function(r){ return typeof r.seoScore === "number"; }).map(function(r){ return r.seoScore; });
+      return vals.length ? Math.round(vals.reduce(function(a,b){ return a+b; },0) / vals.length) : null;
+    }
+    function sum(rows, key){
+      return rows.reduce(function(a,r){ return a + (typeof r[key] === "number" ? r[key] : 0); }, 0);
+    }
+
+    // higherIsBetter differs per row — a rising health score is good, a
+    // rising issue count is not — so direction is passed in rather than
+    // assumed from the sign of the delta.
+    function row(label, before, after, higherIsBetter){
+      if(before === null || after === null) return "";
+      var delta = after - before;
+      var cls = delta === 0 ? "flat" : ((delta > 0) === higherIsBetter ? "up" : "down");
+      var word = delta === 0 ? t().same : ((delta > 0) === higherIsBetter ? t().better : t().worse);
+      var sign = delta > 0 ? "+" : "";
+      return '<div class="ib-trend-row"><span>' + esc(label) + '</span>' +
+             '<span><span class="ib-delta ' + cls + '">' + sign + delta + '</span> ' +
+             '<span style="font-size:12px">' + before + ' → ' + after + ' · ' + esc(word) + '</span></span></div>';
+    }
+
+    el.innerHTML = '<h4>' + esc(t().trendTitle(prevKey, curKey)) + '</h4>' +
+      row(t().trendScore, avgScore(prev), avgScore(cur), true) +
+      row(t().trendIssues, sum(prev, "issueCount"), sum(cur, "issueCount"), false) +
+      row(t().trendAlt, sum(prev, "altIssueCount"), sum(cur, "altIssueCount"), false);
+  }
+
+  function renderAll(){
+    var d = t();
+    document.getElementById("ibEyebrow").textContent = d.eyebrow;
+    document.getElementById("ibH2").textContent = d.h2;
+    document.getElementById("ibLede").textContent = d.lede;
+    document.getElementById("ibLowToggleLabel").textContent = d.lowToggle;
+    renderCoverage();
+    renderSummary();
+    renderTabs();
+    renderList();
+    renderTrend();
+  }
+
+  document.getElementById("ibTabs").addEventListener("click", function(e){
+    var btn = e.target.closest(".ib-tab");
+    if(!btn) return;
+    state.owner = btn.getAttribute("data-owner");
+    renderTabs();
+    renderList();
+  });
+
+  document.getElementById("ibLowToggle").addEventListener("change", function(e){
+    state.showLow = e.target.checked;
+    renderTabs();
+    renderList();
+  });
+
+  document.getElementById("ibList").addEventListener("click", function(e){
+    var btn = e.target.closest(".ib-toggle");
+    if(!btn) return;
+    var pages = btn.nextElementSibling;
+    var open = pages.classList.toggle("open");
+    btn.classList.toggle("open", open);
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
+  // Follows the existing language toggle without hooking into applyLang() —
+  // that function lives inside the main script's IIFE and isn't reachable
+  // from here. Watching the <html lang> attribute it already sets achieves
+  // the same thing without needing a single edit to that file.
+  new MutationObserver(function(){
+    var lang = document.documentElement.lang === "en" ? "en" : "ar";
+    if(lang !== state.lang){ state.lang = lang; renderAll(); }
+  }).observe(document.documentElement, { attributes:true, attributeFilter:["lang"] });
+
+  state.lang = document.documentElement.lang === "en" ? "en" : "ar";
+
+  fetch("data.json?v=" + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(D){ state.data = D; renderAll(); })
+    .catch(function(){ renderAll(); });
+})();
+</script>
+
 <section class="block" style="padding-top:8px;" id="aiReadiness">
   <div class="wrap">
     <div class="block-head reveal">
