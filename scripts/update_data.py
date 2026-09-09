@@ -55,6 +55,8 @@ import urllib.robotparser
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
+from index_cleanup import build_index_cleanup
+
 ORIGIN = "https://www.silah.com.sa"
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data.json")
 
@@ -1680,6 +1682,28 @@ def main():
     if data["aiSearchReadiness"]:
         blocked = [c["agent"] for c in data["aiSearchReadiness"]["crawlers"] if c["flagIfBlocked"] and not c["allowed"]]
         print(f"  AI crawlers blocked: {blocked or 'none'} | llms.txt present: {data['aiSearchReadiness']['llmsTxtPresent']}")
+
+    print("Building Index Cleanup Map ...")
+    try:
+        # Sitemap URLs come from the page-health scan that already ran above —
+        # no second sitemap fetch needed. Used only to flag published pages the
+        # sitemap omits (noindex), which is how the Sept 2026 audit found a live
+        # academy page and two campaign landing pages missing from it entirely.
+        sitemap_urls = [p.get("url") for p in (data.get("pageHealth") or []) if p.get("url")]
+        cleanup = build_index_cleanup(
+            sitemap_urls=sitemap_urls,
+            previous=data.get("indexCleanup"),
+        )
+        if cleanup:
+            data["indexCleanup"] = cleanup
+            print(f"  Index Cleanup: {cleanup['total']} pages, "
+                  f"{cleanup['actionNeeded']} need action")
+    except Exception as e:
+        # One data source must never fail the whole run — same philosophy as the
+        # CrUX and PSI handlers above. A WAF block on the WordPress endpoint
+        # leaves the previous indexCleanup block in place rather than wiping it.
+        print(f"  WARNING: Index Cleanup failed, keeping previous data: "
+              f"{type(e).__name__}: {e}", file=sys.stderr)
 
     print("Checking Google Search Console for real keyword rankings ...")
     gsc_token = get_gsc_access_token()
