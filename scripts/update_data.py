@@ -57,6 +57,42 @@ from datetime import datetime, timezone
 
 from index_cleanup import build_index_cleanup
 
+# ---------------------------------------------------------------------------
+# Force IPv4 for every outbound connection this script makes.
+# ---------------------------------------------------------------------------
+# Sept 9 2026: run #31 failed every single direct fetch to the site with
+# "[Errno 101] Network is unreachable" — sitemap_index.xml, robots.txt, all
+# five fallback pages, and the WordPress inventory endpoint. Nothing was
+# reachable, yet the run still went green: the sitemap fetch fell back to the
+# fixed 5-page list, so pageHealth silently dropped from 63 pages to 5 and
+# overwrote a good scan with a near-empty one.
+#
+# Errno 101 is specifically "no route to this address family", not a refusal,
+# a timeout, or a firewall block — a WAF returns 403, a WAF under load returns
+# 500 or times out. It means the socket layer had nowhere to send the packet
+# at all. The site now publishes AAAA (IPv6) records, Python's getaddrinfo
+# returns the IPv6 address first, and GitHub-hosted runners have no IPv6
+# egress. So every connection died before a single byte left the runner.
+#
+# Google's APIs were unaffected in the same run (CrUX, PSI and Search Console
+# all succeeded), which is the tell: PSI reaches the site from Google's own
+# infrastructure, not from here. Only OUR direct fetches were broken.
+#
+# Restricting getaddrinfo to AF_INET makes every urllib call in this process
+# — including index_cleanup's — resolve to IPv4 only. Deliberately global
+# rather than per-request: urllib gives no clean per-connection hook, and
+# there is no host this script talks to that requires IPv6.
+import socket as _socket
+
+_ORIGINAL_GETADDRINFO = _socket.getaddrinfo
+
+
+def _ipv4_only_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+    return _ORIGINAL_GETADDRINFO(host, port, _socket.AF_INET, type, proto, flags)
+
+
+_socket.getaddrinfo = _ipv4_only_getaddrinfo
+
 ORIGIN = "https://www.silah.com.sa"
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data.json")
 
