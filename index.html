@@ -1296,6 +1296,45 @@
   </div>
 </section>
 
+<section class="block" style="padding-top:8px;" id="indexCleanup">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow">خريطة تنظيف الفهرسة</p>
+      <h2>كل صفحة تحت الدومين — وحالتها الحقيقية</h2>
+      <p>يقارن هذا الجزء ما يقوله ووردبريس عن كل صفحة (منشورة، مسودة، خاصة، محذوفة) بما يحصل عليه
+         الزائر فعلياً عند فتح الرابط، ليكشف الصفحات غير المنشورة التي لا يزال بإمكان العميل الوصول
+         إليها، والصفحات المنشورة التي لا تظهر في نتائج البحث.</p>
+    </div>
+    <div class="ic-cards reveal" id="icCards"></div>
+    <a class="ic-open" href="./index-cleanup.html" id="icOpen">عرض الخريطة الكاملة &#8592;</a>
+    <p class="device-note" id="icNote"></p>
+  </div>
+</section>
+
+<style>
+  #indexCleanup .ic-cards{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;
+  }
+  #indexCleanup .ic-card{
+    background:var(--paper-card); border:1px solid var(--hair);
+    border-radius:14px; padding:18px; box-shadow:var(--shadow);
+  }
+  #indexCleanup .ic-card .n{ font-size:32px; font-weight:800; line-height:1; letter-spacing:-.02em; }
+  #indexCleanup .ic-card .l{ display:block; font-size:13px; color:var(--ink-soft);
+    margin-top:8px; font-weight:600; }
+  #indexCleanup .ic-high .n{ color:var(--poor); }
+  #indexCleanup .ic-mid  .n{ color:var(--amber); }
+  #indexCleanup .ic-ok   .n{ color:var(--moss); }
+  #indexCleanup .ic-all  .n{ color:var(--teal); }
+  #indexCleanup .ic-open{
+    display:inline-block; background:var(--teal); color:#F7F5F1; text-decoration:none;
+    padding:12px 26px; border-radius:999px; font-weight:700; font-size:14.5px;
+  }
+  #indexCleanup .ic-open:hover{ background:var(--teal-soft); }
+  @media(max-width:820px){ #indexCleanup .ic-cards{ grid-template-columns:repeat(2,1fr); } }
+  @media print{ #indexCleanup .ic-open{ display:none; } }
+</style>
+
 <section class="block" style="padding-top:8px;">
   <div class="wrap">
     <div class="block-head reveal">
@@ -2123,6 +2162,41 @@
   // check_ai_search_readiness() in update_data.py. Same empty-state
   // reasoning as the rest of this report: no data yet shows the "not
   // checked" note instead of an empty table or a misleading "all clear".
+  function renderIndexCleanup(){
+    var ic = window.__indexCleanup;
+    var cards = document.getElementById("icCards");
+    var note  = document.getElementById("icNote");
+    var open  = document.getElementById("icOpen");
+    if(!cards) return;
+
+    if(!ic || !ic.items || !ic.items.length){
+      cards.innerHTML = "";
+      if(open) open.style.display = "none";
+      if(note) note.textContent =
+        "لم يُشغَّل هذا الفحص بعد — سيُملأ تلقائياً بعد أول تحديث للتقرير.";
+      return;
+    }
+
+    if(open) open.style.display = "inline-block";
+
+    var sev  = ic.bySeverity || {};
+    var card = function(cls, n, label){
+      return '<div class="ic-card ' + cls + '"><span class="n num">' + (n||0) +
+             '</span><span class="l">' + label + '</span></div>';
+    };
+
+    cards.innerHTML =
+      card("ic-all",  ic.total,   "إجمالي الصفحات") +
+      card("ic-high", sev.high,   "تحتاج معالجة عاجلة") +
+      card("ic-mid",  sev.medium, "تحتاج مراجعة") +
+      card("ic-ok",   sev.ok,     "سليمة");
+
+    if(note){
+      note.textContent = "آخر فحص: " + (ic.checkedAt || "—") +
+        " · المصدر: ووردبريس + فحص مباشر لكل رابط.";
+    }
+  }
+
   function renderAiReadiness(){
     const section = document.getElementById("aiReadiness");
     if(!section) return;
@@ -3124,6 +3198,7 @@
     renderPageHealthTable();
     renderPageHealthScore();
     renderAiReadiness();
+    renderIndexCleanup();
     renderLastRefreshed();
     renderPriorities();
     renderOpportunities();
@@ -3198,6 +3273,7 @@
     renderPageHealthTable();
     renderPageHealthScore();
     renderAiReadiness();
+    renderIndexCleanup();
     renderLastRefreshed();
     renderPriorities();
     renderOpportunities();
@@ -3493,6 +3569,7 @@
         if(Array.isArray(D.pageHealth)){ pageHealthData = D.pageHealth; pageHealthCheckedMonth = D.pageHealthCheckedMonth || null; }
         if(typeof D.pageHealthScore === "number") window.__pageHealthScore = D.pageHealthScore;
         if(D.aiSearchReadiness){ window.__aiSearchReadiness = D.aiSearchReadiness; window.__aiCheckedMonth = D.aiSearchReadinessCheckedMonth || null; }
+        if(D.indexCleanup){ window.__indexCleanup = D.indexCleanup; }
         window.__lastRefreshedAt = D.lastRefreshedAt || null;
         if(typeof D.seoScore === "number") window.__seoScore = D.seoScore;
         if(typeof D.bestPracticesScore === "number") window.__bpScore = D.bestPracticesScore;
