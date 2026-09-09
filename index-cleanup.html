@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>خريطة تنظيف الفهرسة — تقرير موقع صلة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1D26; --ink-2:#102a36; --paper:#F2F1ED; --paper-card:#FBFAF7;
+    --signal:#E8483A; --teal:#134752; --teal-soft:#1d5e6b;
+    --amber:#B3711F; --amber-bg:rgba(193,127,46,0.13);
+    --moss:#2F6B49; --moss-bg:rgba(76,122,94,0.14);
+    --poor:#B23B3B; --poor-bg:rgba(178,59,59,0.13);
+    --ink-soft:#46565d; --hair:rgba(11,29,38,0.10);
+    --shadow:0 1px 2px rgba(11,29,38,0.04), 0 8px 24px -12px rgba(11,29,38,0.18);
+    --radius:18px; --maxw:1180px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:'Cairo','Segoe UI','Tahoma',sans-serif;font-size:15px;line-height:1.7}
+  .num{font-family:'JetBrains Mono','Consolas',monospace;font-feature-settings:'tnum' 1}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:var(--teal)}
+  button{font-family:inherit;cursor:pointer}
+
+  .top{background:var(--ink);color:#F7F5F1;padding:14px 0}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .back{color:#9FB3BB;text-decoration:none;font-size:14px;font-weight:600}
+  .back:hover{color:#fff}
+  .top-actions{display:flex;gap:10px}
+  .btn{background:transparent;border:1px solid rgba(247,245,241,.28);color:#F7F5F1;
+    border-radius:999px;padding:8px 18px;font-size:13.5px;font-weight:600}
+  .btn:hover{background:rgba(247,245,241,.10)}
+  .btn.primary{background:var(--signal);border-color:var(--signal)}
+
+  header.hero{background:var(--ink);color:#F7F5F1;padding:8px 0 44px}
+  .eyebrow{color:var(--signal);font-size:13px;font-weight:700;letter-spacing:.04em;margin:0 0 8px}
+  h1{margin:0 0 12px;font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.25}
+  .lede{margin:0;color:#B7C4CA;font-size:15.5px;max-width:74ch}
+  .stamp{margin-top:18px;font-size:13px;color:#7E939C}
+
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:-28px 0 0}
+  .tile{background:var(--paper-card);border:1px solid var(--hair);border-radius:var(--radius);
+    padding:20px;box-shadow:var(--shadow);text-align:right;font:inherit;color:inherit;cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease}
+  .tile:hover{transform:translateY(-2px)}
+  .tile[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--teal),var(--shadow)}
+  .tile .n{font-size:38px;font-weight:800;line-height:1;letter-spacing:-.03em}
+  .tile .l{display:block;font-size:13.5px;color:var(--ink-soft);margin-top:10px;font-weight:600}
+  .tile .s{display:block;font-size:12px;color:var(--ink-soft);opacity:.75;margin-top:4px}
+  .tile.t-high .n{color:var(--poor)} .tile.t-mid .n{color:var(--amber)}
+  .tile.t-ok .n{color:var(--moss)} .tile.t-all .n{color:var(--teal)}
+
+  .panel{background:var(--paper-card);border:1px solid var(--hair);border-radius:var(--radius);
+    box-shadow:var(--shadow);margin-top:26px;overflow:hidden}
+  .panel-head{padding:20px 24px;border-bottom:1px solid var(--hair)}
+  .panel-head h2{margin:0 0 4px;font-size:19px;font-weight:700}
+  .panel-head p{margin:0;font-size:13.5px;color:var(--ink-soft)}
+
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:16px 24px;
+    border-bottom:1px solid var(--hair);background:rgba(11,29,38,.02)}
+  .controls input,.controls select{padding:9px 13px;border:1px solid var(--hair);
+    border-radius:10px;font:inherit;font-size:14px;background:#fff;color:var(--ink)}
+  .controls input{flex:1;min-width:220px}
+  .controls input:focus,.controls select:focus{outline:2px solid var(--teal);outline-offset:-1px}
+  .cnt{font-size:13px;color:var(--ink-soft);margin-inline-start:auto}
+  .ghost{background:#fff;border:1px solid var(--hair);border-radius:10px;padding:9px 16px;
+    font-size:13.5px;font-weight:600;color:var(--ink)}
+
+  table{width:100%;border-collapse:collapse}
+  th{background:rgba(11,29,38,.04);font-size:12px;font-weight:700;color:var(--ink-soft);
+    padding:12px 14px;text-align:right;border-bottom:1px solid var(--hair);white-space:nowrap}
+  td{padding:14px;border-bottom:1px solid rgba(11,29,38,.06);vertical-align:top;font-size:13.5px}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(11,29,38,.015)}
+  .u{direction:ltr;text-align:left;word-break:break-all;font-size:12.5px;line-height:1.5}
+  .u a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--hair)}
+  .u a:hover{border-bottom-color:var(--teal)}
+  .ttl{font-weight:600;margin-bottom:4px;font-size:13.5px}
+  .badge{display:inline-block;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+  .sev-high{background:var(--poor-bg);color:var(--poor)}
+  .sev-medium{background:var(--amber-bg);color:var(--amber)}
+  .sev-ok{background:var(--moss-bg);color:var(--moss)}
+  .wp{font-size:12px;color:var(--ink-soft);white-space:nowrap}
+  .act{font-size:12.5px;color:var(--ink-soft);max-width:290px}
+  .dt{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;direction:ltr;text-align:right}
+  .lk{background:none;border:none;color:var(--teal);font:inherit;font-size:12.5px;
+    border-bottom:1px dotted var(--teal);padding:0}
+  .det td{background:rgba(19,71,82,.035);font-size:12.5px}
+  .det ul{margin:6px 0;padding-inline-start:20px;columns:2;column-gap:28px}
+  .det li{direction:ltr;text-align:left;word-break:break-all;font-size:12px;margin-bottom:4px}
+  .none{padding:56px;text-align:center;color:var(--ink-soft)}
+
+  .legend{margin-top:26px;padding:22px 24px;background:var(--paper-card);
+    border:1px solid var(--hair);border-inline-start:4px solid var(--teal);border-radius:12px;
+    font-size:13.5px;color:var(--ink-soft);line-height:1.85}
+  .legend h3{margin:0 0 10px;font-size:15px;color:var(--ink);font-weight:700}
+  .legend b{color:var(--ink)}
+  footer{padding:40px 0 60px;text-align:center;font-size:12.5px;color:var(--ink-soft)}
+
+  .err{margin:40px auto;max-width:640px;padding:26px;background:var(--paper-card);
+    border:1px solid var(--hair);border-inline-start:4px solid var(--signal);border-radius:12px}
+
+  @media(max-width:900px){
+    .tiles{grid-template-columns:repeat(2,1fr)}
+    h1{font-size:26px}
+    th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
+  }
+  @media print{
+    body{background:#fff;font-size:10.5px}
+    .top,.controls,.btn,.ghost{display:none!important}
+    header.hero{background:#fff;color:#000;padding:0 0 14px;border-bottom:3px solid var(--signal)}
+    .eyebrow{color:var(--signal)} .lede,.stamp{color:#555}
+    .tiles{margin:14px 0 0;gap:8px}
+    .tile{box-shadow:none;border:1px solid #bbb;padding:10px}
+    .tile .n{font-size:22px}
+    .panel{box-shadow:none;border:1px solid #999;margin-top:14px}
+    tr{page-break-inside:avoid}
+    .det{display:none}
+    a{color:#000}
+  }
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="back" href="./index.html">&#8594; العودة إلى التقرير الشهري</a>
+  <div class="top-actions">
+    <button class="ghost btn" id="csv">تصدير CSV</button>
+    <button class="btn primary" id="pdf">حفظ PDF</button>
+  </div>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">خريطة تنظيف الفهرسة</p>
+  <h1>كل صفحة تحت الدومين — وحالتها الحقيقية</h1>
+  <p class="lede">هذا الجزء يقارن ما يقوله ووردبريس عن كل صفحة (منشورة، مسودة، خاصة، محذوفة)
+    بما يحصل عليه الزائر فعلياً عند فتح الرابط. التقاطع بين المصدرين هو ما يكشف الصفحات
+    غير المنشورة التي لا يزال بإمكان العميل الوصول إليها، والصفحات المنشورة التي لا تظهر في نتائج البحث.</p>
+  <p class="stamp" id="stamp"></p>
+</div></header>
+
+<div class="wrap">
+  <div id="err" class="err" style="display:none"></div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>تفاصيل الصفحات</h2>
+      <p>اضغط على أي بطاقة أعلاه للتصفية، أو ابحث برابط أو عنوان صفحة.</p>
+    </div>
+    <div class="controls">
+      <input id="q" type="search" placeholder="ابحث برابط أو عنوان صفحة…" aria-label="بحث">
+      <select id="fStatus"><option value="">كل حالات ووردبريس</option></select>
+      <select id="fType"><option value="">كل الأنواع</option></select>
+      <button class="ghost" id="reset">عرض الكل</button>
+      <span class="cnt" id="cnt"></span>
+    </div>
+    <table>
+      <thead><tr>
+        <th style="width:26%">الصفحة</th>
+        <th style="width:15%">الحالة</th>
+        <th style="width:9%">في ووردبريس</th>
+        <th style="width:9%">تاريخ النشر</th>
+        <th style="width:9%">آخر تحديث</th>
+        <th style="width:10%">روابط داخلية</th>
+        <th style="width:22%">الإجراء المقترح</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="none" id="none" hidden>لا توجد نتائج مطابقة</div>
+  </div>
+
+  <div class="legend">
+    <h3>كيف تُقرأ الحالات</h3>
+    <b>منشورة وتعمل</b> — الصفحة منشورة ويفتحها الزائر مباشرة. لا يلزم أي إجراء.<br>
+    <b>مسودة لكن يمكن الوصول لها</b> — الصفحة غير منشورة في ووردبريس، لكن الرابط لا يزال يفتح للعامة. هذه أهم حالة في هذا التقرير.<br>
+    <b>محذوفة لكنها لا تزال تفتح</b> — الصفحة في سلة المحذوفات لكن الرابط يعمل، وقد يصل إليها عميل من رابط قديم.<br>
+    <b>منشورة لكنها لا تفتح</b> — الصفحة منشورة في ووردبريس لكن الزائر يصل إلى خطأ. عطل مرئي للعميل.<br>
+    <b>منشورة لكنها خارج خريطة الموقع</b> — الصفحة تعمل ويمكن فتحها، لكنها مستبعدة من الفهرسة فلا تظهر في نتائج البحث.<br>
+    <b>خاصة</b> — لا تفتح إلا لمن لديه حساب على الموقع. طبيعية ولا تحتاج إجراء.<br><br>
+    <b>الروابط الداخلية</b> تُحتسب من محتوى الصفحة نفسها فقط، بعد استبعاد روابط القائمة والتذييل المتكررة في كل صفحة.<br>
+    تُحدَّث هذه البيانات تلقائياً مع كل تحديث للتقرير الشهري.
+  </div>
+</div>
+
+<footer>تقرير موقع شركة صلة — خريطة تنظيف الفهرسة</footer>
+
+<script>
+(function(){
+  var VERDICT_ORDER = ["draft_reachable","trash_reachable","published_broken",
+                       "hidden_from_search","live_redirect","pending","trash_gone",
+                       "live_ok","private","scheduled","draft_hidden"];
+  var WP_AR = {publish:"منشورة",draft:"مسودة",private:"خاصة",trash:"محذوفة",
+               pending:"بانتظار مراجعة",future:"مجدولة"};
+
+  var state = {data:null, filter:null, open:{}};
+  var $ = function(id){ return document.getElementById(id); };
+
+  function dec(u){ try{ return decodeURI(u); }catch(e){ return u; } }
+
+  fetch("./data.json", {cache:"no-store"})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var ic = d.indexCleanup;
+      if(!ic || !ic.items || !ic.items.length){
+        $("err").style.display = "block";
+        $("err").innerHTML = "<b>لم يُشغَّل الفحص بعد.</b><br>" +
+          "ستُملأ هذه الصفحة تلقائياً بعد أول تشغيل للتحديث الشهري، " +
+          "أو عند الضغط على «تحديث البيانات الآن» في التقرير الرئيسي.";
+        return;
+      }
+      state.data = ic;
+      start();
+    })
+    .catch(function(){
+      $("err").style.display = "block";
+      $("err").textContent = "تعذّر تحميل البيانات. حدّث الصفحة أو تحقق من الاتصال.";
+    });
+
+  function start(){
+    var ic = state.data;
+
+    $("stamp").textContent = "آخر فحص: " + (ic.checkedAt || "—") +
+      " · " + ic.total + " صفحة · المصدر: ووردبريس + فحص مباشر لكل رابط";
+
+    var high = ic.bySeverity && ic.bySeverity.high || 0;
+    var med  = ic.bySeverity && ic.bySeverity.medium || 0;
+    var ok   = ic.bySeverity && ic.bySeverity.ok || 0;
+
+    $("tiles").innerHTML =
+      tile("all","t-all",ic.total,"إجمالي الصفحات","كل ما هو تحت الدومين") +
+      tile("high","t-high",high,"تحتاج معالجة عاجلة","صفحات مرئية للعميل بالخطأ") +
+      tile("medium","t-mid",med,"تحتاج مراجعة","ملاحظات فهرسة وتنظيم") +
+      tile("ok","t-ok",ok,"سليمة","لا يلزم أي إجراء");
+
+    Array.prototype.forEach.call(document.querySelectorAll(".tile"), function(t){
+      t.addEventListener("click", function(){
+        state.filter = (state.filter === t.dataset.f) ? null : t.dataset.f;
+        Array.prototype.forEach.call(document.querySelectorAll(".tile"), function(x){
+          x.setAttribute("aria-pressed", x.dataset.f === state.filter);
+        });
+        render();
+      });
+    });
+
+    fill("fStatus", uniq(ic.items.map(function(i){ return i.wpStatus; })), function(v){
+      return WP_AR[v] || v;
+    });
+    fill("fType", uniq(ic.items.map(function(i){ return i.typeLabel || i.type; })), function(v){ return v; });
+
+    $("q").addEventListener("input", render);
+    $("fStatus").addEventListener("change", render);
+    $("fType").addEventListener("change", render);
+    $("reset").addEventListener("click", function(){
+      state.filter=null; state.open={}; $("q").value=""; $("fStatus").value=""; $("fType").value="";
+      Array.prototype.forEach.call(document.querySelectorAll(".tile"), function(x){
+        x.setAttribute("aria-pressed","false");
+      });
+      render();
+    });
+    $("pdf").addEventListener("click", function(){ window.print(); });
+    $("csv").addEventListener("click", exportCsv);
+
+    render();
+  }
+
+  function tile(f,cls,n,label,sub){
+    return '<button class="tile '+cls+'" data-f="'+f+'" aria-pressed="false">'+
+      '<span class="n num">'+n+'</span>'+
+      '<span class="l">'+label+'</span><span class="s">'+sub+'</span></button>';
+  }
+
+  function uniq(a){
+    var s = {}, out = [];
+    a.forEach(function(v){ if(v && !s[v]){ s[v]=1; out.push(v); } });
+    return out.sort();
+  }
+
+  function fill(id, values, label){
+    var sel = $(id);
+    values.forEach(function(v){
+      var o = document.createElement("option");
+      o.value = v; o.textContent = label(v);
+      sel.appendChild(o);
+    });
+  }
+
+  function visible(){
+    var term = $("q").value.trim().toLowerCase();
+    var st = $("fStatus").value, ty = $("fType").value;
+    return state.data.items.filter(function(i){
+      if(state.filter === "high"   && i.severity !== "high") return false;
+      if(state.filter === "medium" && i.severity !== "medium") return false;
+      if(state.filter === "ok"     && i.severity !== "ok") return false;
+      if(st && i.wpStatus !== st) return false;
+      if(ty && (i.typeLabel || i.type) !== ty) return false;
+      if(term){
+        var hay = (dec(i.url) + " " + (i.title||"")).toLowerCase();
+        if(hay.indexOf(term) === -1) return false;
+      }
+      return true;
+    }).sort(function(a,b){
+      var d = VERDICT_ORDER.indexOf(a.verdict) - VERDICT_ORDER.indexOf(b.verdict);
+      return d !== 0 ? d : (a.title||"").localeCompare(b.title||"","ar");
+    });
+  }
+
+  function render(){
+    var rows = visible();
+    $("rows").innerHTML = rows.map(function(i,n){
+      var key = i.id + "_" + n;
+      var links = state.open[key] ?
+        '<tr class="det"><td colspan="7"><b>روابط داخلية من هذه الصفحة ('+i.linkCount+')</b><ul>'+
+        (i.internalLinks||[]).map(function(l){ return "<li>"+dec(l)+"</li>"; }).join("")+
+        '</ul></td></tr>' : '';
+      return '<tr>'+
+        '<td><div class="ttl">'+(i.title || "—")+'</div>'+
+            '<div class="u"><a href="'+i.url+'" target="_blank" rel="noopener">'+dec(i.url)+'</a></div></td>'+
+        '<td><span class="badge sev-'+i.severity+'">'+i.verdictAr+'</span>'+
+            (i.hops ? '<div class="wp" style="margin-top:5px">'+i.hops+' تحويلة</div>' : '')+'</td>'+
+        '<td class="wp">'+(WP_AR[i.wpStatus]||i.wpStatus)+'<div style="opacity:.7">'+(i.typeLabel||i.type||"")+'</div></td>'+
+        '<td class="dt">'+fmt(i.published)+'</td>'+
+        '<td class="dt">'+fmt(i.modified)+'</td>'+
+        '<td>'+(i.linkCount ? '<button class="lk" data-k="'+key+'">'+i.linkCount+' رابط</button>' : '—')+'</td>'+
+        '<td class="act">'+(i.actionAr || "—")+'</td>'+
+      '</tr>' + links;
+    }).join("");
+
+    Array.prototype.forEach.call($("rows").querySelectorAll(".lk"), function(b){
+      b.addEventListener("click", function(){
+        var k = b.dataset.k;
+        state.open[k] = !state.open[k];
+        render();
+      });
+    });
+
+    $("none").hidden = rows.length > 0;
+    $("cnt").textContent = rows.length + " من " + state.data.items.length;
+  }
+
+  function fmt(v){ return v ? String(v).slice(0,10) : "—"; }
+
+  function exportCsv(){
+    var head = ["URL","Page Title","Status","WordPress Status","Content Type",
+                "Publication Date","Last Updated","Internal Links","Action"];
+    var lines = [head.join(",")];
+    visible().forEach(function(i){
+      lines.push([dec(i.url), i.title, i.verdictAr, WP_AR[i.wpStatus]||i.wpStatus,
+                  i.typeLabel||i.type, fmt(i.published), fmt(i.modified),
+                  i.linkCount, i.actionAr]
+        .map(function(v){ return '"' + String(v==null?"":v).replace(/"/g,'""') + '"'; })
+        .join(","));
+    });
+    var blob = new Blob(["\ufeff" + lines.join("\n")], {type:"text/csv;charset=utf-8;"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "index-cleanup-map.csv";
+    a.click();
+  }
+})();
+</script>
+</body>
+</html>
