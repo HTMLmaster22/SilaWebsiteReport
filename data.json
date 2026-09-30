@@ -260,11 +260,11 @@
     {
       "ar": "العمل عن بعد",
       "en": "Remote work (العمل عن بعد)",
-      "pos": 8,
+      "pos": 9,
       "page": 1,
       "tier": "strong",
-      "gscClicks": 43,
-      "gscImpressions": 5280
+      "gscClicks": 31,
+      "gscImpressions": 3710
     },
     {
       "ar": "توظيف السعوديين",
@@ -272,8 +272,8 @@
       "pos": 8,
       "page": 1,
       "tier": "strong",
-      "gscClicks": 1,
-      "gscImpressions": 26
+      "gscClicks": 2,
+      "gscImpressions": 29
     },
     {
       "ar": "خدمات التوطين",
@@ -285,41 +285,47 @@
     {
       "ar": "معاهد الشراكات الاستراتيجية",
       "en": "Strategic partnership institutes",
-      "pos": 8,
+      "pos": 9,
       "page": 1,
       "tier": "strong",
-      "gscClicks": 1,
-      "gscImpressions": 160
+      "gscClicks": 0,
+      "gscImpressions": 11
     },
     {
       "ar": "اسناد السعوديين",
       "en": "Saudi outsourcing (اسناد السعوديين)",
-      "pos": 8,
+      "pos": 9,
       "page": 1,
       "tier": "strong",
       "gscClicks": 0,
-      "gscImpressions": 73
+      "gscImpressions": 69
     },
     {
       "ar": "شركة صلة",
       "en": "Brand: Silah company (شركة صلة)",
-      "pos": null,
-      "page": null,
-      "tier": "weak"
+      "pos": 2,
+      "page": 1,
+      "tier": "strong",
+      "gscClicks": 702,
+      "gscImpressions": 1815
     },
     {
       "ar": "صلة تمكين",
       "en": "Brand: Silah Tamkeen (صلة تمكين)",
-      "pos": null,
-      "page": null,
-      "tier": "weak"
+      "pos": 1,
+      "page": 1,
+      "tier": "strong",
+      "gscClicks": 36,
+      "gscImpressions": 73
     },
     {
       "ar": "silah",
       "en": "Brand: silah",
-      "pos": null,
-      "page": null,
-      "tier": "weak"
+      "pos": 2,
+      "page": 1,
+      "tier": "strong",
+      "gscClicks": 103,
+      "gscImpressions": 377
     }
   ],
   "pages": [
@@ -355,7 +361,7 @@
       "nameAr": "حلول التوطين والتوظيف |",
       "nameEn": "حلول التوطين والتوظيف |",
       "url": "https://www.silah.com.sa/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -524,16 +530,39 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 78,
+      "mobileScore": 80,
       "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 60,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 73,
+      "competesWith": [
+        {
+          "query": "بوابة العمل عن بعد",
+          "impressions": 389,
+          "otherPages": [
+            "https://www.silah.com.sa/jobs/"
+          ]
+        },
+        {
+          "query": "عن بعد",
+          "impressions": 195,
+          "otherPages": [
+            "https://www.silah.com.sa/jobs/"
+          ]
+        },
+        {
+          "query": "سلك",
+          "impressions": 192,
+          "otherPages": [
+            "https://www.silah.com.sa/wishlist/"
+          ]
+        }
+      ],
       "issues": [
         {
           "code": "alt_text_missing",
@@ -558,6 +587,23 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
+          "code": "title_missing_target_keyword",
+          "owner": "marketing",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة لا يحتوي الكلمة المستهدفة «العمل عن بعد»",
+          "labelEn": "Title doesn't contain the page's target keyword (العمل عن بعد)",
+          "detail": {
+            "targetKeyword": "العمل عن بعد"
+          }
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -568,8 +614,40 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (78/100)",
-          "labelEn": "Mobile performance below target (78/100)"
+          "labelAr": "أداء الجوال دون الهدف (80/100)",
+          "labelEn": "Mobile performance below target (80/100)"
+        },
+        {
+          "code": "keyword_cannibalization",
+          "owner": "marketing",
+          "severity": "medium",
+          "labelAr": "تتنافس مع صفحة أخرى على نفس عبارات البحث في Google",
+          "labelEn": "Competes with another of our pages for the same Google searches",
+          "detail": {
+            "queries": [
+              {
+                "query": "بوابة العمل عن بعد",
+                "impressions": 389,
+                "otherPages": [
+                  "https://www.silah.com.sa/jobs/"
+                ]
+              },
+              {
+                "query": "عن بعد",
+                "impressions": 195,
+                "otherPages": [
+                  "https://www.silah.com.sa/jobs/"
+                ]
+              },
+              {
+                "query": "سلك",
+                "impressions": 192,
+                "otherPages": [
+                  "https://www.silah.com.sa/wishlist/"
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -578,7 +656,7 @@
       "nameAr": "آلية التقدم على الوظيفة",
       "nameEn": "آلية التقدم على الوظيفة",
       "url": "https://www.silah.com.sa/%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -644,16 +722,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 74,
-      "unusedCssKb": 24,
+      "mobileScore": 75,
+      "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 72,
+      "seoScore": 73,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -701,8 +780,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (74/100)",
-          "labelEn": "Mobile performance below target (74/100)"
+          "labelAr": "أداء الجوال دون الهدف (75/100)",
+          "labelEn": "Mobile performance below target (75/100)"
         }
       ]
     },
@@ -711,7 +790,7 @@
       "nameAr": "طلب باقة",
       "nameEn": "طلب باقة",
       "url": "https://www.silah.com.sa/%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": false,
         "typesFound": []
@@ -766,16 +845,17 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 88,
+      "mobileScore": 96,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -791,7 +871,7 @@
       "nameAr": "مدونة",
       "nameEn": "مدونة",
       "url": "https://www.silah.com.sa/%d9%85%d8%af%d9%88%d9%86%d8%a9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -868,16 +948,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 74,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 84,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -936,8 +1017,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (73/100)",
-          "labelEn": "Mobile performance below target (73/100)"
+          "labelAr": "أداء الجوال دون الهدف (74/100)",
+          "labelEn": "Mobile performance below target (74/100)"
         }
       ]
     },
@@ -946,7 +1027,7 @@
       "nameAr": "عربة التسوق",
       "nameEn": "عربة التسوق",
       "url": "https://www.silah.com.sa/%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1012,16 +1093,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 77,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -1037,7 +1119,7 @@
       "nameAr": "الدفع",
       "nameEn": "الدفع",
       "url": "https://www.silah.com.sa/%d8%a7%d9%84%d8%af%d9%81%d8%b9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1103,16 +1185,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 78,
+      "mobileScore": 75,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -1128,7 +1211,7 @@
       "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
       "nameEn": "تطبيق صلة لقياس أداء الموظف عن بعد",
       "url": "https://www.silah.com.sa/%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": false,
         "typesFound": []
@@ -1223,16 +1306,17 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 74,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 58,
+      "competesWith": null,
       "issues": [
         {
           "code": "schema_missing",
@@ -1270,8 +1354,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (73/100)",
-          "labelEn": "Mobile performance below target (73/100)"
+          "labelAr": "أداء الجوال دون الهدف (74/100)",
+          "labelEn": "Mobile performance below target (74/100)"
         }
       ]
     },
@@ -1280,7 +1364,7 @@
       "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
       "nameEn": "تشغيل تطبيقات الاقتصاد التشاركي",
       "url": "https://www.silah.com.sa/%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1387,16 +1471,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 74,
-      "unusedCssKb": 24,
+      "mobileScore": 96,
+      "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 75,
+      "seoScore": 80,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -1439,13 +1524,6 @@
           "severity": "high",
           "labelAr": "صفحة يتيمة — لا ترتبط بها أي صفحة أخرى",
           "labelEn": "Orphan page — no other scanned page links to it"
-        },
-        {
-          "code": "mobile_performance_below_target",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (74/100)",
-          "labelEn": "Mobile performance below target (74/100)"
         }
       ]
     },
@@ -1454,7 +1532,7 @@
       "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
       "nameEn": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
       "url": "https://www.silah.com.sa/silah-academy-for-e-learning/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1520,16 +1598,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 77,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 79,
+      "seoScore": 80,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -1541,6 +1620,13 @@
             "count": 2,
             "totalImages": 3
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -1560,8 +1646,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (73/100)",
-          "labelEn": "Mobile performance below target (73/100)"
+          "labelAr": "أداء الجوال دون الهدف (77/100)",
+          "labelEn": "Mobile performance below target (77/100)"
         }
       ]
     },
@@ -1570,7 +1656,7 @@
       "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية |",
       "nameEn": "مشكلة محدودية فرص العمل للمرأة السعودية |",
       "url": "https://www.silah.com.sa/defining-the-problem/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1636,16 +1722,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 72,
-      "unusedCssKb": 24,
+      "mobileScore": 97,
+      "unusedCssKb": 26,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 72,
+      "seoScore": 77,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -1657,6 +1744,13 @@
             "count": 2,
             "totalImages": 2
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -1671,13 +1765,6 @@
           "severity": "high",
           "labelAr": "صفحة يتيمة — لا ترتبط بها أي صفحة أخرى",
           "labelEn": "Orphan page — no other scanned page links to it"
-        },
-        {
-          "code": "mobile_performance_below_target",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (72/100)",
-          "labelEn": "Mobile performance below target (72/100)"
         }
       ]
     },
@@ -1686,7 +1773,7 @@
       "nameAr": "البنية التحتية |",
       "nameEn": "البنية التحتية |",
       "url": "https://www.silah.com.sa/infrastructure/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1763,16 +1850,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 79,
+      "mobileScore": 87,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": "2026-08",
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 86,
+      "seoScore": 88,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -1797,6 +1885,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -1807,8 +1902,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (79/100)",
-          "labelEn": "Mobile performance below target (79/100)"
+          "labelAr": "أداء الجوال دون الهدف (87/100)",
+          "labelEn": "Mobile performance below target (87/100)"
         }
       ]
     },
@@ -1817,7 +1912,7 @@
       "nameAr": "فرص وظيفية تقنية",
       "nameEn": "فرص وظيفية تقنية",
       "url": "https://www.silah.com.sa/%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1898,6 +1993,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 58,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -1962,7 +2058,7 @@
       "nameAr": "Gitex2022 |",
       "nameEn": "Gitex2022 |",
       "url": "https://www.silah.com.sa/gitex2022/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2071,6 +2167,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -2086,7 +2183,7 @@
       "nameAr": "الشروط والأحكام |",
       "nameEn": "الشروط والأحكام |",
       "url": "https://www.silah.com.sa/terms-and-conditions/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2167,6 +2264,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 68,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -2191,6 +2289,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "lighthouse_robots-txt",
           "owner": "it",
           "severity": "medium",
@@ -2204,7 +2309,7 @@
       "nameAr": "دراسة مستقبل العمل لعام 2022م |",
       "nameEn": "دراسة مستقبل العمل لعام 2022م |",
       "url": "https://www.silah.com.sa/%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2280,6 +2385,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 73,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -2301,6 +2407,13 @@
           "detail": {
             "canonical": "https://www.silah.com.sa/دراسة-مستقبل-العمل-لعام-2022م/"
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -2330,7 +2443,7 @@
       "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
       "nameEn": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
       "url": "https://www.silah.com.sa/%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2406,6 +2519,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 78,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -2429,6 +2543,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -2449,7 +2570,7 @@
       "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
       "nameEn": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
       "url": "https://www.silah.com.sa/%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2525,6 +2646,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 76,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -2546,6 +2668,13 @@
           "detail": {
             "canonical": "https://www.silah.com.sa/التقرير-السنوي-للعمل-عن-بعد-2018م-استطلاع/"
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -2575,7 +2704,7 @@
       "nameAr": "Gitex2023_AR |",
       "nameEn": "Gitex2023_AR |",
       "url": "https://www.silah.com.sa/gitex2023/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2654,6 +2783,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -2669,7 +2799,7 @@
       "nameAr": "Gitex2023_EN |",
       "nameEn": "Gitex2023_EN |",
       "url": "https://www.silah.com.sa/gitex2023_en/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2748,6 +2878,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -2763,7 +2894,7 @@
       "nameAr": "Gitex-Form |",
       "nameEn": "Gitex-Form |",
       "url": "https://www.silah.com.sa/gitex-form/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2839,6 +2970,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -2854,7 +2986,7 @@
       "nameAr": "User Public Account",
       "nameEn": "User Public Account",
       "url": "https://www.silah.com.sa/user-public-account/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2930,6 +3062,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -2945,7 +3078,7 @@
       "nameAr": "Wishlist",
       "nameEn": "Wishlist",
       "url": "https://www.silah.com.sa/wishlist/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3021,6 +3154,15 @@
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": [
+        {
+          "query": "سلك",
+          "impressions": 192,
+          "otherPages": [
+            "https://www.silah.com.sa/"
+          ]
+        }
+      ],
       "issues": [
         {
           "code": "should_be_noindex",
@@ -3036,7 +3178,7 @@
       "nameAr": "User Account",
       "nameEn": "User Account",
       "url": "https://www.silah.com.sa/user-account/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3112,6 +3254,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -3127,7 +3270,7 @@
       "nameAr": "شكراً |",
       "nameEn": "شكراً |",
       "url": "https://www.silah.com.sa/thank-you/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3210,6 +3353,7 @@
       ],
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -3225,7 +3369,7 @@
       "nameAr": "Normal Form Test",
       "nameEn": "Normal Form Test",
       "url": "https://www.silah.com.sa/normal-form-test/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3301,6 +3445,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": true,
       "seoScore": null,
+      "competesWith": null,
       "issues": [
         {
           "code": "should_be_noindex",
@@ -3316,7 +3461,7 @@
       "nameAr": "مراكز صلة التقنية",
       "nameEn": "مراكز صلة التقنية",
       "url": "https://www.silah.com.sa/%d9%85%d8%b1%d8%a7%d9%83%d8%b2-%d8%b5%d9%84%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d9%86%d9%8a%d8%a9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3447,6 +3592,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 70,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -3504,7 +3650,7 @@
       "nameAr": "سياسة الخصوصية |",
       "nameEn": "سياسة الخصوصية |",
       "url": "https://www.silah.com.sa/privacy-policy/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3579,6 +3725,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 76,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -3603,6 +3750,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_multiple",
           "owner": "marketing",
           "severity": "low",
@@ -3623,7 +3777,7 @@
       "nameAr": "حلول وخدمات صلة المتكاملة |",
       "nameEn": "حلول وخدمات صلة المتكاملة |",
       "url": "https://www.silah.com.sa/our-brochures/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3733,6 +3887,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 71,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -3744,6 +3899,13 @@
             "count": 7,
             "totalImages": 7
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "meta_description_missing",
@@ -3773,7 +3935,7 @@
       "nameAr": "من هم عملاء شركة صلة |",
       "nameEn": "من هم عملاء شركة صلة |",
       "url": "https://www.silah.com.sa/who-our-clients/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3968,6 +4130,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 77,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -3992,6 +4155,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -4005,7 +4175,7 @@
       "nameAr": "حاسبة تكلفة التوظيف",
       "nameEn": "حاسبة تكلفة التوظيف",
       "url": "https://www.silah.com.sa/business-center-cost/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4086,6 +4256,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 47,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -4097,6 +4268,13 @@
             "count": 3,
             "totalImages": 3
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -4140,7 +4318,7 @@
       "nameAr": "حاسبة تكاليف التوظيف |",
       "nameEn": "حاسبة تكاليف التوظيف |",
       "url": "https://www.silah.com.sa/remote-working-cost-calculator/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4220,6 +4398,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 47,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -4242,6 +4421,13 @@
             "length": 22,
             "min": 25
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -4278,7 +4464,7 @@
       "nameAr": "الخدمات والحلول &nbsp;",
       "nameEn": "الخدمات والحلول &nbsp;",
       "url": "https://www.silah.com.sa/services-and-solutions/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4376,6 +4562,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 91,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -4400,6 +4587,13 @@
           }
         },
         {
+          "code": "title_html_entity",
+          "owner": "it",
+          "severity": "low",
+          "labelAr": "عنوان الصفحة يحتوي رمز HTML ظاهر (مثل &nbsp;)",
+          "labelEn": "Title contains a literal HTML entity (e.g. &nbsp;)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -4413,7 +4607,7 @@
       "nameAr": "تحدث إلينا الآن |",
       "nameEn": "تحدث إلينا الآن |",
       "url": "https://www.silah.com.sa/talk-to-us-now/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4491,11 +4685,12 @@
         }
       ],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 3,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 71,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -4518,6 +4713,13 @@
             "length": 17,
             "min": 25
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -4547,7 +4749,7 @@
       "nameAr": "بوت خدمة العملاء ... أعلى مستويات الرضى |",
       "nameEn": "بوت خدمة العملاء ... أعلى مستويات الرضى |",
       "url": "https://www.silah.com.sa/customer-service-bot/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4624,11 +4826,12 @@
         }
       ],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 74,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -4640,6 +4843,13 @@
             "count": 2,
             "totalImages": 4
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -4669,7 +4879,7 @@
       "nameAr": "Broadcast",
       "nameEn": "Broadcast",
       "url": "https://www.silah.com.sa/auto-calls/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4760,6 +4970,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 74,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -4771,6 +4982,13 @@
             "count": 5,
             "totalImages": 6
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -4793,7 +5011,7 @@
       "nameAr": "إدارة ملتقيات التوظيف والمعارض الإفتراضية",
       "nameEn": "إدارة ملتقيات التوظيف والمعارض الإفتراضية",
       "url": "https://www.silah.com.sa/virtual-events/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4924,6 +5142,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 78,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -4957,7 +5176,7 @@
       "nameAr": "خدمات الاستثمار الاجتماعي |",
       "nameEn": "خدمات الاستثمار الاجتماعي |",
       "url": "https://www.silah.com.sa/esnad-saudis/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5069,6 +5288,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 71,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -5080,6 +5300,13 @@
             "count": 9,
             "totalImages": 10
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "meta_description_missing",
@@ -5109,7 +5336,7 @@
       "nameAr": "نظام صلة لقياس الإنتاجية |",
       "nameEn": "نظام صلة لقياس الإنتاجية |",
       "url": "https://www.silah.com.sa/silah-system-for-productivity-monitoring/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5202,6 +5429,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 78,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -5213,6 +5441,13 @@
             "count": 5,
             "totalImages": 6
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -5228,7 +5463,7 @@
       "nameAr": "طبيعة الوظائف التي يمكن القيام بها عن بعد |",
       "nameEn": "طبيعة الوظائف التي يمكن القيام بها عن بعد |",
       "url": "https://www.silah.com.sa/telework-success/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5304,6 +5539,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 73,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -5315,6 +5551,13 @@
             "count": 2,
             "totalImages": 2
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -5344,7 +5587,7 @@
       "nameAr": "حول صلة |",
       "nameEn": "حول صلة |",
       "url": "https://www.silah.com.sa/about-us/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5476,6 +5719,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 80,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -5500,6 +5744,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -5513,7 +5764,7 @@
       "nameAr": "وحدة الأبحاث والدراسات |",
       "nameEn": "وحدة الأبحاث والدراسات |",
       "url": "https://www.silah.com.sa/researches-and-studies-unit/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5604,6 +5855,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 78,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -5628,6 +5880,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -5648,7 +5907,7 @@
       "nameAr": "انضم لنا",
       "nameEn": "انضم لنا",
       "url": "https://www.silah.com.sa/%d8%a7%d9%86%d8%b6%d9%85-%d9%84%d9%86%d8%a7/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5776,6 +6035,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 65,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -5851,7 +6111,7 @@
       "nameAr": "ما رأي عملائنا بنا؟ |",
       "nameEn": "ما رأي عملائنا بنا؟ |",
       "url": "https://www.silah.com.sa/customer-review/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5926,6 +6186,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 79,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -5950,6 +6211,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -5970,7 +6238,7 @@
       "nameAr": "الأسعار والباقات لحلول مراكز الاتصال |",
       "nameEn": "الأسعار والباقات لحلول مراكز الاتصال |",
       "url": "https://www.silah.com.sa/prices-packages-call-center-solutions/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6052,6 +6320,29 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 77,
+      "competesWith": [
+        {
+          "query": "مراكز الاتصال",
+          "impressions": 140,
+          "otherPages": [
+            "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/"
+          ]
+        },
+        {
+          "query": "مركز الاتصال",
+          "impressions": 88,
+          "otherPages": [
+            "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/"
+          ]
+        },
+        {
+          "query": "خدمات مراكز الاتصال",
+          "impressions": 42,
+          "otherPages": [
+            "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/"
+          ]
+        }
+      ],
       "issues": [
         {
           "code": "alt_text_missing",
@@ -6063,6 +6354,13 @@
             "count": 3,
             "totalImages": 4
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -6077,6 +6375,38 @@
           "severity": "medium",
           "labelAr": "أداء الجوال دون الهدف (74/100)",
           "labelEn": "Mobile performance below target (74/100)"
+        },
+        {
+          "code": "keyword_cannibalization",
+          "owner": "marketing",
+          "severity": "medium",
+          "labelAr": "تتنافس مع صفحة أخرى على نفس عبارات البحث في Google",
+          "labelEn": "Competes with another of our pages for the same Google searches",
+          "detail": {
+            "queries": [
+              {
+                "query": "مراكز الاتصال",
+                "impressions": 140,
+                "otherPages": [
+                  "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/"
+                ]
+              },
+              {
+                "query": "مركز الاتصال",
+                "impressions": 88,
+                "otherPages": [
+                  "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/"
+                ]
+              },
+              {
+                "query": "خدمات مراكز الاتصال",
+                "impressions": 42,
+                "otherPages": [
+                  "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/"
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -6085,7 +6415,7 @@
       "nameAr": "Checkout",
       "nameEn": "Checkout",
       "url": "https://www.silah.com.sa/checkout/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6156,11 +6486,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 72,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -6219,7 +6550,7 @@
       "nameAr": "شكراً |",
       "nameEn": "شكراً |",
       "url": "https://www.silah.com.sa/%d8%b4%d9%83%d8%b1%d8%a7%d9%8b/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6295,13 +6626,14 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": [
         "thank-you"
       ],
       "excludedFromScore": false,
       "seoScore": 79,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -6334,6 +6666,13 @@
             "length": 7,
             "min": 25
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "meta_description_missing",
@@ -6382,7 +6721,7 @@
       "nameAr": "بناء وتشغيل مراكز الأعمال |",
       "nameEn": "بناء وتشغيل مراكز الأعمال |",
       "url": "https://www.silah.com.sa/building-and-operating-business-centers/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6508,11 +6847,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 76,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -6524,6 +6864,13 @@
             "count": 13,
             "totalImages": 17
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -6546,7 +6893,7 @@
       "nameAr": "خدمات وحلول صلة",
       "nameEn": "خدمات وحلول صلة",
       "url": "https://www.silah.com.sa/solutions/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6671,11 +7018,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 76,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -6723,7 +7071,7 @@
       "nameAr": "WhatsApp",
       "nameEn": "WhatsApp",
       "url": "https://www.silah.com.sa/whatsapp/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": false,
         "typesFound": []
@@ -6756,11 +7104,12 @@
       "unusedJsKb": 472,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 14,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 42,
+      "competesWith": null,
       "issues": [
         {
           "code": "schema_missing",
@@ -6833,7 +7182,7 @@
       "nameAr": "اتصل بنا |",
       "nameEn": "اتصل بنا |",
       "url": "https://www.silah.com.sa/contact-us/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6903,11 +7252,21 @@
       "unusedJsKb": 147,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 61,
+      "competesWith": [
+        {
+          "query": "شركة صاة",
+          "impressions": 47,
+          "otherPages": [
+            "https://www.silah.com.sa/",
+            "https://www.silah.com.sa/jobs/"
+          ]
+        }
+      ],
       "issues": [
         {
           "code": "alt_text_missing",
@@ -6932,6 +7291,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -6944,6 +7310,25 @@
           "severity": "medium",
           "labelAr": "أداء الجوال دون الهدف (83/100)",
           "labelEn": "Mobile performance below target (83/100)"
+        },
+        {
+          "code": "keyword_cannibalization",
+          "owner": "marketing",
+          "severity": "medium",
+          "labelAr": "تتنافس مع صفحة أخرى على نفس عبارات البحث في Google",
+          "labelEn": "Competes with another of our pages for the same Google searches",
+          "detail": {
+            "queries": [
+              {
+                "query": "شركة صاة",
+                "impressions": 47,
+                "otherPages": [
+                  "https://www.silah.com.sa/",
+                  "https://www.silah.com.sa/jobs/"
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -6952,7 +7337,7 @@
       "nameAr": "مكتبة الفيديو |",
       "nameEn": "مكتبة الفيديو |",
       "url": "https://www.silah.com.sa/video-library/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -7023,11 +7408,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 76,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -7052,6 +7438,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -7065,7 +7458,7 @@
       "nameAr": "ضريبة القيمة المضافة",
       "nameEn": "ضريبة القيمة المضافة",
       "url": "https://www.silah.com.sa/%d8%b6%d8%b1%d9%8a%d8%a8%d8%a9-%d8%a7%d9%84%d9%82%d9%8a%d9%85%d8%a9-%d8%a7%d9%84%d9%85%d8%b6%d8%a7%d9%81%d8%a9/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -7146,11 +7539,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 75,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -7201,7 +7595,7 @@
       "nameAr": "المشاريع الحكومية",
       "nameEn": "المشاريع الحكومية",
       "url": "https://www.silah.com.sa/goverment-projects/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -7406,11 +7800,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 78,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -7437,7 +7832,7 @@
       "nameAr": "Technology Recruitment Solutions |",
       "nameEn": "Technology Recruitment Solutions |",
       "url": "https://www.silah.com.sa/technology-recruitment-solutions/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -7578,11 +7973,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 76,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -7594,6 +7990,13 @@
             "count": 16,
             "totalImages": 17
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -7616,7 +8019,7 @@
       "nameAr": "احصل على تسعيرة |",
       "nameEn": "احصل على تسعيرة |",
       "url": "https://www.silah.com.sa/get-a-quote-new/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -7754,11 +8157,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 1,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 78,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -7783,6 +8187,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -7796,7 +8207,7 @@
       "nameAr": "بناء وتنفيذ خطة الإفصاح التدريبي",
       "nameEn": "Training Disclosure Plan",
       "url": "https://www.silah.com.sa/training-disclosure-services/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -7869,11 +8280,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 80,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -7885,6 +8297,13 @@
             "count": 2,
             "totalImages": 4
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -7907,7 +8326,7 @@
       "nameAr": "خدمات تعهيد الأعمال",
       "nameEn": "Business Outsourcing Services",
       "url": "https://www.silah.com.sa/outsourcing-services/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -8024,11 +8443,12 @@
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-09",
-      "psiFresh": true,
+      "psiFresh": false,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 75,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -8053,6 +8473,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -8073,7 +8500,7 @@
       "nameAr": "خدمات توطين المهن الفنية الهندسية",
       "nameEn": "Engineering Technician Localization",
       "url": "https://www.silah.com.sa/engineering-technician-center/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -8144,12 +8571,13 @@
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": null,
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 93,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -8176,7 +8604,7 @@
       "nameAr": "التوطين عبر معاهد الشراكات الاستراتيجية",
       "nameEn": "OTJ Training via Strategic Partnerships",
       "url": "https://www.silah.com.sa/otj-training-services/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -8244,16 +8672,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 93,
+      "mobileScore": 96,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": null,
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 92,
+      "seoScore": 93,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -8280,7 +8709,7 @@
       "nameAr": "خدمات توظيف السعوديين",
       "nameEn": "Saudi Hiring Services",
       "url": "https://www.silah.com.sa/%d8%ae%d8%af%d9%85%d8%a7%d8%aa-%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -8373,16 +8802,17 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 92,
+      "mobileScore": 93,
       "unusedCssKb": 25,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": null,
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 58,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 83,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -8415,6 +8845,13 @@
             "length": 23,
             "min": 25
           }
+        },
+        {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         }
       ]
     },
@@ -8423,7 +8860,7 @@
       "nameAr": "التوظيف",
       "nameEn": "التوظيف",
       "url": "https://www.silah.com.sa/jobs/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -8515,6 +8952,29 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 84,
+      "competesWith": [
+        {
+          "query": "بوابة العمل عن بعد",
+          "impressions": 389,
+          "otherPages": [
+            "https://www.silah.com.sa/"
+          ]
+        },
+        {
+          "query": "عن بعد",
+          "impressions": 195,
+          "otherPages": [
+            "https://www.silah.com.sa/"
+          ]
+        },
+        {
+          "query": "خدمات التوظيف",
+          "impressions": 75,
+          "otherPages": [
+            "https://www.silah.com.sa/"
+          ]
+        }
+      ],
       "issues": [
         {
           "code": "alt_text_missing",
@@ -8544,6 +9004,38 @@
           "severity": "medium",
           "labelAr": "أداء الجوال دون الهدف (74/100)",
           "labelEn": "Mobile performance below target (74/100)"
+        },
+        {
+          "code": "keyword_cannibalization",
+          "owner": "marketing",
+          "severity": "medium",
+          "labelAr": "تتنافس مع صفحة أخرى على نفس عبارات البحث في Google",
+          "labelEn": "Competes with another of our pages for the same Google searches",
+          "detail": {
+            "queries": [
+              {
+                "query": "بوابة العمل عن بعد",
+                "impressions": 389,
+                "otherPages": [
+                  "https://www.silah.com.sa/"
+                ]
+              },
+              {
+                "query": "عن بعد",
+                "impressions": 195,
+                "otherPages": [
+                  "https://www.silah.com.sa/"
+                ]
+              },
+              {
+                "query": "خدمات التوظيف",
+                "impressions": 75,
+                "otherPages": [
+                  "https://www.silah.com.sa/"
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -8552,7 +9044,7 @@
       "nameAr": "Test Page",
       "nameEn": "Test Page",
       "url": "https://www.silah.com.sa/test-page/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -8578,16 +9070,17 @@
         "h1Count": 0,
         "internalLinks": []
       },
-      "mobileScore": 97,
+      "mobileScore": 98,
       "unusedCssKb": 19,
       "unusedJsKb": 0,
       "seoIssues": [],
-      "psiCheckedMonth": null,
-      "psiFresh": false,
+      "psiCheckedMonth": "2026-09",
+      "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 99,
+      "competesWith": null,
       "issues": [
         {
           "code": "title_too_short",
@@ -8628,7 +9121,7 @@
       "nameAr": "مقارنة الباقات |",
       "nameEn": "مقارنة الباقات |",
       "url": "https://www.silah.com.sa/compare-packages/",
-      "checkedAt": "2026-09-22",
+      "checkedAt": "2026-09-30",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -8856,6 +9349,7 @@
       "duplicateTitleWith": null,
       "excludedFromScore": false,
       "seoScore": 72,
+      "competesWith": null,
       "issues": [
         {
           "code": "alt_text_missing",
@@ -8880,6 +9374,13 @@
           }
         },
         {
+          "code": "title_missing_site_name",
+          "owner": "it",
+          "severity": "medium",
+          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+        },
+        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -8902,7 +9403,7 @@
   "a11yScoreMobile": 100,
   "a11yScoreDesktop": 93,
   "lighthouseScoresCheckedMonth": "2026-09",
-  "pageHealthScore": 74,
+  "pageHealthScore": 75,
   "pageHealthScoreCheckedMonth": "2026-09",
   "aiSearchReadiness": {
     "crawlers": [
@@ -8961,7 +9462,7 @@
   "aiSearchReadinessCheckedMonth": "2026-09",
   "keywordsSource": "gsc",
   "keywordsCheckedMonth": "2026-09",
-  "lastRefreshedAt": "2026-09-22T12:39:36.305516+00:00",
+  "lastRefreshedAt": "2026-09-30T09:12:54.853171+00:00",
   "scanCoverage": {
     "source": "sitemap",
     "totalPages": 63,
@@ -8976,16 +9477,16 @@
   },
   "issueSummary": {
     "byOwner": {
-      "it": 75,
-      "marketing": 105,
+      "it": 107,
+      "marketing": 110,
       "shared": 50
     },
     "bySeverity": {
       "high": 34,
-      "medium": 157,
-      "low": 39
+      "medium": 193,
+      "low": 40
     },
-    "totalIssues": 230,
+    "totalIssues": 267,
     "orphanDetectionSkipped": false
   },
   "pageHealthHistory": {
@@ -9563,16 +10064,16 @@
         "id": "home",
         "nameAr": "حلول التوطين والتوظيف |",
         "seoScore": 73,
-        "mobileScore": 78,
+        "mobileScore": 80,
         "altIssueCount": 22,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 7
       },
       {
         "id": "%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9",
         "nameAr": "آلية التقدم على الوظيفة",
-        "seoScore": 72,
-        "mobileScore": 74,
+        "seoScore": 73,
+        "mobileScore": 75,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 6
@@ -9581,7 +10082,7 @@
         "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
         "nameAr": "طلب باقة",
         "seoScore": null,
-        "mobileScore": 88,
+        "mobileScore": 96,
         "altIssueCount": 6,
         "schemaOk": false,
         "issueCount": 1
@@ -9590,7 +10091,7 @@
         "id": "%d9%85%d8%af%d9%88%d9%86%d8%a9",
         "nameAr": "مدونة",
         "seoScore": 84,
-        "mobileScore": 73,
+        "mobileScore": 74,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 7
@@ -9599,7 +10100,7 @@
         "id": "%d8%b9%d8%b1%d8%a8%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d9%88%d9%82",
         "nameAr": "عربة التسوق",
         "seoScore": null,
-        "mobileScore": 77,
+        "mobileScore": 75,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 1
@@ -9608,7 +10109,7 @@
         "id": "%d8%a7%d9%84%d8%af%d9%81%d8%b9",
         "nameAr": "الدفع",
         "seoScore": null,
-        "mobileScore": 78,
+        "mobileScore": 75,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 1
@@ -9617,7 +10118,7 @@
         "id": "%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9",
         "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
         "seoScore": 58,
-        "mobileScore": 73,
+        "mobileScore": 74,
         "altIssueCount": 14,
         "schemaOk": false,
         "issueCount": 5
@@ -9625,26 +10126,26 @@
       {
         "id": "%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a",
         "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
-        "seoScore": 75,
-        "mobileScore": 74,
+        "seoScore": 80,
+        "mobileScore": 96,
         "altIssueCount": 10,
         "schemaOk": true,
-        "issueCount": 6
+        "issueCount": 5
       },
       {
         "id": "silah-academy-for-e-learning",
         "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
-        "seoScore": 79,
-        "mobileScore": 73,
+        "seoScore": 80,
+        "mobileScore": 77,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "defining-the-problem",
         "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية |",
-        "seoScore": 72,
-        "mobileScore": 72,
+        "seoScore": 77,
+        "mobileScore": 97,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -9652,11 +10153,11 @@
       {
         "id": "infrastructure",
         "nameAr": "البنية التحتية |",
-        "seoScore": 86,
-        "mobileScore": 79,
+        "seoScore": 88,
+        "mobileScore": 87,
         "altIssueCount": 3,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
@@ -9683,7 +10184,7 @@
         "mobileScore": 94,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
@@ -9692,7 +10193,7 @@
         "mobileScore": 75,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 6
       },
       {
         "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
@@ -9701,7 +10202,7 @@
         "mobileScore": 97,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9",
@@ -9710,7 +10211,7 @@
         "mobileScore": 88,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 6
       },
       {
         "id": "gitex2023",
@@ -9800,7 +10301,7 @@
         "mobileScore": 86,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "our-brochures",
@@ -9809,7 +10310,7 @@
         "mobileScore": 68,
         "altIssueCount": 7,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "who-our-clients",
@@ -9818,7 +10319,7 @@
         "mobileScore": 97,
         "altIssueCount": 26,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "business-center-cost",
@@ -9827,7 +10328,7 @@
         "mobileScore": 27,
         "altIssueCount": 3,
         "schemaOk": true,
-        "issueCount": 6
+        "issueCount": 7
       },
       {
         "id": "remote-working-cost-calculator",
@@ -9836,7 +10337,7 @@
         "mobileScore": 28,
         "altIssueCount": 3,
         "schemaOk": true,
-        "issueCount": 6
+        "issueCount": 7
       },
       {
         "id": "services-and-solutions",
@@ -9845,7 +10346,7 @@
         "mobileScore": 91,
         "altIssueCount": 4,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "talk-to-us-now",
@@ -9854,7 +10355,7 @@
         "mobileScore": 79,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 6
       },
       {
         "id": "customer-service-bot",
@@ -9863,7 +10364,7 @@
         "mobileScore": 85,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "auto-calls",
@@ -9872,7 +10373,7 @@
         "mobileScore": 67,
         "altIssueCount": 5,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "virtual-events",
@@ -9890,7 +10391,7 @@
         "mobileScore": 59,
         "altIssueCount": 9,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "silah-system-for-productivity-monitoring",
@@ -9899,7 +10400,7 @@
         "mobileScore": 90,
         "altIssueCount": 5,
         "schemaOk": true,
-        "issueCount": 2
+        "issueCount": 3
       },
       {
         "id": "telework-success",
@@ -9908,7 +10409,7 @@
         "mobileScore": 75,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "about-us",
@@ -9917,7 +10418,7 @@
         "mobileScore": 96,
         "altIssueCount": 13,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "researches-and-studies-unit",
@@ -9926,7 +10427,7 @@
         "mobileScore": 72,
         "altIssueCount": 5,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "%d8%a7%d9%86%d8%b6%d9%85-%d9%84%d9%86%d8%a7",
@@ -9944,7 +10445,7 @@
         "mobileScore": 75,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "prices-packages-call-center-solutions",
@@ -9953,7 +10454,7 @@
         "mobileScore": 74,
         "altIssueCount": 3,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 5
       },
       {
         "id": "checkout",
@@ -9971,7 +10472,7 @@
         "mobileScore": 80,
         "altIssueCount": 3,
         "schemaOk": true,
-        "issueCount": 8
+        "issueCount": 9
       },
       {
         "id": "building-and-operating-business-centers",
@@ -9980,7 +10481,7 @@
         "mobileScore": 70,
         "altIssueCount": 13,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "solutions",
@@ -10007,7 +10508,7 @@
         "mobileScore": 83,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 6
       },
       {
         "id": "video-library",
@@ -10016,7 +10517,7 @@
         "mobileScore": 97,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "%d8%b6%d8%b1%d9%8a%d8%a8%d8%a9-%d8%a7%d9%84%d9%82%d9%8a%d9%85%d8%a9-%d8%a7%d9%84%d9%85%d8%b6%d8%a7%d9%81%d8%a9",
@@ -10043,7 +10544,7 @@
         "mobileScore": 86,
         "altIssueCount": 16,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "get-a-quote-new",
@@ -10052,7 +10553,7 @@
         "mobileScore": 91,
         "altIssueCount": 15,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "training-disclosure-services",
@@ -10061,7 +10562,7 @@
         "mobileScore": 68,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "outsourcing-services",
@@ -10070,7 +10571,7 @@
         "mobileScore": 82,
         "altIssueCount": 11,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       },
       {
         "id": "engineering-technician-center",
@@ -10084,8 +10585,8 @@
       {
         "id": "otj-training-services",
         "nameAr": "التوطين عبر معاهد الشراكات الاستراتيجية",
-        "seoScore": 92,
-        "mobileScore": 93,
+        "seoScore": 93,
+        "mobileScore": 96,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 2
@@ -10094,10 +10595,10 @@
         "id": "%d8%ae%d8%af%d9%85%d8%a7%d8%aa-%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86",
         "nameAr": "خدمات توظيف السعوديين",
         "seoScore": 83,
-        "mobileScore": 92,
+        "mobileScore": 93,
         "altIssueCount": 7,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "jobs",
@@ -10106,13 +10607,13 @@
         "mobileScore": 74,
         "altIssueCount": 5,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 4
       },
       {
         "id": "test-page",
         "nameAr": "Test Page",
         "seoScore": 99,
-        "mobileScore": 97,
+        "mobileScore": 98,
         "altIssueCount": 0,
         "schemaOk": true,
         "issueCount": 4
@@ -10124,13 +10625,13 @@
         "mobileScore": 71,
         "altIssueCount": 32,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 5
       }
     ]
   },
   "indexCleanup": {
-    "checkedAt": "2026-09-22",
-    "generatedAt": "2026-09-22T12:30:55+00:00",
+    "checkedAt": "2026-09-30",
+    "generatedAt": "2026-09-30T09:08:28+00:00",
     "source": "wordpress+live",
     "total": 142,
     "byStatus": {
@@ -10141,19 +10642,19 @@
     },
     "byVerdict": {
       "live_redirect": 13,
-      "live_ok": 66,
+      "live_ok": 63,
       "draft_hidden": 27,
-      "hidden_from_search": 31,
+      "hidden_from_search": 34,
       "private": 2,
       "trash_gone": 1,
       "trash_reachable": 2
     },
     "bySeverity": {
-      "medium": 45,
-      "ok": 95,
+      "medium": 48,
+      "ok": 92,
       "high": 2
     },
-    "actionNeeded": 47,
+    "actionNeeded": 50,
     "duplicateTitles": [
       {
         "title": "احصل على تسعيرة",
@@ -11437,7 +11938,7 @@
         "type": "page",
         "typeLabel": "صفحة",
         "wpStatus": "publish",
-        "liveCode": 502,
+        "liveCode": 200,
         "hops": 0,
         "finalUrl": null,
         "published": "2025-05-12T06:18:38+00:00",
@@ -11448,13 +11949,13 @@
           "http://silah.com.sa/prices-packages-call-center-solutions/"
         ],
         "inSitemap": false,
-        "verdict": "live_ok",
-        "verdictAr": "منشورة وتعمل",
-        "verdictEn": "Published and working",
-        "severity": "ok",
-        "owner": null,
-        "actionAr": "—",
-        "actionEn": "—"
+        "verdict": "hidden_from_search",
+        "verdictAr": "منشورة لكنها خارج خريطة الموقع",
+        "verdictEn": "Published but not in the sitemap",
+        "severity": "medium",
+        "owner": "shared",
+        "actionAr": "الصفحة تعمل ويمكن للعميل فتحها لكنها لا تظهر في نتائج البحث — يُراجع إن كان ذلك مقصوداً",
+        "actionEn": "Reachable by customers but excluded from search — confirm this is intended"
       },
       {
         "id": 1374,
@@ -11688,7 +12189,7 @@
         "hops": 0,
         "finalUrl": null,
         "published": "2026-09-07T06:18:08+00:00",
-        "modified": "2026-09-10T08:43:48+00:00",
+        "modified": "2026-09-30T07:25:24+00:00",
         "linkCount": 1,
         "internalLinks": [
           "http://silah.com.sa/whatsapp/"
@@ -11734,7 +12235,7 @@
         "type": "page",
         "typeLabel": "صفحة",
         "wpStatus": "publish",
-        "liveCode": 502,
+        "liveCode": 200,
         "hops": 0,
         "finalUrl": null,
         "published": "2016-08-10T11:45:50+00:00",
@@ -12121,7 +12622,7 @@
         "hops": 0,
         "finalUrl": null,
         "published": "2026-09-07T06:17:03+00:00",
-        "modified": "2026-09-14T06:27:27+00:00",
+        "modified": "2026-09-30T07:22:04+00:00",
         "linkCount": 0,
         "internalLinks": [],
         "inSitemap": false,
@@ -12775,7 +13276,7 @@
         "type": "services",
         "typeLabel": "Service",
         "wpStatus": "publish",
-        "liveCode": 502,
+        "liveCode": 200,
         "hops": 0,
         "finalUrl": null,
         "published": "2020-02-07T12:31:54+00:00",
@@ -12783,13 +13284,13 @@
         "linkCount": 0,
         "internalLinks": [],
         "inSitemap": false,
-        "verdict": "live_ok",
-        "verdictAr": "منشورة وتعمل",
-        "verdictEn": "Published and working",
-        "severity": "ok",
-        "owner": null,
-        "actionAr": "—",
-        "actionEn": "—"
+        "verdict": "hidden_from_search",
+        "verdictAr": "منشورة لكنها خارج خريطة الموقع",
+        "verdictEn": "Published but not in the sitemap",
+        "severity": "medium",
+        "owner": "shared",
+        "actionAr": "الصفحة تعمل ويمكن للعميل فتحها لكنها لا تظهر في نتائج البحث — يُراجع إن كان ذلك مقصوداً",
+        "actionEn": "Reachable by customers but excluded from search — confirm this is intended"
       },
       {
         "id": 1123,
@@ -13356,7 +13857,7 @@
         "type": "post",
         "typeLabel": "مقالة",
         "wpStatus": "publish",
-        "liveCode": 502,
+        "liveCode": 200,
         "hops": 0,
         "finalUrl": null,
         "published": "2020-06-17T06:59:08+00:00",
@@ -13364,13 +13865,13 @@
         "linkCount": 0,
         "internalLinks": [],
         "inSitemap": false,
-        "verdict": "live_ok",
-        "verdictAr": "منشورة وتعمل",
-        "verdictEn": "Published and working",
-        "severity": "ok",
-        "owner": null,
-        "actionAr": "—",
-        "actionEn": "—"
+        "verdict": "hidden_from_search",
+        "verdictAr": "منشورة لكنها خارج خريطة الموقع",
+        "verdictEn": "Published but not in the sitemap",
+        "severity": "medium",
+        "owner": "shared",
+        "actionAr": "الصفحة تعمل ويمكن للعميل فتحها لكنها لا تظهر في نتائج البحث — يُراجع إن كان ذلك مقصوداً",
+        "actionEn": "Reachable by customers but excluded from search — confirm this is intended"
       },
       {
         "id": 12014,
@@ -13476,7 +13977,7 @@
         "type": "page",
         "typeLabel": "صفحة",
         "wpStatus": "draft",
-        "liveCode": 502,
+        "liveCode": 404,
         "hops": 0,
         "finalUrl": null,
         "published": "2025-01-28T13:31:50+00:00",
@@ -13504,7 +14005,7 @@
         "hops": 0,
         "finalUrl": null,
         "published": "2026-09-07T06:14:33+00:00",
-        "modified": "2026-09-14T06:53:27+00:00",
+        "modified": "2026-09-30T07:23:35+00:00",
         "linkCount": 0,
         "internalLinks": [],
         "inSitemap": false,
@@ -13782,6 +14283,461 @@
         "owner": null,
         "actionAr": "—",
         "actionEn": "—"
+      }
+    ]
+  },
+  "cannibalization": {
+    "checkedMonth": "2026-09",
+    "queries": [
+      {
+        "query": "عيادات التمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 1396,
+            "clicks": 5,
+            "position": 6.8
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 1391,
+            "clicks": 5,
+            "position": 6.3
+          }
+        ],
+        "impressions": 2787
+      },
+      {
+        "query": "عيادات تمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 1056,
+            "clicks": 4,
+            "position": 5.6
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 873,
+            "clicks": 2,
+            "position": 6.2
+          }
+        ],
+        "impressions": 1929
+      },
+      {
+        "query": "عيادات التمكين الدمام",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 573,
+            "clicks": 1,
+            "position": 8.4
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 538,
+            "clicks": 0,
+            "position": 10.7
+          }
+        ],
+        "impressions": 1111
+      },
+      {
+        "query": "تمكين الضمان",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 438,
+            "clicks": 0,
+            "position": 6.7
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 366,
+            "clicks": 0,
+            "position": 6.4
+          }
+        ],
+        "impressions": 804
+      },
+      {
+        "query": "التمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 297,
+            "clicks": 0,
+            "position": 6.1
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 229,
+            "clicks": 0,
+            "position": 6.0
+          }
+        ],
+        "impressions": 526
+      },
+      {
+        "query": "عيادة تمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 262,
+            "clicks": 0,
+            "position": 5.5
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 234,
+            "clicks": 1,
+            "position": 6.0
+          }
+        ],
+        "impressions": 496
+      },
+      {
+        "query": "عيادات تمكين الضمان",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 235,
+            "clicks": 5,
+            "position": 4.7
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 222,
+            "clicks": 0,
+            "position": 6.8
+          }
+        ],
+        "impressions": 457
+      },
+      {
+        "query": "تمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 322,
+            "clicks": 0,
+            "position": 8.3
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 133,
+            "clicks": 0,
+            "position": 6.4
+          }
+        ],
+        "impressions": 455
+      },
+      {
+        "query": "بوابة العمل عن بعد",
+        "pages": [
+          {
+            "url": "https://www.silah.com.sa/",
+            "impressions": 309,
+            "clicks": 0,
+            "position": 7.7
+          },
+          {
+            "url": "https://www.silah.com.sa/jobs/",
+            "impressions": 80,
+            "clicks": 0,
+            "position": 9.1
+          }
+        ],
+        "impressions": 389
+      },
+      {
+        "query": "عيادات تمكين الضمان الاجتماعي",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 185,
+            "clicks": 0,
+            "position": 6.7
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 181,
+            "clicks": 2,
+            "position": 4.8
+          }
+        ],
+        "impressions": 366
+      },
+      {
+        "query": "تمكين الضمان الاجتماعي",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 178,
+            "clicks": 1,
+            "position": 7.1
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 120,
+            "clicks": 0,
+            "position": 7.5
+          }
+        ],
+        "impressions": 298
+      },
+      {
+        "query": "رقم عيادات تمكين الضمان الاجتماعي",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 142,
+            "clicks": 5,
+            "position": 3.2
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 142,
+            "clicks": 0,
+            "position": 6.9
+          }
+        ],
+        "impressions": 284
+      },
+      {
+        "query": "تسجيل دخول عيادات تمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 141,
+            "clicks": 4,
+            "position": 4.9
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 133,
+            "clicks": 0,
+            "position": 8
+          }
+        ],
+        "impressions": 274
+      },
+      {
+        "query": "عيادات التمكين | tamkeen clinic",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 203,
+            "clicks": 0,
+            "position": 5.0
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 62,
+            "clicks": 0,
+            "position": 10.0
+          }
+        ],
+        "impressions": 265
+      },
+      {
+        "query": "tamkeen clinics dammam",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 132,
+            "clicks": 0,
+            "position": 3.1
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 88,
+            "clicks": 0,
+            "position": 10.1
+          }
+        ],
+        "impressions": 220
+      },
+      {
+        "query": "tamkeen clinics | عيادات التمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 116,
+            "clicks": 0,
+            "position": 6.9
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 104,
+            "clicks": 0,
+            "position": 4.8
+          }
+        ],
+        "impressions": 220
+      },
+      {
+        "query": "عن بعد",
+        "pages": [
+          {
+            "url": "https://www.silah.com.sa/",
+            "impressions": 118,
+            "clicks": 2,
+            "position": 7.8
+          },
+          {
+            "url": "https://www.silah.com.sa/jobs/",
+            "impressions": 77,
+            "clicks": 2,
+            "position": 11.1
+          }
+        ],
+        "impressions": 195
+      },
+      {
+        "query": "سلك",
+        "pages": [
+          {
+            "url": "https://www.silah.com.sa/",
+            "impressions": 100,
+            "clicks": 0,
+            "position": 21.6
+          },
+          {
+            "url": "https://www.silah.com.sa/wishlist/",
+            "impressions": 92,
+            "clicks": 0,
+            "position": 35.3
+          }
+        ],
+        "impressions": 192
+      },
+      {
+        "query": "رقم عيادات تمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 95,
+            "clicks": 1,
+            "position": 3.9
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 93,
+            "clicks": 0,
+            "position": 8.0
+          }
+        ],
+        "impressions": 188
+      },
+      {
+        "query": "عيادات التمكين الضمان الاجتماعي",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 93,
+            "clicks": 0,
+            "position": 5.1
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 93,
+            "clicks": 0,
+            "position": 6.8
+          }
+        ],
+        "impressions": 186
+      },
+      {
+        "query": "عياده تمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 87,
+            "clicks": 0,
+            "position": 5.6
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 87,
+            "clicks": 0,
+            "position": 6.3
+          }
+        ],
+        "impressions": 174
+      },
+      {
+        "query": "عيادات تمكين جدة",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 105,
+            "clicks": 2,
+            "position": 5.5
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 49,
+            "clicks": 1,
+            "position": 9.2
+          }
+        ],
+        "impressions": 154
+      },
+      {
+        "query": "رقم تمكين الضمان الاجتماعي",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 96,
+            "clicks": 0,
+            "position": 5.7
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 46,
+            "clicks": 1,
+            "position": 8.4
+          }
+        ],
+        "impressions": 142
+      },
+      {
+        "query": "مراكز الاتصال",
+        "pages": [
+          {
+            "url": "https://www.silah.com.sa/prices-packages-call-center-solutions/",
+            "impressions": 109,
+            "clicks": 0,
+            "position": 6.4
+          },
+          {
+            "url": "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/",
+            "impressions": 31,
+            "clicks": 0,
+            "position": 23.5
+          }
+        ],
+        "impressions": 140
+      },
+      {
+        "query": "عيادة التمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 67,
+            "clicks": 0,
+            "position": 5.7
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 62,
+            "clicks": 0,
+            "position": 5.8
+          }
+        ],
+        "impressions": 129
       }
     ]
   }
