@@ -286,6 +286,69 @@ TITLE_MAX_CHARS = 65
 META_DESC_MIN_CHARS = 70
 META_DESC_MAX_CHARS = 165
 
+# ---------------------------------------------------------------------------
+# Title relevance and title-template checks (Oct 2026)
+# ---------------------------------------------------------------------------
+# The length checks above only ask "is the title a sensible size". They pass a
+# title that never mentions what the page sells — the homepage title passed
+# every check while missing "العمل عن بعد", the phrase it most needs to rank
+# for. TARGET_KEYWORDS is the page -> phrase map that closes that gap.
+#
+# Deliberately short and explicit: only pages whose target phrase has been
+# agreed. A page with no entry here gets no keyword check at all, rather than
+# a guessed phrase producing a false finding on Marketing's queue. Extend it by
+# adding a slug (the page id) or, for fully-Arabic slugs, a lowercase
+# percent-encoded URL fragment — same workaround as KNOWN_PAGE_NAMES above.
+TARGET_KEYWORDS_BY_ID = {
+    "home": "العمل عن بعد",
+    "otj-training-services": "معاهد الشراكات",
+    "engineering-technician-center": "المهن الفنية",
+    "training-disclosure-services": "الإفصاح التدريبي",
+    "outsourcing-services": "تعهيد",
+}
+TARGET_KEYWORDS_BY_URL_SUBSTRING = {
+    # خدمات-توظيف-السعوديين
+    "%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86": "توظيف السعوديين",
+}
+
+# Brand terms. Used to keep brand searches ("شركة صلة") out of the
+# cannibalization check — a brand query legitimately surfaces many pages, and
+# flagging that would bury the real overlaps.
+BRAND_TERMS = ["صلة", "silah"]
+
+# Cannibalization thresholds. A query only counts if it had real traffic, and
+# a second page only counts as "competing" if it earned a meaningful share of
+# the top page's impressions — otherwise every long-tail query that happens to
+# touch two URLs once would end up on the list.
+CANNIBAL_MIN_QUERY_IMPRESSIONS = 30
+CANNIBAL_MIN_PAGE_IMPRESSIONS = 10
+CANNIBAL_MIN_SHARE_OF_TOP = 0.25
+CANNIBAL_MAX_QUERIES_PER_PAGE = 3
+
+
+def normalize_ar(text):
+    """Loose Arabic normalization for substring matching only (never for
+    display): strips tashkeel and tatweel, unifies alef forms, alef maqsura
+    and taa marbuta, lowercases Latin. So a title written "التدريبى" still
+    matches the target "التدريبي"."""
+    if not text:
+        return ""
+    t = re.sub(r"[\u064B-\u0652\u0640]", "", text.lower())
+    for a, b in (("أ", "ا"), ("إ", "ا"), ("آ", "ا"), ("ى", "ي"), ("ة", "ه")):
+        t = t.replace(a, b)
+    return t
+
+
+def target_keyword_for(entry):
+    kw = TARGET_KEYWORDS_BY_ID.get(entry.get("id"))
+    if kw:
+        return kw
+    url = (entry.get("url") or "").lower()
+    for frag, kw in TARGET_KEYWORDS_BY_URL_SUBSTRING.items():
+        if frag in url:
+            return kw
+    return None
+
 
 def slug_from_url(url):
     """Path-based slug, not domain-based — url.rsplit("/") alone breaks on
@@ -699,6 +762,84 @@ def update_keywords_with_gsc(keywords, access_token):
         kw["gscImpressions"] = round(result["impressions"])
 
 
+def fetch_gsc_query_pages(access_token, days=28, row_limit=5000):
+    """Every (query, page) pair Search Console logged over the trailing
+    window. The keyword tracker above only asks for the query dimension, so it
+    can't see WHICH page earned an impression — this is what makes two of our
+    own pages competing for the same search visible. Returns [] on any
+    failure; the caller treats that as "no cannibalization data this run"."""
+    from datetime import timedelta
+    end = datetime.now(timezone.utc).date()
+    start = end - timedelta(days=days)
+    payload = {
+        "startDate": start.isoformat(), "endDate": end.isoformat(),
+        "dimensions": ["query", "page"], "rowLimit": row_limit,
+    }
+    headers = {"Authorization": f"Bearer {access_token}"}
+    last_err = None
+    for site_url in GSC_SITE_URL_CANDIDATES:
+        endpoint = ("https://searchconsole.googleapis.com/webmasters/v3/sites/"
+                    f"{urllib.parse.quote(site_url, safe='')}/searchAnalytics/query")
+        try:
+            resp = http_json(endpoint, payload=payload, extra_headers=headers)
+            return resp.get("rows", [])
+        except urllib.error.HTTPError as e:
+            last_err = e
+            continue
+    if last_err:
+        print(f"  WARNING: GSC query+page fetch failed: {last_err}", file=sys.stderr)
+    return []
+
+
+def detect_cannibalization(rows, page_health):
+    """Marks each pageHealth entry that competes with another of our own
+    pages for the same non-brand query, as entry["competesWith"] (a short
+    list of {query, impressions, otherPages}) for build_issue_list to turn into
+    an issue. Also returns a site-level list for data.json. Brand queries are
+    skipped on purpose — see BRAND_TERMS."""
+    brand = [normalize_ar(b) for b in BRAND_TERMS]
+    by_query = {}
+    for r in rows:
+        keys = r.get("keys") or []
+        if len(keys) < 2:
+            continue
+        q, page = keys[0], normalize_url(keys[1])
+        if any(b in normalize_ar(q) for b in brand):
+            continue
+        by_query.setdefault(q, []).append(
+            {"url": page, "impressions": round(r.get("impressions", 0)),
+             "clicks": r.get("clicks", 0), "position": round(r.get("position", 0), 1)})
+
+    flagged = []
+    for q, pages in by_query.items():
+        if sum(p["impressions"] for p in pages) < CANNIBAL_MIN_QUERY_IMPRESSIONS:
+            continue
+        pages = sorted((p for p in pages if p["impressions"] >= CANNIBAL_MIN_PAGE_IMPRESSIONS),
+                       key=lambda p: -p["impressions"])
+        if len(pages) < 2 or pages[1]["impressions"] < CANNIBAL_MIN_SHARE_OF_TOP * pages[0]["impressions"]:
+            continue
+        flagged.append({"query": q, "pages": pages,
+                        "impressions": sum(p["impressions"] for p in pages)})
+    flagged.sort(key=lambda f: -f["impressions"])
+
+    by_url = {normalize_url(e.get("url")): e for e in page_health if e.get("url")}
+    for e in page_health:
+        e["competesWith"] = None
+    for f in flagged:
+        urls = [p["url"] for p in f["pages"]]
+        for u in urls:
+            e = by_url.get(u)
+            if e is None:
+                continue
+            e["competesWith"] = (e["competesWith"] or []) + [{
+                "query": f["query"], "impressions": f["impressions"],
+                "otherPages": [o for o in urls if o != u]}]
+    for e in page_health:
+        if e["competesWith"]:
+            e["competesWith"] = sorted(e["competesWith"], key=lambda c: -c["impressions"])[:CANNIBAL_MAX_QUERIES_PER_PAGE]
+    return flagged
+
+
 def fetch_psi_full(page_url, strategy):
     """Like fetch_psi_score, but for an arbitrary URL and returns the extra
     diagnostics — unused CSS/JS byte estimates AND failing SEO-category audits
@@ -1047,6 +1188,26 @@ def build_issue_list(entry):
                 f"عنوان الصفحة قصير ({op['titleLength']} حرف)",
                 f"Title is short ({op['titleLength']} chars)",
                 {"length": op["titleLength"], "min": TITLE_MIN_CHARS})
+        if op["title"]:
+            # Yoast builds titles as "<page title> <sep> <site name>". When the
+            # site name is empty for a content type, every page of that type
+            # ends in a bare separator and Google never sees the brand — which
+            # is what kept silah.com.sa out of results for its own name. One
+            # template setting, so it's IT's, not a per-page copy fix.
+            if re.search(r"[|\-–—»]\s*$", op["title"]):
+                add("title_missing_site_name", OWNER_IT, "medium",
+                    "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
+                    "Title ends in a bare separator with no site name (Yoast title template setting)")
+            if re.search(r"&[a-zA-Z]+;|&#\d+;", op["title"]):
+                add("title_html_entity", OWNER_IT, "low",
+                    "عنوان الصفحة يحتوي رمز HTML ظاهر (مثل &nbsp;)",
+                    "Title contains a literal HTML entity (e.g. &nbsp;)")
+            target = target_keyword_for(entry)
+            if target and normalize_ar(target) not in normalize_ar(op["title"]):
+                add("title_missing_target_keyword", OWNER_MARKETING, "medium",
+                    f"عنوان الصفحة لا يحتوي الكلمة المستهدفة «{target}»",
+                    f"Title doesn't contain the page's target keyword ({target})",
+                    {"targetKeyword": target})
         if not op["metaDescription"]:
             add("meta_description_missing", OWNER_MARKETING, "medium",
                 "لا يوجد وصف تعريفي (meta description)",
@@ -1100,6 +1261,12 @@ def build_issue_list(entry):
             "عنوان الصفحة مكرر مع صفحة أخرى",
             "Title is duplicated on another page",
             {"sharedWith": entry["duplicateTitleWith"]})
+
+    if entry.get("competesWith"):
+        add("keyword_cannibalization", OWNER_MARKETING, "medium",
+            "تتنافس مع صفحة أخرى على نفس عبارات البحث في Google",
+            "Competes with another of our pages for the same Google searches",
+            {"queries": entry["competesWith"]})
 
     return issues
 
@@ -1692,6 +1859,26 @@ def main():
     print(f"  Page Health score: {data['pageHealthScore']} (averaged over {scored_count} pages, "
           f"{len(data['pageHealth']) - scored_count} excluded as non-content pages)")
 
+    # Search Console auth moved up from the keyword section below: the
+    # cannibalization check has to run BEFORE attach_issues so its findings land
+    # in the per-page issue lists. The same token is reused for keywords later
+    # in this run (well inside its one-hour lifetime).
+    print("Checking Google Search Console for pages competing on the same searches ...")
+    gsc_token = get_gsc_access_token()
+    if gsc_token:
+        try:
+            flagged = detect_cannibalization(fetch_gsc_query_pages(gsc_token), data["pageHealth"])
+            data["cannibalization"] = {"checkedMonth": new_month, "queries": flagged[:25]}
+            print(f"  Cannibalization: {len(flagged)} non-brand queries split across 2+ of our pages.")
+        except Exception as e:
+            print(f"  WARNING: cannibalization check failed, skipped this run: "
+                  f"{type(e).__name__}: {e}", file=sys.stderr)
+            for e_ in data["pageHealth"]:
+                e_["competesWith"] = None
+    else:
+        for e_ in data["pageHealth"]:
+            e_["competesWith"] = None
+
     # Owner-tagged issue lists. Runs after scoring because build_issue_list()
     # needs excludedFromScore to judge whether noindex on a page is correct.
     data["issueSummary"] = attach_issues(data["pageHealth"], coverage)
@@ -1742,7 +1929,6 @@ def main():
               f"{type(e).__name__}: {e}", file=sys.stderr)
 
     print("Checking Google Search Console for real keyword rankings ...")
-    gsc_token = get_gsc_access_token()
     if gsc_token and data.get("keywords"):
         update_keywords_with_gsc(data["keywords"], gsc_token)
         data["keywordsSource"] = "gsc"

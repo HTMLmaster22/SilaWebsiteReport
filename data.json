@@ -299,6 +299,27 @@
       "tier": "strong",
       "gscClicks": 0,
       "gscImpressions": 73
+    },
+    {
+      "ar": "شركة صلة",
+      "en": "Brand: Silah company (شركة صلة)",
+      "pos": null,
+      "page": null,
+      "tier": "weak"
+    },
+    {
+      "ar": "صلة تمكين",
+      "en": "Brand: Silah Tamkeen (صلة تمكين)",
+      "pos": null,
+      "page": null,
+      "tier": "weak"
+    },
+    {
+      "ar": "silah",
+      "en": "Brand: silah",
+      "pos": null,
+      "page": null,
+      "tier": "weak"
     }
   ],
   "pages": [

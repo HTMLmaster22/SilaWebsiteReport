@@ -47,3 +47,12 @@ One-time setup (~10 minutes). After this, the report updates itself monthly fore
 
 ## SEO report PDF (added Aug 2026)
 "Download SEO Report (PDF)" button lives in the SEO section. On click it builds the report from the same in-memory `pageHealthData`/`keywords`/`computePriorities()` the live tables already use — not a separate fetch — so it's always exactly what's on screen at that moment, never stale. Renders into an off-screen template, rasterizes with html2canvas, paginates across A4 pages with jsPDF (same library versions already in use on silah.com.sa's own cost-calculator PDF button). Text logic is covered by a Node test against real `data.json` (checks every page/keyword name appears, no `undefined`/`NaN` leaks, balanced HTML). The actual visual PDF output — Arabic text shaping, page breaks, spacing — has **not** been checked in a real browser and should be before relying on it; open the live site, click the button, and look at the file.
+
+## Title relevance, site-name and cannibalization checks (added Oct 2026)
+Three additions to the per-page issue list, all rendered by the existing issue board with no front-end changes:
+- `title_missing_site_name` (IT) — title ends in a bare `|` with no site name. This is the Yoast title template for that content type, not a per-page copy problem: set the site name in Yoast → Settings → Site basics, or fix the Pages title template. First run flagged 33 of 51 content pages, including the homepage.
+- `title_html_entity` (IT) — a literal `&nbsp;` or similar in the title.
+- `title_missing_target_keyword` (Marketing) — the title doesn't contain the page's agreed target phrase. Phrases live in `TARGET_KEYWORDS_BY_ID` / `TARGET_KEYWORDS_BY_URL_SUBSTRING` in `scripts/update_data.py`. Pages with no entry get no check — add a page only once its target phrase is agreed.
+- `keyword_cannibalization` (Marketing) — two of our own pages splitting impressions on the same non-brand Google query. Needs Search Console (same service account as keywords); thresholds are the `CANNIBAL_*` constants. The site-level list is saved as `cannibalization` in `data.json`.
+
+Brand searches (`شركة صلة`, `صلة تمكين`, `silah`) were added to the `keywords` array so brand ranking is tracked monthly alongside the service keywords. They're excluded from the cannibalization check on purpose — a brand query legitimately surfaces many pages.
