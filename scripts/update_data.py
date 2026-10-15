@@ -299,22 +299,35 @@ META_DESC_MAX_CHARS = 165
 # a guessed phrase producing a false finding on Marketing's queue. Extend it by
 # adding a slug (the page id) or, for fully-Arabic slugs, a lowercase
 # percent-encoded URL fragment — same workaround as KNOWN_PAGE_NAMES above.
+#
+# Oct 2026: the homepage entry ("العمل عن بعد") was removed. Marketing moved the
+# homepage away from remote work on purpose, so flagging the title for not
+# containing it was a false finding. The homepage gets no keyword check until
+# Marketing agrees a single target phrase. The Saudi-hiring page now checks
+# "إسناد السعوديين" because the approved title reads "توظيف وإسناد السعوديين",
+# which never contains the contiguous phrase "توظيف السعوديين". The call-centre
+# packages page was added with its approved title phrase.
 TARGET_KEYWORDS_BY_ID = {
-    "home": "العمل عن بعد",
     "otj-training-services": "معاهد الشراكات",
     "engineering-technician-center": "المهن الفنية",
     "training-disclosure-services": "الإفصاح التدريبي",
     "outsourcing-services": "تعهيد",
+    "prices-packages-call-center-solutions": "مراكز الاتصال",
 }
 TARGET_KEYWORDS_BY_URL_SUBSTRING = {
     # خدمات-توظيف-السعوديين
-    "%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86": "توظيف السعوديين",
+    "%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86": "إسناد السعوديين",
 }
 
 # Brand terms. Used to keep brand searches ("شركة صلة") out of the
 # cannibalization check — a brand query legitimately surfaces many pages, and
 # flagging that would bury the real overlaps.
-BRAND_TERMS = ["صلة", "silah"]
+#
+# Oct 2026: added the misspellings/noise that showed up as false
+# cannibalization findings. "صلا" is "صلة" typed without the taa marbuta, and
+# "سلك" matched only a WooCommerce wishlist page — neither is a real overlap
+# between two of our service pages.
+BRAND_TERMS = ["صلة", "silah", "صلا", "سلك"]
 
 # Cannibalization thresholds. A query only counts if it had real traffic, and
 # a second page only counts as "competing" if it earned a meaningful share of
@@ -374,6 +387,21 @@ def normalize_url(url):
     if not url:
         return ""
     return url.rstrip("/") + "/"
+
+
+def same_page_url(a, b):
+    """True when two URLs point at the same page. Used only for the canonical
+    self-reference check. Unlike normalize_url, this percent-DECODES both sides
+    before comparing: WordPress writes the canonical of an Arabic-slug page in
+    plain Arabic (/آلية-التقدم-على-الوظيفة/) while the sitemap lists the same
+    page percent-encoded (/%d8%a2%d9%84.../). Comparing them raw flagged every
+    Arabic-slug page as "canonical points elsewhere" (Oct 2026 false positive,
+    reported as high severity). Also ignores http/https and www differences."""
+    def key(u):
+        u = urllib.parse.unquote(normalize_url(u)).lower()
+        u = re.sub(r"^https?://", "", u)
+        return u[4:] if u.startswith("www.") else u
+    return key(a) == key(b)
 
 
 def discover_pages_from_sitemap():
@@ -1082,7 +1110,7 @@ def check_onpage(html, page_url):
 
     return {
         "canonical": canonical,
-        "canonicalIsSelf": normalize_url(canonical) == normalize_url(page_url) if canonical else None,
+        "canonicalIsSelf": same_page_url(canonical, page_url) if canonical else None,
         "noindex": "noindex" in robots_content,
         "robotsMeta": robots_content or None,
         "title": title,
