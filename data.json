@@ -326,6 +326,60 @@
       "tier": "strong",
       "gscClicks": 125,
       "gscImpressions": 445
+    },
+    {
+      "ar": "شركة توظيف",
+      "en": "Recruitment company (شركة توظيف)",
+      "pos": null,
+      "page": null,
+      "tier": "weak",
+      "searchVolume": 2400,
+      "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026"
+    },
+    {
+      "ar": "مكتب توظيف",
+      "en": "Recruitment office (مكتب توظيف)",
+      "pos": null,
+      "page": null,
+      "tier": "weak",
+      "searchVolume": 720,
+      "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026"
+    },
+    {
+      "ar": "نسب التوطين",
+      "en": "Saudization ratios (نسب التوطين)",
+      "pos": null,
+      "page": null,
+      "tier": "weak",
+      "searchVolume": 1000,
+      "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026"
+    },
+    {
+      "ar": "مراكز اتصال",
+      "en": "Call centres (مراكز اتصال)",
+      "pos": null,
+      "page": null,
+      "tier": "weak",
+      "searchVolume": 1600,
+      "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026"
+    },
+    {
+      "ar": "شركة مراكز اتصال",
+      "en": "Call centre company (شركة مراكز اتصال)",
+      "pos": null,
+      "page": null,
+      "tier": "weak",
+      "searchVolume": 880,
+      "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026"
+    },
+    {
+      "ar": "شركة تعهيد",
+      "en": "Outsourcing company (شركة تعهيد)",
+      "pos": null,
+      "page": null,
+      "tier": "weak",
+      "searchVolume": 210,
+      "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026"
     }
   ],
   "pages": [
