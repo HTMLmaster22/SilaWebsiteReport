@@ -2,8 +2,8 @@
   "reportMonth": "2026-10",
   "seriesStart": "2025-08",
   "mobilePerfPrev": 77,
-  "mobilePerfNow": 73,
-  "desktopPerfScore": 91,
+  "mobilePerfNow": 52,
+  "desktopPerfScore": 63,
   "monthLabels": {
     "ar": [
       "أبريل",
@@ -228,31 +228,31 @@
     {
       "key": "d_fcp",
       "data": [
-        600
+        637
       ]
     },
     {
       "key": "d_lcp",
       "data": [
-        1000
+        1009
       ]
     },
     {
       "key": "d_tbt",
       "data": [
-        0
+        1401
       ]
     },
     {
       "key": "d_cls",
       "data": [
-        0
+        0.01
       ]
     },
     {
       "key": "d_si",
       "data": [
-        1600
+        2483
       ]
     }
   ],
@@ -598,7 +598,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 54,
+      "mobileScore": 52,
       "unusedCssKb": 41,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -607,7 +607,7 @@
       "inboundInternalLinks": 51,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 61,
+      "seoScore": 60,
       "competesWith": [
         {
           "query": "بوابة العمل عن بعد",
@@ -661,8 +661,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (54/100)",
-          "labelEn": "Mobile performance below target (54/100)"
+          "labelAr": "أداء الجوال دون الهدف (52/100)",
+          "labelEn": "Mobile performance below target (52/100)"
         },
         {
           "code": "keyword_cannibalization",
@@ -769,7 +769,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 71,
+      "mobileScore": 79,
       "unusedCssKb": 38,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -778,7 +778,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 66,
+      "seoScore": 68,
       "competesWith": null,
       "issues": [
         {
@@ -817,8 +817,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (71/100)",
-          "labelEn": "Mobile performance below target (71/100)"
+          "labelAr": "أداء الجوال دون الهدف (79/100)",
+          "labelEn": "Mobile performance below target (79/100)"
         }
       ]
     },
@@ -882,7 +882,7 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 96,
+      "mobileScore": 94,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -985,7 +985,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 78,
       "unusedCssKb": 37,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -994,7 +994,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 80,
+      "seoScore": 81,
       "competesWith": null,
       "issues": [
         {
@@ -1044,8 +1044,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (76/100)",
-          "labelEn": "Mobile performance below target (76/100)"
+          "labelAr": "أداء الجوال دون الهدف (78/100)",
+          "labelEn": "Mobile performance below target (78/100)"
         }
       ]
     },
@@ -1314,7 +1314,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 77,
+      "mobileScore": 75,
       "unusedCssKb": 40,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -1362,15 +1362,15 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (77/100)",
-          "labelEn": "Mobile performance below target (77/100)"
+          "labelAr": "أداء الجوال دون الهدف (75/100)",
+          "labelEn": "Mobile performance below target (75/100)"
         }
       ]
     },
     {
       "id": "silah-academy-for-e-learning",
-      "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
-      "nameEn": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
+      "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد",
+      "nameEn": "أكاديمية صلة للتعليم الإلكتروني عن بعد",
       "url": "https://www.silah.com.sa/silah-academy-for-e-learning/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -1402,8 +1402,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
-        "titleLength": 40,
+        "title": "أكاديمية صلة للتعليم الإلكتروني عن بعد | شركة صلة",
+        "titleLength": 49,
         "metaDescription": "قامت صلة بتأسيس مركز تدريب موحد يعتمد منهج تدريبي مميز للعاملين و للعاملات عن بعد وهو أكاديمية صلة للتعليم الإلكتروني عن بعد.",
         "metaDescriptionLength": 125,
         "h1Count": 0,
@@ -1438,7 +1438,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 77,
+      "mobileScore": 55,
       "unusedCssKb": 38,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -1447,7 +1447,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 74,
+      "seoScore": 69,
       "competesWith": null,
       "issues": [
         {
@@ -1460,13 +1460,6 @@
             "count": 2,
             "totalImages": 3
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -1486,15 +1479,15 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (77/100)",
-          "labelEn": "Mobile performance below target (77/100)"
+          "labelAr": "أداء الجوال دون الهدف (55/100)",
+          "labelEn": "Mobile performance below target (55/100)"
         }
       ]
     },
     {
       "id": "defining-the-problem",
-      "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية |",
-      "nameEn": "مشكلة محدودية فرص العمل للمرأة السعودية |",
+      "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية",
+      "nameEn": "مشكلة محدودية فرص العمل للمرأة السعودية",
       "url": "https://www.silah.com.sa/defining-the-problem/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -1526,8 +1519,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "مشكلة محدودية فرص العمل للمرأة السعودية |",
-        "titleLength": 41,
+        "title": "مشكلة محدودية فرص العمل للمرأة السعودية | شركة صلة",
+        "titleLength": 50,
         "metaDescription": "تشير البيانات المستقاة من وزارة العمل السعودية الى انه تقدم ما يزيد على 1.6 مليون سيدة يبحثن عن عمل في القطاع الخاص.",
         "metaDescriptionLength": 116,
         "h1Count": 0,
@@ -1562,7 +1555,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 77,
+      "mobileScore": 78,
       "unusedCssKb": 40,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -1571,7 +1564,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 67,
+      "seoScore": 68,
       "competesWith": null,
       "issues": [
         {
@@ -1584,13 +1577,6 @@
             "count": 2,
             "totalImages": 2
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -1610,15 +1596,15 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (77/100)",
-          "labelEn": "Mobile performance below target (77/100)"
+          "labelAr": "أداء الجوال دون الهدف (78/100)",
+          "labelEn": "Mobile performance below target (78/100)"
         }
       ]
     },
     {
       "id": "infrastructure",
-      "nameAr": "البنية التحتية |",
-      "nameEn": "البنية التحتية |",
+      "nameAr": "البنية التحتية",
+      "nameEn": "البنية التحتية",
       "url": "https://www.silah.com.sa/infrastructure/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -1656,8 +1642,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "البنية التحتية |",
-        "titleLength": 16,
+        "title": "البنية التحتية | شركة صلة",
+        "titleLength": 25,
         "metaDescription": "قامت صلة بتنفيذ بنية تحتية ترتكز على سحابة مركز البيانات التابعة لمزودي الخدمات في المملكة العربية السعودية و ذلك باستخدام أفضل الممارسات.",
         "metaDescriptionLength": 138,
         "h1Count": 0,
@@ -1697,7 +1683,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 63,
       "unusedCssKb": 37,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -1706,7 +1692,7 @@
       "inboundInternalLinks": 49,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 79,
+      "seoScore": 77,
       "competesWith": null,
       "issues": [
         {
@@ -1721,24 +1707,6 @@
           }
         },
         {
-          "code": "title_too_short",
-          "owner": "marketing",
-          "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (16 حرف)",
-          "labelEn": "Title is short (16 chars)",
-          "detail": {
-            "length": 16,
-            "min": 25
-          }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
-        },
-        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -1749,8 +1717,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (74/100)",
-          "labelEn": "Mobile performance below target (74/100)"
+          "labelAr": "أداء الجوال دون الهدف (63/100)",
+          "labelEn": "Mobile performance below target (63/100)"
         }
       ]
     },
@@ -1830,7 +1798,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 69,
+      "mobileScore": 73,
       "unusedCssKb": 199,
       "unusedJsKb": 157,
       "seoIssues": [],
@@ -1839,7 +1807,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 57,
+      "seoScore": 58,
       "competesWith": null,
       "issues": [
         {
@@ -1878,8 +1846,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (69/100)",
-          "labelEn": "Mobile performance below target (69/100)"
+          "labelAr": "أداء الجوال دون الهدف (73/100)",
+          "labelEn": "Mobile performance below target (73/100)"
         },
         {
           "code": "unused_css_high",
@@ -2001,7 +1969,7 @@
           "https://www.silah.com.sa/wp-content/uploads/2022/10/نظام-صلة-لقياس-الإنتاجية-وإدارة-المشاريع.pdf/"
         ]
       },
-      "mobileScore": 70,
+      "mobileScore": 66,
       "unusedCssKb": 38,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -2024,8 +1992,8 @@
     },
     {
       "id": "terms-and-conditions",
-      "nameAr": "الشروط والأحكام |",
-      "nameEn": "الشروط والأحكام |",
+      "nameAr": "الشروط والأحكام",
+      "nameEn": "الشروط والأحكام",
       "url": "https://www.silah.com.sa/terms-and-conditions/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -2057,8 +2025,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "الشروط والأحكام |",
-        "titleLength": 17,
+        "title": "الشروط والأحكام | شركة صلة",
+        "titleLength": 26,
         "metaDescription": "أهلا بك إلى موقع صلة. باستعمالك لهذا الموقع، فإنك توافق على أن تتقيد وتلتزم بالشروط والأحكام التالية لذا، يرجى منك الاطلاع عليها بدقة.",
         "metaDescriptionLength": 134,
         "h1Count": 1,
@@ -2092,7 +2060,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 76,
+      "mobileScore": 79,
       "unusedCssKb": 39,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -2101,7 +2069,7 @@
       "inboundInternalLinks": 49,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 67,
+      "seoScore": 68,
       "competesWith": null,
       "issues": [
         {
@@ -2116,36 +2084,18 @@
           }
         },
         {
-          "code": "title_too_short",
-          "owner": "marketing",
-          "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (17 حرف)",
-          "labelEn": "Title is short (17 chars)",
-          "detail": {
-            "length": 17,
-            "min": 25
-          }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
-        },
-        {
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (76/100)",
-          "labelEn": "Mobile performance below target (76/100)"
+          "labelAr": "أداء الجوال دون الهدف (79/100)",
+          "labelEn": "Mobile performance below target (79/100)"
         }
       ]
     },
     {
       "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
-      "nameAr": "دراسة مستقبل العمل لعام 2022م |",
-      "nameEn": "دراسة مستقبل العمل لعام 2022م |",
+      "nameAr": "دراسة مستقبل العمل لعام 2022م",
+      "nameEn": "دراسة مستقبل العمل لعام 2022م",
       "url": "https://www.silah.com.sa/%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -2177,8 +2127,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "دراسة مستقبل العمل لعام 2022م |",
-        "titleLength": 31,
+        "title": "دراسة مستقبل العمل لعام 2022م | شركة صلة",
+        "titleLength": 40,
         "metaDescription": "بإمكانك التقديم على فرص العمل المطروحة فى صلة من خلال إكمال طلب التقديم الخاص بالباحثين عن عمل عن بعد من مواطني المملكة العربية السعودية.",
         "metaDescriptionLength": 137,
         "h1Count": 0,
@@ -2213,7 +2163,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 72,
+      "mobileScore": 68,
       "unusedCssKb": 40,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -2222,7 +2172,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 66,
+      "seoScore": 65,
       "competesWith": null,
       "issues": [
         {
@@ -2235,13 +2185,6 @@
             "count": 2,
             "totalImages": 2
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -2261,15 +2204,15 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (72/100)",
-          "labelEn": "Mobile performance below target (72/100)"
+          "labelAr": "أداء الجوال دون الهدف (68/100)",
+          "labelEn": "Mobile performance below target (68/100)"
         }
       ]
     },
     {
       "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
-      "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
-      "nameEn": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
+      "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية)",
+      "nameEn": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية)",
       "url": "https://www.silah.com.sa/%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -2301,8 +2244,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
-        "titleLength": 62,
+        "title": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) | شركة صلة",
+        "titleLength": 71,
         "metaDescription": "بإمكانك التقديم على فرص العمل المطروحة فى صلة من خلال إكمال طلب التقديم الخاص بالباحثين عن عمل عن بعد من مواطني المملكة العربية السعودية.",
         "metaDescriptionLength": 137,
         "h1Count": 0,
@@ -2337,7 +2280,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 72,
+      "mobileScore": 67,
       "unusedCssKb": 40,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -2346,7 +2289,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 66,
+      "seoScore": 65,
       "competesWith": null,
       "issues": [
         {
@@ -2361,11 +2304,15 @@
           }
         },
         {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
+          "code": "title_too_long",
+          "owner": "marketing",
+          "severity": "low",
+          "labelAr": "عنوان الصفحة طويل (71 حرف)",
+          "labelEn": "Title is long (71 chars)",
+          "detail": {
+            "length": 71,
+            "max": 65
+          }
         },
         {
           "code": "h1_missing",
@@ -2385,15 +2332,15 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (72/100)",
-          "labelEn": "Mobile performance below target (72/100)"
+          "labelAr": "أداء الجوال دون الهدف (67/100)",
+          "labelEn": "Mobile performance below target (67/100)"
         }
       ]
     },
     {
       "id": "%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9",
-      "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
-      "nameEn": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
+      "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي)",
+      "nameEn": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي)",
       "url": "https://www.silah.com.sa/%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -2425,8 +2372,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
-        "titleLength": 55,
+        "title": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) | شركة صلة",
+        "titleLength": 64,
         "metaDescription": "بإمكانك التقديم على فرص العمل المطروحة فى صلة من خلال إكمال طلب التقديم الخاص بالباحثين عن عمل عن بعد من مواطني المملكة العربية السعودية.",
         "metaDescriptionLength": 137,
         "h1Count": 0,
@@ -2461,7 +2408,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 65,
       "unusedCssKb": 40,
       "unusedJsKb": 58,
       "seoIssues": [],
@@ -2470,7 +2417,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 66,
+      "seoScore": 64,
       "competesWith": null,
       "issues": [
         {
@@ -2483,13 +2430,6 @@
             "count": 2,
             "totalImages": 2
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -2509,8 +2449,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (74/100)",
-          "labelEn": "Mobile performance below target (74/100)"
+          "labelAr": "أداء الجوال دون الهدف (65/100)",
+          "labelEn": "Mobile performance below target (65/100)"
         }
       ]
     },
@@ -2977,8 +2917,8 @@
     },
     {
       "id": "privacy-policy",
-      "nameAr": "سياسة الخصوصية |",
-      "nameEn": "سياسة الخصوصية |",
+      "nameAr": "سياسة الخصوصية",
+      "nameEn": "سياسة الخصوصية",
       "url": "https://www.silah.com.sa/privacy-policy/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -3010,8 +2950,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "سياسة الخصوصية |",
-        "titleLength": 16,
+        "title": "سياسة الخصوصية | شركة صلة",
+        "titleLength": 25,
         "metaDescription": "أهلا بك إلى موقع صلة. تكن صلة وافر الاحترام لخصوصية كل فرد يزور مواقعنا، ونحن فى صلة نقوم بجمع المعلومات عنك بغرض تنفيذ أي خدمة قد تطلبها.",
         "metaDescriptionLength": 138,
         "h1Count": 5,
@@ -3069,24 +3009,6 @@
           }
         },
         {
-          "code": "title_too_short",
-          "owner": "marketing",
-          "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (16 حرف)",
-          "labelEn": "Title is short (16 chars)",
-          "detail": {
-            "length": 16,
-            "min": 25
-          }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
-        },
-        {
           "code": "h1_multiple",
           "owner": "marketing",
           "severity": "low",
@@ -3104,8 +3026,8 @@
     },
     {
       "id": "our-brochures",
-      "nameAr": "حلول وخدمات صلة المتكاملة |",
-      "nameEn": "حلول وخدمات صلة المتكاملة |",
+      "nameAr": "حلول وخدمات صلة المتكاملة",
+      "nameEn": "حلول وخدمات صلة المتكاملة",
       "url": "https://www.silah.com.sa/our-brochures/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -3162,8 +3084,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "حلول وخدمات صلة المتكاملة |",
-        "titleLength": 27,
+        "title": "حلول وخدمات صلة المتكاملة | شركة صلة",
+        "titleLength": 36,
         "metaDescription": null,
         "metaDescriptionLength": 0,
         "h1Count": 0,
@@ -3231,13 +3153,6 @@
           }
         },
         {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
-        },
-        {
           "code": "meta_description_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -3262,8 +3177,8 @@
     },
     {
       "id": "who-our-clients",
-      "nameAr": "من هم عملاء شركة صلة |",
-      "nameEn": "من هم عملاء شركة صلة |",
+      "nameAr": "من هم عملاء شركة صلة",
+      "nameEn": "من هم عملاء شركة صلة",
       "url": "https://www.silah.com.sa/who-our-clients/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -3415,8 +3330,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "من هم عملاء شركة صلة |",
-        "titleLength": 22,
+        "title": "من هم عملاء شركة صلة | شركة صلة",
+        "titleLength": 31,
         "metaDescription": "نحن فى صلة فخورون للعمل مع مئات المنشآت في المملكة العربية السعودية كشريك لإدارة العمل عن بعد. عبرتقديم مجموعة متنوعة من خدماتنا.",
         "metaDescriptionLength": 129,
         "h1Count": 0,
@@ -3472,24 +3387,6 @@
             "count": 26,
             "totalImages": 26
           }
-        },
-        {
-          "code": "title_too_short",
-          "owner": "marketing",
-          "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (22 حرف)",
-          "labelEn": "Title is short (22 chars)",
-          "detail": {
-            "length": 22,
-            "min": 25
-          }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -3905,8 +3802,8 @@
     },
     {
       "id": "talk-to-us-now",
-      "nameAr": "تحدث إلينا الآن |",
-      "nameEn": "تحدث إلينا الآن |",
+      "nameAr": "تحدث إلينا الآن",
+      "nameEn": "تحدث إلينا الآن",
       "url": "https://www.silah.com.sa/talk-to-us-now/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -3939,8 +3836,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "تحدث إلينا الآن |",
-        "titleLength": 17,
+        "title": "تحدث إلينا الآن | شركة صلة",
+        "titleLength": 26,
         "metaDescription": "تحدث إلينا الآن لمعرفة المزيد من المعلومات حول خدمات شركة صلة. و الحصول على استشارة مجانية من خبرائنا عن الخدمات والباقات المناسبة لشركتك.",
         "metaDescriptionLength": 138,
         "h1Count": 0,
@@ -3997,24 +3894,6 @@
             "count": 2,
             "totalImages": 3
           }
-        },
-        {
-          "code": "title_too_short",
-          "owner": "marketing",
-          "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (17 حرف)",
-          "labelEn": "Title is short (17 chars)",
-          "detail": {
-            "length": 17,
-            "min": 25
-          }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -4144,8 +4023,8 @@
     },
     {
       "id": "auto-calls",
-      "nameAr": "Broadcast",
-      "nameEn": "Broadcast",
+      "nameAr": "Broadcast - المكالمات الآلية",
+      "nameEn": "Broadcast - المكالمات الآلية",
       "url": "https://www.silah.com.sa/auto-calls/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -4192,8 +4071,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "Broadcast - المكالمات الآلية |",
-        "titleLength": 30,
+        "title": "Broadcast - المكالمات الآلية | شركة صلة",
+        "titleLength": 39,
         "metaDescription": "تتيح لك هذه الخدمة إرسال مكالمات هاتفية مسجلة مسبقًا لجميع عملائك بضغطة زر، يمكنك الآن جدولة مكالمات التذكير بمواعيد الخدمات.",
         "metaDescriptionLength": 125,
         "h1Count": 0,
@@ -4250,13 +4129,6 @@
             "count": 5,
             "totalImages": 6
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -4448,8 +4320,8 @@
     },
     {
       "id": "esnad-saudis",
-      "nameAr": "خدمات الاستثمار الاجتماعي |",
-      "nameEn": "خدمات الاستثمار الاجتماعي |",
+      "nameAr": "خدمات الاستثمار الاجتماعي",
+      "nameEn": "خدمات الاستثمار الاجتماعي",
       "url": "https://www.silah.com.sa/esnad-saudis/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -4517,8 +4389,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "خدمات الاستثمار الاجتماعي |",
-        "titleLength": 27,
+        "title": "خدمات الاستثمار الاجتماعي | شركة صلة",
+        "titleLength": 36,
         "metaDescription": null,
         "metaDescriptionLength": 0,
         "h1Count": 0,
@@ -4577,13 +4449,6 @@
           }
         },
         {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
-        },
-        {
           "code": "meta_description_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -4608,8 +4473,8 @@
     },
     {
       "id": "silah-system-for-productivity-monitoring",
-      "nameAr": "نظام صلة لقياس الإنتاجية |",
-      "nameEn": "نظام صلة لقياس الإنتاجية |",
+      "nameAr": "نظام صلة لقياس الإنتاجية",
+      "nameEn": "نظام صلة لقياس الإنتاجية",
       "url": "https://www.silah.com.sa/silah-system-for-productivity-monitoring/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -4657,8 +4522,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "نظام صلة لقياس الإنتاجية |",
-        "titleLength": 26,
+        "title": "نظام صلة لقياس الإنتاجية | شركة صلة",
+        "titleLength": 35,
         "metaDescription": "نظام صلة لمراقبة الإنتاجية نظام فريد لإدارة المشاريع وقياس أداء الموظفين. حيث يمكن من خلال النظام التحكم وإدارة المشاريع والمهام في الشركة.",
         "metaDescriptionLength": 139,
         "h1Count": 0,
@@ -4718,13 +4583,6 @@
           }
         },
         {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
-        },
-        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -4742,8 +4600,8 @@
     },
     {
       "id": "telework-success",
-      "nameAr": "طبيعة الوظائف التي يمكن القيام بها عن بعد |",
-      "nameEn": "طبيعة الوظائف التي يمكن القيام بها عن بعد |",
+      "nameAr": "طبيعة الوظائف التي يمكن القيام بها عن بعد",
+      "nameEn": "طبيعة الوظائف التي يمكن القيام بها عن بعد",
       "url": "https://www.silah.com.sa/telework-success/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -4775,8 +4633,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "طبيعة الوظائف التي يمكن القيام بها عن بعد |",
-        "titleLength": 43,
+        "title": "طبيعة الوظائف التي يمكن القيام بها عن بعد | شركة صلة",
+        "titleLength": 52,
         "metaDescription": "طبيعة الوظائف التي يمكن القيام بها عن بعد كالبرمجة أو الترجمة أو الكتابة أو التدقيق أو البحث أو التصميم أو البيع أوالتسويق أو خدمة العملاء.",
         "metaDescriptionLength": 139,
         "h1Count": 0,
@@ -4835,13 +4693,6 @@
           }
         },
         {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
-        },
-        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -4866,8 +4717,8 @@
     },
     {
       "id": "about-us",
-      "nameAr": "حول صلة |",
-      "nameEn": "حول صلة |",
+      "nameAr": "حول صلة",
+      "nameEn": "حول صلة",
       "url": "https://www.silah.com.sa/about-us/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -4955,8 +4806,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "حول صلة |",
-        "titleLength": 9,
+        "title": "حول صلة | شركة صلة",
+        "titleLength": 18,
         "metaDescription": "تتيح لك هذه الخدمة إرسال مكالمات هاتفية مسجلة مسبقًا لجميع عملائك بضغطة زر، يمكنك الآن جدولة مكالمات التذكير بمواعيد الخدمات.",
         "metaDescriptionLength": 125,
         "h1Count": 0,
@@ -5029,19 +4880,12 @@
           "code": "title_too_short",
           "owner": "marketing",
           "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (9 حرف)",
-          "labelEn": "Title is short (9 chars)",
+          "labelAr": "عنوان الصفحة قصير (18 حرف)",
+          "labelEn": "Title is short (18 chars)",
           "detail": {
-            "length": 9,
+            "length": 18,
             "min": 25
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -5082,8 +4926,8 @@
     },
     {
       "id": "researches-and-studies-unit",
-      "nameAr": "وحدة الأبحاث والدراسات |",
-      "nameEn": "وحدة الأبحاث والدراسات |",
+      "nameAr": "وحدة الأبحاث والدراسات",
+      "nameEn": "وحدة الأبحاث والدراسات",
       "url": "https://www.silah.com.sa/researches-and-studies-unit/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -5131,8 +4975,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "وحدة الأبحاث والدراسات |",
-        "titleLength": 24,
+        "title": "وحدة الأبحاث والدراسات | شركة صلة",
+        "titleLength": 33,
         "metaDescription": "تختص وحدة الأبحاث والدراسات فى صلة باقتراح وإعداد البحوث والدراسات وتقديم الاستشارات المتعلقة بالعمل عن بعد ومراقبة الإنتاجية والتدريب الإلكتروني.",
         "metaDescriptionLength": 146,
         "h1Count": 0,
@@ -5188,24 +5032,6 @@
             "count": 5,
             "totalImages": 7
           }
-        },
-        {
-          "code": "title_too_short",
-          "owner": "marketing",
-          "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (24 حرف)",
-          "labelEn": "Title is short (24 chars)",
-          "detail": {
-            "length": 24,
-            "min": 25
-          }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -5419,8 +5245,8 @@
     },
     {
       "id": "customer-review",
-      "nameAr": "ما رأي عملائنا بنا؟ |",
-      "nameEn": "ما رأي عملائنا بنا؟ |",
+      "nameAr": "ما رأي عملائنا بنا؟",
+      "nameEn": "ما رأي عملائنا بنا؟",
       "url": "https://www.silah.com.sa/customer-review/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -5452,8 +5278,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "ما رأي عملائنا بنا؟ |",
-        "titleLength": 21,
+        "title": "ما رأي عملائنا بنا؟ | شركة صلة",
+        "titleLength": 30,
         "metaDescription": "نستعرض لكم بعض أراء عملائنا حول خدمات شركة صلة. وماذا قالوا عن مستوى جودة الخدمات والحلول فى شركة صلة للعمل عن بعد.",
         "metaDescriptionLength": 115,
         "h1Count": 0,
@@ -5511,24 +5337,6 @@
           }
         },
         {
-          "code": "title_too_short",
-          "owner": "marketing",
-          "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (21 حرف)",
-          "labelEn": "Title is short (21 chars)",
-          "detail": {
-            "length": 21,
-            "min": 25
-          }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
-        },
-        {
           "code": "h1_missing",
           "owner": "marketing",
           "severity": "medium",
@@ -5546,8 +5354,8 @@
     },
     {
       "id": "building-and-operating-business-centers",
-      "nameAr": "بناء وتشغيل مراكز الأعمال |",
-      "nameEn": "بناء وتشغيل مراكز الأعمال |",
+      "nameAr": "بناء وتشغيل مراكز الأعمال",
+      "nameEn": "بناء وتشغيل مراكز الأعمال",
       "url": "https://www.silah.com.sa/building-and-operating-business-centers/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -5634,8 +5442,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "بناء وتشغيل مراكز الأعمال |",
-        "titleLength": 27,
+        "title": "بناء وتشغيل مراكز الأعمال | شركة صلة",
+        "titleLength": 36,
         "metaDescription": "تقوم صلة ببناء وتشغيل مراكز أعمال متكاملة بمساحات مناسبة ومكاتب حديثة وخيارات متعددة بهدف صنع بيئة عمل مريحة وملهمة تتناسب مع طبيعة العمل.",
         "metaDescriptionLength": 138,
         "h1Count": 0,
@@ -5692,13 +5500,6 @@
             "count": 13,
             "totalImages": 17
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -6007,8 +5808,8 @@
     },
     {
       "id": "video-library",
-      "nameAr": "مكتبة الفيديو |",
-      "nameEn": "مكتبة الفيديو |",
+      "nameAr": "مكتبة الفيديو",
+      "nameEn": "مكتبة الفيديو",
       "url": "https://www.silah.com.sa/video-library/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -6040,8 +5841,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "مكتبة الفيديو |",
-        "titleLength": 15,
+        "title": "مكتبة الفيديو | شركة صلة",
+        "titleLength": 24,
         "metaDescription": "مكتبة الفيديو لشركة صلة للتعرف على حلول وخدمات شركة صلة و رؤية واستراتيجية صلة في ثقافة العمل عن بعد ونظام صلة لقياس الإنتاجية وتتبع الوقت.",
         "metaDescriptionLength": 139,
         "h1Count": 0,
@@ -6103,19 +5904,12 @@
           "code": "title_too_short",
           "owner": "marketing",
           "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (15 حرف)",
-          "labelEn": "Title is short (15 chars)",
+          "labelAr": "عنوان الصفحة قصير (24 حرف)",
+          "labelEn": "Title is short (24 chars)",
           "detail": {
-            "length": 15,
+            "length": 24,
             "min": 25
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -7454,8 +7248,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "بناء وتنفيذ خطة الإفصاح التدريبي |",
-        "titleLength": 34,
+        "title": "بناء وتنفيذ خطة الإفصاح التدريبي | شركة صلة",
+        "titleLength": 43,
         "metaDescription": "خدمات الإفصاح التدريبي من صلة وإعداد بيانات موثقة وتقارير دقيقة، بما يدعم جاهزية منشأتك لمتطلبات الإفصاح.",
         "metaDescriptionLength": 105,
         "h1Count": 0,
@@ -7513,13 +7307,6 @@
             "count": 2,
             "totalImages": 5
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -7651,8 +7438,8 @@
     },
     {
       "id": "contact-us",
-      "nameAr": "اتصل بنا |",
-      "nameEn": "اتصل بنا |",
+      "nameAr": "اتصل بنا",
+      "nameEn": "اتصل بنا",
       "url": "https://www.silah.com.sa/contact-us/",
       "checkedAt": "2026-10-20",
       "schema": {
@@ -7684,8 +7471,8 @@
         "canonicalIsSelf": true,
         "noindex": false,
         "robotsMeta": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-        "title": "اتصل بنا |",
-        "titleLength": 10,
+        "title": "اتصل بنا | شركة صلة",
+        "titleLength": 19,
         "metaDescription": "لديك سؤال أو استفسار حول العمل عن بعد أو مراقبة الإنتاجية أو التدريب الإلكتروني ، نحن متواجدون لمساعدتك. تواصل معنا بالطريقة التي تناسبك.",
         "metaDescriptionLength": 137,
         "h1Count": 0,
@@ -7757,19 +7544,12 @@
           "code": "title_too_short",
           "owner": "marketing",
           "severity": "low",
-          "labelAr": "عنوان الصفحة قصير (10 حرف)",
-          "labelEn": "Title is short (10 chars)",
+          "labelAr": "عنوان الصفحة قصير (19 حرف)",
+          "labelEn": "Title is short (19 chars)",
           "detail": {
-            "length": 10,
+            "length": 19,
             "min": 25
           }
-        },
-        {
-          "code": "title_missing_site_name",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "عنوان الصفحة ينتهي بفاصل بدون اسم الموقع (إعداد قالب العناوين في Yoast)",
-          "labelEn": "Title ends in a bare separator with no site name (Yoast title template setting)"
         },
         {
           "code": "h1_missing",
@@ -8316,7 +8096,7 @@
   "aiSearchReadinessCheckedMonth": "2026-10",
   "keywordsSource": "gsc",
   "keywordsCheckedMonth": "2026-10",
-  "lastRefreshedAt": "2026-10-20T08:26:17.464003+00:00",
+  "lastRefreshedAt": "2026-10-20T08:59:31.635736+00:00",
   "scanCoverage": {
     "source": "sitemap",
     "totalPages": 53,
@@ -8331,16 +8111,16 @@
   },
   "issueSummary": {
     "byOwner": {
-      "it": 88,
-      "marketing": 92,
+      "it": 66,
+      "marketing": 86,
       "shared": 48
     },
     "bySeverity": {
       "high": 20,
-      "medium": 184,
-      "low": 24
+      "medium": 162,
+      "low": 18
     },
-    "totalIssues": 228,
+    "totalIssues": 200,
     "orphanDetectionSkipped": false
   },
   "pageHealthHistory": {
@@ -9486,8 +9266,8 @@
       {
         "id": "home",
         "nameAr": "حلول التوظيف والتوطين",
-        "seoScore": 61,
-        "mobileScore": 54,
+        "seoScore": 60,
+        "mobileScore": 52,
         "altIssueCount": 22,
         "schemaOk": true,
         "issueCount": 5
@@ -9495,8 +9275,8 @@
       {
         "id": "%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9",
         "nameAr": "آلية التقدم على الوظيفة",
-        "seoScore": 66,
-        "mobileScore": 71,
+        "seoScore": 68,
+        "mobileScore": 79,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 5
@@ -9505,7 +9285,7 @@
         "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
         "nameAr": "طلب باقة",
         "seoScore": null,
-        "mobileScore": 96,
+        "mobileScore": 94,
         "altIssueCount": 6,
         "schemaOk": false,
         "issueCount": 1
@@ -9513,8 +9293,8 @@
       {
         "id": "%d9%85%d8%af%d9%88%d9%86%d8%a9",
         "nameAr": "مدونة",
-        "seoScore": 80,
-        "mobileScore": 76,
+        "seoScore": 81,
+        "mobileScore": 78,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 6
@@ -9532,43 +9312,43 @@
         "id": "%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a",
         "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
         "seoScore": 70,
-        "mobileScore": 77,
+        "mobileScore": 75,
         "altIssueCount": 10,
         "schemaOk": true,
         "issueCount": 5
       },
       {
         "id": "silah-academy-for-e-learning",
-        "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد |",
-        "seoScore": 74,
-        "mobileScore": 77,
+        "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد",
+        "seoScore": 69,
+        "mobileScore": 55,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 4
       },
       {
         "id": "defining-the-problem",
-        "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية |",
-        "seoScore": 67,
-        "mobileScore": 77,
+        "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية",
+        "seoScore": 68,
+        "mobileScore": 78,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 4
       },
       {
         "id": "infrastructure",
-        "nameAr": "البنية التحتية |",
-        "seoScore": 79,
-        "mobileScore": 74,
+        "nameAr": "البنية التحتية",
+        "seoScore": 77,
+        "mobileScore": 63,
         "altIssueCount": 3,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 3
       },
       {
         "id": "%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
         "nameAr": "فرص وظيفية تقنية",
-        "seoScore": 57,
-        "mobileScore": 69,
+        "seoScore": 58,
+        "mobileScore": 73,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 7
@@ -9577,46 +9357,46 @@
         "id": "gitex2022",
         "nameAr": "Gitex2022 |",
         "seoScore": null,
-        "mobileScore": 70,
+        "mobileScore": 66,
         "altIssueCount": 7,
         "schemaOk": true,
         "issueCount": 1
       },
       {
         "id": "terms-and-conditions",
-        "nameAr": "الشروط والأحكام |",
-        "seoScore": 67,
-        "mobileScore": 76,
+        "nameAr": "الشروط والأحكام",
+        "seoScore": 68,
+        "mobileScore": 79,
+        "altIssueCount": 2,
+        "schemaOk": true,
+        "issueCount": 2
+      },
+      {
+        "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
+        "nameAr": "دراسة مستقبل العمل لعام 2022م",
+        "seoScore": 65,
+        "mobileScore": 68,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
       },
       {
-        "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
-        "nameAr": "دراسة مستقبل العمل لعام 2022م |",
-        "seoScore": 66,
-        "mobileScore": 72,
-        "altIssueCount": 2,
-        "schemaOk": true,
-        "issueCount": 5
-      },
-      {
         "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
-        "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية) |",
-        "seoScore": 66,
-        "mobileScore": 72,
+        "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية)",
+        "seoScore": 65,
+        "mobileScore": 67,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 5
       },
       {
         "id": "%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9",
-        "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي) |",
-        "seoScore": 66,
-        "mobileScore": 74,
+        "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي)",
+        "seoScore": 64,
+        "mobileScore": 65,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 4
       },
       {
         "id": "gitex2023",
@@ -9656,30 +9436,30 @@
       },
       {
         "id": "privacy-policy",
-        "nameAr": "سياسة الخصوصية |",
+        "nameAr": "سياسة الخصوصية",
         "seoScore": 68,
         "mobileScore": 79,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 3
       },
       {
         "id": "our-brochures",
-        "nameAr": "حلول وخدمات صلة المتكاملة |",
+        "nameAr": "حلول وخدمات صلة المتكاملة",
         "seoScore": 71,
         "mobileScore": 68,
         "altIssueCount": 7,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 4
       },
       {
         "id": "who-our-clients",
-        "nameAr": "من هم عملاء شركة صلة |",
+        "nameAr": "من هم عملاء شركة صلة",
         "seoScore": 64,
         "mobileScore": 67,
         "altIssueCount": 26,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 3
       },
       {
         "id": "business-center-cost",
@@ -9710,12 +9490,12 @@
       },
       {
         "id": "talk-to-us-now",
-        "nameAr": "تحدث إلينا الآن |",
+        "nameAr": "تحدث إلينا الآن",
         "seoScore": 74,
         "mobileScore": 76,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 3
       },
       {
         "id": "customer-service-bot",
@@ -9728,12 +9508,12 @@
       },
       {
         "id": "auto-calls",
-        "nameAr": "Broadcast",
+        "nameAr": "Broadcast - المكالمات الآلية",
         "seoScore": 67,
         "mobileScore": 66,
         "altIssueCount": 5,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 3
       },
       {
         "id": "virtual-events",
@@ -9746,48 +9526,48 @@
       },
       {
         "id": "esnad-saudis",
-        "nameAr": "خدمات الاستثمار الاجتماعي |",
+        "nameAr": "خدمات الاستثمار الاجتماعي",
         "seoScore": 68,
         "mobileScore": 72,
         "altIssueCount": 9,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 4
       },
       {
         "id": "silah-system-for-productivity-monitoring",
-        "nameAr": "نظام صلة لقياس الإنتاجية |",
+        "nameAr": "نظام صلة لقياس الإنتاجية",
         "seoScore": 70,
         "mobileScore": 76,
         "altIssueCount": 5,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 3
       },
       {
         "id": "telework-success",
-        "nameAr": "طبيعة الوظائف التي يمكن القيام بها عن بعد |",
+        "nameAr": "طبيعة الوظائف التي يمكن القيام بها عن بعد",
         "seoScore": 64,
         "mobileScore": 63,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 4
       },
       {
         "id": "about-us",
-        "nameAr": "حول صلة |",
+        "nameAr": "حول صلة",
         "seoScore": 69,
         "mobileScore": 73,
         "altIssueCount": 13,
         "schemaOk": true,
-        "issueCount": 6
+        "issueCount": 5
       },
       {
         "id": "researches-and-studies-unit",
-        "nameAr": "وحدة الأبحاث والدراسات |",
+        "nameAr": "وحدة الأبحاث والدراسات",
         "seoScore": 67,
         "mobileScore": 47,
         "altIssueCount": 5,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 3
       },
       {
         "id": "%d8%a7%d9%86%d8%b6%d9%85-%d9%84%d9%86%d8%a7",
@@ -9800,21 +9580,21 @@
       },
       {
         "id": "customer-review",
-        "nameAr": "ما رأي عملائنا بنا؟ |",
+        "nameAr": "ما رأي عملائنا بنا؟",
         "seoScore": 72,
         "mobileScore": 71,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 3
       },
       {
         "id": "building-and-operating-business-centers",
-        "nameAr": "بناء وتشغيل مراكز الأعمال |",
+        "nameAr": "بناء وتشغيل مراكز الأعمال",
         "seoScore": 65,
         "mobileScore": 53,
         "altIssueCount": 13,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 3
       },
       {
         "id": "solutions",
@@ -9836,12 +9616,12 @@
       },
       {
         "id": "video-library",
-        "nameAr": "مكتبة الفيديو |",
+        "nameAr": "مكتبة الفيديو",
         "seoScore": 65,
         "mobileScore": 73,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 5
+        "issueCount": 4
       },
       {
         "id": "%d8%b6%d8%b1%d9%8a%d8%a8%d8%a9-%d8%a7%d9%84%d9%82%d9%8a%d9%85%d8%a9-%d8%a7%d9%84%d9%85%d8%b6%d8%a7%d9%81%d8%a9",
@@ -9913,7 +9693,7 @@
         "mobileScore": 69,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 3
       },
       {
         "id": "otj-training-services",
@@ -9926,12 +9706,12 @@
       },
       {
         "id": "contact-us",
-        "nameAr": "اتصل بنا |",
+        "nameAr": "اتصل بنا",
         "seoScore": 56,
         "mobileScore": 63,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 7
+        "issueCount": 6
       },
       {
         "id": "%d8%ae%d8%af%d9%85%d8%a7%d8%aa-%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86",
@@ -9964,7 +9744,7 @@
   },
   "indexCleanup": {
     "checkedAt": "2026-10-20",
-    "generatedAt": "2026-10-20T08:22:06+00:00",
+    "generatedAt": "2026-10-20T08:54:31+00:00",
     "source": "wordpress+live",
     "total": 139,
     "byStatus": {
@@ -13997,5 +13777,9 @@
         "impressions": 108
       }
     ]
-  }
+  },
+  "mobilePerfMonth": "2026-10",
+  "desktopCheckedAt": "2026-10-20",
+  "lighthouseVersion": "13.5.0",
+  "mobilePerfCheckedAt": "2026-10-20"
 }
