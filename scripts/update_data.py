@@ -659,11 +659,32 @@ def fetch_psi_score(strategy, retry=True):
         s = c.get("score")
         return int(round(s * 100)) if isinstance(s, (int, float)) else None
 
+    lh = resp["lighthouseResult"]
+    audits = lh.get("audits", {})
+
+    def num(audit_id, as_float=False):
+        v = (audits.get(audit_id) or {}).get("numericValue")
+        if not isinstance(v, (int, float)):
+            return None
+        return round(float(v), 3) if as_float else int(round(float(v)))
+
     return {
         "performance": pct("performance"),
         "seo": pct("seo"),
         "accessibility": pct("accessibility"),
         "bestPractices": pct("best-practices"),
+        # Oct 2026: the five lab metrics behind the desktop detail cards.
+        # Previously never read, so those cards showed a single June 30 test
+        # forever while the label next to them claimed the current month.
+        "lab": {
+            "fcp": num("first-contentful-paint"),
+            "lcp": num("largest-contentful-paint"),
+            "tbt": num("total-blocking-time"),
+            "cls": num("cumulative-layout-shift", as_float=True),
+            "si": num("speed-index"),
+        },
+        "lighthouseVersion": lh.get("lighthouseVersion"),
+        "fetchTime": (lh.get("fetchTime") or "")[:10],
     }
 
 
@@ -1803,6 +1824,35 @@ def main():
         data["a11yScoreMobile"] = mobile_psi["accessibility"]
         data["a11yScoreDesktop"] = desktop_psi["accessibility"]
         data["lighthouseScoresCheckedMonth"] = new_month
+
+        # Oct 2026: headline mobile/desktop performance scores now refresh on
+        # EVERY successful PSI run, not only when CrUX publishes a new month.
+        # Before, the cards kept a weeks-old number while the per-page table
+        # (re-tested each run) showed the homepage at a different score, so
+        # the same page appeared with two contradicting numbers.
+        # "vs last month" stays honest: mobilePerfPrev only rolls over when the
+        # calendar month of the test changes.
+        test_month = datetime.now(timezone.utc).strftime("%Y-%m")
+        if data.get("mobilePerfMonth") and data["mobilePerfMonth"] != test_month \
+                and data.get("mobilePerfNow") is not None:
+            data["mobilePerfPrev"] = data["mobilePerfNow"]
+        if mobile_score is not None:
+            data["mobilePerfNow"] = mobile_score
+            data["mobilePerfMonth"] = test_month
+        if desktop_score is not None:
+            data["desktopPerfScore"] = desktop_score
+        lab = desktop_psi.get("lab") or {}
+        if all(lab.get(k) is not None for k in ("fcp", "lcp", "tbt", "cls", "si")):
+            data["desktopMetrics"] = [
+                {"key": "d_fcp", "data": [lab["fcp"]]},
+                {"key": "d_lcp", "data": [lab["lcp"]]},
+                {"key": "d_tbt", "data": [lab["tbt"]]},
+                {"key": "d_cls", "data": [round(lab["cls"], 2)]},
+                {"key": "d_si", "data": [lab["si"]]},
+            ]
+            data["desktopCheckedAt"] = desktop_psi.get("fetchTime") or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+            data["lighthouseVersion"] = desktop_psi.get("lighthouseVersion")
+        data["mobilePerfCheckedAt"] = mobile_psi.get("fetchTime") or datetime.now(timezone.utc).strftime("%Y-%m-%d")
     except Exception as e:
         # Both the direct timeout and the one retry inside fetch_psi_score
         # already failed if execution reaches here - a persistent PSI
@@ -1821,16 +1871,8 @@ def main():
     if not homepage_updated:
         print("CrUX/homepage data already at", new_month, "— skipping that part, still running page-health scan below.")
     else:
-        prev_now = data.get("mobilePerfNow")
-        data["mobilePerfPrev"] = prev_now if prev_now is not None else data.get("mobilePerfPrev")
-        # Only overwrite if the fetch above actually succeeded this run -
-        # mobile_score/desktop_score are None specifically when PSI failed
-        # even after its retry, and reportMonth/monthLabels/etc still need
-        # to advance below regardless (CrUX itself did report a new month,
-        # independent of whether PSI cooperated), just not these two scores.
-        if mobile_score is not None:
-            data["mobilePerfNow"] = mobile_score
-            data["desktopPerfScore"] = desktop_score
+        # mobilePerfNow/mobilePerfPrev/desktopPerfScore are handled right
+        # after the PSI fetch above (every run), not here.
         data["reportMonth"] = new_month
 
         if months is not None:
@@ -1864,6 +1906,13 @@ def main():
 
     print("Scanning per-page health (schema, alt text, on-page, unused CSS/JS) ...")
     page_health, coverage = run_page_health_scan(previous=data.get("pageHealth"), month=new_month)
+    # One homepage mobile score across the whole report: the per-page table
+    # re-tests the homepage separately, and two lab runs minutes apart can
+    # differ by 10+ points. Use the headline run's number for the homepage row.
+    if mobile_score is not None:
+        for e in page_health:
+            if e.get("id") == "home":
+                e["mobileScore"] = mobile_score
     data["pageHealth"] = page_health
     data["pageHealthCheckedMonth"] = new_month
     data["scanCoverage"] = coverage

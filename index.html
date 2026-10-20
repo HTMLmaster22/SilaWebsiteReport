@@ -754,7 +754,7 @@
     </div>
 
     <div class="range-filter reveal" id="rangeFilterWrap" role="group" aria-label="Time period">
-      <button class="range-btn" data-range="june" type="button"><span data-i18n="rangeJune">يونيو فقط</span></button>
+      <button class="range-btn" data-range="june" type="button"><span data-i18n="rangeJune">آخر 28 يوماً</span></button>
       <button class="range-btn" data-range="last3" type="button"><span data-i18n="rangeLast3">آخر 3 أشهر</span></button>
       <button class="range-btn is-active" data-range="full" type="button"><span data-i18n="rangeFull">الفترة الكاملة</span></button>
     </div>
@@ -1554,7 +1554,7 @@
       heroMeta:"بيانات Chrome الحقيقية للزوّار (CrUX) · أغسطس 2025 – يونيو 2026 · أجهزة الجوال",
       heroMetaJune:"بيانات Chrome الحقيقية للزوّار (CrUX) · يونيو 2026 · أجهزة الجوال",
       heroH1June:"استجابة الموقع لتفاعل الزوّار حالياً في وضع جيد",
-      heroLedeJune:"هذا هو وضع الموقع الحالي خلال يونيو، بحسب بيانات حقيقية من زوّار فعليين على متصفح Chrome — وليس اختباراً معملياً.",
+      heroLedeJune:"هذا وضع الموقع خلال آخر 28 يوماً، بحسب بيانات حقيقية من زوّار فعليين على متصفح Chrome — وليس اختباراً معملياً.",
       summaryEyebrow:"نظرة سريعة", summaryH2:"كيف تجربة الزائر اليوم؟",
       summaryP:"ثلاثة مقاييس رئيسية يستخدمها جوجل لقياس تجربة أي موقع إلكتروني — وهي نفس المقاييس التي تؤثر على ظهور الموقع في نتائج البحث.",
       badgeGood:"جيد", badgeNI:"يحتاج تحسين", badgePoor:"ضعيف",
@@ -1583,7 +1583,7 @@
       tgMeasureNote:"ملاحظة حول حداثة البيانات: قياسات Lighthouse تُحدَّث تلقائياً مطلع كل شهر. أما بيانات الزوّار الحقيقية (CrUX) فتصدرها جوجل بتأخير يقارب 28 يوماً عن الشهر الفعلي — لذا تكون بيانات الشهر السابق غالباً هي الأحدث المتاحة فعلياً.",
       meaningLabel:"ماذا يعني هذا عملياً",
       chartTitle:"الاتجاه",
-      rangeJune:"يونيو فقط", rangeLast3:"آخر 3 أشهر", rangeFull:"الفترة الكاملة",
+      rangeJune:"آخر 28 يوماً", rangeLast3:"آخر 3 أشهر", rangeFull:"الفترة الكاملة",
       deviceMobileBtn:"الجوال", deviceDesktopBtn:"سطح المكتب",
       outOf100:"من 100", excellentBadge:"ممتاز",
       heroH1Desktop:"أداء الموقع على أجهزة الكمبيوتر ممتاز",
@@ -1694,7 +1694,7 @@
       pageColName:"الصفحة", pageColMobile:"الجوال", pageColDesktop:"سطح المكتب", pageColStatus:"الحالة", pageColReco:"ملاحظة",
       pageStatusMeasured:"تم القياس", pageStatusPending:"بانتظار القياس",
       healthEyebrow:"فحص تلقائي شهري", healthH2:"سلامة الصفحات التقنية",
-      healthP:"يفحص هذا الجزء تلقائياً كل شهر: بيانات Schema المهيكلة، نصوص alt للصور، وحجم CSS/JS غير المستخدم — نفس الفحوصات التي تُجرى يدوياً، لكن بشكل دوري بدون تدخل.",
+      healthP:"يفحص هذا الجزء تلقائياً كل شهر: بيانات Schema المهيكلة، نصوص alt للصور، وحجم CSS/JS غير المستخدم — نفس الفحوصات التي تُجرى يدوياً، لكن بشكل دوري بدون تدخل. أداء الجوال هنا اختبار معملي يتفاوت بضع نقاط بين تشغيل وآخر، فالأهم اتجاهه عبر الأشهر.",
       healthColName:"الصفحة", healthColSchema:"Schema", healthColAlt:"Alt للصور", healthColSeo:"مشاكل SEO", healthColCss:"CSS غير مستخدم", healthColScore:"أداء الجوال",
       healthSeoOk:"سليم", healthSeoIssue:(n)=>`${n} ${n===1?'مشكلة':'مشاكل'}`,
       healthSchemaOk:"موجود ✓", healthSchemaMissing:"غير موجود", healthSchemaUnknown:"—",
@@ -1749,7 +1749,7 @@
       heroMeta:"Real Chrome visitor data (CrUX) · Aug 2025 – Jun 2026 · Mobile devices",
       heroMetaJune:"Real Chrome visitor data (CrUX) · June 2026 · Mobile devices",
       heroH1June:"The site's responsiveness to visitor interactions is currently in good shape",
-      heroLedeJune:"This is where the site stands right now, as of June — based on real Chrome visitor data, not a lab test.",
+      heroLedeJune:"This is where the site stands over the last 28 days — based on real Chrome visitor data, not a lab test.",
       summaryEyebrow:"At a glance", summaryH2:"How's the visitor experience today?",
       summaryP:"Three core metrics Google uses to measure any website's user experience — the same metrics that influence how the site ranks in search results.",
       badgeGood:"Good", badgeNI:"Needs Improvement", badgePoor:"Poor",
@@ -1778,7 +1778,7 @@
       tgMeasureNote:"Data freshness note: Lighthouse scores are re-run automatically at the start of each month. Real-visitor data (CrUX) is published by Google with a ~28-day lag behind the current month — so the previous month's data is usually the most recent genuinely available.",
       meaningLabel:"What this means in practice",
       chartTitle:"Trend",
-      rangeJune:"June only", rangeLast3:"Last 3 months", rangeFull:"Full period",
+      rangeJune:"Last 28 days", rangeLast3:"Last 3 months", rangeFull:"Full period",
       deviceMobileBtn:"Mobile", deviceDesktopBtn:"Desktop",
       outOf100:"/ 100", excellentBadge:"Excellent",
       heroH1Desktop:"Desktop performance is in excellent shape",
@@ -1889,7 +1889,7 @@
       pageColName:"Page", pageColMobile:"Mobile", pageColDesktop:"Desktop", pageColStatus:"Status", pageColReco:"Note",
       pageStatusMeasured:"Measured", pageStatusPending:"Pending",
       healthEyebrow:"Automatic monthly scan", healthH2:"Technical page health",
-      healthP:"This section checks automatically every month: structured Schema data, image alt text, and unused CSS/JS size — the same checks done manually, just running on a schedule with no upkeep needed.",
+      healthP:"This section checks automatically every month: structured Schema data, image alt text, and unused CSS/JS size — the same checks done manually, just running on a schedule with no upkeep needed. Mobile performance here is a lab test that varies a few points from run to run, so the trend across months matters more than any single number.",
       healthColName:"Page", healthColSchema:"Schema", healthColAlt:"Alt text", healthColSeo:"SEO issues", healthColCss:"Unused CSS", healthColScore:"Mobile score",
       healthSeoOk:"Clean", healthSeoIssue:(n)=>`${n} issue${n===1?'':'s'}`,
       healthSchemaOk:"Present ✓", healthSchemaMissing:"Missing", healthSchemaUnknown:"—",
@@ -3089,14 +3089,14 @@
   let currentRange = "full";
   function sliceForRange(arr, range){
     if(range==="june") return arr.slice(-1);
-    if(range==="last3") return arr.slice(-3);
+    if(range==="last3") return arr.slice(-13);
     return arr;
   }
   function rangeStartEndLabels(range, lang){
     const mm = monthLabels[lang];
     if(range==="june") return [mm[mm.length-1], mm[mm.length-1]];
     const last = mm.length - 1;
-    if(range==="last3") return [mm[Math.max(0,last-2)], mm[last]];
+    if(range==="last3") return [mm[Math.max(0,last-12)], mm[last]];
     return [mm[0], mm[last]];
   }
 
@@ -3309,26 +3309,51 @@
 
     toNum.textContent = sliced[sliced.length-1];
 
+    const nowV = sliced[sliced.length-1];
+    const clsNow = classify(nowV, inp.good, inp.ni);
+    const clsTxt = clsNow==="good" ? (currentLang==="ar"?"جيد":"good") : (clsNow==="ni" ? (currentLang==="ar"?"يحتاج تحسين":"needs improvement") : (currentLang==="ar"?"ضعيف":"poor"));
     if(range==="june"){
       fromWrap.style.display = "none";
       arrowWrap.style.display = "none";
-      const cls = classify(sliced[0], inp.good, inp.ni);
       badgeIcon.style.display = "none";
-      badgeText.textContent = (cls==="good"?d.badgeGood:(cls==="ni"?d.badgeNI:d.badgePoor));
-      h1.textContent = d.heroH1June;
+      badgeText.textContent = (clsNow==="good"?d.badgeGood:(clsNow==="ni"?d.badgeNI:d.badgePoor));
+      h1.textContent = currentLang==="ar" ? `سرعة استجابة الموقع لتفاعل الزوّار حالياً: ${clsTxt}` : `The site's responsiveness to visitor interactions is currently ${clsTxt}`;
       lede.textContent = d.heroLedeJune;
       heroMeta.textContent = d.heroMetaJune;
     } else {
+      // Compare the START of the selected range with now (not the worst point),
+      // and name the real months from the data so the text can never go stale.
+      const mm = monthLabels[currentLang] || [];
+      const offset = mm.length - sliced.length;
+      const startV = sliced[0];
+      const startM = mm[offset] || "";
+      const peakV = Math.max(...sliced);
+      const peakI = sliced.indexOf(peakV);
+      const peakM = mm[offset + peakI] || "";
       fromWrap.style.display = "";
       arrowWrap.style.display = "";
       badgeIcon.style.display = "";
-      const peak = Math.max(...sliced);
-      document.getElementById("heroFromNum").textContent = peak;
-      const pct = Math.round(((peak-sliced[sliced.length-1])/peak)*100);
-      const tpl = currentLang==="ar" ? `أسرع بنسبة ${pct}%` : `${pct}% faster`;
-      badgeText.textContent = tpl;
-      h1.textContent = d.heroH1;
-      lede.textContent = d.heroLede;
+      document.getElementById("heroFromNum").textContent = startV;
+      const diff = startV ? Math.round(((startV - nowV) / startV) * 100) : 0;
+      const ar = currentLang==="ar";
+      if(diff >= 5){
+        badgeText.textContent = ar ? `أسرع بنسبة ${diff}%` : `${diff}% faster`;
+        h1.textContent = ar ? "استجابة الموقع لتفاعل الزوّار تحسّنت خلال هذه الفترة" : "The site's responsiveness to visitor interactions improved over this period";
+      } else if(diff <= -5){
+        badgeText.textContent = ar ? `أبطأ بنسبة ${Math.abs(diff)}%` : `${Math.abs(diff)}% slower`;
+        h1.textContent = ar ? "استجابة الموقع لتفاعل الزوّار تراجعت خلال هذه الفترة" : "The site's responsiveness to visitor interactions got slower over this period";
+      } else {
+        badgeText.textContent = ar ? "مستقرة" : "Stable";
+        h1.textContent = ar ? "استجابة الموقع لتفاعل الزوّار مستقرة خلال هذه الفترة" : "The site's responsiveness to visitor interactions held steady over this period";
+      }
+      let txt = ar
+        ? `في ${startM} كان زمن استجابة الموقع لتفاعل الزوّار ${startV} جزء من الثانية، والآن ${nowV} جزء من الثانية (${clsTxt}).`
+        : `In ${startM} the site took ${startV} ms to respond to visitor interactions; it now takes ${nowV} ms (${clsTxt}).`;
+      if(peakI > 0 && peakI < sliced.length-1 && peakV > startV * 1.1){
+        txt += ar ? ` أسوأ قراءة خلال الفترة كانت في ${peakM} (${peakV} جزء من الثانية).` : ` The worst reading in this period was in ${peakM} (${peakV} ms).`;
+      }
+      txt += ar ? " المصدر بيانات حقيقية من زوّار فعليين على متصفح Chrome، وليس اختباراً معملياً." : " Source: real Chrome visitor data, not a lab test.";
+      lede.textContent = txt;
       heroMeta.textContent = d.heroMeta;
     }
   }
@@ -3341,9 +3366,15 @@
     document.getElementById("heroBadgeIcon").style.display = "none";
     document.getElementById("heroToNum").textContent = desktopPerfScore;
     document.getElementById("heroUnit").textContent = d.outOf100;
-    document.getElementById("heroBadgeText").textContent = d.excellentBadge;
-    document.getElementById("heroH1").textContent = d.heroH1Desktop;
-    document.getElementById("heroLede").textContent = d.heroLedeDesktop;
+    const ar = currentLang==="ar";
+    const sc = desktopPerfScore;
+    document.getElementById("heroBadgeText").textContent = sc>=90 ? d.excellentBadge : (sc>=50 ? d.badgeNI : d.badgePoor);
+    document.getElementById("heroH1").textContent = sc>=90 ? d.heroH1Desktop
+      : (ar ? "أداء الموقع على أجهزة الكمبيوتر يحتاج تحسين" : "Desktop performance needs improvement");
+    const allGood = desktopMetrics.every(m => classify(m.data[m.data.length-1], m.good, m.ni)==="good");
+    document.getElementById("heroLede").textContent = allGood ? d.heroLedeDesktop
+      : (ar ? "هذا اختبار معملي (Lighthouse) — قياس واحد في لحظة محددة، وليس بيانات زوّار حقيقية متراكمة. بعض المقاييس التالية خارج النطاق الجيد."
+            : "This is a lab test (Lighthouse) — a single point-in-time measurement, not accumulated real-visitor data. Some metrics below are outside the good range.");
     document.getElementById("heroMeta").textContent = d.heroMetaDesktop;
   }
 
@@ -3592,12 +3623,12 @@
           }
           if(D.latestMonthLabel && D.latestMonthLabel[l]){
             const rxJ = l==="ar" ? /يونيو 2026/ : /June 2026/;
-            if(dd.heroMetaJune) dd.heroMetaJune = dd.heroMetaJune.replace(rxJ, D.latestMonthLabel[l]);
+            if(dd.heroMetaJune) dd.heroMetaJune = dd.heroMetaJune.replace(rxJ, l==="ar" ? `آخر 28 يوماً حتى ${D.latestMonthLabel[l]}` : `last 28 days to ${D.latestMonthLabel[l]}`);
             dd.footDate = l==="ar" ? `آخر تحديث: بيانات ${D.latestMonthLabel[l]} — أحدث المتاح` : `Last updated: ${D.latestMonthLabel[l]} data — most recent available`;
-            dd.heroMetaDesktop = l==="ar" ? `اختبار معملي (Lighthouse 13.4.0) · ${D.latestMonthLabel[l]} · أجهزة الكمبيوتر المكتبي` : `Lab test (Lighthouse 13.4.0) · ${D.latestMonthLabel[l]} · Desktop devices`;
-          }
-          if(D.latestShort && D.latestShort[l]){
-            dd.rangeJune = l==="ar" ? (D.latestShort[l] + " فقط") : (D.latestShort[l] + " only");
+            if(D.desktopCheckedAt){
+              const v = D.lighthouseVersion ? ` ${D.lighthouseVersion}` : "";
+              dd.heroMetaDesktop = l==="ar" ? `اختبار معملي (Lighthouse${v}) · ${D.desktopCheckedAt} · أجهزة الكمبيوتر المكتبي` : `Lab test (Lighthouse${v}) · ${D.desktopCheckedAt} · Desktop devices`;
+            }
           }
         });
         applyLang(currentLang); // full re-render with live data
