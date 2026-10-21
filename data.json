@@ -2,12 +2,10 @@
   "reportMonth": "2026-10",
   "seriesStart": "2025-08",
   "mobilePerfPrev": 77,
-  "mobilePerfNow": 51,
-  "desktopPerfScore": 63,
+  "mobilePerfNow": 42,
+  "desktopPerfScore": 60,
   "monthLabels": {
     "ar": [
-      "أبريل",
-      "أبريل",
       "مايو",
       "مايو",
       "مايو",
@@ -30,11 +28,11 @@
       "سبتمبر",
       "سبتمبر",
       "سبتمبر",
+      "أكتوبر",
+      "أكتوبر",
       "أكتوبر"
     ],
     "en": [
-      "Apr",
-      "Apr",
       "May",
       "May",
       "May",
@@ -57,12 +55,14 @@
       "Sep",
       "Sep",
       "Sep",
+      "Oct",
+      "Oct",
       "Oct"
     ]
   },
   "periodLabel": {
-    "ar": "أبريل 2026 – أكتوبر 2026",
-    "en": "Apr 2026 – Oct 2026"
+    "ar": "مايو 2026 – أكتوبر 2026",
+    "en": "May 2026 – Oct 2026"
   },
   "latestShort": {
     "ar": "أكتوبر",
@@ -76,151 +76,151 @@
     {
       "key": "lcp",
       "data": [
-        3801,
-        3597,
-        3505,
-        3427,
+        3634,
+        3548,
+        3473,
+        3445,
+        3464,
+        3400,
+        3548,
+        3637,
+        3574,
+        3572,
+        3377,
+        3174,
+        3248,
+        3285,
         3371,
-        3321,
-        3356,
-        3293,
-        3403,
-        3514,
-        3435,
-        3437,
-        3251,
-        3118,
-        3187,
-        3227,
-        3323,
-        3307,
-        3344,
-        3291,
-        3185,
-        3148,
-        3075,
-        3099,
-        3157
+        3394,
+        3421,
+        3338,
+        3199,
+        3161,
+        3091,
+        3122,
+        3199,
+        3245,
+        3376
       ]
     },
     {
       "key": "inp",
       "data": [
-        375,
-        428,
-        467,
-        538,
-        396,
-        232,
+        667,
+        685,
+        555,
+        323,
+        239,
+        187,
+        183,
+        188,
+        187,
+        185,
+        181,
+        179,
+        177,
+        178,
+        180,
+        176,
+        178,
+        180,
+        188,
+        194,
+        198,
+        204,
         192,
-        154,
-        154,
-        158,
-        158,
-        158,
-        154,
-        150,
-        149,
-        150,
-        154,
-        148,
-        149,
-        152,
-        154,
-        154,
-        153,
-        158,
-        153
+        209,
+        250
       ]
     },
     {
       "key": "cls",
       "data": [
-        0.04,
-        0.06,
-        0.06,
-        0.06,
-        0.06,
-        0.06,
-        0.04,
-        0.04,
+        0.02,
+        0.02,
         0.03,
         0.02,
-        0.04,
-        0.04,
-        0.06,
-        0.06,
-        0.06,
+        0.01,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
         0.06,
         0.05,
-        0.06,
-        0.06,
-        0.06,
-        0.07,
-        0.07,
-        0.07,
-        0.07,
-        0.07
+        0.11,
+        0.1,
+        0.1,
+        0.09,
+        0.03
       ]
     },
     {
       "key": "fcp",
       "data": [
-        3028,
-        2888,
-        2822,
-        2789,
-        2752,
-        2726,
-        2778,
-        2773,
-        2894,
-        2974,
-        2913,
-        2884,
-        2691,
-        2603,
-        2658,
+        2947,
+        2932,
+        2886,
+        2823,
+        2857,
+        2860,
+        3023,
+        3113,
+        3075,
+        3052,
+        2817,
+        2657,
         2692,
-        2758,
-        2765,
-        2793,
-        2787,
-        2713,
-        2672,
-        2581,
-        2611,
-        2681
+        2747,
+        2822,
+        2815,
+        2868,
+        2817,
+        2753,
+        2702,
+        2610,
+        2660,
+        2756,
+        2792,
+        2870
       ]
     },
     {
       "key": "ttfb",
       "data": [
-        2402,
-        2289,
-        2234,
-        2220,
-        2209,
-        2190,
-        2193,
-        2206,
-        2353,
-        2436,
-        2410,
-        2419,
-        2267,
-        2152,
-        2225,
-        2187,
-        2252,
-        2289,
-        2289,
-        2341,
-        2297,
+        2291,
+        2278,
+        2274,
+        2256,
+        2250,
         2247,
+        2406,
+        2491,
+        2481,
+        2505,
+        2346,
+        2171,
+        2219,
         2202,
-        2238,
-        2326
+        2268,
+        2305,
+        2336,
+        2360,
+        2291,
+        2282,
+        2207,
+        2277,
+        2352,
+        2419,
+        2474
       ]
     }
   ],
@@ -228,31 +228,31 @@
     {
       "key": "d_fcp",
       "data": [
-        606
+        680
       ]
     },
     {
       "key": "d_lcp",
       "data": [
-        1561
+        910
       ]
     },
     {
       "key": "d_tbt",
       "data": [
-        760
+        9950
       ]
     },
     {
       "key": "d_cls",
       "data": [
-        0.01
+        0.0
       ]
     },
     {
       "key": "d_si",
       "data": [
-        2388
+        4339
       ]
     }
   ],
@@ -416,8 +416,8 @@
           "desktop": 94
         },
         "2026-10": {
-          "mobile": 73,
-          "desktop": 91
+          "mobile": 42,
+          "desktop": 60
         }
       }
     }
@@ -598,16 +598,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 51,
-      "unusedCssKb": 41,
-      "unusedJsKb": 58,
+      "mobileScore": 42,
+      "unusedCssKb": 26,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 51,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 60,
+      "seoScore": 62,
       "competesWith": [
         {
           "query": "بوابة العمل عن بعد",
@@ -658,11 +658,11 @@
           "labelEn": "No H1 heading on the page"
         },
         {
-          "code": "mobile_performance_below_target",
+          "code": "mobile_performance_poor",
           "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (51/100)",
-          "labelEn": "Mobile performance below target (51/100)"
+          "severity": "high",
+          "labelAr": "أداء الجوال ضعيف (42/100)",
+          "labelEn": "Poor mobile performance (42/100)"
         },
         {
           "code": "keyword_cannibalization",
@@ -769,16 +769,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 79,
-      "unusedCssKb": 38,
-      "unusedJsKb": 58,
+      "mobileScore": 43,
+      "unusedCssKb": 24,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 68,
+      "seoScore": 63,
       "competesWith": null,
       "issues": [
         {
@@ -814,11 +814,11 @@
           "labelEn": "Orphan page — no other scanned page links to it"
         },
         {
-          "code": "mobile_performance_below_target",
+          "code": "mobile_performance_poor",
           "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (79/100)",
-          "labelEn": "Mobile performance below target (79/100)"
+          "severity": "high",
+          "labelAr": "أداء الجوال ضعيف (43/100)",
+          "labelEn": "Poor mobile performance (43/100)"
         }
       ]
     },
@@ -985,16 +985,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 52,
-      "unusedCssKb": 37,
-      "unusedJsKb": 58,
+      "mobileScore": 45,
+      "unusedCssKb": 22,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 74,
+      "seoScore": 75,
       "competesWith": null,
       "issues": [
         {
@@ -1041,11 +1041,11 @@
           "labelEn": "Orphan page — no other scanned page links to it"
         },
         {
-          "code": "mobile_performance_below_target",
+          "code": "mobile_performance_poor",
           "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (52/100)",
-          "labelEn": "Mobile performance below target (52/100)"
+          "severity": "high",
+          "labelAr": "أداء الجوال ضعيف (45/100)",
+          "labelEn": "Poor mobile performance (45/100)"
         }
       ]
     },
@@ -1149,7 +1149,7 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 73,
+      "mobileScore": 72,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1197,8 +1197,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (73/100)",
-          "labelEn": "Mobile performance below target (73/100)"
+          "labelAr": "أداء الجوال دون الهدف (72/100)",
+          "labelEn": "Mobile performance below target (72/100)"
         }
       ]
     },
@@ -1314,16 +1314,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 70,
-      "unusedCssKb": 40,
-      "unusedJsKb": 58,
+      "mobileScore": 66,
+      "unusedCssKb": 26,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 69,
+      "seoScore": 71,
       "competesWith": null,
       "issues": [
         {
@@ -1362,8 +1362,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (70/100)",
-          "labelEn": "Mobile performance below target (70/100)"
+          "labelAr": "أداء الجوال دون الهدف (66/100)",
+          "labelEn": "Mobile performance below target (66/100)"
         }
       ]
     },
@@ -1438,16 +1438,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 58,
-      "unusedCssKb": 38,
-      "unusedJsKb": 58,
+      "mobileScore": 45,
+      "unusedCssKb": 23,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 69,
+      "seoScore": 70,
       "competesWith": null,
       "issues": [
         {
@@ -1476,11 +1476,11 @@
           "labelEn": "Orphan page — no other scanned page links to it"
         },
         {
-          "code": "mobile_performance_below_target",
+          "code": "mobile_performance_poor",
           "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (58/100)",
-          "labelEn": "Mobile performance below target (58/100)"
+          "severity": "high",
+          "labelAr": "أداء الجوال ضعيف (45/100)",
+          "labelEn": "Poor mobile performance (45/100)"
         }
       ]
     },
@@ -1555,16 +1555,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 79,
-      "unusedCssKb": 40,
-      "unusedJsKb": 58,
+      "mobileScore": 67,
+      "unusedCssKb": 26,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 68,
+      "seoScore": 69,
       "competesWith": null,
       "issues": [
         {
@@ -1596,8 +1596,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (79/100)",
-          "labelEn": "Mobile performance below target (79/100)"
+          "labelAr": "أداء الجوال دون الهدف (67/100)",
+          "labelEn": "Mobile performance below target (67/100)"
         }
       ]
     },
@@ -1683,16 +1683,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 71,
-      "unusedCssKb": 37,
-      "unusedJsKb": 58,
+      "mobileScore": 43,
+      "unusedCssKb": 22,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 49,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 79,
+      "seoScore": 75,
       "competesWith": null,
       "issues": [
         {
@@ -1714,11 +1714,11 @@
           "labelEn": "No H1 heading on the page"
         },
         {
-          "code": "mobile_performance_below_target",
+          "code": "mobile_performance_poor",
           "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (71/100)",
-          "labelEn": "Mobile performance below target (71/100)"
+          "severity": "high",
+          "labelAr": "أداء الجوال ضعيف (43/100)",
+          "labelEn": "Poor mobile performance (43/100)"
         }
       ]
     },
@@ -1798,16 +1798,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 70,
-      "unusedCssKb": 199,
-      "unusedJsKb": 157,
+      "mobileScore": 57,
+      "unusedCssKb": 184,
+      "unusedJsKb": 170,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 58,
+      "seoScore": 54,
       "competesWith": null,
       "issues": [
         {
@@ -1846,22 +1846,22 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (70/100)",
-          "labelEn": "Mobile performance below target (70/100)"
+          "labelAr": "أداء الجوال دون الهدف (57/100)",
+          "labelEn": "Mobile performance below target (57/100)"
         },
         {
           "code": "unused_css_high",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "CSS غير مستخدم (199KB)",
-          "labelEn": "High unused CSS (199KB)"
+          "labelAr": "CSS غير مستخدم (184KB)",
+          "labelEn": "High unused CSS (184KB)"
         },
         {
           "code": "unused_js_high",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "JavaScript غير مستخدم (157KB)",
-          "labelEn": "High unused JavaScript (157KB)"
+          "labelAr": "JavaScript غير مستخدم (170KB)",
+          "labelEn": "High unused JavaScript (170KB)"
         }
       ]
     },
@@ -1969,9 +1969,9 @@
           "https://www.silah.com.sa/wp-content/uploads/2022/10/نظام-صلة-لقياس-الإنتاجية-وإدارة-المشاريع.pdf/"
         ]
       },
-      "mobileScore": 66,
-      "unusedCssKb": 38,
-      "unusedJsKb": 58,
+      "mobileScore": 39,
+      "unusedCssKb": 23,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
@@ -2060,16 +2060,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 70,
-      "unusedCssKb": 39,
-      "unusedJsKb": 58,
+      "mobileScore": 66,
+      "unusedCssKb": 24,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 49,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 66,
+      "seoScore": 68,
       "competesWith": null,
       "issues": [
         {
@@ -2087,8 +2087,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (70/100)",
-          "labelEn": "Mobile performance below target (70/100)"
+          "labelAr": "أداء الجوال دون الهدف (66/100)",
+          "labelEn": "Mobile performance below target (66/100)"
         }
       ]
     },
@@ -2163,16 +2163,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 72,
-      "unusedCssKb": 40,
-      "unusedJsKb": 58,
+      "mobileScore": 68,
+      "unusedCssKb": 25,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 66,
+      "seoScore": 69,
       "competesWith": null,
       "issues": [
         {
@@ -2204,8 +2204,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (72/100)",
-          "labelEn": "Mobile performance below target (72/100)"
+          "labelAr": "أداء الجوال دون الهدف (68/100)",
+          "labelEn": "Mobile performance below target (68/100)"
         }
       ]
     },
@@ -2280,16 +2280,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 63,
-      "unusedCssKb": 40,
-      "unusedJsKb": 58,
+      "mobileScore": 68,
+      "unusedCssKb": 25,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 64,
+      "seoScore": 69,
       "competesWith": null,
       "issues": [
         {
@@ -2332,8 +2332,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (63/100)",
-          "labelEn": "Mobile performance below target (63/100)"
+          "labelAr": "أداء الجوال دون الهدف (68/100)",
+          "labelEn": "Mobile performance below target (68/100)"
         }
       ]
     },
@@ -2408,16 +2408,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 61,
-      "unusedCssKb": 40,
-      "unusedJsKb": 58,
+      "mobileScore": 68,
+      "unusedCssKb": 25,
+      "unusedJsKb": 71,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 63,
+      "seoScore": 69,
       "competesWith": null,
       "issues": [
         {
@@ -2449,8 +2449,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (61/100)",
-          "labelEn": "Mobile performance below target (61/100)"
+          "labelAr": "أداء الجوال دون الهدف (68/100)",
+          "labelEn": "Mobile performance below target (68/100)"
         }
       ]
     },
@@ -8033,11 +8033,11 @@
   ],
   "pageHealthCheckedMonth": "2026-10",
   "seoScore": 100,
-  "bestPracticesScore": 81,
-  "a11yScoreMobile": 97,
-  "a11yScoreDesktop": 90,
+  "bestPracticesScore": 77,
+  "a11yScoreMobile": 100,
+  "a11yScoreDesktop": 93,
   "lighthouseScoresCheckedMonth": "2026-10",
-  "pageHealthScore": 66,
+  "pageHealthScore": 67,
   "pageHealthScoreCheckedMonth": "2026-10",
   "aiSearchReadiness": {
     "crawlers": [
@@ -8096,7 +8096,7 @@
   "aiSearchReadinessCheckedMonth": "2026-10",
   "keywordsSource": "gsc",
   "keywordsCheckedMonth": "2026-10",
-  "lastRefreshedAt": "2026-10-21T11:55:58.863955+00:00",
+  "lastRefreshedAt": "2026-10-21T12:11:55.514497+00:00",
   "scanCoverage": {
     "source": "sitemap",
     "totalPages": 53,
@@ -8116,8 +8116,8 @@
       "shared": 48
     },
     "bySeverity": {
-      "high": 20,
-      "medium": 162,
+      "high": 25,
+      "medium": 157,
       "low": 18
     },
     "totalIssues": 200,
@@ -9266,8 +9266,8 @@
       {
         "id": "home",
         "nameAr": "حلول التوظيف والتوطين",
-        "seoScore": 60,
-        "mobileScore": 51,
+        "seoScore": 62,
+        "mobileScore": 42,
         "altIssueCount": 22,
         "schemaOk": true,
         "issueCount": 5
@@ -9275,8 +9275,8 @@
       {
         "id": "%d8%a2%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%aa%d9%82%d8%af%d9%85-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%88%d8%b8%d9%8a%d9%81%d8%a9",
         "nameAr": "آلية التقدم على الوظيفة",
-        "seoScore": 68,
-        "mobileScore": 79,
+        "seoScore": 63,
+        "mobileScore": 43,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 5
@@ -9293,8 +9293,8 @@
       {
         "id": "%d9%85%d8%af%d9%88%d9%86%d8%a9",
         "nameAr": "مدونة",
-        "seoScore": 74,
-        "mobileScore": 52,
+        "seoScore": 75,
+        "mobileScore": 45,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 6
@@ -9303,7 +9303,7 @@
         "id": "%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9",
         "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
         "seoScore": 58,
-        "mobileScore": 73,
+        "mobileScore": 72,
         "altIssueCount": 14,
         "schemaOk": false,
         "issueCount": 5
@@ -9311,8 +9311,8 @@
       {
         "id": "%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a",
         "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
-        "seoScore": 69,
-        "mobileScore": 70,
+        "seoScore": 71,
+        "mobileScore": 66,
         "altIssueCount": 10,
         "schemaOk": true,
         "issueCount": 5
@@ -9320,8 +9320,8 @@
       {
         "id": "silah-academy-for-e-learning",
         "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد",
-        "seoScore": 69,
-        "mobileScore": 58,
+        "seoScore": 70,
+        "mobileScore": 45,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -9329,8 +9329,8 @@
       {
         "id": "defining-the-problem",
         "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية",
-        "seoScore": 68,
-        "mobileScore": 79,
+        "seoScore": 69,
+        "mobileScore": 67,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -9338,8 +9338,8 @@
       {
         "id": "infrastructure",
         "nameAr": "البنية التحتية",
-        "seoScore": 79,
-        "mobileScore": 71,
+        "seoScore": 75,
+        "mobileScore": 43,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 3
@@ -9347,8 +9347,8 @@
       {
         "id": "%d9%81%d8%b1%d8%b5_%d9%88%d8%b8%d9%8a%d9%81%d9%8a%d8%a9_%d8%aa%d9%82%d9%86%d9%8a%d8%a9",
         "nameAr": "فرص وظيفية تقنية",
-        "seoScore": 58,
-        "mobileScore": 70,
+        "seoScore": 54,
+        "mobileScore": 57,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 7
@@ -9357,7 +9357,7 @@
         "id": "gitex2022",
         "nameAr": "Gitex2022 |",
         "seoScore": null,
-        "mobileScore": 66,
+        "mobileScore": 39,
         "altIssueCount": 7,
         "schemaOk": true,
         "issueCount": 1
@@ -9365,8 +9365,8 @@
       {
         "id": "terms-and-conditions",
         "nameAr": "الشروط والأحكام",
-        "seoScore": 66,
-        "mobileScore": 70,
+        "seoScore": 68,
+        "mobileScore": 66,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 2
@@ -9374,8 +9374,8 @@
       {
         "id": "%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85",
         "nameAr": "دراسة مستقبل العمل لعام 2022م",
-        "seoScore": 66,
-        "mobileScore": 72,
+        "seoScore": 69,
+        "mobileScore": 68,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -9383,8 +9383,8 @@
       {
         "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
         "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية)",
-        "seoScore": 64,
-        "mobileScore": 63,
+        "seoScore": 69,
+        "mobileScore": 68,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 5
@@ -9392,8 +9392,8 @@
       {
         "id": "%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9",
         "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي)",
-        "seoScore": 63,
-        "mobileScore": 61,
+        "seoScore": 69,
+        "mobileScore": 68,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -9744,7 +9744,7 @@
   },
   "indexCleanup": {
     "checkedAt": "2026-10-21",
-    "generatedAt": "2026-10-21T11:50:58+00:00",
+    "generatedAt": "2026-10-21T12:06:58+00:00",
     "source": "wordpress+live",
     "total": 139,
     "byStatus": {
@@ -13781,5 +13781,12 @@
   "mobilePerfMonth": "2026-10",
   "desktopCheckedAt": "2026-10-21",
   "lighthouseVersion": "13.5.0",
-  "mobilePerfCheckedAt": "2026-10-21"
+  "mobilePerfCheckedAt": "2026-10-21",
+  "cruxFormFactor": "PHONE",
+  "deviceShare": {
+    "phone": 67,
+    "desktop": 24,
+    "tablet": 8,
+    "asOf": "2026-10-19"
+  }
 }
