@@ -772,14 +772,14 @@
     <div class="device-grid reveal">
       <div>
         <div class="stackbar">
-          <div class="seg" style="width:73%;background:var(--teal);">73%</div>
-          <div class="seg" style="width:24%;background:var(--signal);">24%</div>
-          <div class="seg" style="width:3%;background:#c7c2b4;color:var(--ink);">‎</div>
+          <div class="seg" id="devSegPhone" style="width:73%;background:var(--teal);">73%</div>
+          <div class="seg" id="devSegDesktop" style="width:24%;background:var(--signal);">24%</div>
+          <div class="seg" id="devSegTablet" style="width:3%;background:#c7c2b4;color:var(--ink);">‎</div>
         </div>
         <ul class="device-legend">
-          <li><span class="sw" style="background:var(--teal)"></span><span data-i18n="deviceLegendPhone">جوال</span><span class="v num">73%</span></li>
-          <li><span class="sw" style="background:var(--signal)"></span><span data-i18n="deviceLegendDesktop">كمبيوتر مكتبي</span><span class="v num">24%</span></li>
-          <li><span class="sw" style="background:#c7c2b4"></span><span data-i18n="deviceLegendTablet">جهاز لوحي</span><span class="v num">3%</span></li>
+          <li><span class="sw" style="background:var(--teal)"></span><span data-i18n="deviceLegendPhone">جوال</span><span class="v num" id="devVPhone">73%</span></li>
+          <li><span class="sw" style="background:var(--signal)"></span><span data-i18n="deviceLegendDesktop">كمبيوتر مكتبي</span><span class="v num" id="devVDesktop">24%</span></li>
+          <li><span class="sw" style="background:#c7c2b4"></span><span data-i18n="deviceLegendTablet">جهاز لوحي</span><span class="v num" id="devVTablet">3%</span></li>
         </ul>
       </div>
       <p class="device-note" data-i18n="deviceNote">٣ من كل ٤ زوّار يفتحون الموقع من الجوال — لهذا تركّز هذه البيانات على تجربة الجوال تحديداً، فهي التجربة التي يشعر بها أغلب زوّار الموقع فعلياً.</p>
@@ -792,7 +792,7 @@
     <div class="block-head reveal">
       <p class="block-eyebrow" data-i18n="pageEyebrow">لكل صفحة على حدة</p>
       <h2 data-i18n="pageH2">أداء أهم صفحات الموقع</h2>
-      <p data-i18n="pageP">البيانات أعلاه سيتك (Chrome) تعكس الموقع ككل. هنا تفصيل أقرب لواقع كل صفحة تسويقية على حدة، ليعرف الفريق أين يركّز أولاً.</p>
+      <p data-i18n="pageP"></p>
     </div>
     <table class="kw-table reveal" id="pageTable">
       <thead><tr>
@@ -1154,10 +1154,24 @@
     items.forEach(function(x){
       var code = x.issue.code;
       if(!groups[code]){
-        groups[code] = { code:code, issue:x.issue, pages:[] };
+        groups[code] = { code:code, issue:x.issue, pages:[], issues:[] };
       }
       groups[code].pages.push(x.page);
+      groups[code].issues.push(x.issue);
     });
+    // Labels like "22 images missing alt text" or "(52/100)" belong to ONE
+    // page; used as the group title they read as if every page in the group
+    // had that value. Group title is generic, per-page values in the list.
+    var GENERIC = {
+      ar: { alt_text_missing:"صور بدون نص بديل (Alt Text)", mobile_performance_poor:"أداء الجوال ضعيف (أقل من 50/100)",
+            mobile_performance_below_target:"أداء الجوال دون الهدف (50–89/100)", unused_js_high:"JavaScript غير مستخدم بحجم كبير (أكثر من 150KB)",
+            unused_css_high:"CSS غير مستخدم بحجم كبير (أكثر من 60KB)", meta_description_too_long:"الوصف التعريفي طويل",
+            meta_description_too_short:"الوصف التعريفي قصير", title_too_short:"عنوان الصفحة قصير", title_too_long:"عنوان الصفحة طويل" },
+      en: { alt_text_missing:"Images missing alt text", mobile_performance_poor:"Poor mobile performance (below 50/100)",
+            mobile_performance_below_target:"Mobile performance below target (50–89/100)", unused_js_high:"High unused JavaScript (over 150KB)",
+            unused_css_high:"High unused CSS (over 60KB)", meta_description_too_long:"Meta description too long",
+            meta_description_too_short:"Meta description too short", title_too_short:"Title too short", title_too_long:"Title too long" }
+    };
 
     var sevRank = { high:0, medium:1, low:2 };
     var ordered = Object.keys(groups).map(function(k){ return groups[k]; })
@@ -1169,12 +1183,14 @@
     var sevLabel = { high:t().sevHigh, medium:t().sevMedium, low:t().sevLow };
 
     el.innerHTML = ordered.map(function(g){
-      var label = state.lang === "ar" ? g.issue.labelAr : g.issue.labelEn;
-      var pagesHtml = g.pages.map(function(p){
+      var generic = GENERIC[state.lang === "ar" ? "ar" : "en"][g.code];
+      var label = generic || (state.lang === "ar" ? g.issue.labelAr : g.issue.labelEn);
+      var pagesHtml = g.pages.map(function(p, i){
         var name = (state.lang === "ar" ? p.nameAr : p.nameEn) || p.id;
+        var own = generic ? ' <span style="color:var(--ink-soft);font-size:12px">— ' + esc(state.lang === "ar" ? g.issues[i].labelAr : g.issues[i].labelEn) + '</span>' : '';
         return p.url
-          ? '<div><a class="row-page-link" href="' + safeHref(p.url) + '" target="_blank" rel="noopener noreferrer">' + esc(name) + '</a></div>'
-          : '<div>' + esc(name) + '</div>';
+          ? '<div><a class="row-page-link" href="' + safeHref(p.url) + '" target="_blank" rel="noopener noreferrer">' + esc(name) + '</a>' + own + '</div>'
+          : '<div>' + esc(name) + own + '</div>';
       }).join("");
       return '<div class="ib-group sev-' + g.issue.severity + '">' +
         '<div class="ib-g-head">' +
@@ -1417,7 +1433,7 @@
   <div class="wrap">
     <h4 data-i18n="footH4">عن هذه البيانات</h4>
     <p data-i18n="footP1">البيانات أعلاه مأخوذة من تقرير Chrome لتجربة المستخدم الحقيقية (CrUX) — قياسات حقيقية من زوّار فعليين يستخدمون متصفح Chrome، وليست اختباراً معملياً. تغطي الفترة من أغسطس 2025 إلى يونيو 2026، عند النسبة المئوية 75 — أي أن 75% من الزوّار حصلوا على تجربة تساوي أو أفضل من الرقم الموضّح.</p>
-    <p data-i18n="footP2">زمن استجابة الخادم (TTFB) كان أقل المقاييس تحسّناً خلال هذه الفترة، وهو محور التركيز القادم.</p>
+    <p data-i18n="footP2"></p>
     <p data-i18n="footP3">الأولويات وجدول الصفحات أعلاه يُحسبان تلقائياً من بيانات هذا الشهر. عرض بيانات الزيارات والنقرات لكل صفحة يتطلب استكمال إعداد صلاحية الوصول إلى Google Search Console أولاً.</p>
     <div class="foot-credit">
       <span data-i18n="footCredit">إعداد: تقنية المعلومات — شركة صلة</span>
@@ -1562,14 +1578,14 @@
       card2Title:"سرعة الاستجابة",
       card3Title:"ثبات العرض",
       detailEyebrow:"بالتفصيل", detailH2:"كل مقياس على حدة",
-      detailP:"اضغط على أي مقياس لعرض تعريفه، واتجاهه خلال آخر 10 أشهر، وما يعنيه عملياً.",
+      detailP:"اضغط على أي مقياس لعرض تعريفه، واتجاهه خلال الفترة المعروضة، وما يعنيه عملياً.",
       deviceEyebrow:"السياق", deviceH2:"من أين يزورنا الناس",
       deviceLegendPhone:"جوال", deviceLegendDesktop:"كمبيوتر مكتبي", deviceLegendTablet:"جهاز لوحي",
       deviceNote:"٣ من كل ٤ زوّار يفتحون الموقع من الجوال — لهذا تركّز هذه البيانات على تجربة الجوال تحديداً، فهي التجربة التي يشعر بها أغلب زوّار الموقع فعلياً.",
       footH4:"عن هذه البيانات",
       footP1:"البيانات أعلاه مأخوذة من تقرير Chrome لتجربة المستخدم الحقيقية (CrUX) — قياسات حقيقية من زوّار فعليين يستخدمون متصفح Chrome، وليست اختباراً معملياً. تغطي الفترة من أغسطس 2025 إلى يونيو 2026، عند النسبة المئوية 75 — أي أن 75% من الزوّار حصلوا على تجربة تساوي أو أفضل من الرقم الموضّح.",
-      footP2:"زمن استجابة الخادم (TTFB) كان أقل المقاييس تحسّناً خلال هذه الفترة، وهو محور التركيز القادم.",
-      footP3:"الأولويات وجدول الصفحات أعلاه يُحسبان تلقائياً من بيانات هذا الشهر. عرض بيانات الزيارات والنقرات لكل صفحة يتطلب استكمال إعداد صلاحية الوصول إلى Google Search Console أولاً.",
+      footP2:"",
+      footP3:"الأولويات والجداول أعلاه تُحسب تلقائياً من آخر تحديث للبيانات. ترتيب الكلمات المفتاحية مأخوذ من Google Search Console، أما الزيارات والنقرات لكل صفحة فلم تُضف للتقرير بعد.",
       footCredit:"إعداد: تقنية المعلومات — شركة صلة", footDate:"آخر تحديث: 5 يوليو 2026 (بيانات يونيو 2026 — أحدث المتاح)",
       gaugeGood:"جيد", gaugeNI:"يحتاج تحسين", gaugePoor:"ضعيف",
       ownerLabel:"المسؤول", ownerTech:"التقنية", ownerMkt:"التسويق", ownerShared:"مشترك — تقنية + تسويق",
@@ -1577,10 +1593,10 @@
       targetsP:"لكل مؤشر: قيمته الحالية، المعيار المرجعي وفق تصنيف جوجل الرسمي، والهدف المتفق على الوصول له خلال الربع القادم — مع تحديد الطرف المسؤول، لتكون خطة العمل مبنية على أرقام واضحة.",
       tgColMetric:"المؤشر", tgColCurrent:"القيمة الحالية", tgColBench:"المعيار المرجعي (جوجل)", tgColTarget:"الهدف — الربع القادم", tgColOwner:"المسؤول",
       tgLighthouseMobile:"مؤشر أداء الجوال (Lighthouse)", tgLighthouseDesktop:"مؤشر أداء سطح المكتب (Lighthouse)",
-      tgTargetMobile:"الوصول إلى 90 أو أعلى", tgTargetKeep:"الحفاظ على 95 أو أعلى",
+      tgTargetMobile:"الوصول إلى 90 أو أعلى", tgTargetKeep:"الحفاظ على 90 أو أعلى",
       tgKwName:"كلمة «خدمات التوطين» في نتائج البحث", tgKwCurrent:"لا تظهر حالياً", tgKwTarget:"دخول أفضل 20 نتيجة عبر صفحة مخصصة",
       tgSchemaName:"البيانات المنظّمة (Schema)", tgSchemaCurrent:"غير مفعّلة", tgSchemaTarget:"تفعيلها على الصفحات الرئيسية",
-      tgMeasureNote:"ملاحظة حول حداثة البيانات: قياسات Lighthouse تُحدَّث تلقائياً مطلع كل شهر. أما بيانات الزوّار الحقيقية (CrUX) فتصدرها جوجل بتأخير يقارب 28 يوماً عن الشهر الفعلي — لذا تكون بيانات الشهر السابق غالباً هي الأحدث المتاحة فعلياً.",
+      tgMeasureNote:"ملاحظة حول حداثة البيانات: قياسات Lighthouse تُعاد مع كل تحديث للبيانات (تلقائياً كل شهر أو عند الضغط على «تحديث البيانات الآن»)، وتتفاوت بضع نقاط بين اختبار وآخر. أما بيانات الزوّار الحقيقية (CrUX) فتنشرها جوجل أسبوعياً، وكل قراءة تمثل آخر 28 يوماً — لذلك أي تحسين على الموقع يظهر فيها تدريجياً خلال 4 أسابيع تقريباً.",
       meaningLabel:"ماذا يعني هذا عملياً",
       chartTitle:"الاتجاه",
       rangeJune:"آخر 28 يوماً", rangeLast3:"آخر 3 أشهر", rangeFull:"الفترة الكاملة",
@@ -1604,7 +1620,7 @@
       mktMetaWhy:"بدون وصف تعريفي، جوجل يختار سطرًا عشوائيًا من محتوى الصفحة لعرضه في نتائج البحث — غالبًا لا يشجّع الزائر على الضغط.",
       mktMetaHow:"من ووردبريس: افتح الصفحة للتعديل ← مربع Yoast SEO أسفل المحرر ← اكتب وصف من <strong>120-155 حرف</strong> يتضمن الكلمة المفتاحية المستهدفة.",
       mktKwTitle:(n)=>`تقوية المحتوى لـ ${n} كلمات مفتاحية متأخرة`,
-      mktKwWhy:"هذه الكلمات إما خارج أفضل 5 صفحات في نتائج البحث أو في صفحة نتائج ثانية — محتوى أعمق ومخصص لها يرفع ترتيبها تدريجيًا.",
+      mktKwWhy:"هذه الكلمات إما لا تظهر في نتائج البحث أصلاً أو تظهر في الصفحة الثانية أو أبعد — محتوى أعمق يستهدفها بوضوح يرفع ترتيبها تدريجيًا.",
       mktKwHow:"راجعي الصفحة الحالية المستهدفة لكل كلمة، وأضيفي فقرات أعمق حولها، أو أنشئي صفحة مخصصة إذا ما فيه صفحة واضحة تستهدفها فعليًا.",
       mktAltTitle:(n)=>`إضافة نص بديل (Alt Text) لصور في ${n} صفحة`,
       mktAltWhy:"النص البديل يساعد جوجل على فهم محتوى الصور، ويحسّن تجربة الوصول لذوي الإعاقة البصرية.",
@@ -1672,13 +1688,13 @@
       scoresSyncedOn:(d)=>`محدَّث اعتبارًا من فحص ${d}`,
       scoreTargetReached:"✓ الهدف محقَّق بالفعل",
       scoreTargetGap:(n)=>`الهدف: <strong>100</strong> — بعد إصلاح ${n} ${n===1?'مشكلة':'مشاكل'}`,
-      kwNotInTop5:"خارج أفضل 5 صفحات",
+      kwNotInTop5:"لا تظهر (0 ظهور خلال 28 يوماً)",
       prioEyebrowBase:"أولويات الشهر",
       prioH2:"أهم الأشياء التي تستحق الاهتمام الآن",
       prioP:"ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.",
-      prioCwv:"{metric} على الجوال يحتاج تحسين — هذا أضعف مقياس أداء حالياً، ويؤثر مباشرة على تجربة الـ73% من الزوّار الذين يفتحون الموقع من الجوال.",
+      prioCwv:"{metric} {where}تصنيفه «{cls}» — هذا أضعف مقياس أداء حالياً، ويؤثر مباشرة على تجربة {phone}% من الزوّار الذين يفتحون الموقع من الجوال.",
       prioBroken:(n)=>`${n} ${n===1?'صفحة تُرجع':'صفحات تُرجع'} خطأ فعلي عند الفحص (HTTP غير ناجح) — أولوية عاجلة، الصفحة قد تكون معطّلة فعليًا للزوّار.`,
-      prioKw:"الكلمة المفتاحية {kw} لا تظهر ضمن نتائج البحث حالياً — فرصة حقيقية لصفحة مخصصة تستهدفها مباشرة.",
+      prioKw:"الكلمة المفتاحية {kw} لا تظهر في نتائج البحث (0 ظهور خلال آخر 28 يوماً حسب Search Console) — تحتاج محتوى يستهدفها بوضوح.",
       prioPending:"{n} صفحات رئيسية لم تُقَس بعد هذا الشهر — {link} لإضافتها والحصول على صورة كاملة.",
       prioPendingLink:"انتقل لجدول الصفحات",
       prioSchema:"تمت إضافة بيانات Schema يدوياً لـ 5 من صفحات الخدمات اليوم — الصفحة الرئيسية لا تزال بدونها.",
@@ -1689,8 +1705,8 @@
       statDesktopPerf:"مؤشر أداء سطح المكتب",
       statVsLastMonth:"مقارنة بالشهر الماضي",
       pageEyebrow:"لكل صفحة على حدة",
-      pageH2:"أداء أهم صفحات الموقع",
-      pageP:"البيانات أعلاه (CrUX) تعكس الموقع ككل. هنا تفصيل أقرب لواقع كل صفحة تسويقية على حدة، ليعرف الفريق أين يركّز أولاً.",
+      pageH2:"أداء الصفحة الرئيسية",
+      pageP:"الصفحة الرئيسية تُختبر على الجوال وسطح المكتب في كل تحديث للبيانات. أداء الجوال لباقي الصفحات موجود في جدول «سلامة الصفحات التقنية» أدناه.",
       pageColName:"الصفحة", pageColMobile:"الجوال", pageColDesktop:"سطح المكتب", pageColStatus:"الحالة", pageColReco:"ملاحظة",
       pageStatusMeasured:"تم القياس", pageStatusPending:"بانتظار القياس",
       healthEyebrow:"فحص تلقائي شهري", healthH2:"سلامة الصفحات التقنية",
@@ -1710,7 +1726,7 @@
       aiColCrawler:"الروبوت", aiColPurpose:"الغرض", aiColStatus:"الحالة",
       aiAllowed:"مسموح ✓", aiBlocked:"محظور",
       aiLlmsTxtLabel:"ملف llms.txt", aiLlmsTxtPresent:"موجود", aiLlmsTxtMissing:"غير موجود",
-      aiLlmsTxtNote:"ملاحظة: جوجل صرّحت رسمياً إنها تتجاهل هذا الملف تماماً في البحث ونتائج الذكاء الاصطناعي — لا يؤثر على الظهور في جوجل. قد يفيد فقط بعض روبوتات الذكاء الاصطناعي الأخرى (غير جوجل).",
+      aiLlmsTxtNote:"ملاحظة: جوجل أوضحت أنها لا تعتمد على هذا الملف في البحث أو في ميزات الذكاء الاصطناعي، فلا يؤثر على الظهور في جوجل. قد يفيد فقط بعض روبوتات الذكاء الاصطناعي الأخرى.",
       aiCheckedNote:"لم يُشغَّل الفحص بعد — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.",
       aiCheckedOn:(d)=>`آخر فحص: ${d}`,
       kwSourceGsc:(d)=>`المصدر: بيانات حقيقية من Google Search Console (آخر تحديث: ${d}) — متوسط الترتيب الفعلي خلال آخر 28 يوماً.`,
@@ -1757,14 +1773,14 @@
       card2Title:"Interactivity",
       card3Title:"Visual Stability",
       detailEyebrow:"In detail", detailH2:"Each metric, one by one",
-      detailP:"Tap any metric to see its definition, its trend over the last 10 months, and what it actually means.",
+      detailP:"Tap any metric to see its definition, its trend over the period shown, and what it actually means.",
       deviceEyebrow:"Context", deviceH2:"Where people visit us from",
       deviceLegendPhone:"Phone", deviceLegendDesktop:"Desktop", deviceLegendTablet:"Tablet",
       deviceNote:"3 out of 4 visitors open the site from their phone — that's why this data focuses specifically on the mobile experience, since that's what most visitors actually feel.",
       footH4:"About this data",
       footP1:"The data above comes from the Chrome Real User Experience Report (CrUX) — real measurements from actual visitors using Chrome, not a lab test. It covers August 2025 to June 2026, at the 75th percentile, meaning 75% of visitors had an experience equal to or better than the number shown.",
-      footP2:"Server response time (TTFB) improved the least over this period, and is the next area of focus.",
-      footP3:"The priorities and page table above are computed automatically from this month's data. Showing per-page traffic and click data requires finishing the Google Search Console access setup first.",
+      footP2:"",
+      footP3:"The priorities and tables above are computed automatically from the latest data refresh. Keyword rankings come from Google Search Console; per-page visits and clicks are not part of the report yet.",
       footCredit:"Prepared by: Information Technology — Silah", footDate:"Last updated: July 5, 2026 (June 2026 data — latest available)",
       gaugeGood:"Good", gaugeNI:"Needs Improvement", gaugePoor:"Poor",
       ownerLabel:"Owner", ownerTech:"IT", ownerMkt:"Marketing", ownerShared:"Shared — IT + Marketing",
@@ -1772,10 +1788,10 @@
       targetsP:"For each metric: its current value, the official Google benchmark, the agreed target for next quarter — and who owns it, so the action plan is built on clear numbers.",
       tgColMetric:"Metric", tgColCurrent:"Current", tgColBench:"Google Benchmark", tgColTarget:"Target — Next Quarter", tgColOwner:"Owner",
       tgLighthouseMobile:"Mobile Performance Score (Lighthouse)", tgLighthouseDesktop:"Desktop Performance Score (Lighthouse)",
-      tgTargetMobile:"Reach 90 or above", tgTargetKeep:"Maintain 95 or above",
+      tgTargetMobile:"Reach 90 or above", tgTargetKeep:"Keep it at 90 or above",
       tgKwName:"“Saudization services” keyword in search results", tgKwCurrent:"Not ranking", tgKwTarget:"Enter top 20 via a dedicated page",
       tgSchemaName:"Structured Data (Schema)", tgSchemaCurrent:"Not implemented", tgSchemaTarget:"Enable on key pages",
-      tgMeasureNote:"Data freshness note: Lighthouse scores are re-run automatically at the start of each month. Real-visitor data (CrUX) is published by Google with a ~28-day lag behind the current month — so the previous month's data is usually the most recent genuinely available.",
+      tgMeasureNote:"Data freshness note: Lighthouse scores are re-run on every data refresh (automatically each month, or via \"Refresh data now\") and vary by a few points between runs. Real-visitor data (CrUX) is published by Google weekly, and each reading covers the previous 28 days — so any improvement to the site shows up in it gradually over about 4 weeks.",
       meaningLabel:"What this means in practice",
       chartTitle:"Trend",
       rangeJune:"Last 28 days", rangeLast3:"Last 3 months", rangeFull:"Full period",
@@ -1799,7 +1815,7 @@
       mktMetaWhy:"Without a meta description, Google picks a random line from the page to show in search results — usually not compelling enough to click.",
       mktMetaHow:"In WordPress: open the page to edit ← Yoast SEO box below the editor ← write <strong>120-155 characters</strong> including the target keyword.",
       mktKwTitle:(n)=>`Strengthen content for ${n} underperforming keyword${n===1?'':'s'}`,
-      mktKwWhy:"These keywords are either outside the top 5 results or on a second results page — deeper, dedicated content gradually improves ranking.",
+      mktKwWhy:"These keywords either don't appear in search results at all or sit on page 2 or beyond — deeper content that clearly targets them lifts their ranking over time.",
       mktKwHow:"Review the current page targeting each keyword and add deeper content around it, or create a dedicated page if none clearly targets it yet.",
       mktAltTitle:(n)=>`Add alt text to images on ${n} page${n===1?'':'s'}`,
       mktAltWhy:"Alt text helps Google understand image content, and improves accessibility for visually impaired visitors.",
@@ -1867,13 +1883,13 @@
       scoresSyncedOn:(d)=>`Updated as of the ${d} scan`,
       scoreTargetReached:"✓ Target already reached",
       scoreTargetGap:(n)=>`Target: <strong>100</strong> — after fixing ${n} issue${n===1?'':'s'}`,
-      kwNotInTop5:"Outside top 5 pages",
+      kwNotInTop5:"Not appearing (0 impressions in 28 days)",
       prioEyebrowBase:"This Month's Priorities",
       prioH2:"The top things worth your attention right now",
       prioP:"Auto-generated from this month's data — ranking what's worth acting on first.",
-      prioCwv:"{metric} on mobile needs improvement — it's currently the weakest performance metric, and it directly affects the 73% of visitors who open the site on mobile.",
+      prioCwv:"{metric} {where}is rated \"{cls}\" — currently the weakest performance metric, and it directly affects the {phone}% of visitors who open the site on mobile.",
       prioBroken:(n)=>`${n} page${n===1?'':'s'} returning an actual error on check (unsuccessful HTTP status) — urgent, the page may genuinely be broken for visitors.`,
-      prioKw:"The keyword {kw} isn't ranking in search results at all — a real opportunity for a dedicated page targeting it directly.",
+      prioKw:"The keyword {kw} isn't appearing in search results (0 impressions in the last 28 days per Search Console) — it needs content that clearly targets it.",
       prioPending:"{n} key pages haven't been measured yet this month — {link} to add them for the full picture.",
       prioPendingLink:"jump to the page table",
       prioSchema:"Schema structured data was manually added to 5 service pages today — the homepage still doesn't have it.",
@@ -1884,8 +1900,8 @@
       statDesktopPerf:"Desktop Performance Score",
       statVsLastMonth:"vs. last month",
       pageEyebrow:"Page by page",
-      pageH2:"How the site's key pages are performing",
-      pageP:"The data above (CrUX) reflects the site as a whole. This is a closer look at each marketing-relevant page individually, so the team knows where to focus first.",
+      pageH2:"Homepage performance",
+      pageP:"The homepage is tested on both mobile and desktop on every data refresh. Mobile performance for every other page is in the \"Technical page health\" table below.",
       pageColName:"Page", pageColMobile:"Mobile", pageColDesktop:"Desktop", pageColStatus:"Status", pageColReco:"Note",
       pageStatusMeasured:"Measured", pageStatusPending:"Pending",
       healthEyebrow:"Automatic monthly scan", healthH2:"Technical page health",
@@ -1902,7 +1918,7 @@
       aiColCrawler:"Crawler", aiColPurpose:"Purpose", aiColStatus:"Status",
       aiAllowed:"Allowed ✓", aiBlocked:"Blocked",
       aiLlmsTxtLabel:"llms.txt file", aiLlmsTxtPresent:"Present", aiLlmsTxtMissing:"Missing",
-      aiLlmsTxtNote:"Note: Google has stated it ignores this file entirely for Search and AI features — it doesn't affect Google visibility. It may only help some non-Google AI crawlers.",
+      aiLlmsTxtNote:"Note: Google has said it doesn't use this file for Search or its AI features, so it doesn't affect Google visibility. It may only help some other AI crawlers.",
       aiCheckedNote:"Not checked yet — this fills in automatically after the first GitHub Action run.",
       aiCheckedOn:(d)=>`Last checked: ${d}`,
       kwSourceGsc:(d)=>`Source: real Google Search Console data (last updated: ${d}) — average position over the trailing 28 days.`,
@@ -1963,18 +1979,6 @@
     {
       id:"home", url:"/", labelAr:"الصفحة الرئيسية", labelEn:"Homepage",
       monthly:{ "2026-05":{ mobile:72 }, "2026-06":{ mobile:81, desktop:96 } }
-    },
-    {
-      id:"gov", url:null, labelAr:"صفحة المشاريع الحكومية", labelEn:"Government Projects Page",
-      monthly:{},
-      noteAr:"أضف الرابط لبدء القياس",
-      noteEn:"Add the URL to start tracking"
-    },
-    {
-      id:"services", url:null, labelAr:"صفحة الخدمات الرئيسية", labelEn:"Main Services Page",
-      monthly:{},
-      noteAr:"أضف الرابط لبدء القياس",
-      noteEn:"Add the URL to start tracking"
     }
   ];
 
@@ -2312,8 +2316,10 @@
 
   function healthCounts(){
     return {
-      missingSchema: pageHealthData.filter(p => p.schema && !p.schema.hasExpectedType).length,
-      withAltIssues: pageHealthData.filter(p => p.altText && p.altText.issueCount > 0).length
+      // Same page set as the issue list: pages excluded from scoring
+      // (cart/account/expired events) aren't counted here either.
+      missingSchema: pageHealthData.filter(p => !p.excludedFromScore && p.schema && !p.schema.hasExpectedType).length,
+      withAltIssues: pageHealthData.filter(p => !p.excludedFromScore && p.altText && p.altText.issueCount > 0).length
     };
   }
 
@@ -2392,7 +2398,11 @@
         text = d.prioAiCrawler(it.count);
       } else if(it.type==="cwv"){
         const name = currentLang==="ar" ? it.m.nameAr : it.m.nameEn;
-        text = d.prioCwv.replace("{metric}", `<strong>${escapeHtml(name)}</strong>`);
+        const clsTxt = it.sev==="poor" ? (currentLang==="ar"?"ضعيف":"poor") : (currentLang==="ar"?"يحتاج تحسين":"needs improvement");
+        const phoneOnly = window.__cruxFormFactor === "PHONE";
+        const where = phoneOnly ? (currentLang==="ar"?"على الجوال ":"on mobile ") : "";
+        const phone = (window.__deviceShare && window.__deviceShare.phone) || 73;
+        text = d.prioCwv.replace("{metric}", `<strong>${escapeHtml(name)}</strong>`).replace("{where}", where).replace("{cls}", clsTxt).replace("{phone}", phone);
       } else if(it.type==="kw"){
         const name = currentLang==="ar" ? it.k.ar : it.k.en;
         text = d.prioKw.replace("{kw}", `<strong>${escapeHtml(name)}</strong>`);
@@ -2534,7 +2544,7 @@
       ));
     }
 
-    const altMissing = pageHealthData.filter(p => p.altText && p.altText.issueCount > 0);
+    const altMissing = pageHealthData.filter(p => !p.excludedFromScore && p.altText && p.altText.issueCount > 0);
     if(altMissing.length){
       cards.push(mktCard(
         "alt", d.mktAltTitle(altMissing.length), d.mktBadgeCount(altMissing.length),
@@ -2731,7 +2741,11 @@
       let text = "";
       if(it.type==="broken") text = d.prioBroken(it.count);
       else if(it.type==="aiCrawler") text = d.prioAiCrawler(it.count);
-      else if(it.type==="cwv"){ const name = lang==="ar"?it.m.nameAr:it.m.nameEn; text = d.prioCwv.replace("{metric}", `<b>${escapeHtml(name)}</b>`); }
+      else if(it.type==="cwv"){ const name = lang==="ar"?it.m.nameAr:it.m.nameEn;
+        const clsTxt = it.sev==="poor" ? (lang==="ar"?"ضعيف":"poor") : (lang==="ar"?"يحتاج تحسين":"needs improvement");
+        const where = window.__cruxFormFactor === "PHONE" ? (lang==="ar"?"على الجوال ":"on mobile ") : "";
+        const phone = (window.__deviceShare && window.__deviceShare.phone) || 73;
+        text = d.prioCwv.replace("{metric}", `<b>${escapeHtml(name)}</b>`).replace("{where}", where).replace("{cls}", clsTxt).replace("{phone}", phone); }
       else if(it.type==="kw"){ const name = lang==="ar"?it.k.ar:it.k.en; text = d.prioKw.replace("{kw}", `<b>${escapeHtml(name)}</b>`); }
       else if(it.type==="pending") text = d.prioPending.replace("{n}", it.count).replace("{link}", d.prioPendingLink);
       else if(it.type==="schema") text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
@@ -2892,9 +2906,18 @@
       </tr>`);
     });
     rows.push(`<tr><td><strong>${d.tgLighthouseMobile}</strong></td><td class="num">${mobilePerfNow} / 100</td><td class="num">≥ 90</td><td>${d.tgTargetMobile}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
-    rows.push(`<tr><td><strong>${d.tgLighthouseDesktop}</strong></td><td class="num">${desktopPerfScore} / 100</td><td class="num">≥ 90</td><td>${d.tgTargetKeep}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
-    rows.push(`<tr><td><strong>${d.tgKwName}</strong></td><td>${d.tgKwCurrent}</td><td>—</td><td>${d.tgKwTarget}</td><td>${pill("mkt",d.ownerMkt)}</td></tr>`);
-    rows.push(`<tr><td><strong>${d.tgSchemaName}</strong></td><td>${d.tgSchemaCurrent}</td><td>—</td><td>${d.tgSchemaTarget}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
+    rows.push(`<tr><td><strong>${d.tgLighthouseDesktop}</strong></td><td class="num">${desktopPerfScore} / 100</td><td class="num">≥ 90</td><td>${desktopPerfScore>=90 ? d.tgTargetKeep : d.tgTargetMobile}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
+    // Keyword + schema rows computed from live data (were hand-typed:
+    // one keyword "not ranking" and schema "not enabled", long after the
+    // scan showed schema on almost every page).
+    const ar = currentLang==="ar";
+    const kwShown = keywords.filter(k=>k.pos!==null).length;
+    rows.push(`<tr><td><strong>${ar?"الكلمات المستهدفة الظاهرة في نتائج البحث":"Tracked keywords appearing in search"}</strong></td><td class="num">${kwShown} / ${keywords.length}</td><td>—</td><td>${ar?"ظهور كل الكلمات المستهدفة":"All tracked keywords appearing"}</td><td>${pill("mkt",d.ownerMkt)}</td></tr>`);
+    if(pageHealthData.length){
+      const { missingSchema } = healthCounts();
+      const cur = missingSchema ? (ar?`${missingSchema} ${missingSchema===1?"صفحة":"صفحات"} بدون Schema`:`${missingSchema} page${missingSchema===1?"":"s"} without Schema`) : (ar?"مفعّلة على كل الصفحات":"On every page");
+      rows.push(`<tr><td><strong>${d.tgSchemaName}</strong></td><td>${cur}</td><td>—</td><td>${ar?"تفعيلها على كل الصفحات":"On every page"}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
+    }
     el.innerHTML = `<thead><tr><th>${d.tgColMetric}</th><th>${d.tgColCurrent}</th><th>${d.tgColBench}</th><th>${d.tgColTarget}</th><th>${d.tgColOwner}</th></tr></thead><tbody>${rows.join("")}</tbody>`;
   }
 
@@ -2946,8 +2969,8 @@
       unit:"ms", divisor:1, decimals:0,
       defAr:"مدى سرعة استجابة الموقع عندما يضغط الزائر على زر أو رابط — أي مدى السلاسة التي يشعر بها أثناء الاستخدام.",
       defEn:"How quickly the site responds when a visitor clicks a button or link — essentially how smooth the site feels to use.",
-      meanAr:"هذا هو المقياس الذي شهد أكبر تحسّن — من تجربة بطيئة ومحبطة إلى استجابة فورية تقريباً.",
-      meanEn:"This is the metric that saw the biggest turnaround — from a slow, frustrating experience to a near-instant response.",
+      meanAr:"رقم أقل يعني أن الموقع يستجيب فوراً عند الضغط على زر أو رابط، بدون تأخير ملحوظ.",
+      meanEn:"A lower number means the site reacts instantly when a button or link is tapped, with no noticeable lag.",
       good:200, ni:500, visMax:760,
       data:[350,380,400,420,380,420,650,700,350,180,165]
     },
@@ -2982,8 +3005,8 @@
       unit:"s", divisor:1000, decimals:1,
       defAr:"الوقت الذي يستغرقه الخادم (السيرفر) للرد على أول طلب من المتصفح — قبل ما تبدأ الصفحة تتحمّل أصلاً.",
       defEn:"How long the server takes to respond to the very first request from the browser — before the page even starts loading.",
-      meanAr:"هذا الرقم مرتبط بسرعة الاستضافة والخادم نفسه، وهو أقل عنصر تحسّن خلال الفترة — نقطة نركّز عليها قادماً.",
-      meanEn:"This one is tied to hosting/server speed, and it improved the least over this period — a focus area going forward.",
+      meanAr:"هذا الرقم مرتبط بسرعة الاستضافة والخادم نفسه، ويؤثر على كل المقاييس الأخرى لأنه أول ما يحدث قبل أن تبدأ الصفحة بالتحميل.",
+      meanEn:"This one is tied to hosting/server speed, and it affects every other metric because it happens before the page even starts loading.",
       good:800, ni:1800, visMax:2400,
       data:[1650,1700,1600,1750,1650,1750,2050,1900,1650,1550,1550]
     }
@@ -3021,8 +3044,8 @@
       unit:"ms", divisor:1, decimals:0,
       defAr:"الوقت الذي يبقى فيه المتصفح مشغولاً عن الاستجابة لتفاعل الزائر أثناء تحميل الصفحة.",
       defEn:"How long the browser stays too busy to respond to visitor interaction while the page loads.",
-      meanAr:"رقم صفر يعني المتصفح كان جاهزاً للاستجابة فوراً طوال وقت التحميل.",
-      meanEn:"A zero means the browser was ready to respond instantly throughout loading.",
+      meanAr:"رقم أقل يعني أن المتصفح يبقى جاهزاً للاستجابة لنقرات الزائر أثناء التحميل بدون تجميد.",
+      meanEn:"A lower number means the browser stays ready to respond to clicks while the page loads, without freezing.",
       good:200, ni:600, visMax:900, data:[0]
     },
     {
@@ -3614,6 +3637,33 @@
         if(typeof D.a11yScoreMobile === "number") window.__a11yMobile = D.a11yScoreMobile;
         if(typeof D.a11yScoreDesktop === "number") window.__a11yDesktop = D.a11yScoreDesktop;
         if(D.lighthouseScoresCheckedMonth) window.__lighthouseScoresCheckedMonth = D.lighthouseScoresCheckedMonth;
+        // Older data.json has no cruxFormFactor: that data was requested
+        // without a formFactor, i.e. all devices combined, so label it so.
+        window.__cruxFormFactor = D.cruxFormFactor || "ALL";
+        // Homepage row = the same test run as the headline cards.
+        { const hp = pageRegistry.find(x=>x.id==="home");
+          if(hp){ hp.monthly[REPORT_MONTH] = { mobile: mobilePerfNow, desktop: desktopPerfScore }; } }
+        if(D.deviceShare && typeof D.deviceShare.phone === "number"){
+          const ds = D.deviceShare; window.__deviceShare = ds;
+          const setSeg = (id, v, showText) => { const el = document.getElementById(id); if(el){ el.style.width = v + "%"; el.textContent = showText ? v + "%" : "\u200e"; } };
+          setSeg("devSegPhone", ds.phone, true); setSeg("devSegDesktop", ds.desktop, true); setSeg("devSegTablet", ds.tablet, ds.tablet >= 8);
+          [["devVPhone",ds.phone],["devVDesktop",ds.desktop],["devVTablet",ds.tablet]].forEach(([id,v]) => { const el = document.getElementById(id); if(el) el.textContent = v + "%"; });
+          dict.ar.deviceNote = `${ds.phone}% من الزوّار يفتحون الموقع من الجوال (بيانات Chrome الحقيقية لآخر 28 يوماً) — لهذا تركّز هذه البيانات على تجربة الجوال، فهي التجربة التي يعيشها أغلب الزوّار فعلياً.`;
+          dict.en.deviceNote = `${ds.phone}% of visitors open the site on a phone (real Chrome data, last 28 days) — that's why this report focuses on the mobile experience, since it's what most visitors actually get.`;
+        }
+        // TTFB summary line, computed from the data instead of a fixed claim.
+        { const m = metrics.find(x=>x.key==="ttfb");
+          if(m && m.data.length > 1){
+            const a = m.data[0], b = m.data[m.data.length-1];
+            const pct = Math.round(Math.abs(a-b)/a*100);
+            const cls = classify(b, m.good, m.ni);
+            const clsAr = {good:"جيد", ni:"يحتاج تحسين", poor:"ضعيف"}[cls], clsEn = {good:"good", ni:"needs improvement", poor:"poor"}[cls];
+            const startAr = monthLabels.ar[0], startEn = monthLabels.en[0];
+            const chAr = b < a ? `تحسّن بنسبة ${pct}% فقط منذ ${startAr}` : (b > a ? `ساء بنسبة ${pct}% منذ ${startAr}` : `لم يتغيّر منذ ${startAr}`);
+            const chEn = b < a ? `improved only ${pct}% since ${startEn}` : (b > a ? `got ${pct}% worse since ${startEn}` : `is unchanged since ${startEn}`);
+            dict.ar.footP2 = `زمن استجابة الخادم (TTFB) حالياً ${fmt(b,m)} ثانية وتصنيفه «${clsAr}»، و${chAr}` + (cls==="good" ? "." : " — وهو محور التركيز القادم.");
+            dict.en.footP2 = `Server response time (TTFB) is currently ${fmt(b,m)}s, rated "${clsEn}", and ${chEn}` + (cls==="good" ? "." : " — it's the next area of focus.");
+          } }
         // refresh period wording so future months never show stale text
         ["ar","en"].forEach(l => {
           const dd = dict[l];
@@ -3631,6 +3681,12 @@
             }
           }
         });
+        if(window.__cruxFormFactor !== "PHONE"){
+          dict.ar.heroMeta = dict.ar.heroMeta.replace("أجهزة الجوال","كل الأجهزة");
+          dict.ar.heroMetaJune = dict.ar.heroMetaJune.replace("أجهزة الجوال","كل الأجهزة");
+          dict.en.heroMeta = dict.en.heroMeta.replace("Mobile devices","All devices");
+          dict.en.heroMetaJune = dict.en.heroMetaJune.replace("Mobile devices","All devices");
+        }
         applyLang(currentLang); // full re-render with live data
       })
       .catch(()=>{ /* offline / local file — fallback values already rendered */ });

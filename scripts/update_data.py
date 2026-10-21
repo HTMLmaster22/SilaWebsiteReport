@@ -560,8 +560,13 @@ def http_json(url, payload=None, extra_headers=None, timeout=120):
         return json.loads(r.read().decode())
 
 
-def fetch_crux_history():
+def fetch_crux_history(form_factor=None):
     """Return (months:[(y,m)], series:{key:[p75,...]}) from the CrUX History API.
+
+    form_factor: "PHONE" / "DESKTOP" / None (None = all devices combined).
+    Oct 2026: the report labels this data "mobile devices" everywhere, but
+    the request never set formFactor, so it was really all devices combined.
+    main() now asks for PHONE first and records which one it got.
 
     Raises urllib.error.HTTPError with code 404 if Google has no CrUX record
     for this origin (insufficient anonymized sample volume) — caller decides
@@ -580,6 +585,8 @@ def fetch_crux_history():
     for mset in metric_sets:
         try:
             body = {"origin": ORIGIN, "metrics": mset}
+            if form_factor:
+                body["formFactor"] = form_factor
             resp = http_json(url, body)
             break
         except urllib.error.HTTPError as e:
@@ -618,6 +625,23 @@ def fetch_crux_history():
             else:
                 prev = vals[i]
     return months, series
+
+
+def fetch_device_share():
+    """Real share of visits by device (phone/desktop/tablet) from the CrUX
+    API's form_factors metric, latest 28 days. Replaces a hand-typed
+    73/24/3 split in index.html that had no recorded source."""
+    url = f"https://chromeuxreport.googleapis.com/v1/records:queryRecord?key={API_KEY}"
+    resp = http_json(url, {"origin": ORIGIN, "metrics": ["form_factors"]})
+    rec = resp["record"]
+    fr = rec["metrics"]["form_factors"]["fractions"]
+    last = rec.get("collectionPeriod", {}).get("lastDate", {})
+    return {
+        "phone": round(float(fr.get("phone", 0)) * 100),
+        "desktop": round(float(fr.get("desktop", 0)) * 100),
+        "tablet": round(float(fr.get("tablet", 0)) * 100),
+        "asOf": f"{last.get('year', 0):04d}-{last.get('month', 0):02d}-{last.get('day', 0):02d}" if last else None,
+    }
 
 
 def fetch_psi_score(strategy, retry=True):
@@ -1749,8 +1773,16 @@ def main():
 
     months, series = None, None
     try:
-        print("Fetching CrUX history for", ORIGIN, "...")
-        months, series = fetch_crux_history()
+        print("Fetching CrUX history for", ORIGIN, "(phone) ...")
+        try:
+            months, series = fetch_crux_history("PHONE")
+            data["cruxFormFactor"] = "PHONE"
+        except urllib.error.HTTPError as e_phone:
+            if e_phone.code != 404:
+                raise
+            print("  No phone-only CrUX record — falling back to all devices combined.")
+            months, series = fetch_crux_history()
+            data["cruxFormFactor"] = "ALL"
         y_last, m_last = months[-1]
         print("Latest CrUX month:", f"{y_last:04d}-{m_last:02d}", "| points:", len(months))
     except urllib.error.HTTPError as e:
@@ -1868,11 +1900,16 @@ def main():
         print(f"  WARNING: PSI fetch failed after retry, keeping previous scores this run: {type(e).__name__}: {e}", file=sys.stderr)
         mobile_score = desktop_score = None
 
-    if not homepage_updated:
-        print("CrUX/homepage data already at", new_month, "— skipping that part, still running page-health scan below.")
-    else:
-        # mobilePerfNow/mobilePerfPrev/desktopPerfScore are handled right
-        # after the PSI fetch above (every run), not here.
+    try:
+        data["deviceShare"] = fetch_device_share()
+        print("Device share:", data["deviceShare"])
+    except Exception as e:
+        print(f"  WARNING: device-share fetch failed, keeping previous value: {type(e).__name__}: {e}", file=sys.stderr)
+
+    # Oct 2026: CrUX publishes a new 28-day window every week, but this block
+    # used to run only when the calendar month changed, so mid-month refreshes
+    # kept showing the first window of the month. Now refreshed every run.
+    if True:
         data["reportMonth"] = new_month
 
         if months is not None:
@@ -1898,11 +1935,17 @@ def main():
                 else:
                     data.setdefault("metrics", []).append({"key": key, "data": vals})
 
-        for p in data.get("pages", []):
-            if p.get("id") == "home":
-                p.setdefault("monthly", {})[new_month] = {
-                    "mobile": mobile_score, "desktop": desktop_score,
-                }
+        # Homepage row of the per-page table: same test run as the headline
+        # cards, keyed by the month the test actually ran in.
+        if mobile_score is not None or desktop_score is not None:
+            test_month = datetime.now(timezone.utc).strftime("%Y-%m")
+            for p in data.get("pages", []):
+                if p.get("id") == "home":
+                    cur = p.setdefault("monthly", {}).setdefault(test_month, {})
+                    if mobile_score is not None:
+                        cur["mobile"] = mobile_score
+                    if desktop_score is not None:
+                        cur["desktop"] = desktop_score
 
     print("Scanning per-page health (schema, alt text, on-page, unused CSS/JS) ...")
     page_health, coverage = run_page_health_scan(previous=data.get("pageHealth"), month=new_month)
