@@ -1,0 +1,122 @@
+
+### desktop run 1  score=59  TBT=2138ms  LCP=1286ms  TTFB=254ms  fetch=2026-10-25T13:01:11.431Z
+-- bootup-time (script execution, ms):
+     1718 total    1679 scripting  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+     1413 total     242 scripting  https://www.silah.com.sa/
+      471 total     109 scripting  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+      268 total      22 scripting  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/smartslider-frontend.min.js?ver=c397fa89
+      100 total       3 scripting  Unattributable
+-- third parties (blocking ms / main-thread ms):
+-- long tasks:
+     1704ms  start 680  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+      225ms  start 2972  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/smartslider-frontend.min.js?ver=c397fa89
+      151ms  start 2746  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+      138ms  start 2608  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+      107ms  start 2501  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+       96ms  start 2405  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+       94ms  start 303  https://www.silah.com.sa/
+       75ms  start 404  https://www.silah.com.sa/
+       69ms  start 3322  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+       57ms  start 535  https://www.silah.com.sa/
+-- main-thread breakdown:
+     2095ms  Script Evaluation
+      868ms  Style & Layout
+      614ms  Other
+      264ms  Parse HTML & CSS
+      112ms  Rendering
+       77ms  Script Parsing & Compilation
+
+### desktop run 2  score=63  TBT=1432ms  LCP=1006ms  TTFB=222ms  fetch=2026-10-25T13:01:39.365Z
+-- bootup-time (script execution, ms):
+     1557 total    1544 scripting  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+      227 total      30 scripting  https://www.silah.com.sa/
+      208 total      66 scripting  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+       55 total       2 scripting  Unattributable
+-- third parties (blocking ms / main-thread ms):
+-- long tasks:
+     1550ms  start 537  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+-- main-thread breakdown:
+     1666ms  Script Evaluation
+      195ms  Other
+      148ms  Style & Layout
+       32ms  Rendering
+       27ms  Parse HTML & CSS
+       26ms  Script Parsing & Compilation
+
+### desktop run 3  score=59  TBT=2138ms  LCP=1286ms  TTFB=254ms  fetch=2026-10-25T13:01:11.431Z
+-- bootup-time (script execution, ms):
+     1718 total    1679 scripting  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+     1413 total     242 scripting  https://www.silah.com.sa/
+      471 total     109 scripting  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+      268 total      22 scripting  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/smartslider-frontend.min.js?ver=c397fa89
+      100 total       3 scripting  Unattributable
+-- third parties (blocking ms / main-thread ms):
+-- long tasks:
+     1704ms  start 680  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+      225ms  start 2972  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/smartslider-frontend.min.js?ver=c397fa89
+      151ms  start 2746  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+      138ms  start 2608  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+      107ms  start 2501  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+       96ms  start 2405  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+       94ms  start 303  https://www.silah.com.sa/
+       75ms  start 404  https://www.silah.com.sa/
+       69ms  start 3322  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+       57ms  start 535  https://www.silah.com.sa/
+-- main-thread breakdown:
+     2095ms  Script Evaluation
+      868ms  Style & Layout
+      614ms  Other
+      264ms  Parse HTML & CSS
+      112ms  Rendering
+       77ms  Script Parsing & Compilation
+
+### mobile run 1  score=51  TBT=764ms  LCP=6004ms  TTFB=220ms  fetch=2026-10-25T13:02:00.522Z
+-- bootup-time (script execution, ms):
+     1068 total    1035 scripting  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+      371 total      49 scripting  https://www.silah.com.sa/
+      334 total      67 scripting  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+       99 total       3 scripting  Unattributable
+-- third parties (blocking ms / main-thread ms):
+-- long tasks:
+     1056ms  start 1897  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+-- main-thread breakdown:
+     1204ms  Script Evaluation
+      356ms  Other
+      219ms  Style & Layout
+       62ms  Parse HTML & CSS
+       62ms  Script Parsing & Compilation
+       58ms  Rendering
+
+### mobile run 2  score=47  TBT=2037ms  LCP=4880ms  TTFB=235ms  fetch=2026-10-25T13:02:21.687Z
+-- bootup-time (script execution, ms):
+     2319 total    2287 scripting  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+      421 total     103 scripting  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+      325 total      40 scripting  https://www.silah.com.sa/
+       96 total       2 scripting  Unattributable
+-- third parties (blocking ms / main-thread ms):
+-- long tasks:
+     2309ms  start 1888  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+-- main-thread breakdown:
+     2483ms  Script Evaluation
+      366ms  Other
+      212ms  Style & Layout
+       79ms  Rendering
+       60ms  Script Parsing & Compilation
+       54ms  Parse HTML & CSS
+
+### mobile run 3  score=47  TBT=2037ms  LCP=4880ms  TTFB=235ms  fetch=2026-10-25T13:02:21.687Z
+-- bootup-time (script execution, ms):
+     2319 total    2287 scripting  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+      421 total     103 scripting  https://www.silah.com.sa/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js?ver=c397fa89
+      325 total      40 scripting  https://www.silah.com.sa/
+       96 total       2 scripting  Unattributable
+-- third parties (blocking ms / main-thread ms):
+-- long tasks:
+     2309ms  start 1888  https://agents.engati.ai/static/js/chat_widget.js?config=%7B%22bot_key%22%3A%22def232b98cca4a47%22%2C%22welcome_msg%22%3Atrue%2C%22branding_key%22%3A%22default%22%2C%22server%22%3A%22https%3A%2F%2Fagents.engati.ai%22%2C%22e%22%3A%22p%22%7D
+-- main-thread breakdown:
+     2483ms  Script Evaluation
+      366ms  Other
+      212ms  Style & Layout
+       79ms  Rendering
+       60ms  Script Parsing & Compilation
+       54ms  Parse HTML & CSS
