@@ -709,7 +709,32 @@ def fetch_psi_score(strategy, retry=True):
         },
         "lighthouseVersion": lh.get("lighthouseVersion"),
         "fetchTime": (lh.get("fetchTime") or "")[:10],
+        "heavyScripts": heavy_scripts(audits),
     }
+
+
+def heavy_scripts(audits):
+    """Scripts that cost the most main-thread time in this run (Lighthouse
+    'bootup-time'). Oct 2026: added after the scores dropped with no
+    explanation in the report; diagnostics showed one third-party chat
+    widget freezing the page for 1-2 s on every run."""
+    items = ((audits.get("bootup-time") or {}).get("details") or {}).get("items") or []
+    out = []
+    for it in sorted(items, key=lambda x: -(x.get("total") or 0)):
+        url = it.get("url") or ""
+        if not url.startswith("http"):
+            continue  # "Unattributable" etc.
+        parsed = urllib.parse.urlparse(url)
+        if parsed.netloc.endswith("silah.com.sa") and parsed.path in ("", "/"):
+            continue  # the page's own inline work, not one script
+        ms = int(round(it.get("total") or 0))
+        if ms < 100:
+            continue
+        out.append({"host": parsed.netloc, "file": parsed.path.rsplit("/", 1)[-1] or parsed.path,
+                    "path": parsed.path, "ms": ms})
+        if len(out) >= 5:
+            break
+    return out
 
 
 # Lighthouse audits deliberately not reported, because a check in this file
@@ -1885,6 +1910,11 @@ def main():
             data["desktopCheckedAt"] = desktop_psi.get("fetchTime") or datetime.now(timezone.utc).strftime("%Y-%m-%d")
             data["lighthouseVersion"] = desktop_psi.get("lighthouseVersion")
         data["mobilePerfCheckedAt"] = mobile_psi.get("fetchTime") or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        data["heavyScripts"] = {
+            "mobile": mobile_psi.get("heavyScripts") or [],
+            "desktop": desktop_psi.get("heavyScripts") or [],
+            "checkedAt": data["mobilePerfCheckedAt"],
+        }
     except Exception as e:
         # Both the direct timeout and the one retry inside fetch_psi_score
         # already failed if execution reaches here - a persistent PSI

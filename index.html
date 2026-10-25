@@ -2323,8 +2323,37 @@
     };
   }
 
+  // Heaviest single script in the latest Google (Lighthouse) runs. Only
+  // reported when it freezes the page for 0.5 s or more on its own.
+  function heaviestScript(){
+    const hs = window.__heavyScripts;
+    if(!hs) return null;
+    let top = null;
+    ["mobile","desktop"].forEach(dev => (hs[dev]||[]).forEach(x => {
+      if(!top || x.ms > top.ms) top = Object.assign({ dev }, x);
+    }));
+    if(!top || top.ms < 500) return null;
+    const known = [
+      [/engati\.ai$/, "ودجت المحادثة (Engati)", "the chat widget (Engati)"],
+      [/smart-slider/, "سلايدر الصور (Smart Slider)", "the image slider (Smart Slider)"],
+      [/googletagmanager\.com$/, "Google Tag Manager", "Google Tag Manager"]
+    ];
+    const hit = known.find(k => k[0].test(top.host) || k[0].test(top.path||""));
+    top.nameAr = hit ? hit[1] : top.file; top.nameEn = hit ? hit[2] : top.file;
+    top.checkedAt = hs.checkedAt;
+    return top;
+  }
+  function heavyScriptText(it, lang){
+    const sec = (it.ms/1000).toFixed(1);
+    return lang==="ar"
+      ? `سكربت <strong>${escapeHtml(it.nameAr)}</strong> يجمّد الصفحة حوالي ${sec} ثانية عند فتحها (اختبار Google، ${it.dev==="mobile"?"الجوال":"سطح المكتب"}، ${escapeHtml(it.checkedAt||"")}) — وهو أثقل سكربت في الصفحة ويخفض مؤشر الأداء مباشرة. الحل الممكن: تأخير تحميله حتى أول تفاعل من الزائر، مع العلم أن أيقونته ستظهر بعد أول حركة أو نقرة.`
+      : `The <strong>${escapeHtml(it.nameEn)}</strong> script freezes the page for about ${sec}s on load (Google test, ${it.dev}, ${escapeHtml(it.checkedAt||"")}) — the heaviest script on the page, and it pulls the performance score down directly. Possible fix: delay it until the visitor's first interaction; its icon would then appear after the first scroll or tap.`;
+  }
+
   function computePriorities(){
     const list = [];
+    { const hs = heaviestScript();
+      if(hs) list.push(Object.assign({ sev: hs.ms >= 1000 ? "poor" : "ni", type:"heavyJs" }, hs)); }
 
     // 0) pages actually returning a broken HTTP status — checked first and
     // deliberately not competing with the .slice(0,5) cap below, since an
@@ -2414,8 +2443,10 @@
         text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
       } else if(it.type==="alt"){
         text = it.count ? d.prioAltCount(it.count) : d.prioAlt;
+      } else if(it.type==="heavyJs"){
+        text = heavyScriptText(it, currentLang);
       }
-      const ownerMap = { broken:["tech",d.ownerTech], aiCrawler:["tech",d.ownerTech], cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared] };
+      const ownerMap = { broken:["tech",d.ownerTech], aiCrawler:["tech",d.ownerTech], cwv:["tech",d.ownerTech], kw:["mkt",d.ownerMkt], pending:["tech",d.ownerTech], schema:["tech",d.ownerTech], alt:["shared",d.ownerShared], heavyJs:["tech",d.ownerTech] };
       const [ocls, otxt] = ownerMap[it.type] || ["tech", d.ownerTech];
       return `<div class="priority-item ${it.sev}">
         <span class="priority-num num">0${i+1}</span>
@@ -2750,6 +2781,7 @@
       else if(it.type==="pending") text = d.prioPending.replace("{n}", it.count).replace("{link}", d.prioPendingLink);
       else if(it.type==="schema") text = it.count ? d.prioSchemaCount(it.count) : d.prioSchema;
       else if(it.type==="alt") text = d.pdfRecoAltTpl(it.count || 0);
+      else if(it.type==="heavyJs") text = heavyScriptText(it, lang).replace(/<\/?strong>/g, m => m.replace("strong","b"));
       if(!text) return;
       (it.type==="kw" ? mktItems : itItems).push({pri, text});
     });
@@ -3640,6 +3672,7 @@
         // Older data.json has no cruxFormFactor: that data was requested
         // without a formFactor, i.e. all devices combined, so label it so.
         window.__cruxFormFactor = D.cruxFormFactor || "ALL";
+        window.__heavyScripts = D.heavyScripts || null;
         // Homepage row = the same test run as the headline cards.
         { const hp = pageRegistry.find(x=>x.id==="home");
           if(hp){ hp.monthly[REPORT_MONTH] = { mobile: mobilePerfNow, desktop: desktopPerfScore }; } }
