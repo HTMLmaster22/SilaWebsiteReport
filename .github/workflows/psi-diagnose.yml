@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   diagnose:
@@ -17,4 +17,16 @@ jobs:
       - name: Which scripts block the homepage
         env:
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
-        run: python scripts/psi_diagnose.py
+        run: python scripts/psi_diagnose.py | tee /tmp/psi-diagnostics.txt
+      # Results go to a separate "diagnostics" branch (never main), so the
+      # live report and its deploys are untouched.
+      - name: Save results to diagnostics branch
+        run: |
+          git config user.name  "report-bot"
+          git config user.email "report-bot@users.noreply.github.com"
+          git checkout --orphan diagnostics
+          git rm -rfq .
+          cp /tmp/psi-diagnostics.txt psi-diagnostics.txt
+          git add psi-diagnostics.txt
+          git commit -qm "PSI diagnostics $(date -u +%F_%H%M)"
+          git push -f origin diagnostics
