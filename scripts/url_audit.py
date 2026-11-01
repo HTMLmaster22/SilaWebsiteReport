@@ -43,7 +43,9 @@ _listed = {norm(u) for _, u, _ in _items}
 for u in sorted(sm):
     if u not in _listed:
         _items.append(["sitemap-only", "https://www.silah.com.sa" + u, ""])
+import time
 for cat, url, action in _items:
+    time.sleep(2)  # stay well under the site firewall rate limit
     code, final, hdr, body = get(url)
     robots_meta = re.findall(r'<meta[^>]+name=["\']robots["\'][^>]*content=["\']([^"\']*)', body, re.I)
     xr = hdr.get("X-Robots-Tag") or hdr.get("x-robots-tag") or ""

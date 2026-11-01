@@ -308,13 +308,19 @@ def build_index_cleanup(sitemap_urls=None, previous=None):
     total = len(payload["items"])
     print(f"  index-cleanup: WordPress reported {total} pages — checking each live ...")
 
+    failed_checks = 0
     for n, raw in enumerate(payload["items"], 1):
         url = raw.get("url") or ""
 
         # Private and draft pages are often exposed only as ?page_id=NN. Those
         # are still worth live-checking — that IS the URL a customer could hold.
         live = check_live(url)
+        if live["code"] == 0:
+            time.sleep(5)
+            live = check_live(url)  # one retry: a timeout is not a broken page
 
+        if live["code"] == 0 and raw.get("status") == "publish":
+            failed_checks += 1
         in_sitemap = _normalize(url) in sitemap_set if have_sitemap else True
         verdict_key = classify(raw.get("status", ""), live, in_sitemap)
         v = VERDICTS[verdict_key]
@@ -370,6 +376,13 @@ def build_index_cleanup(sitemap_urls=None, previous=None):
     duplicates.sort(key=lambda d: -d["count"])
 
     action_needed = sum(1 for it in items if it["severity"] in ("high", "medium"))
+
+    # If many published pages could not be reached at all, the problem is the
+    # connection (e.g. site firewall), not the pages: keep the last good map.
+    published = sum(1 for it in items if it["wpStatus"] == "publish") or 1
+    if failed_checks >= 5 and failed_checks / published > 0.10:
+        print(f"  index-cleanup: {failed_checks} live checks failed — keeping previous map", file=sys.stderr)
+        return previous
 
     return {
         "checkedAt": datetime.now(timezone.utc).strftime("%Y-%m-%d"),

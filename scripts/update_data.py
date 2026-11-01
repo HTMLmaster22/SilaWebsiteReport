@@ -475,12 +475,14 @@ def discover_all_sitemap_urls():
         if not loc.text:
             continue
         sm_xml = fetch_html(loc.text.strip())
-        if not sm_xml:
-            continue
         try:
-            sm_root = ET.fromstring(sm_xml)
+            sm_root = ET.fromstring(sm_xml) if sm_xml else None
         except ET.ParseError:
-            continue
+            sm_root = None
+        if sm_root is None:
+            # All-or-nothing: a partial sitemap would flag real pages as missing.
+            print(f"  WARNING: could not read {loc.text.strip()} — skipping sitemap comparison this run", file=sys.stderr)
+            return []
         urls.extend(l.text.strip() for l in sm_root.findall(".//sm:loc", SITEMAP_NS) if l.text)
     return urls
 
@@ -2003,6 +2005,15 @@ def main():
 
     print("Scanning per-page health (schema, alt text, on-page, unused CSS/JS) ...")
     page_health, coverage = run_page_health_scan(previous=data.get("pageHealth"), month=new_month)
+    # Nov 2026 guard: on 1 Nov the site firewall (Sucuri) blocked the runner,
+    # sitemap discovery failed, the scan fell back to 5 pages and the report
+    # briefly showed 9 issues instead of 200. If this run could not read the
+    # sitemap but the last good run did, stop here without writing anything.
+    prev_cov = data.get("scanCoverage") or {}
+    if coverage.get("source") == "fallback" and prev_cov.get("source") == "sitemap":
+        print("ERROR: sitemap unreadable this run (site firewall/network?) — keeping the "
+              "previous report data untouched. Re-run later.", file=sys.stderr)
+        return 2
     # One homepage mobile score across the whole report: the per-page table
     # re-tests the homepage separately, and two lab runs minutes apart can
     # differ by 10+ points. Use the headline run's number for the homepage row.
@@ -2089,8 +2100,9 @@ def main():
         # Nov 2026: compare against EVERY child sitemap (pages, posts, services,
         # ...), not only the pages scanned above. Using page-sitemap alone
         # marked 20 live, indexable service/post URLs as "not in the sitemap".
-        sitemap_urls = discover_all_sitemap_urls() or \
-            [p.get("url") for p in (data.get("pageHealth") or []) if p.get("url")]
+        # None (not a partial list) when the full sitemap can't be read, so
+        # the map skips the "not in sitemap" flag instead of raising false ones.
+        sitemap_urls = discover_all_sitemap_urls() or None
         cleanup = build_index_cleanup(
             sitemap_urls=sitemap_urls,
             previous=data.get("indexCleanup"),
