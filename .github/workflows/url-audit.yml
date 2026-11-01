@@ -1,0 +1,30 @@
+name: URL audit (read-only)
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Live check of listed URLs
+        run: python scripts/url_audit.py | tee /tmp/url-audit.txt
+      # Output goes to the separate "diagnostics" branch, never main.
+      - name: Save results to diagnostics branch
+        run: |
+          git config user.name  "report-bot"
+          git config user.email "report-bot@users.noreply.github.com"
+          git fetch origin diagnostics || true
+          git checkout --orphan diag-tmp
+          git rm -rfq .
+          cp /tmp/url-audit.txt url-audit.txt
+          git add url-audit.txt
+          git commit -qm "URL audit $(date -u +%F_%H%M)"
+          git push -f origin HEAD:diagnostics-url
