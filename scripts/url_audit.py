@@ -54,3 +54,10 @@ for line in open("scripts/url_audit_list.tsv", encoding="utf-8"):
         str(len(html.unescape(desc[0]))) if desc and desc[0].strip() else "0",
         str(h1), "pw" if pw else "-", "sitemap" if norm(url) in sm else "-",
     ]))
+
+# Are the "whylinkus" / link-number items content blocks on the homepage?
+_, _, _, home = get("https://www.silah.com.sa/")
+for phrase in ["إدارة التوظيف والاستقطاب", "برمجية متطورة لرفع جودة الكوادر السعودية",
+               "تخطيط التدريب وقياس التطوير المهني", "تعهيد المشروعات وتشغيل مراكز الأعمال",
+               "خبراء وفرق متخصصة لاستشارات التوطين", "1450", "17000", "6250"]:
+    print("HOME\t" + phrase + "\t" + ("FOUND" if phrase in html.unescape(home) else "absent"))
