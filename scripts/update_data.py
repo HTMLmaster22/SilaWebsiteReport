@@ -460,6 +460,31 @@ def discover_pages_from_sitemap():
     return urls[:MAX_AUTO_PAGES], total
 
 
+def discover_all_sitemap_urls():
+    """Every URL listed in any child sitemap of sitemap_index.xml. Returns []
+    on failure so the caller can fall back."""
+    index_xml = fetch_html(f"{ORIGIN}/sitemap_index.xml")
+    if not index_xml:
+        return []
+    try:
+        root = ET.fromstring(index_xml)
+    except ET.ParseError:
+        return []
+    urls = []
+    for loc in root.findall(".//sm:loc", SITEMAP_NS):
+        if not loc.text:
+            continue
+        sm_xml = fetch_html(loc.text.strip())
+        if not sm_xml:
+            continue
+        try:
+            sm_root = ET.fromstring(sm_xml)
+        except ET.ParseError:
+            continue
+        urls.extend(l.text.strip() for l in sm_root.findall(".//sm:loc", SITEMAP_NS) if l.text)
+    return urls
+
+
 def build_page_list():
     """Combines automatic sitemap discovery with the known bilingual names
     above. Falls back to PAGE_LIST_FALLBACK if discovery fails for any reason.
@@ -2061,7 +2086,11 @@ def main():
         # no second sitemap fetch needed. Used only to flag published pages the
         # sitemap omits (noindex), which is how the Sept 2026 audit found a live
         # academy page and two campaign landing pages missing from it entirely.
-        sitemap_urls = [p.get("url") for p in (data.get("pageHealth") or []) if p.get("url")]
+        # Nov 2026: compare against EVERY child sitemap (pages, posts, services,
+        # ...), not only the pages scanned above. Using page-sitemap alone
+        # marked 20 live, indexable service/post URLs as "not in the sitemap".
+        sitemap_urls = discover_all_sitemap_urls() or \
+            [p.get("url") for p in (data.get("pageHealth") or []) if p.get("url")]
         cleanup = build_index_cleanup(
             sitemap_urls=sitemap_urls,
             previous=data.get("indexCleanup"),

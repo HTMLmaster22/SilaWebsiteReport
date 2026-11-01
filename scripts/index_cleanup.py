@@ -152,8 +152,8 @@ VERDICTS = {
         "ar": "منشورة لكنها خارج خريطة الموقع",
         "en": "Published but not in the sitemap",
         "severity": "medium", "owner": OWNER_SHARED,
-        "actionAr": "الصفحة تعمل ويمكن للعميل فتحها لكنها لا تظهر في نتائج البحث — يُراجع إن كان ذلك مقصوداً",
-        "actionEn": "Reachable by customers but excluded from search — confirm this is intended",
+        "actionAr": "الصفحة تعمل لكنها غير مدرجة في خريطة الموقع — يُراجع: إضافتها للخريطة إن كانت مهمة، أو إخفاؤها من قوقل إن لم تكن",
+        "actionEn": "Reachable but not listed in the sitemap — either add it to the sitemap if it matters, or hide it from Google if not",
     },
 }
 
