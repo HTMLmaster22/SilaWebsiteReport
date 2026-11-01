@@ -37,8 +37,13 @@ for c in children:
 print(f"SITEMAP children={len(children)} urls={len(sm)}")
 print("SITEMAP_CHILDREN " + " ".join(children))
 
-for line in open("scripts/url_audit_list.tsv", encoding="utf-8"):
-    cat, url, action = (line.rstrip("\n").split("\t") + ["", ""])[:3]
+_items = [(line.rstrip("\n").split("\t") + ["", ""])[:3] for line in open("scripts/url_audit_list.tsv", encoding="utf-8") if line.strip()]
+_listed = {norm(u) for _, u, _ in _items}
+# also check every sitemap URL that the list doesn't cover
+for u in sorted(sm):
+    if u not in _listed:
+        _items.append(["sitemap-only", "https://www.silah.com.sa" + u, ""])
+for cat, url, action in _items:
     code, final, hdr, body = get(url)
     robots_meta = re.findall(r'<meta[^>]+name=["\']robots["\'][^>]*content=["\']([^"\']*)', body, re.I)
     xr = hdr.get("X-Robots-Tag") or hdr.get("x-robots-tag") or ""
