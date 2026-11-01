@@ -4,8 +4,12 @@ Input: scripts/url_audit_list.tsv (category<TAB>url<TAB>requested action)."""
 import gzip, html, re, sys, urllib.parse, urllib.request, xml.etree.ElementTree as ET
 
 UA = "Mozilla/5.0 (compatible; SilahReportBot/1.0)"
+def iri(url):
+    p = urllib.parse.urlsplit(url)
+    return urllib.parse.urlunsplit((p.scheme, p.netloc, urllib.parse.quote(urllib.parse.unquote(p.path), safe="/%"), p.query, p.fragment))
+
 def get(url):
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    req = urllib.request.Request(iri(url), headers={"User-Agent": UA})
     try:
         with urllib.request.urlopen(req, timeout=40) as r:
             body = r.read()
