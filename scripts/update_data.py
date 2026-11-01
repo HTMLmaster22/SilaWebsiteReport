@@ -1779,11 +1779,10 @@ def build_note(new_month, keywords_source, coverage):
     elif coverage.get("source") == "fallback":
         cov_line = "تعذّر قراءة خريطة الموقع في هذا التشغيل — تم فحص القائمة الاحتياطية الثابتة فقط."
     else:
-        cov_line = f"تم فحص جميع صفحات خريطة الموقع ({coverage['scannedPages']} صفحة)."
+        cov_line = f"تم فحص جميع الصفحات (Pages) في خريطة الموقع ({coverage['scannedPages']} صفحة)."
     return (f"{kw_line} {cov_line} "
             "كل ملاحظة في التقرير موسومة بالجهة المسؤولة عنها (تقنية / تسويق / مشتركة). "
-            "صفوف أداء الصفحات غير الرئيسية لا تزال تحتاج إضافة الروابط يدويًا "
-            "(راجع pageRegistry في index.html). كل ما عدا ذلك — سلامة الصفحات، وصول "
+            "كل ما عدا ذلك — سلامة الصفحات، وصول "
             "زواحف الذكاء الاصطناعي، درجات Lighthouse، ومؤشرات CrUX — يُحدَّث تلقائيًا "
             "شهريًا عبر GitHub Action من واجهات Google مباشرة ومن الموقع نفسه.")
 
