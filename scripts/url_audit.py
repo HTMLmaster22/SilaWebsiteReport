@@ -36,6 +36,8 @@ for c in children:
         sm.add(norm(html.unescape(loc)))
 print(f"SITEMAP children={len(children)} urls={len(sm)}")
 print("SITEMAP_CHILDREN " + " ".join(children))
+for _c in children:
+    _, _, _, _b = get(html.unescape(_c)); print("CHILD\t" + _c + "\t" + str(len(re.findall(r"<loc>", _b))))
 
 _items = [(line.rstrip("\n").split("\t") + ["", ""])[:3] for line in open("scripts/url_audit_list.tsv", encoding="utf-8") if line.strip()]
 _listed = {norm(u) for _, u, _ in _items}
