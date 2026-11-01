@@ -40,9 +40,11 @@ print("SITEMAP_CHILDREN " + " ".join(children))
 _items = [(line.rstrip("\n").split("\t") + ["", ""])[:3] for line in open("scripts/url_audit_list.tsv", encoding="utf-8") if line.strip()]
 _listed = {norm(u) for _, u, _ in _items}
 # also check every sitemap URL that the list doesn't cover
-for u in sorted(sm):
-    if u not in _listed:
-        _items.append(["sitemap-only", "https://www.silah.com.sa" + u, ""])
+import os
+if os.environ.get("AUDIT_SITEMAP_EXTRAS", "1") == "1":
+    for u in sorted(sm):
+        if u not in _listed:
+            _items.append(["sitemap-only", "https://www.silah.com.sa" + u, ""])
 import time
 for cat, url, action in _items:
     time.sleep(2)  # stay well under the site firewall rate limit
@@ -62,9 +64,3 @@ for cat, url, action in _items:
         str(h1), "pw" if pw else "-", "sitemap" if norm(url) in sm else "-",
     ]))
 
-# Are the "whylinkus" / link-number items content blocks on the homepage?
-_, _, _, home = get("https://www.silah.com.sa/")
-for phrase in ["إدارة التوظيف والاستقطاب", "برمجية متطورة لرفع جودة الكوادر السعودية",
-               "تخطيط التدريب وقياس التطوير المهني", "تعهيد المشروعات وتشغيل مراكز الأعمال",
-               "خبراء وفرق متخصصة لاستشارات التوطين", "1450", "17000", "6250"]:
-    print("HOME\t" + phrase + "\t" + ("FOUND" if phrase in html.unescape(home) else "absent"))
