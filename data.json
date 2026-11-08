@@ -2,8 +2,8 @@
   "reportMonth": "2026-10",
   "seriesStart": "2025-08",
   "mobilePerfPrev": 53,
-  "mobilePerfNow": 84,
-  "desktopPerfScore": 96,
+  "mobilePerfNow": 87,
+  "desktopPerfScore": 39,
   "monthLabels": {
     "ar": [
       "مايو",
@@ -228,19 +228,19 @@
     {
       "key": "d_fcp",
       "data": [
-        327
+        770
       ]
     },
     {
       "key": "d_lcp",
       "data": [
-        749
+        4538
       ]
     },
     {
       "key": "d_tbt",
       "data": [
-        13
+        1563
       ]
     },
     {
@@ -252,7 +252,7 @@
     {
       "key": "d_si",
       "data": [
-        1919
+        3667
       ]
     }
   ],
@@ -420,8 +420,8 @@
           "desktop": 64
         },
         "2026-11": {
-          "mobile": 84,
-          "desktop": 96
+          "mobile": 87,
+          "desktop": 39
         }
       }
     }
@@ -602,7 +602,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 84,
+      "mobileScore": 87,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -611,7 +611,7 @@
       "inboundInternalLinks": 41,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 75,
+      "seoScore": 76,
       "competesWith": [
         {
           "query": "شركة",
@@ -667,8 +667,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (84/100)",
-          "labelEn": "Mobile performance below target (84/100)"
+          "labelAr": "أداء الجوال دون الهدف (87/100)",
+          "labelEn": "Mobile performance below target (87/100)"
         },
         {
           "code": "keyword_cannibalization",
@@ -766,7 +766,7 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 95,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -887,7 +887,7 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 75,
+      "mobileScore": 74,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -896,7 +896,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 59,
+      "seoScore": 58,
       "competesWith": null,
       "issues": [
         {
@@ -935,8 +935,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (75/100)",
-          "labelEn": "Mobile performance below target (75/100)"
+          "labelAr": "أداء الجوال دون الهدف (74/100)",
+          "labelEn": "Mobile performance below target (74/100)"
         }
       ]
     },
@@ -1052,7 +1052,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 100,
+      "mobileScore": 99,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1169,7 +1169,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 83,
+      "mobileScore": 82,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1178,7 +1178,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 82,
+      "seoScore": 81,
       "competesWith": null,
       "issues": [
         {
@@ -1210,8 +1210,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (83/100)",
-          "labelEn": "Mobile performance below target (83/100)"
+          "labelAr": "أداء الجوال دون الهدف (82/100)",
+          "labelEn": "Mobile performance below target (82/100)"
         }
       ]
     },
@@ -1407,7 +1407,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 83,
+      "mobileScore": 86,
       "unusedCssKb": 20,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1416,7 +1416,7 @@
       "inboundInternalLinks": 39,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 88,
+      "seoScore": 89,
       "competesWith": null,
       "issues": [
         {
@@ -1441,8 +1441,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (83/100)",
-          "labelEn": "Mobile performance below target (83/100)"
+          "labelAr": "أداء الجوال دون الهدف (86/100)",
+          "labelEn": "Mobile performance below target (86/100)"
         }
       ]
     },
@@ -1516,7 +1516,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 100,
+      "mobileScore": 99,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1722,7 +1722,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 99,
+      "mobileScore": 97,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1731,7 +1731,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 79,
+      "seoScore": 78,
       "competesWith": null,
       "issues": [
         {
@@ -2289,9 +2289,9 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 31,
+      "mobileScore": 30,
       "unusedCssKb": 144,
-      "unusedJsKb": 1402,
+      "unusedJsKb": 1381,
       "seoIssues": [],
       "psiCheckedMonth": "2026-10",
       "psiFresh": true,
@@ -2330,8 +2330,8 @@
           "code": "mobile_performance_poor",
           "owner": "it",
           "severity": "high",
-          "labelAr": "أداء الجوال ضعيف (31/100)",
-          "labelEn": "Poor mobile performance (31/100)"
+          "labelAr": "أداء الجوال ضعيف (30/100)",
+          "labelEn": "Poor mobile performance (30/100)"
         },
         {
           "code": "unused_css_high",
@@ -2344,8 +2344,8 @@
           "code": "unused_js_high",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "JavaScript غير مستخدم (1402KB)",
-          "labelEn": "High unused JavaScript (1402KB)"
+          "labelAr": "JavaScript غير مستخدم (1381KB)",
+          "labelEn": "High unused JavaScript (1381KB)"
         }
       ]
     },
@@ -2424,7 +2424,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 29,
+      "mobileScore": 30,
       "unusedCssKb": 144,
       "unusedJsKb": 1379,
       "seoIssues": [],
@@ -2433,7 +2433,7 @@
       "inboundInternalLinks": 39,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 47,
+      "seoScore": 48,
       "competesWith": null,
       "issues": [
         {
@@ -2458,8 +2458,8 @@
           "code": "mobile_performance_poor",
           "owner": "it",
           "severity": "high",
-          "labelAr": "أداء الجوال ضعيف (29/100)",
-          "labelEn": "Poor mobile performance (29/100)"
+          "labelAr": "أداء الجوال ضعيف (30/100)",
+          "labelEn": "Poor mobile performance (30/100)"
         },
         {
           "code": "unused_css_high",
@@ -6632,7 +6632,7 @@
   "seoScore": 100,
   "bestPracticesScore": 100,
   "a11yScoreMobile": 100,
-  "a11yScoreDesktop": 93,
+  "a11yScoreDesktop": 72,
   "lighthouseScoresCheckedMonth": "2026-10",
   "pageHealthScore": 70,
   "pageHealthScoreCheckedMonth": "2026-10",
@@ -6693,7 +6693,7 @@
   "aiSearchReadinessCheckedMonth": "2026-10",
   "keywordsSource": "gsc",
   "keywordsCheckedMonth": "2026-10",
-  "lastRefreshedAt": "2026-11-08T10:27:46.309731+00:00",
+  "lastRefreshedAt": "2026-11-08T11:48:13.446447+00:00",
   "scanCoverage": {
     "source": "sitemap",
     "totalPages": 43,
@@ -7863,8 +7863,8 @@
       {
         "id": "home",
         "nameAr": "حلول التوظيف والتوطين",
-        "seoScore": 75,
-        "mobileScore": 84,
+        "seoScore": 76,
+        "mobileScore": 87,
         "altIssueCount": 22,
         "schemaOk": true,
         "issueCount": 5
@@ -7873,7 +7873,7 @@
         "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
         "nameAr": "طلب باقة",
         "seoScore": null,
-        "mobileScore": 97,
+        "mobileScore": 95,
         "altIssueCount": 6,
         "schemaOk": false,
         "issueCount": 1
@@ -7881,8 +7881,8 @@
       {
         "id": "%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9",
         "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
-        "seoScore": 59,
-        "mobileScore": 75,
+        "seoScore": 58,
+        "mobileScore": 74,
         "altIssueCount": 14,
         "schemaOk": false,
         "issueCount": 5
@@ -7891,7 +7891,7 @@
         "id": "%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a",
         "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
         "seoScore": 82,
-        "mobileScore": 100,
+        "mobileScore": 99,
         "altIssueCount": 10,
         "schemaOk": true,
         "issueCount": 4
@@ -7899,8 +7899,8 @@
       {
         "id": "silah-academy-for-e-learning",
         "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد",
-        "seoScore": 82,
-        "mobileScore": 83,
+        "seoScore": 81,
+        "mobileScore": 82,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -7917,8 +7917,8 @@
       {
         "id": "infrastructure",
         "nameAr": "البنية التحتية",
-        "seoScore": 88,
-        "mobileScore": 83,
+        "seoScore": 89,
+        "mobileScore": 86,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 3
@@ -7927,7 +7927,7 @@
         "id": "terms-and-conditions",
         "nameAr": "الشروط والأحكام",
         "seoScore": 79,
-        "mobileScore": 100,
+        "mobileScore": 99,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 1
@@ -7944,8 +7944,8 @@
       {
         "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
         "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية)",
-        "seoScore": 79,
-        "mobileScore": 99,
+        "seoScore": 78,
+        "mobileScore": 97,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -7981,7 +7981,7 @@
         "id": "business-center-cost",
         "nameAr": "حاسبة تكلفة التوظيف",
         "seoScore": 48,
-        "mobileScore": 31,
+        "mobileScore": 30,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 6
@@ -7989,8 +7989,8 @@
       {
         "id": "remote-working-cost-calculator",
         "nameAr": "حاسبة تكاليف التوظيف",
-        "seoScore": 47,
-        "mobileScore": 29,
+        "seoScore": 48,
+        "mobileScore": 30,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 5
@@ -8251,7 +8251,7 @@
   },
   "indexCleanup": {
     "checkedAt": "2026-11-08",
-    "generatedAt": "2026-11-08T10:24:01+00:00",
+    "generatedAt": "2026-11-08T11:44:01+00:00",
     "source": "wordpress+live",
     "total": 137,
     "byStatus": {
@@ -12379,15 +12379,39 @@
         "host": "www.silah.com.sa",
         "file": "n2.min.js",
         "path": "/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js",
-        "ms": 186
+        "ms": 140
       }
     ],
     "desktop": [
       {
+        "host": "agents.engati.ai",
+        "file": "chat_widget.js",
+        "path": "/static/js/chat_widget.js",
+        "ms": 950
+      },
+      {
+        "host": "www.gstatic.com",
+        "file": "recaptcha__ar.js",
+        "path": "/recaptcha/releases/bSuJ2xBC8cFy7pM4Z3Hu9boH/recaptcha__ar.js",
+        "ms": 831
+      },
+      {
         "host": "www.silah.com.sa",
         "file": "n2.min.js",
         "path": "/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js",
-        "ms": 176
+        "ms": 328
+      },
+      {
+        "host": "www.googletagmanager.com",
+        "file": "gtm.js",
+        "path": "/gtm.js",
+        "ms": 229
+      },
+      {
+        "host": "www.googletagmanager.com",
+        "file": "js",
+        "path": "/gtag/js",
+        "ms": 218
       }
     ],
     "checkedAt": "2026-11-08"
