@@ -599,6 +599,80 @@
   .reveal{ opacity:0; transform:translateY(14px); animation:revealIn .6s cubic-bezier(.4,0,.2,1) forwards; animation-delay:.05s; }
   @keyframes revealIn{ to{ opacity:1; transform:translateY(0); } }
 </style>
+<style>
+  /* ===== Dashboard + tabs (Nov 2026) =====
+     The report used to be one long scroll. The dashboard answers "how is
+     the site doing?" in one screen; every existing section now sits in a
+     tab below it, unchanged. */
+  section.dash{ padding:40px 0 8px; }
+  .dash-head{ margin-bottom:20px; }
+  .dash-head h2{ font-size:clamp(24px,3.4vw,32px); font-weight:800; margin:0; }
+  .dash-verdicts{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
+  .verdict{ background:var(--paper-card); border:1px solid var(--hair); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; border-inline-start:6px solid var(--hair); min-width:0; }
+  .verdict.pass{ border-inline-start-color:var(--moss); }
+  .verdict.fail{ border-inline-start-color:var(--poor); }
+  .verdict-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .verdict-device{ font-size:13px; font-weight:800; color:var(--ink-soft); display:flex; align-items:center; gap:8px; }
+  .verdict-device svg{ width:18px; height:18px; }
+  .verdict-status{ font-size:clamp(22px,3vw,28px); font-weight:800; margin:6px 0 2px; display:flex; align-items:center; gap:10px; }
+  .verdict.pass .verdict-status{ color:var(--moss); }
+  .verdict.fail .verdict-status{ color:var(--poor); }
+  .verdict.nodata .verdict-status{ color:var(--ink-soft); font-size:18px; }
+  .verdict-status svg{ width:26px; height:26px; flex:none; }
+  .verdict-sub{ font-size:13px; color:var(--ink-soft); margin:0 0 12px; }
+  .verdict-metrics{ display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none; }
+  .verdict-metrics li{ font-size:12.5px; font-weight:700; padding:4px 10px; border-radius:999px; background:var(--paper); border:1px solid var(--hair); white-space:nowrap; }
+  .verdict-metrics li.good{ color:var(--moss); background:var(--moss-bg); border-color:transparent; }
+  .verdict-metrics li.ni{ color:var(--amber); background:var(--amber-bg); border-color:transparent; }
+  .verdict-metrics li.poor{ color:var(--poor); background:var(--poor-bg); border-color:transparent; }
+  .verdict-home{ margin:12px 0 0; padding-top:10px; border-top:1px dashed var(--hair); font-size:13px; color:var(--ink-soft); }
+  .verdict-home strong.pass{ color:var(--moss); }
+  .verdict-home strong.fail{ color:var(--poor); }
+
+  .dash-kpis{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+  .kpi{ background:var(--paper-card); border:1px solid var(--hair); border-radius:14px; padding:16px; min-width:0; }
+  .kpi-label{ font-size:12.5px; font-weight:800; color:var(--ink-soft); margin:0 0 6px; }
+  .kpi-value{ font-size:28px; font-weight:800; line-height:1.1; display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
+  .kpi-value small{ font-size:13px; font-weight:700; color:var(--ink-soft); }
+  .kpi.good .kpi-value{ color:var(--moss); }
+  .kpi.ni .kpi-value{ color:var(--amber); }
+  .kpi.poor .kpi-value{ color:var(--poor); }
+  .kpi-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .kpi-delta{ font-size:12px; font-weight:800; }
+  .kpi-delta.up{ color:var(--moss); } .kpi-delta.down{ color:var(--poor); }
+  .kpi-src{ font-size:11.5px; color:var(--ink-soft); margin:8px 0 0; line-height:1.6; }
+  .dash-fresh{ font-size:13px; color:var(--ink-soft); margin:14px 0 0; line-height:1.8; }
+  .verdict-home bdi, .kpi-src bdi{ white-space:nowrap; }
+
+  /* priorities sit directly under the dashboard */
+  section.dash + section.block{ padding-top:24px !important; }
+
+  .tabbar{ position:sticky; top:64px; z-index:30; background:rgba(242,241,237,0.94); backdrop-filter:blur(10px); border-bottom:1px solid var(--hair); margin-top:8px; }
+  .tabbar-scroll{ display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .tabbar-scroll::-webkit-scrollbar{ display:none; }
+  .tab-btn{ flex:none; background:none; border:0; border-bottom:3px solid transparent; padding:14px 14px 11px; font-size:14.5px; font-weight:800; color:var(--ink-soft); white-space:nowrap; }
+  .tab-btn:hover{ color:var(--ink); }
+  .tab-btn[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--signal); }
+  .tab-panel[hidden]{ display:none !important; }
+
+  @media(max-width:820px){
+    .dash-verdicts{ grid-template-columns:1fr; }
+    .dash-kpis{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .wrap{ padding:0 16px; }
+    /* wide tables scroll inside themselves instead of the whole page
+       (the page-health table was ~440px wide on a 390px phone) */
+    #healthTable, #pageTable{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    /* team filter pills wrap instead of pushing the page wider */
+    #issueBoard .ib-tabs{ display:flex; flex-wrap:wrap; max-width:100%; border-radius:16px; }
+    #issueBoard .ib-tab{ padding:8px 12px; }
+    .seo-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    .seo-score-card .score{ font-size:26px; }
+  }
+  @media print{
+    .tabbar{ display:none; }
+    .tab-panel[hidden]{ display:block !important; }
+  }
+</style>
 </head>
 <body>
 
@@ -631,6 +705,42 @@
   <div class="refresh-status" id="lastRefreshedLine"></div>
 </header>
 
+<section class="dash" id="dashboard" aria-labelledby="dashH2">
+  <div class="wrap">
+    <div class="dash-head">
+      <p class="block-eyebrow" id="dashEyebrow">لوحة المتابعة</p>
+      <h2 id="dashH2">وضع الموقع اليوم</h2>
+    </div>
+    <div class="dash-verdicts" id="dashVerdicts"></div>
+    <div class="dash-kpis" id="dashKpis"></div>
+    <p class="dash-fresh" id="dashFresh"></p>
+  </div>
+</section>
+
+<section class="block" style="padding-bottom:16px;">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" id="prioEyebrowEl">أولويات الشهر</p>
+      <h2 data-i18n="prioH2">أهم الأشياء التي تستحق الاهتمام الآن</h2>
+      <p data-i18n="prioP">ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.</p>
+    </div>
+    <div class="priority-list reveal" id="priorityList"></div>
+  </div>
+</section>
+
+<nav class="tabbar" aria-label="أقسام التقرير">
+  <div class="wrap">
+    <div class="tabbar-scroll" role="tablist" id="tablist">
+      <button class="tab-btn" role="tab" type="button" id="tab-speed" data-tab="speed" aria-controls="panel-speed"><span data-i18n="tabSpeed">السرعة</span></button>
+      <button class="tab-btn" role="tab" type="button" id="tab-health" data-tab="health" aria-controls="panel-health"><span data-i18n="tabHealth">صحة الصفحات</span></button>
+      <button class="tab-btn" role="tab" type="button" id="tab-seo" data-tab="seo" aria-controls="panel-seo"><span data-i18n="tabSeo">محركات البحث</span></button>
+      <button class="tab-btn" role="tab" type="button" id="tab-index" data-tab="index" aria-controls="panel-index"><span data-i18n="tabIndex">تنظيف الفهرسة</span></button>
+      <button class="tab-btn" role="tab" type="button" id="tab-ai" data-tab="ai" aria-controls="panel-ai"><span data-i18n="tabAi">الذكاء الاصطناعي</span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="tab-panel" id="panel-speed" data-tab="speed" role="tabpanel" aria-labelledby="tab-speed">
 <section class="hero">
   <div class="wrap">
     <div class="pulse-wrap" aria-hidden="true">
@@ -676,17 +786,6 @@
   </div>
 </section>
 
-<section class="block" style="padding-bottom:16px;">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" id="prioEyebrowEl">أولويات الشهر</p>
-      <h2 data-i18n="prioH2">أهم الأشياء التي تستحق الاهتمام الآن</h2>
-      <p data-i18n="prioP">ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.</p>
-    </div>
-    <div class="priority-list reveal" id="priorityList"></div>
-  </div>
-</section>
-
 <section class="block" style="padding-top:8px;">
   <div class="wrap">
     <div class="block-head reveal">
@@ -701,7 +800,7 @@
   </div>
 </section>
 
-<section class="block" style="padding-top:8px;">
+<section class="block dash-dup" hidden style="padding-top:8px;">
   <div class="wrap">
     <div class="block-head reveal">
       <p class="block-eyebrow" data-i18n="summaryEyebrow">نظرة سريعة</p>
@@ -806,7 +905,9 @@
     </table>
   </div>
 </section>
+</div><!-- /panel-speed -->
 
+<div class="tab-panel" id="panel-health" data-tab="health" role="tabpanel" aria-labelledby="tab-health">
 <section class="block" style="padding-top:8px;" id="pageHealth">
   <div class="wrap">
     <div class="block-head reveal">
@@ -1298,66 +1399,9 @@
     .catch(function(){ renderAll(); });
 })();
 </script>
+</div><!-- /panel-health -->
 
-<section class="block" style="padding-top:8px;" id="aiReadiness">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" data-i18n="aiEyebrow">جاهزية الظهور في محركات الذكاء الاصطناعي</p>
-      <h2 data-i18n="aiH2">هل تقدر أدوات الذكاء الاصطناعي تصل لموقعنا؟</h2>
-      <p data-i18n="aiP">عند سؤال أدوات مثل ChatGPT أو Claude أو Perplexity عن خدمات مشابهة لخدماتنا، هل تقدر تصل لمحتوى الموقع أصلاً؟ هذا الجزء يفحص شهرياً ملف robots.txt للتأكد من عدم حظر روبوتات الذكاء الاصطناعي الرئيسية.</p>
-    </div>
-    <table class="kw-table reveal" id="aiTable">
-      <thead><tr>
-        <th data-i18n="aiColCrawler">الروبوت</th>
-        <th data-i18n="aiColPurpose">الغرض</th>
-        <th data-i18n="aiColStatus">الحالة</th>
-      </tr></thead>
-      <tbody id="aiTableBody"></tbody>
-    </table>
-    <p class="device-note" id="aiLlmsTxtLine" style="margin-top:14px;"></p>
-    <p class="device-note" id="aiCheckedNote" data-i18n="aiCheckedNote">لم يُشغَّل الفحص بعد — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.</p>
-  </div>
-</section>
-
-<section class="block" style="padding-top:8px;" id="indexCleanup">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow">خريطة تنظيف الفهرسة</p>
-      <h2>كل صفحة تحت الدومين — وحالتها الحقيقية</h2>
-      <p>يقارن هذا الجزء ما يقوله ووردبريس عن كل صفحة (منشورة، مسودة، خاصة، محذوفة) بما يحصل عليه
-         الزائر فعلياً عند فتح الرابط، ليكشف الصفحات غير المنشورة التي لا يزال بإمكان العميل الوصول
-         إليها، والصفحات المنشورة غير المدرجة في خريطة الموقع.</p>
-    </div>
-    <div class="ic-cards reveal" id="icCards"></div>
-    <a class="ic-open" href="./index-cleanup.html" id="icOpen">عرض الخريطة الكاملة &#8592;</a>
-    <p class="device-note" id="icNote"></p>
-  </div>
-</section>
-
-<style>
-  #indexCleanup .ic-cards{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;
-  }
-  #indexCleanup .ic-card{
-    background:var(--paper-card); border:1px solid var(--hair);
-    border-radius:14px; padding:18px; box-shadow:var(--shadow);
-  }
-  #indexCleanup .ic-card .n{ font-size:32px; font-weight:800; line-height:1; letter-spacing:-.02em; }
-  #indexCleanup .ic-card .l{ display:block; font-size:13px; color:var(--ink-soft);
-    margin-top:8px; font-weight:600; }
-  #indexCleanup .ic-high .n{ color:var(--poor); }
-  #indexCleanup .ic-mid  .n{ color:var(--amber); }
-  #indexCleanup .ic-ok   .n{ color:var(--moss); }
-  #indexCleanup .ic-all  .n{ color:var(--teal); }
-  #indexCleanup .ic-open{
-    display:inline-block; background:var(--teal); color:#F7F5F1; text-decoration:none;
-    padding:12px 26px; border-radius:999px; font-weight:700; font-size:14.5px;
-  }
-  #indexCleanup .ic-open:hover{ background:var(--teal-soft); }
-  @media(max-width:820px){ #indexCleanup .ic-cards{ grid-template-columns:repeat(2,1fr); } }
-  @media print{ #indexCleanup .ic-open{ display:none; } }
-</style>
-
+<div class="tab-panel" id="panel-seo" data-tab="seo" role="tabpanel" aria-labelledby="tab-seo">
 <section class="block" style="padding-top:8px;">
   <div class="wrap">
     <div class="block-head reveal">
@@ -1428,6 +1472,70 @@
     </div>
   </div>
 </section>
+</div><!-- /panel-seo -->
+
+<div class="tab-panel" id="panel-index" data-tab="index" role="tabpanel" aria-labelledby="tab-index">
+<section class="block" style="padding-top:8px;" id="indexCleanup">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow">خريطة تنظيف الفهرسة</p>
+      <h2>كل صفحة تحت الدومين — وحالتها الحقيقية</h2>
+      <p>يقارن هذا الجزء ما يقوله ووردبريس عن كل صفحة (منشورة، مسودة، خاصة، محذوفة) بما يحصل عليه
+         الزائر فعلياً عند فتح الرابط، ليكشف الصفحات غير المنشورة التي لا يزال بإمكان العميل الوصول
+         إليها، والصفحات المنشورة غير المدرجة في خريطة الموقع.</p>
+    </div>
+    <div class="ic-cards reveal" id="icCards"></div>
+    <a class="ic-open" href="./index-cleanup.html" id="icOpen">عرض الخريطة الكاملة &#8592;</a>
+    <p class="device-note" id="icNote"></p>
+  </div>
+</section>
+
+<style>
+  #indexCleanup .ic-cards{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;
+  }
+  #indexCleanup .ic-card{
+    background:var(--paper-card); border:1px solid var(--hair);
+    border-radius:14px; padding:18px; box-shadow:var(--shadow);
+  }
+  #indexCleanup .ic-card .n{ font-size:32px; font-weight:800; line-height:1; letter-spacing:-.02em; }
+  #indexCleanup .ic-card .l{ display:block; font-size:13px; color:var(--ink-soft);
+    margin-top:8px; font-weight:600; }
+  #indexCleanup .ic-high .n{ color:var(--poor); }
+  #indexCleanup .ic-mid  .n{ color:var(--amber); }
+  #indexCleanup .ic-ok   .n{ color:var(--moss); }
+  #indexCleanup .ic-all  .n{ color:var(--teal); }
+  #indexCleanup .ic-open{
+    display:inline-block; background:var(--teal); color:#F7F5F1; text-decoration:none;
+    padding:12px 26px; border-radius:999px; font-weight:700; font-size:14.5px;
+  }
+  #indexCleanup .ic-open:hover{ background:var(--teal-soft); }
+  @media(max-width:820px){ #indexCleanup .ic-cards{ grid-template-columns:repeat(2,1fr); } }
+  @media print{ #indexCleanup .ic-open{ display:none; } }
+</style>
+</div><!-- /panel-index -->
+
+<div class="tab-panel" id="panel-ai" data-tab="ai" role="tabpanel" aria-labelledby="tab-ai">
+<section class="block" style="padding-top:8px;" id="aiReadiness">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" data-i18n="aiEyebrow">جاهزية الظهور في محركات الذكاء الاصطناعي</p>
+      <h2 data-i18n="aiH2">هل تقدر أدوات الذكاء الاصطناعي تصل لموقعنا؟</h2>
+      <p data-i18n="aiP">عند سؤال أدوات مثل ChatGPT أو Claude أو Perplexity عن خدمات مشابهة لخدماتنا، هل تقدر تصل لمحتوى الموقع أصلاً؟ هذا الجزء يفحص شهرياً ملف robots.txt للتأكد من عدم حظر روبوتات الذكاء الاصطناعي الرئيسية.</p>
+    </div>
+    <table class="kw-table reveal" id="aiTable">
+      <thead><tr>
+        <th data-i18n="aiColCrawler">الروبوت</th>
+        <th data-i18n="aiColPurpose">الغرض</th>
+        <th data-i18n="aiColStatus">الحالة</th>
+      </tr></thead>
+      <tbody id="aiTableBody"></tbody>
+    </table>
+    <p class="device-note" id="aiLlmsTxtLine" style="margin-top:14px;"></p>
+    <p class="device-note" id="aiCheckedNote" data-i18n="aiCheckedNote">لم يُشغَّل الفحص بعد — سيُملأ هذا الجدول تلقائياً بعد أول تشغيل لـ GitHub Action.</p>
+  </div>
+</section>
+</div><!-- /panel-ai -->
 
 <footer>
   <div class="wrap">
@@ -3289,6 +3397,176 @@
     });
   }
 
+  /* ---------------- Dashboard + tabs (Nov 2026) ----------------
+     Reads only values the rest of the report already uses (metrics,
+     mobilePerfNow/Prev, desktopPerfScore) plus data.json's `cwv` block —
+     Google's own Core Web Vitals pass/fail, the same numbers PageSpeed
+     Insights shows under "Origin" (whole site) and "This URL" (homepage).
+     Nothing here estimates or recomputes a number differently. */
+  Object.assign(dict.ar, {
+    tabSpeed:"السرعة", tabHealth:"صحة الصفحات", tabSeo:"محركات البحث", tabIndex:"تنظيف الفهرسة", tabAi:"الذكاء الاصطناعي",
+    dashEyebrow:"لوحة المتابعة", dashH2:"وضع الموقع اليوم",
+    dvMobile:"الجوال", dvDesktop:"سطح المكتب",
+    dvPass:"ناجح في تقييم جوجل", dvFail:"غير ناجح في تقييم جوجل", dvNoData:"لا توجد بيانات كافية من جوجل بعد",
+    dvPending:"يظهر بعد التحديث القادم للبيانات",
+    dvSubSite:"تقييم جوجل الرسمي (Core Web Vitals) · الموقع كامل · زوّار حقيقيون، آخر 28 يوماً",
+    dvHome:"الصفحة الرئيسية وحدها:", dvHomePass:"ناجحة", dvHomeFail:"غير ناجحة", dvHomeNoData:"لا توجد بيانات كافية",
+    kpiMobile:"مؤشر أداء الجوال", kpiDesktop:"مؤشر أداء سطح المكتب", kpiLcp:"سرعة ظهور المحتوى (LCP)", kpiTtfb:"زمن استجابة الخادم (TTFB)",
+    kpiSrcLab:"اختبار جوجل المعملي · الصفحة الرئيسية", kpiSrcMedian:"وسيط {n} اختبارات", kpiSrcField:"زوّار حقيقيون · الموقع كامل · الجوال · آخر 28 يوماً",
+    kpiVsLast:"مقارنة بالشهر الماضي", kpiTarget:"الهدف",
+    dashFresh:"كيف تقرأ هذه الأرقام: مؤشرات الأداء اختبار معملي يتغيّر فور أي تحسين، أما تقييم جوجل وبيانات الزوّار الحقيقيين فهي متوسط آخر 28 يوماً، لذلك تتحسّن تدريجياً خلال الأسابيع التالية لأي تحسين.",
+  });
+  Object.assign(dict.en, {
+    tabSpeed:"Speed", tabHealth:"Page health", tabSeo:"Search (SEO)", tabIndex:"Index cleanup", tabAi:"AI search",
+    dashEyebrow:"Dashboard", dashH2:"Where the site stands today",
+    dvMobile:"Mobile", dvDesktop:"Desktop",
+    dvPass:"Passes Google's assessment", dvFail:"Fails Google's assessment", dvNoData:"Not enough data from Google yet",
+    dvPending:"Appears after the next data refresh",
+    dvSubSite:"Google's official Core Web Vitals assessment · whole site · real visitors, last 28 days",
+    dvHome:"Homepage alone:", dvHomePass:"passes", dvHomeFail:"fails", dvHomeNoData:"not enough data",
+    kpiMobile:"Mobile performance score", kpiDesktop:"Desktop performance score", kpiLcp:"Loading speed (LCP)", kpiTtfb:"Server response (TTFB)",
+    kpiSrcLab:"Google lab test · homepage", kpiSrcMedian:"median of {n} runs", kpiSrcField:"Real visitors · whole site · mobile · last 28 days",
+    kpiVsLast:"vs last month", kpiTarget:"Target",
+    dashFresh:"How to read these numbers: the performance scores are lab tests and change as soon as something is improved; Google's assessment and the real-visitor numbers are a 28-day average, so they catch up gradually over the following weeks.",
+  });
+
+  const CWV_LIMITS = { lcp:[2500,4000], inp:[200,500], cls:[0.10,0.25] };
+  function cwvClass(key, v){ const [g,n] = CWV_LIMITS[key]; return v<=g ? "good" : (v<=n ? "ni" : "poor"); }
+  function lhClass(v){ return v>=90 ? "good" : (v>=50 ? "ni" : "poor"); }
+  const ICON_PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>';
+  const ICON_DESK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>';
+  const ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>';
+  const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9 9l6 6M15 9l-6 6"/></svg>';
+
+  // Whole-site mobile verdict when data.json predates the `cwv` block:
+  // computed from the same latest CrUX values the Speed tab shows, with
+  // Google's thresholds. Desktop has no fallback — never guessed.
+  function fallbackMobileCwv(){
+    if(window.__cruxFormFactor !== "PHONE") return null;
+    const v = {};
+    ["lcp","inp","cls"].forEach(k=>{ const m = metrics.find(x=>x.key===k); if(m && m.data.length) v[k] = m.data[m.data.length-1]; });
+    if(v.lcp===undefined || v.cls===undefined) return null;
+    v.pass = v.lcp<=2500 && v.cls<=0.1 && (v.inp===undefined || v.inp<=200);
+    return v;
+  }
+
+  function verdictCard(ff, d){
+    const cwv = window.__cwv;
+    const isPhone = ff==="PHONE";
+    let site = cwv && cwv.origin ? cwv.origin[ff] : undefined;
+    if(site===undefined && isPhone) site = fallbackMobileCwv();
+    const home = cwv && cwv.home ? cwv.home[ff] : undefined;
+    const ar = currentLang==="ar";
+    let cls = "nodata", status = d.dvNoData, icon = "";
+    if(site===undefined){ status = d.dvPending; }
+    else if(site && site.pass===true){ cls="pass"; status=d.dvPass; icon=ICON_OK; }
+    else if(site && site.pass===false){ cls="fail"; status=d.dvFail; icon=ICON_X; }
+    const chips = [];
+    if(site){
+      if(site.lcp!==undefined) chips.push(`<li class="${cwvClass("lcp",site.lcp)}">LCP <span class="num">${(site.lcp/1000).toFixed(1)}${ar?" ث":"s"}</span></li>`);
+      if(site.inp!==undefined) chips.push(`<li class="${cwvClass("inp",site.inp)}">INP <span class="num">${site.inp}${ar?" م.ث":"ms"}</span></li>`);
+      if(site.cls!==undefined) chips.push(`<li class="${cwvClass("cls",site.cls)}">CLS <span class="num">${Number(site.cls).toFixed(2)}</span></li>`);
+    }
+    let homeLine = "";
+    if(home!==undefined){
+      const hs = home===null ? `<strong>${d.dvHomeNoData}</strong>` : (home.pass===true ? `<strong class="pass">${d.dvHomePass}</strong>` : (home.pass===false ? `<strong class="fail">${d.dvHomeFail}</strong>` : `<strong>${d.dvHomeNoData}</strong>`));
+      const hv = home && home.lcp!==undefined ? ` · <bdi>LCP <span class="num">${(home.lcp/1000).toFixed(1)}${ar?" ث":"s"}</span></bdi>` + (home.inp!==undefined?` · <bdi>INP <span class="num">${home.inp}${ar?" م.ث":"ms"}</span></bdi>`:"") + (home.cls!==undefined?` · <bdi>CLS <span class="num">${Number(home.cls).toFixed(2)}</span></bdi>`:"") : "";
+      homeLine = `<p class="verdict-home">${d.dvHome} ${hs}${hv}</p>`;
+    }
+    return `<article class="verdict ${cls}">
+      <div class="verdict-top"><span class="verdict-device">${isPhone?ICON_PHONE:ICON_DESK}${isPhone?d.dvMobile:d.dvDesktop}</span></div>
+      <p class="verdict-status">${icon}<span>${status}</span></p>
+      <p class="verdict-sub">${d.dvSubSite}</p>
+      ${chips.length?`<ul class="verdict-metrics">${chips.join("")}</ul>`:""}
+      ${homeLine}
+    </article>`;
+  }
+
+  function renderDashboard(){
+    const vEl = document.getElementById("dashVerdicts"), kEl = document.getElementById("dashKpis"), fEl = document.getElementById("dashFresh");
+    if(!vEl || !kEl) return;
+    const d = dict[currentLang], ar = currentLang==="ar";
+    document.getElementById("dashEyebrow").textContent = d.dashEyebrow + " — " + calendarLabel(REPORT_MONTH, currentLang);
+    document.getElementById("dashH2").textContent = d.dashH2;
+    vEl.innerHTML = verdictCard("PHONE", d) + verdictCard("DESKTOP", d);
+
+    const runs = window.__psiRuns || {};
+    const labSrc = (n)=> d.kpiSrcLab + (window.__mobilePerfCheckedAt ? " · <bdi dir=\"ltr\">" + escapeHtml(window.__mobilePerfCheckedAt) + "</bdi>" : "") + (n && n.length>1 ? " · " + d.kpiSrcMedian.replace("{n}", n.length) : "");
+    const delta = mobilePerfNow - mobilePerfPrev;
+    const lcpM = metrics.find(x=>x.key==="lcp"), ttfbM = metrics.find(x=>x.key==="ttfb");
+    const lcp = lcpM && lcpM.data.length ? lcpM.data[lcpM.data.length-1] : null;
+    const ttfb = ttfbM && ttfbM.data.length ? ttfbM.data[ttfbM.data.length-1] : null;
+    const fieldSrc = window.__cruxFormFactor === "PHONE" ? d.kpiSrcField : d.kpiSrcField.replace(ar?"الجوال":"mobile", ar?"كل الأجهزة":"all devices");
+    const sUnit = ar ? "ث" : "s";
+    const kpis = [
+      { label:d.kpiMobile, cls:lhClass(mobilePerfNow), value:`${mobilePerfNow}<small>/100</small>`,
+        row:`<span class="kpi-delta ${delta>=0?"up":"down"}">${delta>=0?"▲ +":"▼ "}${delta} ${d.kpiVsLast}</span>`, src:labSrc(runs.mobile) },
+      { label:d.kpiDesktop, cls:lhClass(desktopPerfScore), value:`${desktopPerfScore}<small>/100</small>`, row:"", src:labSrc(runs.desktop) },
+      { label:d.kpiLcp, cls:lcp===null?"":classify(lcp, lcpM.good, lcpM.ni), value:lcp===null?"—":`${(lcp/1000).toFixed(1)}<small>${sUnit}</small>`,
+        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ≤ 2.5 ${sUnit}</span>`, src:fieldSrc },
+      { label:d.kpiTtfb, cls:ttfb===null?"":classify(ttfb, ttfbM.good, ttfbM.ni), value:ttfb===null?"—":`${(ttfb/1000).toFixed(1)}<small>${sUnit}</small>`,
+        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ≤ 0.8 ${sUnit}</span>`, src:fieldSrc },
+    ];
+    kEl.innerHTML = kpis.map(k=>`<div class="kpi ${k.cls}"><p class="kpi-label">${k.label}</p><div class="kpi-value num">${k.value}</div>${k.row?`<div class="kpi-row">${k.row}</div>`:""}<p class="kpi-src">${k.src}</p></div>`).join("");
+
+    if(fEl) fEl.textContent = d.dashFresh;
+  }
+
+  /* Tabs: state lives in the URL (#tab-seo) so a link can open a tab,
+     with localStorage as a per-viewer convenience only. An in-page link to
+     a section inside another tab (e.g. #pagePerf) opens that tab first. */
+  const TAB_NAMES = ["speed","health","seo","index","ai"];
+  function activateTab(name, focusBtn){
+    if(!TAB_NAMES.includes(name)) name = "speed";
+    TAB_NAMES.forEach(n=>{
+      const btn = document.getElementById("tab-"+n), pnl = document.getElementById("panel-"+n);
+      const on = n===name;
+      if(btn){ btn.setAttribute("aria-selected", on?"true":"false"); btn.tabIndex = on?0:-1; }
+      if(pnl) pnl.hidden = !on;
+    });
+    try{ localStorage.setItem("silahReportTab", name); }catch(e){}
+    if(focusBtn){ const b = document.getElementById("tab-"+name); if(b) b.focus(); }
+  }
+  function tabForElement(el){ const p = el && el.closest ? el.closest(".tab-panel") : null; return p ? p.getAttribute("data-tab") : null; }
+  function openHash(hash, scroll){
+    if(!hash || hash.length<2) return false;
+    const id = decodeURIComponent(hash.slice(1));
+    if(id.startsWith("tab-")){ activateTab(id.slice(4)); return true; }
+    const el = document.getElementById(id);
+    const tab = tabForElement(el);
+    if(tab){ activateTab(tab); if(scroll) requestAnimationFrame(()=>el.scrollIntoView({behavior:"smooth", block:"start"})); return true; }
+    return false;
+  }
+  (function initTabs(){
+    const list = document.getElementById("tablist");
+    if(!list) return;
+    list.addEventListener("click", e=>{
+      const btn = e.target.closest(".tab-btn"); if(!btn) return;
+      const name = btn.getAttribute("data-tab");
+      activateTab(name);
+      try{ history.replaceState(null, "", "#tab-"+name); }catch(err){}
+    });
+    list.addEventListener("keydown", e=>{
+      const keys = document.documentElement.dir==="rtl" ? {ArrowLeft:1, ArrowRight:-1} : {ArrowLeft:-1, ArrowRight:1};
+      if(!(e.key in keys) && e.key!=="Home" && e.key!=="End") return;
+      e.preventDefault();
+      const cur = TAB_NAMES.findIndex(n=>document.getElementById("tab-"+n).getAttribute("aria-selected")==="true");
+      let nxt = e.key==="Home" ? 0 : (e.key==="End" ? TAB_NAMES.length-1 : (cur + keys[e.key] + TAB_NAMES.length) % TAB_NAMES.length);
+      activateTab(TAB_NAMES[nxt], true);
+      try{ history.replaceState(null, "", "#tab-"+TAB_NAMES[nxt]); }catch(err){}
+    });
+    document.addEventListener("click", e=>{
+      const a = e.target.closest('a[href^="#"]'); if(!a) return;
+      const h = a.getAttribute("href");
+      if(openHash(h, true)) e.preventDefault();
+    });
+    window.addEventListener("hashchange", ()=>openHash(location.hash, true));
+    if(!openHash(location.hash, true)){
+      let saved = null; try{ saved = localStorage.getItem("silahReportTab"); }catch(e){}
+      activateTab(saved || "speed");
+    }
+  })();
+
   function applyLang(lang){
     currentLang = lang;
     const d = dict[lang];
@@ -3343,6 +3621,7 @@
     renderMarketingPlan();
     renderTargets();
     renderStatPair();
+    renderDashboard();
     if(currentDevice==="mobile") updateHero(currentRange); else updateHeroDesktop();
   }
 
@@ -3673,6 +3952,9 @@
         // without a formFactor, i.e. all devices combined, so label it so.
         window.__cruxFormFactor = D.cruxFormFactor || "ALL";
         window.__heavyScripts = D.heavyScripts || null;
+        window.__cwv = D.cwv || null;
+        window.__psiRuns = D.psiRuns || null;
+        window.__mobilePerfCheckedAt = D.mobilePerfCheckedAt || null;
         // Homepage row = the same test run as the headline cards.
         { const hp = pageRegistry.find(x=>x.id==="home");
           if(hp){ hp.monthly[REPORT_MONTH] = { mobile: mobilePerfNow, desktop: desktopPerfScore }; } }

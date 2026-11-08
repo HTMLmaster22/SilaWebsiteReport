@@ -740,6 +740,87 @@ def fetch_psi_score(strategy, retry=True):
     }
 
 
+def fetch_psi_median(strategy, runs=3):
+    """Run the homepage PSI test `runs` times and keep the run with the
+    median Performance score (Nov 2026).
+
+    One Lighthouse run can swing wildly: on Nov 8 2026 a single desktop run
+    recorded 39 while two independent runs minutes before and after scored
+    97 and 99 (the cache had just been cleared, so that one test hit a cold
+    page). That one unlucky run then became the report's headline number.
+    Google's own guidance is to run Lighthouse several times and use the
+    median. The whole result of the median run is kept (not a mix of runs)
+    so its lab metrics and heavy-script list stay consistent with the score.
+
+    Individual run failures are tolerated; raises only if every run fails,
+    which the caller already handles by keeping the previous scores."""
+    results, last_err = [], None
+    for _ in range(runs):
+        try:
+            r = fetch_psi_score(strategy)
+            if r.get("performance") is not None:
+                results.append(r)
+        except Exception as e:  # one bad run must not discard the others
+            last_err = e
+            print(f"  WARNING: PSI {strategy} run failed, continuing: {type(e).__name__}: {e}", file=sys.stderr)
+    if not results:
+        raise last_err or RuntimeError(f"PSI {strategy}: no successful runs")
+    ordered = sorted(results, key=lambda r: r["performance"])
+    # Odd count -> true median. Even count (a run failed) -> the lower of the
+    # two middle runs, so a failure never makes the reported score look better.
+    chosen = ordered[(len(ordered) - 1) // 2]
+    chosen["allRuns"] = [r["performance"] for r in results]
+    return chosen
+
+
+def fetch_crux_current(form_factor, url=None):
+    """Latest 28-day real-user (CrUX) p75 values and Google's Core Web Vitals
+    pass/fail verdict, exactly as PageSpeed Insights shows it at the top of
+    the report (Nov 2026).
+
+    origin-level when url is None (PSI's "Origin" tab = whole site), or for a
+    single page when url is given (PSI's "This URL" tab). Returns None when
+    Google has no data for that combination (HTTP 404 = not enough traffic),
+    so the report can say "not enough data" instead of guessing.
+
+    Verdict rule (Google's): pass only if LCP <= 2500 ms, INP <= 200 ms and
+    CLS <= 0.1 at the 75th percentile. LCP and CLS are required; INP is
+    included when Google has it (PSI assesses without it otherwise)."""
+    body = {"formFactor": form_factor}
+    if url:
+        body["url"] = url
+    else:
+        body["origin"] = ORIGIN
+    try:
+        resp = http_json(f"https://chromeuxreport.googleapis.com/v1/records:queryRecord?key={API_KEY}", body)
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+    rec = resp.get("record") or {}
+    vals = {}
+    for api_name, m in (rec.get("metrics") or {}).items():
+        key = CRUX_METRIC_MAP.get(api_name)
+        p75 = ((m or {}).get("percentiles") or {}).get("p75")
+        if not key or p75 is None:
+            continue
+        try:
+            vals[key] = round(float(p75), 2) if key == "cls" else int(round(float(p75)))
+        except (TypeError, ValueError):
+            continue
+    if "lcp" in vals and "cls" in vals:
+        ok = vals["lcp"] <= 2500 and vals["cls"] <= 0.1
+        if "inp" in vals:
+            ok = ok and vals["inp"] <= 200
+        vals["pass"] = ok
+    else:
+        vals["pass"] = None
+    last = (rec.get("collectionPeriod") or {}).get("lastDate") or {}
+    if last:
+        vals["asOf"] = f"{last.get('year', 0):04d}-{last.get('month', 0):02d}-{last.get('day', 0):02d}"
+    return vals
+
+
 def heavy_scripts(audits):
     """Scripts that cost the most main-thread time in this run (Lighthouse
     'bootup-time'). Oct 2026: added after the scores dropped with no
@@ -1889,11 +1970,14 @@ def main():
     # only update when homepage_updated is actually True.
     print("Fetching PageSpeed Insights scores ...")
     try:
-        mobile_psi = fetch_psi_score("mobile")
-        desktop_psi = fetch_psi_score("desktop")
+        # Nov 2026: median of 3 runs each, see fetch_psi_median().
+        mobile_psi = fetch_psi_median("mobile")
+        desktop_psi = fetch_psi_median("desktop")
         mobile_score = mobile_psi["performance"]
         desktop_score = desktop_psi["performance"]
-        print("PSI mobile:", mobile_score, "| desktop:", desktop_score)
+        print("PSI mobile:", mobile_score, mobile_psi.get("allRuns"),
+              "| desktop:", desktop_score, desktop_psi.get("allRuns"))
+        data["psiRuns"] = {"mobile": mobile_psi.get("allRuns"), "desktop": desktop_psi.get("allRuns")}
 
         # Real SEO/Best Practices/Accessibility scores from the PSI runs
         # above -- previously these three were hand-typed once into
@@ -1955,6 +2039,23 @@ def main():
         # fields either.
         print(f"  WARNING: PSI fetch failed after retry, keeping previous scores this run: {type(e).__name__}: {e}", file=sys.stderr)
         mobile_score = desktop_score = None
+
+    # Nov 2026: Google's official Core Web Vitals verdict (pass/fail) for the
+    # whole site and for the homepage, on phones and on desktop — the same
+    # four numbers PageSpeed Insights shows under "Origin" / "This URL".
+    # Each lookup is independent: one failing keeps that cell's previous
+    # value rather than wiping the others.
+    cwv = data.get("cwv") or {}
+    for scope, url in (("origin", None), ("home", ORIGIN + "/")):
+        cwv.setdefault(scope, {})
+        for ff in ("PHONE", "DESKTOP"):
+            try:
+                cwv[scope][ff] = fetch_crux_current(ff, url)
+                print(f"CWV {scope} {ff}:", cwv[scope][ff])
+            except Exception as e:
+                print(f"  WARNING: CWV {scope} {ff} lookup failed, keeping previous: {type(e).__name__}: {e}", file=sys.stderr)
+    cwv["checkedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    data["cwv"] = cwv
 
     try:
         data["deviceShare"] = fetch_device_share()
