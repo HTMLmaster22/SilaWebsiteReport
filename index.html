@@ -717,17 +717,6 @@
   </div>
 </section>
 
-<section class="block" style="padding-bottom:16px;">
-  <div class="wrap">
-    <div class="block-head reveal">
-      <p class="block-eyebrow" id="prioEyebrowEl">أولويات الشهر</p>
-      <h2 data-i18n="prioH2">أهم الأشياء التي تستحق الاهتمام الآن</h2>
-      <p data-i18n="prioP">ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.</p>
-    </div>
-    <div class="priority-list reveal" id="priorityList"></div>
-  </div>
-</section>
-
 <nav class="tabbar" aria-label="أقسام التقرير">
   <div class="wrap">
     <div class="tabbar-scroll" role="tablist" id="tablist">
@@ -736,6 +725,7 @@
       <button class="tab-btn" role="tab" type="button" id="tab-seo" data-tab="seo" aria-controls="panel-seo"><span data-i18n="tabSeo">محركات البحث</span></button>
       <button class="tab-btn" role="tab" type="button" id="tab-index" data-tab="index" aria-controls="panel-index"><span data-i18n="tabIndex">تنظيف الفهرسة</span></button>
       <button class="tab-btn" role="tab" type="button" id="tab-ai" data-tab="ai" aria-controls="panel-ai"><span data-i18n="tabAi">الذكاء الاصطناعي</span></button>
+      <button class="tab-btn" role="tab" type="button" id="tab-prio" data-tab="prio" aria-controls="panel-prio"><span data-i18n="tabPrio">أولويات الشهر</span></button>
     </div>
   </div>
 </nav>
@@ -1536,6 +1526,19 @@
   </div>
 </section>
 </div><!-- /panel-ai -->
+
+<div class="tab-panel" id="panel-prio" data-tab="prio" role="tabpanel" aria-labelledby="tab-prio">
+<section class="block" style="padding-top:8px;">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <p class="block-eyebrow" id="prioEyebrowEl">أولويات الشهر</p>
+      <h2 data-i18n="prioH2">أهم الأشياء التي تستحق الاهتمام الآن</h2>
+      <p data-i18n="prioP">ملخص مبني تلقائياً على بيانات هذا الشهر — يرتب لك ما يستحق التحرك بشأنه أولاً.</p>
+    </div>
+    <div class="priority-list reveal" id="priorityList"></div>
+  </div>
+</section>
+</div><!-- /panel-prio -->
 
 <footer>
   <div class="wrap">
@@ -3404,7 +3407,7 @@
      Insights shows under "Origin" (whole site) and "This URL" (homepage).
      Nothing here estimates or recomputes a number differently. */
   Object.assign(dict.ar, {
-    tabSpeed:"السرعة", tabHealth:"صحة الصفحات", tabSeo:"محركات البحث", tabIndex:"تنظيف الفهرسة", tabAi:"الذكاء الاصطناعي",
+    tabSpeed:"السرعة", tabHealth:"صحة الصفحات", tabSeo:"محركات البحث", tabIndex:"تنظيف الفهرسة", tabAi:"الذكاء الاصطناعي", tabPrio:"أولويات الشهر",
     dashEyebrow:"لوحة المتابعة", dashH2:"وضع الموقع اليوم",
     dvMobile:"الجوال", dvDesktop:"سطح المكتب",
     dvPass:"ناجح في تقييم جوجل", dvFail:"غير ناجح في تقييم جوجل", dvNoData:"لا توجد بيانات كافية من جوجل بعد",
@@ -3417,7 +3420,7 @@
     dashFresh:"كيف تقرأ هذه الأرقام: مؤشرات الأداء اختبار معملي يتغيّر فور أي تحسين، أما تقييم جوجل وبيانات الزوّار الحقيقيين فهي متوسط آخر 28 يوماً، لذلك تتحسّن تدريجياً خلال الأسابيع التالية لأي تحسين.",
   });
   Object.assign(dict.en, {
-    tabSpeed:"Speed", tabHealth:"Page health", tabSeo:"Search (SEO)", tabIndex:"Index cleanup", tabAi:"AI search",
+    tabSpeed:"Speed", tabHealth:"Page health", tabSeo:"Search (SEO)", tabIndex:"Index cleanup", tabAi:"AI search", tabPrio:"Priorities",
     dashEyebrow:"Dashboard", dashH2:"Where the site stands today",
     dvMobile:"Mobile", dvDesktop:"Desktop",
     dvPass:"Passes Google's assessment", dvFail:"Fails Google's assessment", dvNoData:"Not enough data from Google yet",
@@ -3515,7 +3518,7 @@
   /* Tabs: state lives in the URL (#tab-seo) so a link can open a tab,
      with localStorage as a per-viewer convenience only. An in-page link to
      a section inside another tab (e.g. #pagePerf) opens that tab first. */
-  const TAB_NAMES = ["speed","health","seo","index","ai"];
+  const TAB_NAMES = ["speed","health","seo","index","ai","prio"];
   function activateTab(name, focusBtn){
     if(!TAB_NAMES.includes(name)) name = "speed";
     TAB_NAMES.forEach(n=>{
