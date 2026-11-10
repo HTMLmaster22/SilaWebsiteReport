@@ -647,11 +647,17 @@
   /* priorities sit directly under the dashboard */
   section.dash + section.block{ padding-top:24px !important; }
 
-  .tabbar{ position:sticky; top:64px; z-index:30; background:rgba(242,241,237,0.94); backdrop-filter:blur(10px); border-bottom:1px solid var(--hair); margin-top:8px; }
-  .tabbar-scroll{ display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .tabbar{ position:sticky; top:var(--topbar-h,64px); z-index:30; background:rgba(242,241,237,0.94); backdrop-filter:blur(10px); border-bottom:1px solid var(--hair); margin-top:8px; }
+  .tabbar-scroll{ position:relative; display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
   .tabbar-scroll::-webkit-scrollbar{ display:none; }
   .tab-btn{ flex:none; background:none; border:0; border-bottom:3px solid transparent; padding:14px 14px 11px; font-size:14.5px; font-weight:800; color:var(--ink-soft); white-space:nowrap; }
   .tab-btn:hover{ color:var(--ink); }
+  html[dir="rtl"]{ --tabfade:90deg; } html[dir="ltr"]{ --tabfade:270deg; }
+  .tabbar-scroll.fade-end{ -webkit-mask-image:linear-gradient(var(--tabfade), transparent 0, #000 40px); mask-image:linear-gradient(var(--tabfade), transparent 0, #000 40px); }
+  .tabbar-scroll.fade-start{ -webkit-mask-image:linear-gradient(var(--tabfade), #000 calc(100% - 40px), transparent 100%); mask-image:linear-gradient(var(--tabfade), #000 calc(100% - 40px), transparent 100%); }
+  .tabbar-scroll.fade-start.fade-end{ -webkit-mask-image:linear-gradient(var(--tabfade), transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%); mask-image:linear-gradient(var(--tabfade), transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%); }
+  .kpi-why{ font-size:12px; line-height:1.6; margin:8px 0 0; color:var(--ink); }
+  .kpi-why a{ color:inherit; font-weight:800; text-decoration:underline; text-underline-offset:3px; }
   .tab-btn[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--signal); }
   .tab-panel[hidden]{ display:none !important; }
 
@@ -1846,7 +1852,8 @@
       recoPoorMobile:"أداء الجوال ضعيف — يحتاج أولوية عالية",
       recoNiMobile:"أداء متوسط — تحسينات إضافية ممكنة",
       recoGood:"أداء جيد هذا الشهر",
-      recoGap:(m,de)=>`الجوال ${m} (يحتاج تحسين) مقابل سطح المكتب ${de} (جيد) — فجوة حقيقية بين الجهازين تستحق المتابعة.`,
+      recoTier:{poor:"ضعيف", ni:"يحتاج تحسين", good:"جيد"},
+      recoGap:(m,de,mt,dt)=>`الجوال ${m} (${mt}) مقابل سطح المكتب ${de} (${dt}) — فجوة حقيقية بين الجهازين تستحق المتابعة.`,
       calendarMonths:["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]
     },
     en: {
@@ -2041,7 +2048,8 @@
       recoPoorMobile:"Mobile performance is poor — needs high priority",
       recoNiMobile:"Middle of the range — further optimization possible",
       recoGood:"Good performance this month",
-      recoGap:(m,de)=>`Mobile ${m} (needs improvement) vs. Desktop ${de} (good) — a real gap between the two devices worth following up on.`,
+      recoTier:{poor:"poor", ni:"needs improvement", good:"good"},
+      recoGap:(m,de,mt,dt)=>`Mobile ${m} (${mt}) vs. Desktop ${de} (${dt}) — a real gap between the two devices worth following up on.`,
       calendarMonths:["January","February","March","April","May","June","July","August","September","October","November","December"]
     }
   };
@@ -2105,6 +2113,11 @@
   let pageHealthData = [];
   let pageHealthCheckedMonth = null;
 
+  // "≤" and "≥" are mirrored by the browser inside right-to-left text, so
+  // "≤ 2.5" reads as "≥ 2.5" in Arabic. Words avoid that.
+  function atMost(v){ return currentLang==="ar" ? `${v.trim()} أو أقل` : `≤ ${v.trim()}`; }
+  function atLeast(v){ return currentLang==="ar" ? `${v.trim()} أو أعلى` : `≥ ${v.trim()}`; }
+
   function pageReco(cur){
     const d = dict[currentLang];
     const tier = v => v < 50 ? "poor" : v < 90 ? "ni" : "good";
@@ -2119,7 +2132,7 @@
       // the recommendation would never say so. Only worth calling out as a
       // distinct "gap" when the two are actually in different tiers, not
       // just different by a couple of points within the same tier.
-      if(mt !== dt) return d.recoGap(cur.mobile, cur.desktop);
+      if(mt !== dt) return d.recoGap(cur.mobile, cur.desktop, d.recoTier[mt], d.recoTier[dt]);
       return tierText(mt);
     }
     if(hasMobile) return tierText(tier(cur.mobile));
@@ -2436,11 +2449,11 @@
 
   // Heaviest single script in the latest Google (Lighthouse) runs. Only
   // reported when it freezes the page for 0.5 s or more on its own.
-  function heaviestScript(){
+  function heaviestScript(onlyDev){
     const hs = window.__heavyScripts;
     if(!hs) return null;
     let top = null;
-    ["mobile","desktop"].forEach(dev => (hs[dev]||[]).forEach(x => {
+    (onlyDev ? [onlyDev] : ["mobile","desktop"]).forEach(dev => (hs[dev]||[]).forEach(x => {
       if(!top || x.ms > top.ms) top = Object.assign({ dev }, x);
     }));
     if(!top || top.ms < 500) return null;
@@ -3043,13 +3056,13 @@
       rows.push(`<tr>
         <td><strong>${escapeHtml(name)}</strong><span class="page-url">${escapeHtml(m.fullAr)}</span></td>
         <td class="num">${fmt(latest,m)} ${unitTxt(m)}</td>
-        <td class="num">≤ ${fmt(m.good,m)} ${unitTxt(m)}</td>
-        <td class="num">≤ ${fmt(m.good,m)} ${unitTxt(m)}</td>
+        <td class="num">${atMost(fmt(m.good,m)+" "+unitTxt(m))}</td>
+        <td class="num">${atMost(fmt(m.good,m)+" "+unitTxt(m))}</td>
         <td>${pill("tech", d.ownerTech)}</td>
       </tr>`);
     });
-    rows.push(`<tr><td><strong>${d.tgLighthouseMobile}</strong></td><td class="num">${mobilePerfNow} / 100</td><td class="num">≥ 90</td><td>${d.tgTargetMobile}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
-    rows.push(`<tr><td><strong>${d.tgLighthouseDesktop}</strong></td><td class="num">${desktopPerfScore} / 100</td><td class="num">≥ 90</td><td>${desktopPerfScore>=90 ? d.tgTargetKeep : d.tgTargetMobile}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
+    rows.push(`<tr><td><strong>${d.tgLighthouseMobile}</strong></td><td class="num">${mobilePerfNow} / 100</td><td class="num">${atLeast("90")}</td><td>${d.tgTargetMobile}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
+    rows.push(`<tr><td><strong>${d.tgLighthouseDesktop}</strong></td><td class="num">${desktopPerfScore} / 100</td><td class="num">${atLeast("90")}</td><td>${desktopPerfScore>=90 ? d.tgTargetKeep : d.tgTargetMobile}</td><td>${pill("tech",d.ownerTech)}</td></tr>`);
     // Keyword + schema rows computed from live data (were hand-typed:
     // one keyword "not ranking" and schema "not enabled", long after the
     // scan showed schema on almost every page).
@@ -3501,16 +3514,23 @@
     const ttfb = ttfbM && ttfbM.data.length ? ttfbM.data[ttfbM.data.length-1] : null;
     const fieldSrc = window.__cruxFormFactor === "PHONE" ? d.kpiSrcField : d.kpiSrcField.replace(ar?"الجوال":"mobile", ar?"كل الأجهزة":"all devices");
     const sUnit = ar ? "ث" : "s";
+    const why = (dev, score)=>{
+      const it = score < 90 ? heaviestScript(dev) : null;
+      if(!it) return "";
+      const sec = (it.ms/1000).toFixed(1);
+      return ar ? `<p class="kpi-why">السبب الأبرز: ${escapeHtml(it.nameAr)} جمّد الصفحة ${sec} ث في هذا الاختبار. <a href="#tab-prio">التفاصيل</a></p>`
+                : `<p class="kpi-why">Main cause: ${escapeHtml(it.nameEn)} froze the page for ${sec}s in this test. <a href="#tab-prio">Details</a></p>`;
+    };
     const kpis = [
       { label:d.kpiMobile, cls:lhClass(mobilePerfNow), value:`${mobilePerfNow}<small>/100</small>`,
-        row:`<span class="kpi-delta ${delta>=0?"up":"down"}">${delta>=0?"▲ +":"▼ "}${delta} ${d.kpiVsLast}</span>`, src:labSrc(runs.mobile) },
-      { label:d.kpiDesktop, cls:lhClass(desktopPerfScore), value:`${desktopPerfScore}<small>/100</small>`, row:"", src:labSrc(runs.desktop) },
+        row:`<span class="kpi-delta ${delta>=0?"up":"down"}">${delta>=0?"▲ +":"▼ "}${delta} ${d.kpiVsLast}</span>`, src:labSrc(runs.mobile), why:why("mobile", mobilePerfNow) },
+      { label:d.kpiDesktop, cls:lhClass(desktopPerfScore), value:`${desktopPerfScore}<small>/100</small>`, row:"", src:labSrc(runs.desktop), why:why("desktop", desktopPerfScore) },
       { label:d.kpiLcp, cls:lcp===null?"":classify(lcp, lcpM.good, lcpM.ni), value:lcp===null?"—":`${(lcp/1000).toFixed(1)}<small>${sUnit}</small>`,
-        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ≤ 2.5 ${sUnit}</span>`, src:fieldSrc },
+        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ${atMost("2.5 "+sUnit)}</span>`, src:fieldSrc },
       { label:d.kpiTtfb, cls:ttfb===null?"":classify(ttfb, ttfbM.good, ttfbM.ni), value:ttfb===null?"—":`${(ttfb/1000).toFixed(1)}<small>${sUnit}</small>`,
-        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ≤ 0.8 ${sUnit}</span>`, src:fieldSrc },
+        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ${atMost("0.8 "+sUnit)}</span>`, src:fieldSrc },
     ];
-    kEl.innerHTML = kpis.map(k=>`<div class="kpi ${k.cls}"><p class="kpi-label">${k.label}</p><div class="kpi-value num">${k.value}</div>${k.row?`<div class="kpi-row">${k.row}</div>`:""}<p class="kpi-src">${k.src}</p></div>`).join("");
+    kEl.innerHTML = kpis.map(k=>`<div class="kpi ${k.cls}"><p class="kpi-label">${k.label}</p><div class="kpi-value num">${k.value}</div>${k.row?`<div class="kpi-row">${k.row}</div>`:""}${k.why||""}<p class="kpi-src">${k.src}</p></div>`).join("");
 
     if(fEl) fEl.textContent = d.dashFresh;
   }
@@ -3528,13 +3548,33 @@
       if(pnl) pnl.hidden = !on;
     });
     try{ localStorage.setItem("silahReportTab", name); }catch(e){}
-    if(focusBtn){ const b = document.getElementById("tab-"+name); if(b) b.focus(); }
+    const b = document.getElementById("tab-"+name), strip = document.getElementById("tablist");
+    if(b && strip){ strip.scrollLeft = b.offsetLeft - (strip.clientWidth - b.offsetWidth)/2; updateTabFade(); }
+    if(focusBtn && b) b.focus();
+  }
+  function updateTabFade(){
+    const s = document.getElementById("tablist"); if(!s) return;
+    const max = s.scrollWidth - s.clientWidth, pos = Math.abs(s.scrollLeft);
+    s.classList.toggle("fade-end", max > 4 && pos < max - 4);
+    s.classList.toggle("fade-start", max > 4 && pos > 4);
+  }
+  // Where the tab content starts, measured from the open panel (the bar itself
+  // is sticky, so its own position says nothing once it is stuck).
+  function tabsTop(){
+    const bar = document.querySelector(".tabbar"), top = document.querySelector(".topbar");
+    const pnl = document.querySelector(".tab-panel:not([hidden])");
+    if(!bar || !pnl) return null;
+    return pnl.getBoundingClientRect().top + window.scrollY - bar.offsetHeight - (top ? top.offsetHeight : 0);
+  }
+  function scrollToTabs(always){
+    const y = tabsTop(); if(y===null) return;
+    if(always || window.scrollY > y) window.scrollTo({ top: Math.max(0, y), behavior: always ? "smooth" : "instant" });
   }
   function tabForElement(el){ const p = el && el.closest ? el.closest(".tab-panel") : null; return p ? p.getAttribute("data-tab") : null; }
-  function openHash(hash, scroll){
+  function openHash(hash, scroll, initial){
     if(!hash || hash.length<2) return false;
     const id = decodeURIComponent(hash.slice(1));
-    if(id.startsWith("tab-")){ activateTab(id.slice(4)); return true; }
+    if(id.startsWith("tab-")){ activateTab(id.slice(4)); if(!initial){ try{ history.replaceState(null, "", "#"+id); }catch(err){} } if(scroll && !initial) requestAnimationFrame(()=>scrollToTabs(true)); return true; }
     const el = document.getElementById(id);
     const tab = tabForElement(el);
     if(tab){ activateTab(tab); if(scroll) requestAnimationFrame(()=>el.scrollIntoView({behavior:"smooth", block:"start"})); return true; }
@@ -3547,8 +3587,16 @@
       const btn = e.target.closest(".tab-btn"); if(!btn) return;
       const name = btn.getAttribute("data-tab");
       activateTab(name);
+      scrollToTabs(false);
       try{ history.replaceState(null, "", "#tab-"+name); }catch(err){}
     });
+    list.addEventListener("scroll", updateTabFade, { passive:true });
+    window.addEventListener("resize", updateTabFade);
+    const topbar = document.querySelector(".topbar");
+    const setTopbarH = ()=>{ if(topbar) document.documentElement.style.setProperty("--topbar-h", topbar.offsetHeight + "px"); };
+    setTopbarH();
+    if(topbar && "ResizeObserver" in window) new ResizeObserver(setTopbarH).observe(topbar);
+    window.addEventListener("resize", setTopbarH);
     list.addEventListener("keydown", e=>{
       const keys = document.documentElement.dir==="rtl" ? {ArrowLeft:1, ArrowRight:-1} : {ArrowLeft:-1, ArrowRight:1};
       if(!(e.key in keys) && e.key!=="Home" && e.key!=="End") return;
@@ -3564,7 +3612,7 @@
       if(openHash(h, true)) e.preventDefault();
     });
     window.addEventListener("hashchange", ()=>openHash(location.hash, true));
-    if(!openHash(location.hash, true)){
+    if(!openHash(location.hash, true, true)){
       let saved = null; try{ saved = localStorage.getItem("silahReportTab"); }catch(e){}
       activateTab(saved || "speed");
     }
