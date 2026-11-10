@@ -6,7 +6,7 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   refresh:
@@ -16,44 +16,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install dependencies
-        run: pip install google-auth requests
-      - name: Refresh data.json from Google APIs
+      - name: Diagnose homepage as seen from this runner
         env:
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
-          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
-          INVENTORY_KEY: ${{ secrets.INVENTORY_KEY }}
-        run: python scripts/update_data.py
-      - name: Commit & push if changed
-        run: |
-          git config user.name  "report-bot"
-          git config user.email "report-bot@users.noreply.github.com"
-          if git diff --quiet data.json; then
-            echo "No changes — data already current."
-          else
-            git add data.json
-            git commit -m "chore: monthly data refresh (CrUX + PSI) [skip ci]"
-            # This job's checkout is a snapshot from when it started. If anyone
-            # (or any other run) pushes to main in the meantime — e.g. a manual
-            # edit via the GitHub web editor, which is exactly what rejected
-            # this push on Aug 9 2026 — origin/main has moved on, and a plain
-            # `git push` gets rejected as non-fast-forward. Our commit only
-            # ever touches data.json, so rebasing onto the current tip right
-            # before pushing is meant to clear that race without a human
-            # needing to manually re-run the job.
-            #
-            # -X theirs is required to actually make that true, not just -X
-            # on its own (Aug 17 2026 fix: a run failed with an unresolved
-            # conflict because this flag was missing entirely). During a
-            # REBASE specifically, "ours"/"theirs" are reversed from their
-            # meaning in a normal merge: "ours" is origin/main (the branch
-            # being rebased onto), "theirs" is this run's own fresh commit
-            # being replayed on top. -X theirs makes THIS run's just-scanned
-            # data win the conflict, which is what we actually want — the
-            # whole point of this step is that our freshly-computed
-            # data.json should always be the one that lands, not whatever
-            # was on main before we started.
-            git fetch origin main
-            git rebase -X theirs origin/main
-            git push
-          fi
+        run: python scripts/diag_desktop.py
