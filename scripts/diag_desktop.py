@@ -30,8 +30,6 @@ def fetch(url, ua=DESK, extra=None, method="GET"):
 
 
 home = "https://www.silah.com.sa/"
-AUTH = {"Authorization": "Basic Zm9vOmJhcg=="}   # makes the firewall pass the request straight to the origin (nothing is stored)
-r0 = fetch(home); print("EDGE desktop", json.dumps(r0)); print("EDGE mobile", json.dumps(fetch(home, ua=MOB)))
 UAS = {
  "chrome-desktop": DESK,
  "lighthouse-desktop": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
@@ -63,18 +61,15 @@ UAS = {
  "old-ie": "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)",
  "engati": "Engati",
 }
-for name, ua in UAS.items():
-    r = fetch(home, ua=ua, extra=AUTH)
-    print("ORIGIN", "OPT " if r.get("delayed") else "RAW ", name.ljust(20), json.dumps(r)); time.sleep(0.5)
-for label, ck in [("comment_author", "comment_author_abc=x"), ("wp-postpass", "wp-postpass_abc=x"), ("woo-cart", "woocommerce_items_in_cart=1"), ("pll_language", "pll_language=ar"), ("wpml", "wp-wpml_current_language=ar"), ("random", "foo=bar")]:
-    r = fetch(home, extra=dict(AUTH, Cookie=ck)); print("ORIGIN-COOKIE", "OPT " if r.get("delayed") else "RAW ", label.ljust(16), json.dumps(r)); time.sleep(0.5)
-for label, extra in [("accept-json", {"Accept": "application/json"}), ("accept-any", {"Accept": "*/*"}), ("no-accept-lang", {"Accept-Language": ""}), ("x-requested-with", {"X-Requested-With": "XMLHttpRequest"}), ("http1.0-ish", {"Connection": "close"})]:
-    r = fetch(home, extra=dict(AUTH, **extra)); print("ORIGIN-HDR", "OPT " if r.get("delayed") else "RAW ", label.ljust(16), json.dumps(r)); time.sleep(0.5)
-r = fetch(home, extra=AUTH, method="HEAD"); print("ORIGIN-HEAD", json.dumps(r))
-# which visitors share one firewall copy? unique query URL per pair, no real page touched
+
+def st(url, ua): 
+    r = fetch(url, ua=ua); time.sleep(0.7); return r.get("x-sucuri-cache")
 n = int(time.time())
-for i, name in enumerate(["whatsapp-android", "whatsapp-ios", "ipad", "googlebot", "rocket-preload", "curl", "empty", "tiktok", "wordpress-loopback", "lighthouse-desktop"]):
-    q = home + "?diag=" + str(n + i)
-    a = fetch(q, ua=UAS[name]); time.sleep(0.6); b = fetch(q, ua=DESK); time.sleep(0.6); c = fetch(q, ua=MOB)
-    print("SHARE", name.ljust(20), "first:", a.get("x-sucuri-cache"), "| then desktop:", b.get("x-sucuri-cache"), "| then mobile:", c.get("x-sucuri-cache"))
-print("EDGE-AFTER desktop", json.dumps(fetch(home)))
+q1 = home + "?diag=" + str(n)
+print("PRIME desktop x3:", st(q1, DESK), st(q1, DESK), st(q1, DESK))
+for name in ["lighthouse-desktop", "whatsapp-android", "whatsapp-ios", "facebook", "googlebot", "curl", "ipad", "rocket-preload"]:
+    print("READS-DESKTOP-COPY", name.ljust(20), st(q1, UAS[name]))
+print("READS-DESKTOP-COPY", "mobile".ljust(20), st(q1, MOB))
+for name in ["whatsapp-android", "facebook"]:
+    n += 1; q = home + "?diag=" + str(n)
+    print("PRIME", name, "x3:", st(q, UAS[name]), st(q, UAS[name]), st(q, UAS[name]), "| then desktop:", st(q, DESK), "| then mobile:", st(q, MOB))
