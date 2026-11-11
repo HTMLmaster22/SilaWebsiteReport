@@ -627,6 +627,12 @@ def fetch_crux_history(form_factor=None):
     record = resp["record"]
     periods = record["collectionPeriods"]
     months = [(p["lastDate"]["year"], p["lastDate"]["month"]) for p in periods]
+    # Nov 2026: end date of every weekly reading, so the report can state
+    # "compared with last week" only when the last two readings really are
+    # a week apart. Kept on the function to leave its return shape alone.
+    fetch_crux_history.period_ends = [
+        f"{p['lastDate']['year']:04d}-{p['lastDate']['month']:02d}-{p['lastDate']['day']:02d}" for p in periods
+    ]
 
     series = {}
     for api_name, ts in record["metrics"].items():
@@ -2084,6 +2090,12 @@ def main():
                 "ar": f"{AR_MONTHS[m_last-1]} {y_last}",
                 "en": f"{EN_MONTHS_FULL[m_last-1]} {y_last}",
             }
+
+            ends = getattr(fetch_crux_history, "period_ends", None)
+            if ends and len(ends) == len(months):
+                data["periodEnds"] = ends
+            else:
+                data.pop("periodEnds", None)
 
             by_key = {m["key"]: m for m in data.get("metrics", [])}
             for key, vals in series.items():

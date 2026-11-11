@@ -640,13 +640,20 @@
   .kpi-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px; }
   .kpi-delta{ font-size:12px; font-weight:800; }
   .kpi-delta.up{ color:var(--moss); } .kpi-delta.down{ color:var(--poor); }
+  .kpi-delta b{ font-weight:800; color:var(--ink-soft); } .kpi-delta b.up{ color:var(--moss); } .kpi-delta b.down{ color:var(--poor); }
   .kpi-src{ font-size:11.5px; color:var(--ink-soft); margin:8px 0 0; line-height:1.6; }
   .dash-fresh{ font-size:13px; color:var(--ink-soft); margin:14px 0 0; line-height:1.8; }
   .verdict-home bdi, .kpi-src bdi{ white-space:nowrap; }
+  .verdict-week{ margin:12px 0 0; font-size:13px; color:var(--ink-soft); line-height:1.7; }
+  .verdict-week b{ font-weight:800; white-space:nowrap; }
+  .verdict-week .wk-part{ white-space:nowrap; }
+  .verdict-week b.up{ color:var(--moss); } .verdict-week b.down{ color:var(--poor); }
   .dash-note{ display:flex; gap:10px; align-items:flex-start; margin:0 0 16px; padding:12px 16px; border-radius:12px; border:1px solid var(--hair); border-inline-start:4px solid var(--teal, #12444f); background:var(--paper-card); font-size:13.5px; line-height:1.8; color:var(--ink); }
   .dash-note[hidden]{ display:none; }
   .dash-note svg{ flex:none; width:18px; height:18px; margin-top:4px; }
   .dash-note bdi{ white-space:nowrap; }
+  .kpi-warn{ font-size:12px; line-height:1.65; margin:8px 0 0; padding:8px 10px; border-radius:8px; background:rgba(178,58,48,.08); color:var(--poor); font-weight:700; }
+  .kpi-warn bdi{ white-space:nowrap; }
 
   /* priorities sit directly under the dashboard */
   section.dash + section.block{ padding-top:24px !important; }
@@ -3435,6 +3442,9 @@
     kpiMobile:"مؤشر أداء الجوال", kpiDesktop:"مؤشر أداء سطح المكتب", kpiLcp:"سرعة ظهور المحتوى (LCP)", kpiTtfb:"زمن استجابة الخادم (TTFB)",
     kpiSrcLab:"اختبار جوجل المعملي · الصفحة الرئيسية", kpiSrcMedian:"وسيط {n} اختبارات", kpiSrcField:"زوّار حقيقيون · الموقع كامل · الجوال · آخر 28 يوماً",
     kpiVsLast:"مقارنة بالشهر الماضي", kpiTarget:"الهدف",
+    wkLabel:"مقارنة بالأسبوع الماضي:", wkFaster:"أسرع بـ {v}", wkSlower:"أبطأ بـ {v}", wkSame:"بدون تغيير",
+    wkFasterLong:"أسرع بـ {v} من الأسبوع الماضي", wkSlowerLong:"أبطأ بـ {v} من الأسبوع الماضي", wkSameLong:"بدون تغيير عن الأسبوع الماضي",
+    runsUnstable:"تنبيه: نتائج الاختبارات متباينة ({runs}). غالباً الموقع يقدّم نسختين مختلفتين من الصفحة، إحداهما غير محسّنة. امسح كاش الجدار الناري ثم أعد تحديث البيانات.",
     fixNote:"طُبّقت تحسينات السرعة بتاريخ {fix}. تقييم جوجل متوسط آخر 28 يوماً: البيانات الحالية حتى {asof} وتغطي {n} من 28 يوماً بعد التحسينات، ويظهر أثرها كاملاً بحلول {full} تقريباً.",
     fixNote0:"طُبّقت تحسينات السرعة بتاريخ {fix}. تقييم جوجل متوسط آخر 28 يوماً: البيانات الحالية حتى {asof} ولا تشمل أي يوم بعد التحسينات حتى الآن، ويظهر أثرها كاملاً بحلول {full} تقريباً.",
     dashFresh:"كيف تقرأ هذه الأرقام: مؤشرات الأداء اختبار معملي يتغيّر فور أي تحسين، أما تقييم جوجل وبيانات الزوّار الحقيقيين فهي متوسط آخر 28 يوماً، لذلك تتحسّن تدريجياً خلال الأسابيع التالية لأي تحسين.",
@@ -3450,6 +3460,9 @@
     kpiMobile:"Mobile performance score", kpiDesktop:"Desktop performance score", kpiLcp:"Loading speed (LCP)", kpiTtfb:"Server response (TTFB)",
     kpiSrcLab:"Google lab test · homepage", kpiSrcMedian:"median of {n} runs", kpiSrcField:"Real visitors · whole site · mobile · last 28 days",
     kpiVsLast:"vs last month", kpiTarget:"Target",
+    wkLabel:"Compared with last week:", wkFaster:"{v} faster", wkSlower:"{v} slower", wkSame:"no change",
+    wkFasterLong:"{v} faster than last week", wkSlowerLong:"{v} slower than last week", wkSameLong:"No change from last week",
+    runsUnstable:"Warning: the test runs disagree ({runs}). The site is most likely serving two different versions of the page, one of them unoptimized. Purge the firewall cache, then refresh the data.",
     fixNote:"Speed improvements were applied on {fix}. Google's assessment is a 28-day average: the current data runs to {asof} and covers {n} of 28 days after the improvements, so the full effect shows by about {full}.",
     fixNote0:"Speed improvements were applied on {fix}. Google's assessment is a 28-day average: the current data runs to {asof} and does not include any day after the improvements yet. The full effect shows by about {full}.",
     dashFresh:"How to read these numbers: the performance scores are lab tests and change as soon as something is improved; Google's assessment and the real-visitor numbers are a 28-day average, so they catch up gradually over the following weeks.",
@@ -3483,6 +3496,32 @@
   function parseDay(s){ const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s||""); return m ? Date.UTC(+m[1], +m[2]-1, +m[3]) : null; }
   function dayLabel(ms){ const t = new Date(ms); return `<bdi>${t.getUTCDate()} ${dict[currentLang].calendarMonths[t.getUTCMonth()]} ${t.getUTCFullYear()}</bdi>`; }
 
+  // Change between the two most recent weekly readings of a real-visitor
+  // metric (CrUX publishes one 28-day reading per week). Compared on the
+  // rounded values the report shows, so the difference always matches them.
+  // Returns null unless the last two readings are really about a week apart.
+  function weekChange(key){
+    const m = metrics.find(x=>x.key===key);
+    if(!m || !m.data || m.data.length < 2) return null;
+    const ends = window.__periodEnds;
+    if(ends && ends.length === m.data.length){
+      const a = parseDay(ends[ends.length-2]), b = parseDay(ends[ends.length-1]);
+      if(a===null || b===null || Math.round((b-a)/dayMs) < 5 || Math.round((b-a)/dayMs) > 9) return null;
+    }
+    const cur = m.data[m.data.length-1], prev = m.data[m.data.length-2];
+    const ar = currentLang==="ar";
+    if(key==="inp"){ const diff = Math.round(cur) - Math.round(prev); return { diff, text: `${Math.abs(diff)}${ar?" م.ث":" ms"}` }; }
+    const r = v=>Math.round(v/100)/10;
+    const diff = Math.round((r(cur) - r(prev))*10)/10;
+    return { diff, text: `${Math.abs(diff).toFixed(1)}${ar?" ث":" s"}` };
+  }
+  function weekPhrase(c, d, long){
+    if(!c) return "";
+    if(c.diff === 0) return `<b>${long ? d.wkSameLong : d.wkSame}</b>`;
+    const tpl = c.diff < 0 ? (long ? d.wkFasterLong : d.wkFaster) : (long ? d.wkSlowerLong : d.wkSlower);
+    return `<b class="${c.diff < 0 ? "up" : "down"}">${tpl.replace("{v}", `<bdi>${c.text}</bdi>`)}</b>`;
+  }
+
   function verdictCard(ff, d){
     const cwv = window.__cwv;
     const isPhone = ff==="PHONE";
@@ -3506,11 +3545,18 @@
       const hv = home && home.lcp!==undefined ? ` · <bdi>LCP <span class="num">${(home.lcp/1000).toFixed(1)}${ar?" ث":"s"}</span></bdi>` + (home.inp!==undefined?` · <bdi>INP <span class="num">${home.inp}${ar?" م.ث":"ms"}</span></bdi>`:"") + (home.cls!==undefined?` · <bdi>CLS <span class="num">${Number(home.cls).toFixed(2)}</span></bdi>`:"") : "";
       homeLine = `<p class="verdict-home">${d.dvHome} ${hs}${hv}</p>`;
     }
+    // Weekly movement, phones only: the weekly history is phone data.
+    let weekLine = "";
+    if(isPhone && site && window.__cruxFormFactor === "PHONE"){
+      const parts = [["LCP", weekChange("lcp")], ["INP", weekChange("inp")]].filter(x=>x[1]).map(x=>`<span class="wk-part"><bdi>${x[0]}</bdi> ${weekPhrase(x[1], d, false)}</span>`);
+      if(parts.length) weekLine = `<p class="verdict-week">${d.wkLabel} ${parts.join(" · ")}</p>`;
+    }
     return `<article class="verdict ${cls}">
       <div class="verdict-top"><span class="verdict-device">${isPhone?ICON_PHONE:ICON_DESK}${isPhone?d.dvMobile:d.dvDesktop}</span></div>
       <p class="verdict-status">${icon}<span>${status}</span></p>
       <p class="verdict-sub">${d.dvSubSite}</p>
       ${chips.length?`<ul class="verdict-metrics">${chips.join("")}</ul>`:""}
+      ${weekLine}
       ${homeLine}
     </article>`;
   }
@@ -3540,7 +3586,12 @@
     }
 
     const runs = window.__psiRuns || {};
-    const labSrc = (n)=> d.kpiSrcLab + (window.__mobilePerfCheckedAt ? " · <bdi dir=\"ltr\">" + escapeHtml(window.__mobilePerfCheckedAt) + "</bdi>" : "") + (n && n.length>1 ? " · " + d.kpiSrcMedian.replace("{n}", n.length) : "");
+    const runList = (n)=> `<bdi dir="ltr">${n.map(v=>escapeHtml(String(v))).join(" · ")}</bdi>`;
+    const labSrc = (n)=> d.kpiSrcLab + (window.__mobilePerfCheckedAt ? " · <bdi dir=\"ltr\">" + escapeHtml(window.__mobilePerfCheckedAt) + "</bdi>" : "") + (n && n.length>1 ? " · " + d.kpiSrcMedian.replace("{n}", n.length) + " (" + runList(n) + ")" : "");
+    // Runs minutes apart that differ by 20+ points are not one page being
+    // measured noisily; say so instead of quietly showing the median.
+    const unstable = (n)=> (n && n.length>1 && Math.max(...n) - Math.min(...n) >= 20) ? `<p class="kpi-warn">${d.runsUnstable.replace("{runs}", runList(n))}</p>` : "";
+    const wkRow = (key)=>{ const c = weekChange(key); return c ? `<span class="kpi-delta">${weekPhrase(c, d, true)}</span>` : ""; };
     const delta = mobilePerfNow - mobilePerfPrev;
     const lcpM = metrics.find(x=>x.key==="lcp"), ttfbM = metrics.find(x=>x.key==="ttfb");
     const lcp = lcpM && lcpM.data.length ? lcpM.data[lcpM.data.length-1] : null;
@@ -3556,12 +3607,12 @@
     };
     const kpis = [
       { label:d.kpiMobile, cls:lhClass(mobilePerfNow), value:`${mobilePerfNow}<small>/100</small>`,
-        row:`<span class="kpi-delta ${delta>=0?"up":"down"}">${delta>=0?"▲ +":"▼ "}${delta} ${d.kpiVsLast}</span>`, src:labSrc(runs.mobile), why:why("mobile", mobilePerfNow) },
-      { label:d.kpiDesktop, cls:lhClass(desktopPerfScore), value:`${desktopPerfScore}<small>/100</small>`, row:"", src:labSrc(runs.desktop), why:why("desktop", desktopPerfScore) },
+        row:`<span class="kpi-delta ${delta>=0?"up":"down"}">${delta>=0?"▲ +":"▼ "}${delta} ${d.kpiVsLast}</span>`, src:labSrc(runs.mobile), why:unstable(runs.mobile) + why("mobile", mobilePerfNow) },
+      { label:d.kpiDesktop, cls:lhClass(desktopPerfScore), value:`${desktopPerfScore}<small>/100</small>`, row:"", src:labSrc(runs.desktop), why:unstable(runs.desktop) + why("desktop", desktopPerfScore) },
       { label:d.kpiLcp, cls:lcp===null?"":classify(lcp, lcpM.good, lcpM.ni), value:lcp===null?"—":`${(lcp/1000).toFixed(1)}<small>${sUnit}</small>`,
-        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ${atMost("2.5 "+sUnit)}</span>`, src:fieldSrc },
+        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ${atMost("2.5 "+sUnit)}</span>`, why:wkRow("lcp") ? `<div class="kpi-row">${wkRow("lcp")}</div>` : "", src:fieldSrc },
       { label:d.kpiTtfb, cls:ttfb===null?"":classify(ttfb, ttfbM.good, ttfbM.ni), value:ttfb===null?"—":`${(ttfb/1000).toFixed(1)}<small>${sUnit}</small>`,
-        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ${atMost("0.8 "+sUnit)}</span>`, src:fieldSrc },
+        row:`<span class="kpi-src" style="margin:0">${d.kpiTarget}: ${atMost("0.8 "+sUnit)}</span>`, why:wkRow("ttfb") ? `<div class="kpi-row">${wkRow("ttfb")}</div>` : "", src:fieldSrc },
     ];
     kEl.innerHTML = kpis.map(k=>`<div class="kpi ${k.cls}"><p class="kpi-label">${k.label}</p><div class="kpi-value num">${k.value}</div>${k.row?`<div class="kpi-row">${k.row}</div>`:""}${k.why||""}<p class="kpi-src">${k.src}</p></div>`).join("");
 
@@ -4038,6 +4089,7 @@
         window.__heavyScripts = D.heavyScripts || null;
         window.__cwv = D.cwv || null;
         window.__psiRuns = D.psiRuns || null;
+        window.__periodEnds = D.periodEnds || null;
         window.__mobilePerfCheckedAt = D.mobilePerfCheckedAt || null;
         // Homepage row = the same test run as the headline cards.
         { const hp = pageRegistry.find(x=>x.id==="home");
