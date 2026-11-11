@@ -643,6 +643,10 @@
   .kpi-src{ font-size:11.5px; color:var(--ink-soft); margin:8px 0 0; line-height:1.6; }
   .dash-fresh{ font-size:13px; color:var(--ink-soft); margin:14px 0 0; line-height:1.8; }
   .verdict-home bdi, .kpi-src bdi{ white-space:nowrap; }
+  .dash-note{ display:flex; gap:10px; align-items:flex-start; margin:0 0 16px; padding:12px 16px; border-radius:12px; border:1px solid var(--hair); border-inline-start:4px solid var(--teal, #12444f); background:var(--paper-card); font-size:13.5px; line-height:1.8; color:var(--ink); }
+  .dash-note[hidden]{ display:none; }
+  .dash-note svg{ flex:none; width:18px; height:18px; margin-top:4px; }
+  .dash-note bdi{ white-space:nowrap; }
 
   /* priorities sit directly under the dashboard */
   section.dash + section.block{ padding-top:24px !important; }
@@ -718,6 +722,7 @@
       <h2 id="dashH2">وضع الموقع اليوم</h2>
     </div>
     <div class="dash-verdicts" id="dashVerdicts"></div>
+    <p class="dash-note" id="dashNote" hidden></p>
     <div class="dash-kpis" id="dashKpis"></div>
     <p class="dash-fresh" id="dashFresh"></p>
   </div>
@@ -3430,6 +3435,8 @@
     kpiMobile:"مؤشر أداء الجوال", kpiDesktop:"مؤشر أداء سطح المكتب", kpiLcp:"سرعة ظهور المحتوى (LCP)", kpiTtfb:"زمن استجابة الخادم (TTFB)",
     kpiSrcLab:"اختبار جوجل المعملي · الصفحة الرئيسية", kpiSrcMedian:"وسيط {n} اختبارات", kpiSrcField:"زوّار حقيقيون · الموقع كامل · الجوال · آخر 28 يوماً",
     kpiVsLast:"مقارنة بالشهر الماضي", kpiTarget:"الهدف",
+    fixNote:"طُبّقت تحسينات السرعة بتاريخ {fix}. تقييم جوجل متوسط آخر 28 يوماً: البيانات الحالية حتى {asof} وتغطي {n} من 28 يوماً بعد التحسينات، ويظهر أثرها كاملاً بحلول {full} تقريباً.",
+    fixNote0:"طُبّقت تحسينات السرعة بتاريخ {fix}. تقييم جوجل متوسط آخر 28 يوماً: البيانات الحالية حتى {asof} ولا تشمل أي يوم بعد التحسينات حتى الآن، ويظهر أثرها كاملاً بحلول {full} تقريباً.",
     dashFresh:"كيف تقرأ هذه الأرقام: مؤشرات الأداء اختبار معملي يتغيّر فور أي تحسين، أما تقييم جوجل وبيانات الزوّار الحقيقيين فهي متوسط آخر 28 يوماً، لذلك تتحسّن تدريجياً خلال الأسابيع التالية لأي تحسين.",
   });
   Object.assign(dict.en, {
@@ -3443,6 +3450,8 @@
     kpiMobile:"Mobile performance score", kpiDesktop:"Desktop performance score", kpiLcp:"Loading speed (LCP)", kpiTtfb:"Server response (TTFB)",
     kpiSrcLab:"Google lab test · homepage", kpiSrcMedian:"median of {n} runs", kpiSrcField:"Real visitors · whole site · mobile · last 28 days",
     kpiVsLast:"vs last month", kpiTarget:"Target",
+    fixNote:"Speed improvements were applied on {fix}. Google's assessment is a 28-day average: the current data runs to {asof} and covers {n} of 28 days after the improvements, so the full effect shows by about {full}.",
+    fixNote0:"Speed improvements were applied on {fix}. Google's assessment is a 28-day average: the current data runs to {asof} and does not include any day after the improvements yet. The full effect shows by about {full}.",
     dashFresh:"How to read these numbers: the performance scores are lab tests and change as soon as something is improved; Google's assessment and the real-visitor numbers are a 28-day average, so they catch up gradually over the following weeks.",
   });
 
@@ -3465,6 +3474,14 @@
     v.pass = v.lcp<=2500 && v.cls<=0.1 && (v.inp===undefined || v.inp<=200);
     return v;
   }
+
+  // Date the speed fixes went live (firewall page caching + chat widget delay).
+  // Drives the note under Google's verdict; the note hides itself once the
+  // 28-day window is entirely after this date.
+  const SPEED_FIXES_APPLIED = "2026-11-08";
+  const dayMs = 86400000;
+  function parseDay(s){ const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s||""); return m ? Date.UTC(+m[1], +m[2]-1, +m[3]) : null; }
+  function dayLabel(ms){ const t = new Date(ms); return `<bdi>${t.getUTCDate()} ${dict[currentLang].calendarMonths[t.getUTCMonth()]} ${t.getUTCFullYear()}</bdi>`; }
 
   function verdictCard(ff, d){
     const cwv = window.__cwv;
@@ -3505,6 +3522,22 @@
     document.getElementById("dashEyebrow").textContent = d.dashEyebrow + " — " + calendarLabel(REPORT_MONTH, currentLang);
     document.getElementById("dashH2").textContent = d.dashH2;
     vEl.innerHTML = verdictCard("PHONE", d) + verdictCard("DESKTOP", d);
+
+    // Note under the verdict while Google's 28-day window still includes days
+    // from before the speed fixes.
+    const nEl = document.getElementById("dashNote");
+    if(nEl){
+      const cw = window.__cwv, fix = parseDay(SPEED_FIXES_APPLIED);
+      const sites = cw && cw.origin ? [cw.origin.PHONE, cw.origin.DESKTOP].filter(Boolean) : [];
+      const asOf = sites.map(x=>parseDay(x.asOf)).filter(x=>x!==null).sort((a,b)=>b-a)[0];
+      const failing = sites.some(x=>x.pass===false);
+      const covered = (asOf===undefined || fix===null) ? null : Math.max(0, Math.min(28, Math.round((asOf - fix)/dayMs)));
+      if(failing && covered!==null && covered < 28){
+        nEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M11 12h1v5h1"/></svg><span>' +
+          (covered===0 ? d.fixNote0 : d.fixNote).replace("{fix}", dayLabel(fix)).replace("{asof}", dayLabel(asOf)).replace("{n}", `<bdi>${covered}</bdi>`).replace("{full}", dayLabel(fix + 28*dayMs)) + "</span>";
+        nEl.hidden = false;
+      } else { nEl.hidden = true; nEl.innerHTML = ""; }
+    }
 
     const runs = window.__psiRuns || {};
     const labSrc = (n)=> d.kpiSrcLab + (window.__mobilePerfCheckedAt ? " · <bdi dir=\"ltr\">" + escapeHtml(window.__mobilePerfCheckedAt) + "</bdi>" : "") + (n && n.length>1 ? " · " + d.kpiSrcMedian.replace("{n}", n.length) : "");
