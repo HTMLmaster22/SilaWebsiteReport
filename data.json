@@ -6,8 +6,6 @@
   "desktopPerfScore": 99,
   "monthLabels": {
     "ar": [
-      "مايو",
-      "مايو",
       "يونيو",
       "يونيو",
       "يونيو",
@@ -30,11 +28,11 @@
       "أكتوبر",
       "أكتوبر",
       "أكتوبر",
+      "نوفمبر",
+      "نوفمبر",
       "نوفمبر"
     ],
     "en": [
-      "May",
-      "May",
       "Jun",
       "Jun",
       "Jun",
@@ -57,12 +55,14 @@
       "Oct",
       "Oct",
       "Oct",
+      "Nov",
+      "Nov",
       "Nov"
     ]
   },
   "periodLabel": {
-    "ar": "مايو 2026 – نوفمبر 2026",
-    "en": "May 2026 – Nov 2026"
+    "ar": "يونيو 2026 – نوفمبر 2026",
+    "en": "Jun 2026 – Nov 2026"
   },
   "latestShort": {
     "ar": "نوفمبر",
@@ -76,8 +76,6 @@
     {
       "key": "lcp",
       "data": [
-        3445,
-        3464,
         3400,
         3548,
         3637,
@@ -100,14 +98,14 @@
         3376,
         3357,
         3362,
-        3600
+        3600,
+        3616,
+        3665
       ]
     },
     {
       "key": "inp",
       "data": [
-        323,
-        239,
         187,
         183,
         188,
@@ -130,14 +128,14 @@
         250,
         278,
         360,
-        374
+        374,
+        340,
+        340
       ]
     },
     {
       "key": "cls",
       "data": [
-        0.02,
-        0.01,
         0.0,
         0.0,
         0.0,
@@ -160,14 +158,14 @@
         0.03,
         0.03,
         0.03,
+        0.04,
+        0.05,
         0.04
       ]
     },
     {
       "key": "fcp",
       "data": [
-        2823,
-        2857,
         2860,
         3023,
         3113,
@@ -190,14 +188,14 @@
         2870,
         2831,
         2822,
-        3050
+        3050,
+        3079,
+        3127
       ]
     },
     {
       "key": "ttfb",
       "data": [
-        2256,
-        2250,
         2247,
         2406,
         2491,
@@ -220,7 +218,9 @@
         2474,
         2474,
         2453,
-        2562
+        2562,
+        2648,
+        2685
       ]
     }
   ],
@@ -228,13 +228,13 @@
     {
       "key": "d_fcp",
       "data": [
-        304
+        323
       ]
     },
     {
       "key": "d_lcp",
       "data": [
-        846
+        843
       ]
     },
     {
@@ -246,13 +246,13 @@
     {
       "key": "d_cls",
       "data": [
-        0.01
+        0.0
       ]
     },
     {
       "key": "d_si",
       "data": [
-        863
+        1064
       ]
     }
   ],
@@ -263,8 +263,8 @@
       "pos": 8,
       "page": 1,
       "tier": "strong",
-      "gscClicks": 41,
-      "gscImpressions": 3630
+      "gscClicks": 38,
+      "gscImpressions": 3461
     },
     {
       "ar": "توظيف السعوديين",
@@ -273,7 +273,7 @@
       "page": 1,
       "tier": "strong",
       "gscClicks": 1,
-      "gscImpressions": 18
+      "gscImpressions": 17
     },
     {
       "ar": "خدمات التوطين",
@@ -289,7 +289,7 @@
       "page": 1,
       "tier": "strong",
       "gscClicks": 0,
-      "gscImpressions": 2
+      "gscImpressions": 1
     },
     {
       "ar": "اسناد السعوديين",
@@ -298,7 +298,7 @@
       "page": 2,
       "tier": "weak",
       "gscClicks": 1,
-      "gscImpressions": 43
+      "gscImpressions": 45
     },
     {
       "ar": "شركة صلة",
@@ -306,8 +306,8 @@
       "pos": 2,
       "page": 1,
       "tier": "strong",
-      "gscClicks": 338,
-      "gscImpressions": 1540
+      "gscClicks": 333,
+      "gscImpressions": 1529
     },
     {
       "ar": "صلة تمكين",
@@ -315,8 +315,8 @@
       "pos": 1,
       "page": 1,
       "tier": "strong",
-      "gscClicks": 17,
-      "gscImpressions": 44
+      "gscClicks": 19,
+      "gscImpressions": 51
     },
     {
       "ar": "silah",
@@ -324,8 +324,8 @@
       "pos": 3,
       "page": 1,
       "tier": "strong",
-      "gscClicks": 56,
-      "gscImpressions": 295
+      "gscClicks": 62,
+      "gscImpressions": 340
     },
     {
       "ar": "شركة توظيف",
@@ -335,19 +335,19 @@
       "tier": "strong",
       "searchVolume": 2400,
       "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026",
-      "gscClicks": 4,
-      "gscImpressions": 182
+      "gscClicks": 3,
+      "gscImpressions": 180
     },
     {
       "ar": "مكتب توظيف",
       "en": "Recruitment office (مكتب توظيف)",
-      "pos": 3,
+      "pos": 9,
       "page": 2,
       "tier": "weak",
       "searchVolume": 720,
       "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026",
       "gscClicks": 0,
-      "gscImpressions": 15
+      "gscImpressions": 16
     },
     {
       "ar": "نسب التوطين",
@@ -361,35 +361,35 @@
     {
       "ar": "مراكز اتصال",
       "en": "Call centres (مراكز اتصال)",
-      "pos": 3,
+      "pos": 4,
       "page": 1,
       "tier": "strong",
       "searchVolume": 1600,
       "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026",
       "gscClicks": 0,
-      "gscImpressions": 4
+      "gscImpressions": 6
     },
     {
       "ar": "شركة مراكز اتصال",
       "en": "Call centre company (شركة مراكز اتصال)",
-      "pos": 4,
+      "pos": 5,
       "page": 1,
       "tier": "strong",
       "searchVolume": 880,
       "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026",
       "gscClicks": 0,
-      "gscImpressions": 3
+      "gscImpressions": 1
     },
     {
       "ar": "شركة تعهيد",
       "en": "Outsourcing company (شركة تعهيد)",
-      "pos": 3,
+      "pos": 4,
       "page": 1,
       "tier": "strong",
       "searchVolume": 210,
       "searchVolumeSource": "Google Ads Keyword Planner, SA, Arabic, Sep 2025-Aug 2026",
       "gscClicks": 0,
-      "gscImpressions": 4
+      "gscImpressions": 6
     }
   ],
   "pages": [
@@ -433,7 +433,7 @@
       "nameAr": "حلول التوظيف والتوطين",
       "nameEn": "حلول التوظيف والتوطين",
       "url": "https://www.silah.com.sa/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -614,26 +614,26 @@
       "seoScore": 76,
       "competesWith": [
         {
-          "query": "شركة",
-          "impressions": 348,
+          "query": "عن بعد",
+          "impressions": 375,
           "otherPages": [
-            "https://www.silah.com.sa/jobs/"
+            "https://www.silah.com.sa/jobs/",
+            "https://www.silah.com.sa/services/full-time-or-part-time-remote-employee/"
           ]
         },
         {
           "query": "تمكين وظائف",
-          "impressions": 344,
+          "impressions": 323,
           "otherPages": [
             "https://dhamanclinics.silah.com.sa/v2/",
             "https://dhamanclinics.silah.com.sa/"
           ]
         },
         {
-          "query": "عن بعد",
-          "impressions": 294,
+          "query": "شركة",
+          "impressions": 270,
           "otherPages": [
-            "https://www.silah.com.sa/jobs/",
-            "https://www.silah.com.sa/services/full-time-or-part-time-remote-employee/"
+            "https://www.silah.com.sa/jobs/"
           ]
         }
       ],
@@ -679,26 +679,26 @@
           "detail": {
             "queries": [
               {
-                "query": "شركة",
-                "impressions": 348,
+                "query": "عن بعد",
+                "impressions": 375,
                 "otherPages": [
-                  "https://www.silah.com.sa/jobs/"
+                  "https://www.silah.com.sa/jobs/",
+                  "https://www.silah.com.sa/services/full-time-or-part-time-remote-employee/"
                 ]
               },
               {
                 "query": "تمكين وظائف",
-                "impressions": 344,
+                "impressions": 323,
                 "otherPages": [
                   "https://dhamanclinics.silah.com.sa/v2/",
                   "https://dhamanclinics.silah.com.sa/"
                 ]
               },
               {
-                "query": "عن بعد",
-                "impressions": 294,
+                "query": "شركة",
+                "impressions": 270,
                 "otherPages": [
-                  "https://www.silah.com.sa/jobs/",
-                  "https://www.silah.com.sa/services/full-time-or-part-time-remote-employee/"
+                  "https://www.silah.com.sa/jobs/"
                 ]
               }
             ]
@@ -711,7 +711,7 @@
       "nameAr": "طلب باقة",
       "nameEn": "طلب باقة",
       "url": "https://www.silah.com.sa/%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": false,
         "typesFound": []
@@ -766,7 +766,7 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 97,
+      "mobileScore": 95,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -792,7 +792,7 @@
       "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
       "nameEn": "تطبيق صلة لقياس أداء الموظف عن بعد",
       "url": "https://www.silah.com.sa/%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": false,
         "typesFound": []
@@ -887,7 +887,7 @@
           "https://www.silah.com.sa/"
         ]
       },
-      "mobileScore": 74,
+      "mobileScore": 72,
       "unusedCssKb": 0,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -935,8 +935,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (74/100)",
-          "labelEn": "Mobile performance below target (74/100)"
+          "labelAr": "أداء الجوال دون الهدف (72/100)",
+          "labelEn": "Mobile performance below target (72/100)"
         }
       ]
     },
@@ -945,7 +945,7 @@
       "nameAr": "تشغيل تطبيقات الاقتصاد التشاركي",
       "nameEn": "تشغيل تطبيقات الاقتصاد التشاركي",
       "url": "https://www.silah.com.sa/%d8%aa%d8%b4%d8%ba%d9%8a%d9%84-%d8%aa%d8%b7%d8%a8%d9%8a%d9%82%d8%a7%d8%aa-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b5%d8%a7%d8%af-%d8%a7%d9%84%d8%aa%d8%b4%d8%a7%d8%b1%d9%83%d9%8a/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1103,7 +1103,7 @@
       "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد",
       "nameEn": "أكاديمية صلة للتعليم الإلكتروني عن بعد",
       "url": "https://www.silah.com.sa/silah-academy-for-e-learning/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1169,7 +1169,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 86,
+      "mobileScore": 85,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1178,7 +1178,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 83,
+      "seoScore": 82,
       "competesWith": null,
       "issues": [
         {
@@ -1210,8 +1210,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (86/100)",
-          "labelEn": "Mobile performance below target (86/100)"
+          "labelAr": "أداء الجوال دون الهدف (85/100)",
+          "labelEn": "Mobile performance below target (85/100)"
         }
       ]
     },
@@ -1220,7 +1220,7 @@
       "nameAr": "مشكلة محدودية فرص العمل للمرأة السعودية",
       "nameEn": "مشكلة محدودية فرص العمل للمرأة السعودية",
       "url": "https://www.silah.com.sa/defining-the-problem/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1330,7 +1330,7 @@
       "nameAr": "البنية التحتية",
       "nameEn": "البنية التحتية",
       "url": "https://www.silah.com.sa/infrastructure/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1407,8 +1407,8 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 87,
-      "unusedCssKb": 20,
+      "mobileScore": 92,
+      "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-11",
@@ -1436,13 +1436,6 @@
           "severity": "medium",
           "labelAr": "لا يوجد عنوان رئيسي H1",
           "labelEn": "No H1 heading on the page"
-        },
-        {
-          "code": "mobile_performance_below_target",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (87/100)",
-          "labelEn": "Mobile performance below target (87/100)"
         }
       ]
     },
@@ -1451,7 +1444,7 @@
       "nameAr": "الشروط والأحكام",
       "nameEn": "الشروط والأحكام",
       "url": "https://www.silah.com.sa/terms-and-conditions/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1516,7 +1509,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 100,
+      "mobileScore": 99,
       "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1546,7 +1539,7 @@
       "nameAr": "دراسة مستقبل العمل لعام 2022م",
       "nameEn": "دراسة مستقبل العمل لعام 2022م",
       "url": "https://www.silah.com.sa/%d8%af%d8%b1%d8%a7%d8%b3%d8%a9-%d9%85%d8%b3%d8%aa%d9%82%d8%a8%d9%84-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d9%84%d8%b9%d8%a7%d9%85-2022%d9%85/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1663,7 +1656,7 @@
       "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية)",
       "nameEn": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية)",
       "url": "https://www.silah.com.sa/%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1729,7 +1722,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 89,
+      "mobileScore": 88,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1781,8 +1774,8 @@
           "code": "mobile_performance_below_target",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (89/100)",
-          "labelEn": "Mobile performance below target (89/100)"
+          "labelAr": "أداء الجوال دون الهدف (88/100)",
+          "labelEn": "Mobile performance below target (88/100)"
         }
       ]
     },
@@ -1791,7 +1784,7 @@
       "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي)",
       "nameEn": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي)",
       "url": "https://www.silah.com.sa/%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1857,7 +1850,7 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 88,
+      "mobileScore": 94,
       "unusedCssKb": 22,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -1866,7 +1859,7 @@
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 76,
+      "seoScore": 78,
       "competesWith": null,
       "issues": [
         {
@@ -1893,13 +1886,6 @@
           "severity": "high",
           "labelAr": "صفحة يتيمة — لا ترتبط بها أي صفحة أخرى",
           "labelEn": "Orphan page — no other scanned page links to it"
-        },
-        {
-          "code": "mobile_performance_below_target",
-          "owner": "it",
-          "severity": "medium",
-          "labelAr": "أداء الجوال دون الهدف (88/100)",
-          "labelEn": "Mobile performance below target (88/100)"
         }
       ]
     },
@@ -1908,7 +1894,7 @@
       "nameAr": "سياسة الخصوصية",
       "nameEn": "سياسة الخصوصية",
       "url": "https://www.silah.com.sa/privacy-policy/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -1973,8 +1959,8 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 100,
-      "unusedCssKb": 21,
+      "mobileScore": 99,
+      "unusedCssKb": 23,
       "unusedJsKb": 0,
       "seoIssues": [],
       "psiCheckedMonth": "2026-11",
@@ -1982,7 +1968,7 @@
       "inboundInternalLinks": 40,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 80,
+      "seoScore": 79,
       "competesWith": null,
       "issues": [
         {
@@ -2010,7 +1996,7 @@
       "nameAr": "من هم عملاء شركة صلة",
       "nameEn": "من هم عملاء شركة صلة",
       "url": "https://www.silah.com.sa/who-our-clients/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2195,7 +2181,7 @@
           "https://www.silah.com.sa/virtual-events/"
         ]
       },
-      "mobileScore": 99,
+      "mobileScore": 98,
       "unusedCssKb": 24,
       "unusedJsKb": 0,
       "seoIssues": [],
@@ -2204,7 +2190,7 @@
       "inboundInternalLinks": 40,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 79,
+      "seoScore": 78,
       "competesWith": null,
       "issues": [
         {
@@ -2232,7 +2218,7 @@
       "nameAr": "حاسبة تكلفة التوظيف",
       "nameEn": "حاسبة تكلفة التوظيف",
       "url": "https://www.silah.com.sa/business-center-cost/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2303,16 +2289,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 29,
+      "mobileScore": 36,
       "unusedCssKb": 144,
-      "unusedJsKb": 1401,
+      "unusedJsKb": 1407,
       "seoIssues": [],
       "psiCheckedMonth": "2026-11",
       "psiFresh": true,
       "inboundInternalLinks": 0,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 47,
+      "seoScore": 49,
       "competesWith": null,
       "issues": [
         {
@@ -2344,8 +2330,8 @@
           "code": "mobile_performance_poor",
           "owner": "it",
           "severity": "high",
-          "labelAr": "أداء الجوال ضعيف (29/100)",
-          "labelEn": "Poor mobile performance (29/100)"
+          "labelAr": "أداء الجوال ضعيف (36/100)",
+          "labelEn": "Poor mobile performance (36/100)"
         },
         {
           "code": "unused_css_high",
@@ -2358,8 +2344,8 @@
           "code": "unused_js_high",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "JavaScript غير مستخدم (1401KB)",
-          "labelEn": "High unused JavaScript (1401KB)"
+          "labelAr": "JavaScript غير مستخدم (1407KB)",
+          "labelEn": "High unused JavaScript (1407KB)"
         }
       ]
     },
@@ -2368,7 +2354,7 @@
       "nameAr": "حاسبة تكاليف التوظيف",
       "nameEn": "حاسبة تكاليف التوظيف",
       "url": "https://www.silah.com.sa/remote-working-cost-calculator/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2438,16 +2424,16 @@
           "https://www.silah.com.sa/who-our-clients/"
         ]
       },
-      "mobileScore": 30,
+      "mobileScore": 29,
       "unusedCssKb": 144,
-      "unusedJsKb": 1398,
+      "unusedJsKb": 1407,
       "seoIssues": [],
       "psiCheckedMonth": "2026-11",
       "psiFresh": true,
       "inboundInternalLinks": 40,
       "duplicateTitleWith": null,
       "excludedFromScore": false,
-      "seoScore": 48,
+      "seoScore": 47,
       "competesWith": null,
       "issues": [
         {
@@ -2472,8 +2458,8 @@
           "code": "mobile_performance_poor",
           "owner": "it",
           "severity": "high",
-          "labelAr": "أداء الجوال ضعيف (30/100)",
-          "labelEn": "Poor mobile performance (30/100)"
+          "labelAr": "أداء الجوال ضعيف (29/100)",
+          "labelEn": "Poor mobile performance (29/100)"
         },
         {
           "code": "unused_css_high",
@@ -2486,8 +2472,8 @@
           "code": "unused_js_high",
           "owner": "it",
           "severity": "medium",
-          "labelAr": "JavaScript غير مستخدم (1398KB)",
-          "labelEn": "High unused JavaScript (1398KB)"
+          "labelAr": "JavaScript غير مستخدم (1407KB)",
+          "labelEn": "High unused JavaScript (1407KB)"
         }
       ]
     },
@@ -2496,7 +2482,7 @@
       "nameAr": "الخدمات والحلول",
       "nameEn": "الخدمات والحلول",
       "url": "https://www.silah.com.sa/services-and-solutions/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2621,7 +2607,7 @@
       "nameAr": "تحدث إلينا الآن",
       "nameEn": "تحدث إلينا الآن",
       "url": "https://www.silah.com.sa/talk-to-us-now/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2725,7 +2711,7 @@
       "nameAr": "بوت خدمة العملاء ... أعلى مستويات الرضى",
       "nameEn": "بوت خدمة العملاء ... أعلى مستويات الرضى",
       "url": "https://www.silah.com.sa/customer-service-bot/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2835,7 +2821,7 @@
       "nameAr": "Broadcast - المكالمات الآلية",
       "nameEn": "Broadcast - المكالمات الآلية",
       "url": "https://www.silah.com.sa/auto-calls/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -2960,7 +2946,7 @@
       "nameAr": "نظام صلة لقياس الإنتاجية",
       "nameEn": "نظام صلة لقياس الإنتاجية",
       "url": "https://www.silah.com.sa/silah-system-for-productivity-monitoring/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3080,7 +3066,7 @@
       "nameAr": "طبيعة الوظائف التي يمكن القيام بها عن بعد",
       "nameEn": "طبيعة الوظائف التي يمكن القيام بها عن بعد",
       "url": "https://www.silah.com.sa/telework-success/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3190,7 +3176,7 @@
       "nameAr": "حول صلة",
       "nameEn": "حول صلة",
       "url": "https://www.silah.com.sa/about-us/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3360,7 +3346,7 @@
       "nameAr": "وحدة الأبحاث والدراسات",
       "nameEn": "وحدة الأبحاث والدراسات",
       "url": "https://www.silah.com.sa/researches-and-studies-unit/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3485,7 +3471,7 @@
       "nameAr": "ما رأي عملائنا بنا؟",
       "nameEn": "ما رأي عملائنا بنا؟",
       "url": "https://www.silah.com.sa/customer-review/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3594,7 +3580,7 @@
       "nameAr": "بناء وتشغيل مراكز الأعمال",
       "nameEn": "بناء وتشغيل مراكز الأعمال",
       "url": "https://www.silah.com.sa/building-and-operating-business-centers/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3759,7 +3745,7 @@
       "nameAr": "WhatsApp",
       "nameEn": "WhatsApp",
       "url": "https://www.silah.com.sa/whatsapp/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": false,
         "typesFound": []
@@ -3870,7 +3856,7 @@
       "nameAr": "مكتبة الفيديو",
       "nameEn": "مكتبة الفيديو",
       "url": "https://www.silah.com.sa/video-library/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -3984,7 +3970,7 @@
       "nameAr": "ضريبة القيمة المضافة",
       "nameEn": "ضريبة القيمة المضافة",
       "url": "https://www.silah.com.sa/%d8%b6%d8%b1%d9%8a%d8%a8%d8%a9-%d8%a7%d9%84%d9%82%d9%8a%d9%85%d8%a9-%d8%a7%d9%84%d9%85%d8%b6%d8%a7%d9%81%d8%a9/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4104,7 +4090,7 @@
       "nameAr": "Technology Recruitment Solutions",
       "nameEn": "Technology Recruitment Solutions",
       "url": "https://www.silah.com.sa/technology-recruitment-solutions/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4277,7 +4263,7 @@
       "nameAr": "احصل على تسعيرة",
       "nameEn": "احصل على تسعيرة",
       "url": "https://www.silah.com.sa/get-a-quote-new/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4447,7 +4433,7 @@
       "nameAr": "خدمات توطين المهن الفنية الهندسية",
       "nameEn": "Engineering Technician Localization",
       "url": "https://www.silah.com.sa/engineering-technician-center/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4551,7 +4537,7 @@
       "nameAr": "التوظيف",
       "nameEn": "التوظيف",
       "url": "https://www.silah.com.sa/jobs/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4645,23 +4631,23 @@
       "seoScore": 84,
       "competesWith": [
         {
-          "query": "شركة",
-          "impressions": 348,
-          "otherPages": [
-            "https://www.silah.com.sa/"
-          ]
-        },
-        {
           "query": "عن بعد",
-          "impressions": 294,
+          "impressions": 375,
           "otherPages": [
             "https://www.silah.com.sa/",
             "https://www.silah.com.sa/services/full-time-or-part-time-remote-employee/"
           ]
         },
         {
+          "query": "شركة",
+          "impressions": 270,
+          "otherPages": [
+            "https://www.silah.com.sa/"
+          ]
+        },
+        {
           "query": "خدمات التوظيف",
-          "impressions": 112,
+          "impressions": 142,
           "otherPages": [
             "https://www.silah.com.sa/"
           ]
@@ -4706,23 +4692,23 @@
           "detail": {
             "queries": [
               {
-                "query": "شركة",
-                "impressions": 348,
-                "otherPages": [
-                  "https://www.silah.com.sa/"
-                ]
-              },
-              {
                 "query": "عن بعد",
-                "impressions": 294,
+                "impressions": 375,
                 "otherPages": [
                   "https://www.silah.com.sa/",
                   "https://www.silah.com.sa/services/full-time-or-part-time-remote-employee/"
                 ]
               },
               {
+                "query": "شركة",
+                "impressions": 270,
+                "otherPages": [
+                  "https://www.silah.com.sa/"
+                ]
+              },
+              {
                 "query": "خدمات التوظيف",
-                "impressions": 112,
+                "impressions": 142,
                 "otherPages": [
                   "https://www.silah.com.sa/"
                 ]
@@ -4737,7 +4723,7 @@
       "nameAr": "مقارنة الباقات",
       "nameEn": "مقارنة الباقات",
       "url": "https://www.silah.com.sa/compare-packages/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -4992,7 +4978,7 @@
       "nameAr": "بناء وتنفيذ خطة الإفصاح التدريبي",
       "nameEn": "Training Disclosure Plan",
       "url": "https://www.silah.com.sa/training-disclosure-services/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5097,7 +5083,7 @@
       "nameAr": "التوطين عبر معاهد الشراكات الاستراتيجية",
       "nameEn": "OTJ Training via Strategic Partnerships",
       "url": "https://www.silah.com.sa/otj-training-services/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5202,7 +5188,7 @@
       "nameAr": "اتصل بنا",
       "nameEn": "اتصل بنا",
       "url": "https://www.silah.com.sa/contact-us/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5280,7 +5266,7 @@
       "competesWith": [
         {
           "query": "شركة صاة",
-          "impressions": 59,
+          "impressions": 55,
           "otherPages": [
             "https://www.silah.com.sa/jobs/",
             "https://www.silah.com.sa/",
@@ -5342,7 +5328,7 @@
             "queries": [
               {
                 "query": "شركة صاة",
-                "impressions": 59,
+                "impressions": 55,
                 "otherPages": [
                   "https://www.silah.com.sa/jobs/",
                   "https://www.silah.com.sa/",
@@ -5359,7 +5345,7 @@
       "nameAr": "خدمات توظيف السعوديين",
       "nameEn": "Saudi Hiring Services",
       "url": "https://www.silah.com.sa/%d8%ae%d8%af%d9%85%d8%a7%d8%aa-%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%a7%d9%84%d8%b3%d8%b9%d9%88%d8%af%d9%8a%d9%8a%d9%86/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5482,7 +5468,7 @@
       "nameAr": "خدمات تعهيد الأعمال",
       "nameEn": "Business Outsourcing Services",
       "url": "https://www.silah.com.sa/outsourcing-services/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5645,7 +5631,7 @@
       "nameAr": "خدمات مراكز الاتصال",
       "nameEn": "خدمات مراكز الاتصال",
       "url": "https://www.silah.com.sa/prices-packages-call-center-solutions/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5730,7 +5716,7 @@
       "competesWith": [
         {
           "query": "خدمات مركز الاتصال",
-          "impressions": 44,
+          "impressions": 32,
           "otherPages": [
             "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/"
           ]
@@ -5765,7 +5751,7 @@
             "queries": [
               {
                 "query": "خدمات مركز الاتصال",
-                "impressions": 44,
+                "impressions": 32,
                 "otherPages": [
                   "https://www.silah.com.sa/%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%AA%D8%B5%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D8%A7%D8%B9%D9%85%D8%A9/"
                 ]
@@ -5780,7 +5766,7 @@
       "nameAr": "حلول متكاملة ترفع كفاءة أعمالك",
       "nameEn": "حلول متكاملة ترفع كفاءة أعمالك",
       "url": "https://www.silah.com.sa/request-quote/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -5951,7 +5937,7 @@
       "nameAr": "إدارة ملتقيات التوظيف والمعارض الإفتراضية",
       "nameEn": "إدارة ملتقيات التوظيف والمعارض الإفتراضية",
       "url": "https://www.silah.com.sa/virtual-events/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6109,7 +6095,7 @@
       "nameAr": "المشاريع الحكومية",
       "nameEn": "المشاريع الحكومية",
       "url": "https://www.silah.com.sa/goverment-projects/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6339,7 +6325,7 @@
       "nameAr": "خدمات الاستثمار الاجتماعي",
       "nameEn": "خدمات الاستثمار الاجتماعي",
       "url": "https://www.silah.com.sa/esnad-saudis/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6485,7 +6471,7 @@
       "nameAr": "خدمات وحلول صلة",
       "nameEn": "خدمات وحلول صلة",
       "url": "https://www.silah.com.sa/solutions/",
-      "checkedAt": "2026-11-16",
+      "checkedAt": "2026-11-23",
       "schema": {
         "hasExpectedType": true,
         "typesFound": [
@@ -6710,7 +6696,7 @@
   "aiSearchReadinessCheckedMonth": "2026-11",
   "keywordsSource": "gsc",
   "keywordsCheckedMonth": "2026-11",
-  "lastRefreshedAt": "2026-11-16T06:27:40.989148+00:00",
+  "lastRefreshedAt": "2026-11-23T06:46:55.718219+00:00",
   "scanCoverage": {
     "source": "sitemap",
     "totalPages": 44,
@@ -6725,16 +6711,16 @@
   },
   "issueSummary": {
     "byOwner": {
-      "it": 31,
+      "it": 29,
       "marketing": 63,
       "shared": 43
     },
     "bySeverity": {
       "high": 15,
-      "medium": 110,
+      "medium": 108,
       "low": 12
     },
-    "totalIssues": 137,
+    "totalIssues": 135,
     "orphanDetectionSkipped": false
   },
   "pageHealthHistory": {
@@ -8279,7 +8265,7 @@
         "id": "%d8%b7%d9%84%d8%a8-%d8%a8%d8%a7%d9%82%d8%a9",
         "nameAr": "طلب باقة",
         "seoScore": null,
-        "mobileScore": 97,
+        "mobileScore": 95,
         "altIssueCount": 6,
         "schemaOk": false,
         "issueCount": 1
@@ -8288,7 +8274,7 @@
         "id": "%d8%aa%d8%b7%d8%a8%d9%8a%d9%82-%d8%b5%d9%84%d8%a9",
         "nameAr": "تطبيق صلة لقياس أداء الموظف عن بعد",
         "seoScore": 58,
-        "mobileScore": 74,
+        "mobileScore": 72,
         "altIssueCount": 14,
         "schemaOk": false,
         "issueCount": 5
@@ -8305,8 +8291,8 @@
       {
         "id": "silah-academy-for-e-learning",
         "nameAr": "أكاديمية صلة للتعليم الإلكتروني عن بعد",
-        "seoScore": 83,
-        "mobileScore": 86,
+        "seoScore": 82,
+        "mobileScore": 85,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 4
@@ -8324,16 +8310,16 @@
         "id": "infrastructure",
         "nameAr": "البنية التحتية",
         "seoScore": 89,
-        "mobileScore": 87,
+        "mobileScore": 92,
         "altIssueCount": 3,
         "schemaOk": true,
-        "issueCount": 3
+        "issueCount": 2
       },
       {
         "id": "terms-and-conditions",
         "nameAr": "الشروط والأحكام",
         "seoScore": 79,
-        "mobileScore": 100,
+        "mobileScore": 99,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 1
@@ -8351,7 +8337,7 @@
         "id": "%d9%85%d9%8a%d8%b2%d8%a9-%d8%a7%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-%d8%a7%d9%84%d9%85%d8%b1%d9%88%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d9%83%d8%a7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84",
         "nameAr": "ميزة العمل عن بعد: المرونة المكانية والزمانية (دراسة عالمية)",
         "seoScore": 76,
-        "mobileScore": 89,
+        "mobileScore": 88,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 5
@@ -8359,17 +8345,17 @@
       {
         "id": "%d8%a7%d9%84%d8%aa%d9%82%d8%b1%d9%8a%d8%b1-%d8%a7%d9%84%d8%b3%d9%86%d9%88%d9%8a-%d9%84%d9%84%d8%b9%d9%85%d9%84-%d8%b9%d9%86-%d8%a8%d8%b9%d8%af-2018%d9%85-%d8%a7%d8%b3%d8%aa%d8%b7%d9%84%d8%a7%d8%b9",
         "nameAr": "التقرير السنوي للعمل عن بعد 2018م (استطلاع رأي عالمي)",
-        "seoScore": 76,
-        "mobileScore": 88,
+        "seoScore": 78,
+        "mobileScore": 94,
         "altIssueCount": 2,
         "schemaOk": true,
-        "issueCount": 4
+        "issueCount": 3
       },
       {
         "id": "privacy-policy",
         "nameAr": "سياسة الخصوصية",
-        "seoScore": 80,
-        "mobileScore": 100,
+        "seoScore": 79,
+        "mobileScore": 99,
         "altIssueCount": 2,
         "schemaOk": true,
         "issueCount": 2
@@ -8377,8 +8363,8 @@
       {
         "id": "who-our-clients",
         "nameAr": "من هم عملاء شركة صلة",
-        "seoScore": 79,
-        "mobileScore": 99,
+        "seoScore": 78,
+        "mobileScore": 98,
         "altIssueCount": 26,
         "schemaOk": true,
         "issueCount": 2
@@ -8386,8 +8372,8 @@
       {
         "id": "business-center-cost",
         "nameAr": "حاسبة تكلفة التوظيف",
-        "seoScore": 47,
-        "mobileScore": 29,
+        "seoScore": 49,
+        "mobileScore": 36,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 6
@@ -8395,8 +8381,8 @@
       {
         "id": "remote-working-cost-calculator",
         "nameAr": "حاسبة تكاليف التوظيف",
-        "seoScore": 48,
-        "mobileScore": 30,
+        "seoScore": 47,
+        "mobileScore": 29,
         "altIssueCount": 3,
         "schemaOk": true,
         "issueCount": 5
@@ -8665,8 +8651,8 @@
     ]
   },
   "indexCleanup": {
-    "checkedAt": "2026-11-16",
-    "generatedAt": "2026-11-16T06:24:25+00:00",
+    "checkedAt": "2026-11-23",
+    "generatedAt": "2026-11-23T06:42:22+00:00",
     "source": "wordpress+live",
     "total": 139,
     "byStatus": {
@@ -12244,607 +12230,541 @@
         "pages": [
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 675,
-            "clicks": 4,
-            "position": 5.2
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 649,
-            "clicks": 1,
-            "position": 5.3
+            "impressions": 1108,
+            "clicks": 5,
+            "position": 5.0
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/book/",
-            "impressions": 519,
+            "impressions": 634,
             "clicks": 2,
             "position": 9.0
           },
           {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 304,
+            "clicks": 1,
+            "position": 5.2
+          },
+          {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 341,
+            "impressions": 32,
             "clicks": 0,
-            "position": 6.9
+            "position": 7.6
           }
         ],
-        "impressions": 2184
+        "impressions": 2078
       },
       {
         "query": "عيادات التمكين",
         "pages": [
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 579,
-            "clicks": 1,
-            "position": 5.2
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 573,
-            "clicks": 0,
-            "position": 6.4
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 333,
-            "clicks": 1,
-            "position": 6.6
+            "impressions": 902,
+            "clicks": 2,
+            "position": 5.1
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/book/",
-            "impressions": 216,
+            "impressions": 474,
             "clicks": 0,
-            "position": 7.6
+            "position": 8.7
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 272,
+            "clicks": 0,
+            "position": 5.5
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/book/count/1/",
             "impressions": 52,
             "clicks": 0,
             "position": 8.9
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 23,
+            "clicks": 0,
+            "position": 8.3
           }
         ],
-        "impressions": 1753
-      },
-      {
-        "query": "تمكين الضمان",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 383,
-            "clicks": 1,
-            "position": 7.3
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 113,
-            "clicks": 1,
-            "position": 6.6
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 65,
-            "clicks": 0,
-            "position": 7.6
-          }
-        ],
-        "impressions": 561
-      },
-      {
-        "query": "عيادة تمكين",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 133,
-            "clicks": 1,
-            "position": 5.2
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 96,
-            "clicks": 0,
-            "position": 5.1
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/book/",
-            "impressions": 84,
-            "clicks": 0,
-            "position": 8
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 63,
-            "clicks": 0,
-            "position": 6.1
-          }
-        ],
-        "impressions": 376
-      },
-      {
-        "query": "شركة",
-        "pages": [
-          {
-            "url": "https://www.silah.com.sa/jobs/",
-            "impressions": 210,
-            "clicks": 3,
-            "position": 14.0
-          },
-          {
-            "url": "https://www.silah.com.sa/",
-            "impressions": 138,
-            "clicks": 6,
-            "position": 36.4
-          }
-        ],
-        "impressions": 348
-      },
-      {
-        "query": "عيادات التمكين | tamkeen clinic",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 204,
-            "clicks": 0,
-            "position": 6.0
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 140,
-            "clicks": 1,
-            "position": 4.3
-          }
-        ],
-        "impressions": 344
-      },
-      {
-        "query": "تمكين وظائف",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 142,
-            "clicks": 0,
-            "position": 10.6
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 103,
-            "clicks": 0,
-            "position": 10.9
-          },
-          {
-            "url": "https://www.silah.com.sa/",
-            "impressions": 99,
-            "clicks": 0,
-            "position": 10.8
-          }
-        ],
-        "impressions": 344
-      },
-      {
-        "query": "التمكين",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 171,
-            "clicks": 0,
-            "position": 6.4
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 116,
-            "clicks": 0,
-            "position": 5.9
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 39,
-            "clicks": 0,
-            "position": 6.5
-          }
-        ],
-        "impressions": 326
-      },
-      {
-        "query": "عيادات التمكين الدمام",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 130,
-            "clicks": 0,
-            "position": 7.1
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 114,
-            "clicks": 1,
-            "position": 7.8
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 79,
-            "clicks": 0,
-            "position": 8.0
-          }
-        ],
-        "impressions": 323
+        "impressions": 1723
       },
       {
         "query": "عن بعد",
         "pages": [
           {
             "url": "https://www.silah.com.sa/",
-            "impressions": 162,
-            "clicks": 2,
-            "position": 8.6
+            "impressions": 256,
+            "clicks": 6,
+            "position": 8.5
           },
           {
             "url": "https://www.silah.com.sa/jobs/",
-            "impressions": 114,
-            "clicks": 5,
-            "position": 10.1
+            "impressions": 104,
+            "clicks": 3,
+            "position": 10.9
           },
           {
             "url": "https://www.silah.com.sa/services/full-time-or-part-time-remote-employee/",
-            "impressions": 18,
+            "impressions": 15,
             "clicks": 0,
-            "position": 14.6
+            "position": 16.2
           }
         ],
-        "impressions": 294
+        "impressions": 375
       },
       {
-        "query": "عيادات تمكين الضمان الاجتماعي",
+        "query": "عيادة تمكين",
         "pages": [
           {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 105,
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 211,
             "clicks": 1,
-            "position": 4.6
+            "position": 5
           },
           {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 91,
+            "url": "https://dhamanclinics.silah.com.sa/v2/book/",
+            "impressions": 129,
             "clicks": 0,
-            "position": 4.9
+            "position": 7.9
           },
           {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 28,
+            "clicks": 0,
+            "position": 5
+          }
+        ],
+        "impressions": 368
+      },
+      {
+        "query": "تمكين وظائف",
+        "pages": [
+          {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 210,
+            "clicks": 0,
+            "position": 10.7
+          },
+          {
+            "url": "https://www.silah.com.sa/",
+            "impressions": 72,
+            "clicks": 0,
+            "position": 11.0
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 41,
+            "clicks": 0,
+            "position": 10.7
+          }
+        ],
+        "impressions": 323
+      },
+      {
+        "query": "التمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 254,
+            "clicks": 1,
+            "position": 6.4
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
             "impressions": 66,
-            "clicks": 1,
-            "position": 7.4
-          }
-        ],
-        "impressions": 262
-      },
-      {
-        "query": "رقم تمكين",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 123,
-            "clicks": 1,
-            "position": 10.0
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 113,
             "clicks": 0,
-            "position": 8.1
+            "position": 5.4
           }
         ],
-        "impressions": 236
+        "impressions": 320
       },
       {
-        "query": "تمكين الضمان الاجتماعي",
+        "query": "عيادات التمكين | tamkeen clinic",
         "pages": [
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 99,
-            "clicks": 0,
-            "position": 9.0
+            "impressions": 206,
+            "clicks": 1,
+            "position": 4.4
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 47,
+            "impressions": 109,
             "clicks": 0,
-            "position": 9.1
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 35,
-            "clicks": 0,
-            "position": 10.0
+            "position": 6.4
           }
         ],
-        "impressions": 181
+        "impressions": 315
+      },
+      {
+        "query": "شركة",
+        "pages": [
+          {
+            "url": "https://www.silah.com.sa/jobs/",
+            "impressions": 183,
+            "clicks": 3,
+            "position": 19.5
+          },
+          {
+            "url": "https://www.silah.com.sa/",
+            "impressions": 87,
+            "clicks": 6,
+            "position": 57.6
+          }
+        ],
+        "impressions": 270
+      },
+      {
+        "query": "عيادات التمكين الدمام",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 196,
+            "clicks": 0,
+            "position": 6.9
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 51,
+            "clicks": 1,
+            "position": 6.8
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/book/",
+            "impressions": 10,
+            "clicks": 0,
+            "position": 9.6
+          }
+        ],
+        "impressions": 257
       },
       {
         "query": "عيادات التمكين | tamkeen clinics أبها",
         "pages": [
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 77,
+            "impressions": 80,
             "clicks": 0,
-            "position": 4.8
+            "position": 4.9
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 63,
+            "impressions": 59,
             "clicks": 0,
             "position": 4.9
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/book/",
-            "impressions": 22,
+            "impressions": 24,
             "clicks": 0,
-            "position": 11.5
+            "position": 11.6
           }
         ],
-        "impressions": 162
+        "impressions": 163
       },
       {
         "query": "عيادة التمكين",
         "pages": [
           {
-            "url": "https://dhamanclinics.silah.com.sa/",
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
             "impressions": 73,
+            "clicks": 0,
+            "position": 5.4
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 55,
             "clicks": 0,
             "position": 5.3
           },
           {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 54,
+            "url": "https://dhamanclinics.silah.com.sa/v2/book/",
+            "impressions": 24,
             "clicks": 0,
-            "position": 5.6
-          },
+            "position": 8.0
+          }
+        ],
+        "impressions": 152
+      },
+      {
+        "query": "رقم تمكين الضمان",
+        "pages": [
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 21,
+            "impressions": 114,
             "clicks": 0,
-            "position": 6.8
+            "position": 5.3
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 31,
+            "clicks": 0,
+            "position": 5.4
+          }
+        ],
+        "impressions": 145
+      },
+      {
+        "query": "خدمات التوظيف",
+        "pages": [
+          {
+            "url": "https://www.silah.com.sa/",
+            "impressions": 80,
+            "clicks": 0,
+            "position": 9.1
+          },
+          {
+            "url": "https://www.silah.com.sa/jobs/",
+            "impressions": 62,
+            "clicks": 0,
+            "position": 9.6
+          }
+        ],
+        "impressions": 142
+      },
+      {
+        "query": "عيادات التمكين جدة",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 76,
+            "clicks": 0,
+            "position": 4.6
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/book/",
-            "impressions": 14,
+            "impressions": 25,
             "clicks": 0,
-            "position": 7.5
-          }
-        ],
-        "impressions": 162
-      },
-      {
-        "query": "عيادات تمكين الدمام",
-        "pages": [
+            "position": 10.1
+          },
           {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 57,
+            "impressions": 21,
             "clicks": 0,
-            "position": 7.6
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 49,
-            "clicks": 0,
-            "position": 6.6
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 48,
-            "clicks": 0,
-            "position": 7.1
+            "position": 5.7
           }
         ],
-        "impressions": 154
+        "impressions": 122
       },
       {
-        "query": "تسجيل دخول عيادات تمكين",
+        "query": "ماهي عيادات التمكين",
         "pages": [
           {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 92,
+            "clicks": 0,
+            "position": 6.9
+          },
+          {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 72,
-            "clicks": 1,
-            "position": 4.2
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 45,
+            "impressions": 29,
             "clicks": 0,
-            "position": 7.5
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 36,
-            "clicks": 0,
-            "position": 4.1
+            "position": 6.5
           }
         ],
-        "impressions": 153
+        "impressions": 121
       },
       {
         "query": "عيادات التمكين الضمان الاجتماعي",
         "pages": [
           {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 72,
+            "clicks": 1,
+            "position": 4.6
+          },
+          {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 60,
-            "clicks": 1,
-            "position": 4.5
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 40,
-            "clicks": 1,
-            "position": 4.7
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 28,
+            "impressions": 39,
             "clicks": 0,
-            "position": 7.1
+            "position": 4.3
           }
         ],
-        "impressions": 128
+        "impressions": 111
       },
       {
         "query": "عيادات تمكين جدة",
         "pages": [
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 54,
+            "impressions": 79,
             "clicks": 0,
-            "position": 5.2
+            "position": 4.7
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 48,
+            "impressions": 27,
             "clicks": 0,
-            "position": 5.9
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 22,
-            "clicks": 0,
-            "position": 8.8
+            "position": 6.0
           }
         ],
-        "impressions": 124
+        "impressions": 106
       },
       {
-        "query": "رقم تمكين الضمان الاجتماعي",
+        "query": "تسجيل دخول عيادات تمكين",
         "pages": [
           {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 75,
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 67,
             "clicks": 1,
-            "position": 5.7
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 48,
-            "clicks": 0,
-            "position": 5.3
-          }
-        ],
-        "impressions": 123
-      },
-      {
-        "query": "تمكين وظائف الضمان",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 74,
-            "clicks": 2,
-            "position": 8.1
+            "position": 4.1
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 42,
+            "impressions": 30,
             "clicks": 0,
-            "position": 8.1
+            "position": 4.1
           }
         ],
-        "impressions": 116
+        "impressions": 97
       },
       {
-        "query": "عيادات التمكين جدة",
-        "pages": [
-          {
-            "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 52,
-            "clicks": 0,
-            "position": 5.8
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 47,
-            "clicks": 0,
-            "position": 4.8
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 14,
-            "clicks": 0,
-            "position": 8.1
-          }
-        ],
-        "impressions": 113
-      },
-      {
-        "query": "تمكين",
+        "query": "عيادة تمكين الضمان الاجتماعي",
         "pages": [
           {
             "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 70,
+            "impressions": 75,
             "clicks": 0,
-            "position": 5.7
+            "position": 4.2
           },
           {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 26,
+            "impressions": 21,
             "clicks": 0,
-            "position": 25.0
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 16,
-            "clicks": 0,
-            "position": 4.3
+            "position": 3.7
           }
         ],
-        "impressions": 112
+        "impressions": 96
       },
       {
-        "query": "خدمات التوظيف",
+        "query": "رقم عيادات تمكين",
         "pages": [
           {
-            "url": "https://www.silah.com.sa/jobs/",
-            "impressions": 73,
-            "clicks": 0,
-            "position": 9.5
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 69,
+            "clicks": 1,
+            "position": 2.7
           },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 18,
+            "clicks": 0,
+            "position": 2.8
+          }
+        ],
+        "impressions": 87
+      },
+      {
+        "query": "منصه العمل عن بعد",
+        "pages": [
           {
             "url": "https://www.silah.com.sa/",
-            "impressions": 39,
+            "impressions": 66,
             "clicks": 0,
-            "position": 9.1
+            "position": 7.6
+          },
+          {
+            "url": "https://www.silah.com.sa/jobs/",
+            "impressions": 21,
+            "clicks": 0,
+            "position": 10.9
           }
         ],
-        "impressions": 112
+        "impressions": 87
+      },
+      {
+        "query": "التسجيل في منصة تمكين الضمان الاجتماعي",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 44,
+            "clicks": 0,
+            "position": 10.0
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/",
+            "impressions": 38,
+            "clicks": 1,
+            "position": 10.0
+          }
+        ],
+        "impressions": 82
+      },
+      {
+        "query": "عياده تمكين",
+        "pages": [
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 56,
+            "clicks": 0,
+            "position": 4.9
+          },
+          {
+            "url": "https://dhamanclinics.silah.com.sa/v2/book/",
+            "impressions": 25,
+            "clicks": 0,
+            "position": 8.6
+          }
+        ],
+        "impressions": 81
       },
       {
         "query": "عيادات تمكين الضمان",
         "pages": [
           {
+            "url": "https://dhamanclinics.silah.com.sa/v2/",
+            "impressions": 40,
+            "clicks": 0,
+            "position": 5
+          },
+          {
             "url": "https://dhamanclinics.silah.com.sa/",
-            "impressions": 58,
+            "impressions": 36,
             "clicks": 1,
             "position": 4.6
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 29,
-            "clicks": 0,
-            "position": 5.1
-          },
-          {
-            "url": "https://dhamanclinics.silah.com.sa/v2/",
-            "impressions": 21,
-            "clicks": 0,
-            "position": 7
           }
         ],
-        "impressions": 108
+        "impressions": 76
+      },
+      {
+        "query": "وكالة توظيف",
+        "pages": [
+          {
+            "url": "https://www.silah.com.sa/jobs/",
+            "impressions": 36,
+            "clicks": 1,
+            "position": 8.7
+          },
+          {
+            "url": "https://www.silah.com.sa/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%AA%D9%88%D8%B8%D9%8A%D9%81-%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86/",
+            "impressions": 15,
+            "clicks": 0,
+            "position": 57.5
+          },
+          {
+            "url": "https://www.silah.com.sa/",
+            "impressions": 10,
+            "clicks": 0,
+            "position": 25.4
+          }
+        ],
+        "impressions": 61
       }
     ]
   },
   "mobilePerfMonth": "2026-11",
-  "desktopCheckedAt": "2026-11-16",
+  "desktopCheckedAt": "2026-11-23",
   "lighthouseVersion": "13.6.0",
-  "mobilePerfCheckedAt": "2026-11-16",
+  "mobilePerfCheckedAt": "2026-11-23",
   "cruxFormFactor": "PHONE",
   "deviceShare": {
-    "phone": 67,
-    "desktop": 25,
-    "tablet": 8,
-    "asOf": "2026-11-14"
+    "phone": 69,
+    "desktop": 24,
+    "tablet": 7,
+    "asOf": "2026-11-21"
   },
   "heavyScripts": {
     "mobile": [
@@ -12852,7 +12772,7 @@
         "host": "www.silah.com.sa",
         "file": "n2.min.js",
         "path": "/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js",
-        "ms": 196
+        "ms": 122
       }
     ],
     "desktop": [
@@ -12860,64 +12780,64 @@
         "host": "www.silah.com.sa",
         "file": "n2.min.js",
         "path": "/wp-content/plugins/smart-slider-3/Public/SmartSlider3/Application/Frontend/Assets/dist/n2.min.js",
-        "ms": 109
+        "ms": 105
       }
     ],
-    "checkedAt": "2026-11-16"
+    "checkedAt": "2026-11-23"
   },
   "psiRuns": {
     "mobile": [
-      88,
+      87,
       88,
       88
     ],
     "desktop": [
       99,
       99,
-      99
+      98
     ]
   },
   "cwv": {
     "origin": {
       "PHONE": {
-        "cls": 0.05,
-        "ttfb": 2648,
-        "fcp": 3079,
+        "cls": 0.04,
+        "ttfb": 2685,
+        "fcp": 3127,
         "inp": 340,
-        "lcp": 3616,
+        "lcp": 3665,
         "pass": false,
-        "asOf": "2026-11-14"
+        "asOf": "2026-11-21"
       },
       "DESKTOP": {
-        "ttfb": 2389,
-        "fcp": 2591,
+        "fcp": 2405,
         "inp": 80,
-        "lcp": 3348,
         "cls": 0.06,
+        "ttfb": 2220,
+        "lcp": 3298,
         "pass": false,
-        "asOf": "2026-11-14"
+        "asOf": "2026-11-21"
       }
     },
     "home": {
       "PHONE": {
-        "lcp": 3636,
-        "cls": 0.12,
-        "ttfb": 2017,
-        "fcp": 2414,
-        "inp": 284,
+        "cls": 0.11,
+        "ttfb": 2028,
+        "inp": 302,
+        "fcp": 2389,
+        "lcp": 3591,
         "pass": false,
-        "asOf": "2026-11-14"
+        "asOf": "2026-11-21"
       },
       "DESKTOP": {
-        "ttfb": 1927,
-        "fcp": 2069,
+        "ttfb": 1896,
+        "inp": 80,
+        "lcp": 3298,
+        "fcp": 1985,
         "cls": 0.06,
-        "inp": 90,
-        "lcp": 3477,
         "pass": false,
-        "asOf": "2026-11-14"
+        "asOf": "2026-11-21"
       }
     },
-    "checkedAt": "2026-11-16"
+    "checkedAt": "2026-11-23"
   }
 }
