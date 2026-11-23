@@ -66,3 +66,14 @@ for cat, url, action in _items:
         str(h1), "pw" if pw else "-", "sitemap" if norm(url) in sm else "-",
     ]))
 
+
+# ALTDUMP: list images with missing/empty alt on each listed page
+if os.environ.get("AUDIT_ALT_DUMP") == "1":
+    for cat, url, action in _items:
+        _, _, _, body = get(url)
+        for tag in re.findall(r"<img\b[^>]*>", body, re.I):
+            alt = re.search(r'\balt=["\']([^"\']*)["\']', tag, re.I)
+            if alt and alt.group(1).strip():
+                continue
+            src = re.search(r'\b(?:data-lazy-src|data-src|src)=["\']([^"\']+)', tag, re.I)
+            print("NOALT\t" + url + "\t" + (src.group(1) if src else tag[:120]))

@@ -17,6 +17,7 @@ jobs:
       - name: Live check of listed URLs
         env:
           AUDIT_SITEMAP_EXTRAS: "0"
+          AUDIT_ALT_DUMP: "1"
         run: python scripts/url_audit.py | tee /tmp/url-audit.txt
       # Output goes to the separate "diagnostics" branch, never main.
       - name: Save results to diagnostics branch
